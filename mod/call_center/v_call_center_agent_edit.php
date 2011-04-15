@@ -426,6 +426,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	No Answer Delay Time:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='agent_no_answer_delay_time' maxlength='255' value='$agent_no_answer_delay_time'>\n";
+	echo "<br />\n";
+	echo "Enter the agent no answer delay time in seconds.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	Max No Answer:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -476,17 +487,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  <input class='formfld' type='text' name='agent_logout' maxlength='255' value='$agent_logout'>\n";
 	echo "<br />\n";
 	echo "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	No Answer Delay Time:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='agent_no_answer_delay_time' maxlength='255' value='$agent_no_answer_delay_time'>\n";
-	echo "<br />\n";
-	echo "Enter the agent no answer delay time in seconds.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

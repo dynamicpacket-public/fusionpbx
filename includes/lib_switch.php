@@ -5495,11 +5495,12 @@ if (!function_exists('sync_package_v_call_center')) {
 							}
 						}
 
-					$v_agents .= "		<agent ";
+					$v_agents .= "<agent ";
 					$v_agents .= "name=\"$agent_name@".$_SESSION['domains'][$row["v_id"]]['domain']."\" ";
 					$v_agents .= "type=\"$agent_type\" ";
 					$v_agents .= "contact=\"$tmp_agent_contact\" ";
 					$v_agents .= "status=\"$agent_status\" ";
+					$v_agents .= "no-answer-delay-time=\"$agent_no_answer_delay_time\" ";
 					$v_agents .= "max-no-answer=\"$agent_max_no_answer\" ";
 					$v_agents .= "wrap-up-time=\"$agent_wrap_up_time\" ";
 					$v_agents .= "reject-delay-time=\"$agent_reject_delay_time\" ";
