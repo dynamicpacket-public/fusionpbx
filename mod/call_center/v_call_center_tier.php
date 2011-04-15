@@ -36,8 +36,11 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
-$orderby = $_GET["orderby"];
-$order = $_GET["order"];
+//get http variables and set as php variables
+	$orderby = $_GET["orderby"];
+	$order = $_GET["order"];
+
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -119,10 +122,10 @@ $order = $_GET["order"];
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_name]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_name]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_level]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_position]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_name]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_name]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_level]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_position]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='v_call_center_tier_edit.php?id=".$row[call_center_tier_id]."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='v_call_center_tier_delete.php?id=".$row[call_center_tier_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
@@ -163,11 +166,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($result_count);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>

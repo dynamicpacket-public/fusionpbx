@@ -68,7 +68,7 @@ $order = $_GET["order"];
 	$result = $prep_statement->fetchAll();
 	$numrows = count($result);
 	unset ($prep_statement, $result, $sql);
-	$rows_per_page = 10;
+	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 

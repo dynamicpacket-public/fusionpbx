@@ -118,7 +118,6 @@ $order = $_GET["order"];
 	//echo thorderby('agent_busy_delay_time', 'Busy Delay Time', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
 	echo "	<a href='v_call_center_agent_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_call_center_agent_edit.php'\" value='+'>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -126,18 +125,17 @@ $order = $_GET["order"];
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[v_id]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_name]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_type]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_call_timeout]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_contact]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_max_no_answer]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_status]."</td>\n";			
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_name]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_type]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_call_timeout]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_contact]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_max_no_answer]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_status]."&nbsp;</td>\n";			
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='v_call_center_agent_edit.php?id=".$row[call_center_agent_id]."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='v_call_center_agent_delete.php?id=".$row[call_center_agent_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
@@ -150,7 +148,6 @@ $order = $_GET["order"];
 		unset($sql, $result, $row_count);
 	} //end if results
 
-
 	echo "<tr>\n";
 	echo "<td colspan='11' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
@@ -159,19 +156,16 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	echo "			<a href='v_call_center_agent_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "		<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_call_center_agent_edit.php'\" value='+'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "</table>";
 	echo "</div>";
 	echo "<br><br>";
 	echo "<br><br>";
-
 
 	echo "</td>";
 	echo "</tr>";
@@ -179,11 +173,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($result_count);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>
