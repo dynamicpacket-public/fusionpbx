@@ -1,0 +1,84 @@
+<?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2010
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+include "root.php";
+if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
+	header("Location: ".PROJECT_PATH."/install.php");
+	exit;
+}
+require_once "includes/config.php";
+require_once "includes/checkauth.php";
+require_once "includes/header.php";
+
+echo "<br />";
+echo "<br />";
+
+//information
+	//echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+	//echo "  <tr>\n";
+	//echo "	<td align='left'><b>Information</b><br>\n";
+	//echo "		The following links are for convenience access to the user account settings, and voicemail.<br />\n";
+	//echo "	</td>\n";
+	//echo "  </tr>\n";
+	//echo "</table>\n";
+	//echo "<br />\n";
+
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+	echo "<tr>\n";
+	echo "	<th class='th' colspan='2' align='left'>User Information&nbsp;</th>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "		UserName: \n";
+	echo "	</td>\n";
+	echo "	<td class=\"rowstyle1\">\n";
+	echo "		<a href='".PROJECT_PATH."/mod/users/usersupdate.php'>".$_SESSION["username"]."</a> \n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "		Voicemail: \n";
+	echo "	</td>\n";
+	echo "	<td class=\"rowstyle1\">\n";
+	echo "		<a href='".PROJECT_PATH."/mod/voicemail_msgs/v_voicemail_msgs.php'>View Messages</a> \n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+
+	echo "<br />\n";
+	echo "<br />\n";
+
+//call forward, follow me and dnd
+	$is_included = "true";
+	require_once "mod/calls/v_calls.php";
+
+//call forward, follow me and dnd
+	$is_included = "true";
+	require_once "mod/hunt_group/v_hunt_group_call_forward.php";
+
+require_once "includes/footer.php";
+?>
