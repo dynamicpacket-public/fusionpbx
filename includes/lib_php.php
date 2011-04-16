@@ -27,8 +27,24 @@
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 		//error_reporting(E_ALL);
 
-	//start the session
-		session_start();
+	//session handling
+		//start the session
+			session_start();
+		//check whether to timout the session
+			if (isset($_SESSION['session_last_activity']) && (time() - $_SESSION['session_last_activity'] > 14400)) {
+				// last request was more than 4 hours ago
+				session_destroy();   // destroy session data in storage
+				session_unset();     // unset $_SESSION variable for the runtime
+			}
+			$_SESSION['session_last_activity'] = time(); // update last activity time stamp
+		//regenerate sessions to avoid session id attacks such as session fixation
+			if (!isset($_SESSION['session_created'])) {
+				$_SESSION['session_created'] = time();
+			} else if (time() - $_SESSION['session_created'] > 1800) {
+				// session started more than 30 minutes ago
+				session_regenerate_id(true);    // change session ID for the current session an invalidate old session ID
+				$_SESSION['session_created'] = time();  // update creation time
+			}
 
 	//get the document_root parent directory
 		$document_root_parent = join(array_slice(explode("\\",realpath($_SERVER["DOCUMENT_ROOT"])),0,-1), '/');
