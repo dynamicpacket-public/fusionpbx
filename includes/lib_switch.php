@@ -5439,6 +5439,7 @@ if (!function_exists('sync_package_v_call_center')) {
 						$agent_call_timeout = $row["agent_call_timeout"];
 						$agent_contact = $row["agent_contact"];
 						$agent_status = $row["agent_status"];
+						$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
 						$agent_max_no_answer = $row["agent_max_no_answer"];
 						$agent_wrap_up_time = $row["agent_wrap_up_time"];
 						$agent_reject_delay_time = $row["agent_reject_delay_time"];
