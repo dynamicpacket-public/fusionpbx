@@ -72,6 +72,7 @@ else {
 		$vm_keep_local_after_email = check_str($_POST["vm_keep_local_after_email"]);
 		$user_context = check_str($_POST["user_context"]);
 		$range = check_str($_POST["range"]);
+		$autogen_users = check_str($_POST["autogen_users"]);
 		$toll_allow = check_str($_POST["toll_allow"]);
 		$callgroup = check_str($_POST["callgroup"]);
 		$auth_acl = check_str($_POST["auth_acl"]);
@@ -145,11 +146,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add") {
-			$userfirstname='extension';$userlastname=$extension;$useremail='';
-			$user_list_array = explode("|", $user_list);
-			foreach($user_list_array as $tmp_user){
-				$user_password = generate_password();
-				user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
+			$userfirstname='extension';$useremail='';
+			if ($autogen_users == "true") {
+				$auto_user = $extension;
+				for ($i=1; $i<=$range; $i++){
+					$userlastname = $auto_user;
+					$user_password = generate_password();
+					user_add($auto_user, $user_password, $userfirstname, $userlastname, $useremail);
+					$generated_users[$i]['username'] = $auto_user;
+					$generated_users[$i]['password'] = $user_password;
+					$auto_user++;
+				}
+			} else {
+				$userlastname = $extension;
+				$user_list_array = explode("|", $user_list);
+				foreach($user_list_array as $tmp_user){
+					$user_password = generate_password();
+					user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
+				}
 			}
 			unset($tmp_user);
 
@@ -190,7 +204,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$v_id', ";
 				$sql .= "'$extension', ";
 				$sql .= "'$password', ";
-				$sql .= "'$user_list', ";
+				if ($autogen_users == "true") { 
+					$sql .= "'|$extension|', ";
+				} else {
+					$sql .= "'$user_list', ";
+				}
 				$sql .= "'$provisioning_list', ";
 				$sql .= "'#".generate_password(4, 1)."', ";
 				$sql .= "'$extension', ";
@@ -230,9 +248,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+			if ($autogen_users != "true") echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
 			echo "<div align='center'>\n";
 			echo "Add Complete\n";
+			if ($autogen_users == "true") {
+				//HERE
+				// $generated_users
+				echo "<table>\n";
+				echo "<tr><td>User Name</td><td>Password</td></tr>\n";
+				foreach($generated_users as $tmp_user){
+					echo "<tr><td>".$tmp_user['username']."</td><td>".$tmp_user['password']."</td></tr>\n";
+				}
+				echo "</table>";
+			}
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -450,6 +478,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    </select>\n";
 		echo "<br />\n";
 		echo "Enter the number of extensions to create. Increments each extension by 1.<br />\n";
+		echo "<input type=\"checkbox\" name=\"autogen_users\" value=\"true\"> Auto-generate user with extension as login name<br>\n";
 		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
