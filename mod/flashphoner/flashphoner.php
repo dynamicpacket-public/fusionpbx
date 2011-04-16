@@ -31,24 +31,20 @@ require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/header.php";
 
-
 $extension_id = $_SESSION['user_extension_array'][0]['extension_id'];
 $extension = $_SESSION['user_extension_array'][0]['extension'];
 
 //get a list of assigned extensions for this user
 $sql = "";
-$sql .= " select * from v_extensions ";
+$sql .= "select * from v_extensions ";
 $sql .= "where v_id = '$v_id' ";
 $sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
-//$v_mailboxes = '';
+
 $x = 0;
 $result = $prepstatement->fetchAll();
 foreach ($result as &$row) {
-	//$v_mailboxes = $v_mailboxes.$row["mailbox"].'|';
-	//$extension_id = $row["extension_id"];
-	//$mailbox = $row["mailbox"];
 	$extension_array[$x]['extension_id'] = $row["extension_id"];
 	$extension_array[$x]['extension'] = $row["extension"];
 	$x++;
@@ -61,27 +57,19 @@ if ($x > 0) {
 	$client_ip = $_SERVER['REMOTE_ADDR'];
 	$sql = sprintf("INSERT INTO v_flashphone_auth (auth_key, hostaddr, createtime, username) values ('%s', '%s', now(), '%s')",
 			$key, $client_ip, $_SESSION["username"]);
-
 	$db->exec(check_sql($sql));
-
-//	$prepstatement = $db->prepare(check_sql($sql));
-// 	$prepstatement->execute();
 }
 
 // Abort here if we dont have an extension for them and tell them to get one assigned
 if ($x < 1) {
-
 	echo "This user does not have an extension assigned, please Contact your system adminstrator if you feel this is in error<br />\n";
-
 } else if ($x == 1) {
 	// DISPLAY THE PHONE HERE
 	$extension = $extension_array[0]['extension'];
 	$extension_id = $extension_array[0]['extension_id'];
 	include "phone_html.php";
-
 } else {
 	include "phone_choices_html.php";
-
 }
 
 //show the footer

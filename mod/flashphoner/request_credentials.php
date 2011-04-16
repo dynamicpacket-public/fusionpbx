@@ -35,18 +35,15 @@ $key = $_REQUEST['key'];
 $username = $_REQUEST['username'];
 
 // make sure they atleast have a KEY from before
-// $sql = "select * from v_flashphone_auth where auth_key = '".urldecode($key)."' and hostaddr = '".$_SERVER['REMOTE_ADDR']."' and username = '".$username."'";
 $sql = sprintf("select * from v_flashphone_auth where auth_key = '%s' and hostaddr = '%s' and username = '%s';",
 		urldecode($key),
 		$_SERVER['REMOTE_ADDR'],
 		$username);
-
-// echo "$sql\n";
 	
 $prepstatement = $db->prepare(check_sql($sql));
 if (!$prepstatement) {
-    echo "\nPDO::errorInfo():\n";
-    print_r($db->errorInfo());
+	echo "\nPDO::errorInfo():\n";
+	print_r($db->errorInfo());
 }
 
 $prepstatement->execute();
@@ -54,7 +51,6 @@ $x = 0;
 $result = $prepstatement->fetchAll();
 
 // There is probably a better way to do this but this will work on anything
-
 foreach ($result as &$row) {
 	$auth_array[$x] = $row;
 	$x++;
@@ -83,18 +79,17 @@ unset ($prepstatement);
 
 if ($x == 1) {
 header('Content-Type: text/xml');
+
 ?>
 <?xml version="1.0" encoding="utf-8" ?>
 <fusionpbx version="1.0">
-        <flashphoner>
-                        <login><?php echo $extension_array[0]['extension']; ?></login>
-                        <password><?php echo $extension_array[0]['password']; ?></password>
-                        <proxy><?php echo $extension_array[0]['user_context']; ?></proxy>
-                        <port>5060</port>
-        </flashphoner>
+	<flashphoner>
+		<login><?php echo $extension_array[0]['extension']; ?></login>
+		<password><?php echo $extension_array[0]['password']; ?></password>
+		<proxy><?php echo $extension_array[0]['user_context']; ?></proxy>
+		<port>5060</port>
+	</flashphoner>
 </fusionpbx>
-
 <?php
-
 } 
 ?>

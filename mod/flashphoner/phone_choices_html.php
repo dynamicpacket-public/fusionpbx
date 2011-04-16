@@ -1,12 +1,12 @@
 <script type="text/javascript">
 function submitform()
 {
-    if(document.flashform.onsubmit &&
-    !document.flashform.onsubmit())
-    {
-        return;
-    }
- document.flashform.submit();
+	if(document.flashform.onsubmit &&
+	!document.flashform.onsubmit())
+	{
+		return;
+	}
+	document.flashform.submit();
 }
 
 function start_phone()
