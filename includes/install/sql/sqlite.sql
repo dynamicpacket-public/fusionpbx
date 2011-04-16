@@ -252,6 +252,7 @@ CREATE TABLE v_virtual_table_fields (virtual_table_field_id INTEGER PRIMARY KEY,
 CREATE TABLE v_virtual_table_data_types_name_value (virtual_table_data_types_name_value_id INTEGER PRIMARY KEY, v_id NUMBER, virtual_table_id NUMBER, virtual_table_field_id NUMBER, virtual_data_types_name TEXT, virtual_data_types_value TEXT);
 CREATE TABLE v_virtual_table_data (virtual_table_data_id INTEGER PRIMARY KEY, v_id NUMBER, virtual_table_id NUMBER, virtual_data_row_id TEXT, virtual_field_name TEXT, virtual_data_field_value TEXT, virtual_data_add_user TEXT, virtual_data_add_date TEXT, virtual_data_del_user TEXT, virtual_data_del_date TEXT, virtual_table_parent_id NUMERIC, virtual_data_parent_row_id TEXT);
 CREATE TABLE v_call_center_logs (cc_id INTEGER PRIMARY KEY, v_id NUMBER, cc_queue TEXT, cc_action TEXT, cc_count NUMBER, cc_agent TEXT, cc_agent_system TEXT, cc_agent_status TEXT, cc_agent_state TEXT, cc_agent_uuid TEXT, cc_caller_uuid TEXT, cc_caller_cid_name TEXT, cc_caller_cid_number TEXT, cc_selection TEXT, cc_cause TEXT, cc_agent_answer_time TEXT, cc_wait_time TEXT, cc_talk_time TEXT, cc_total_time TEXT,cc_epoch NUMBER, cc_date DATE);
+CREATE TABLE v_flashphone_auth (auth_serial INTEGER PRIMARY KEY, auth_key TEXT, hostaddr TEXT, createtime DATE, username TEXT);
 CREATE INDEX index_billsec ON v_xml_cdr(billsec ASC);
 CREATE INDEX index_caller_id_name ON v_xml_cdr(caller_id_name ASC);
 CREATE INDEX index_destination_number ON v_xml_cdr(destination_number ASC);
