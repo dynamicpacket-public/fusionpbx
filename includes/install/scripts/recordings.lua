@@ -27,6 +27,10 @@ max_tries = "3";
 digit_timeout = "3000";
 sounds_dir = "";
 recordings_dir = "";
+file_name = "";
+recording_number = "";
+recording_slots = "";
+recording_prefix = "";
 
 --dtmf call back function detects the "#" and ends the call
 	function onInput(s, type, obj)
@@ -45,13 +49,31 @@ recordings_dir = "";
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
+			recording_slots = session:getVariable("recording_slots");
+			recording_prefix = session:getVariable("recording_prefix");
+			recording_name = session:getVariable("recording_name");
 
+		--select the recording number
+			if (recording_slots) then
+				min_digits = 1;
+				max_digits = 20;
+				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_recording_number.wav", "", "\\d+");
+				recording_name = recording_prefix..recording_number..".wav";
+			end
+
+		--set the default recording name if one was not provided
+			if (recording_name) then
+				--recording name is provided do nothing
+			else
+				--set a default recording_name
+				recording_name = "temp_"..session:get_uuid()..".wav";
+			end
+		
 		--prompt for the recording
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/begin_recording.wav");
 			session:execute("set", "playback_terminators=#");
 
 		--begin recording
-			recording_name = "temp_"..session:get_uuid()..".wav";
 			session:execute("record", recordings_dir.."/"..recording_name.." 180 200");
 
 		--preview the recording
