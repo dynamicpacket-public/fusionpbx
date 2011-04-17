@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 
 //set debug
-	$debug = false; //true //false
+	$debug = true; //true //false
 
 //increase limits
 	set_time_limit(3600);
@@ -88,7 +88,7 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		if (strlen($domain_name) == 0) { $domain_name = $_SERVER["HTTP_HOST"]; }
 		$sql = "";
 		$sql .= "select v_id from v_system_settings ";
-		$sql .= "where v_domain = '".$_SERVER["HTTP_HOST"]."' ";
+		$sql .= "where v_domain = '".$domain_name."' ";
 		$row = $db->query($sql)->fetch();
 		$v_id = $row['v_id'];
 		if (strlen($v_id) == 0) { $v_id = '1'; }
