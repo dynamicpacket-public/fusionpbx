@@ -308,7 +308,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'action', ";
 		$sql .= "'$action_application_1', ";
 		$sql .= "'$action_data_1', ";
-		$sql .= "'60' ";
+		$sql .= "'70' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
