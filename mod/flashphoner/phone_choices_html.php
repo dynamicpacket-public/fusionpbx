@@ -12,7 +12,8 @@ function submitform()
 function start_phone()
 {
 	var testvar = document.getElementById("extension_id").value; 
-	window.open("/flashphoner/phone.php?extension_id="+testvar, "FlashPhoner", "height=300, width=230");
+	window.open("/flashphoner/phone.php?extension_id="+testvar+"key=<?php echo $key;?>&username=<?php echo $_SESSION['username'] ?>", 
+		"FlashPhoner", "height=300, width=230");
 }
 
 </script>
