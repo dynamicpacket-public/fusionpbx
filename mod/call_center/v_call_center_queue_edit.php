@@ -320,34 +320,40 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_strategy'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_strategy == "ring-all") { 
-		echo "	<option value='ring-all' SELECTED >ring-all</option>\n";
+		echo "	<option value='ring-all' selected='selected' >ring-all</option>\n";
 	}
 	else {
 		echo "	<option value='ring-all'>ring-all</option>\n";
 	}
 	if ($queue_strategy == "longest-idle-agent") { 
-		echo "	<option value='longest-idle-agent' SELECTED >longest-idle-agent</option>\n";
+		echo "	<option value='longest-idle-agent' selected='selected' >longest-idle-agent</option>\n";
 	}
 	else {
 		echo "	<option value='longest-idle-agent'>longest-idle-agent</option>\n";
 	}
 	if ($queue_strategy == "agent-with-least-talk-time") { 
-		echo "	<option value='agent-with-least-talk-time' SELECTED >agent-with-least-talk-time</option>\n";
+		echo "	<option value='agent-with-least-talk-time' selected='selected' >agent-with-least-talk-time</option>\n";
 	}
 	else {
 		echo "	<option value='agent-with-least-talk-time'>agent-with-least-talk-time</option>\n";
 	}
 	if ($queue_strategy == "agent-with-fewest-calls") { 
-		echo "	<option value='agent-with-fewest-calls' SELECTED >agent-with-fewest-calls</option>\n";
+		echo "	<option value='agent-with-fewest-calls' selected='selected' >agent-with-fewest-calls</option>\n";
 	}
 	else {
 		echo "	<option value='agent-with-fewest-calls'>agent-with-fewest-calls</option>\n";
 	}
 	if ($queue_strategy == "sequentially-by-agent-order") { 
-		echo "	<option value='sequentially-by-agent-order' SELECTED >sequentially-by-agent-order</option>\n";
+		echo "	<option value='sequentially-by-agent-order' selected='selected' >sequentially-by-agent-order</option>\n";
 	}
 	else {
 		echo "	<option value='sequentially-by-agent-order'>sequentially-by-agent-order</option>\n";
+	}
+	if ($queue_strategy == "sequentially-by-next-agent-order") { 
+		echo "	<option value='sequentially-by-next-agent-order' selected='selected' >sequentially-by-next-agent-order</option>\n";
+	}
+	else {
+		echo "	<option value='sequentially-by-next-agent-order'>sequentially-by-next-agent-order</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
