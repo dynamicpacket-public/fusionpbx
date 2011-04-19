@@ -50,7 +50,7 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		$uuid = check_str(urldecode($xml->variables->uuid));
 		$domain_name = check_str(urldecode($xml->variables->domain_name));
 		$accountcode = check_str(urldecode($xml->variables->accountcode));
-		$direction = check_str(urldecode($xml->channel_data->direction));
+		$direction = check_str(urldecode($xml->variables->call_direction));
 		$default_language = check_str(urldecode($xml->variables->default_language));
 		$xml_string = check_str($xml_string);
 		$start_epoch = check_str(urldecode($xml->variables->start_epoch));

@@ -20,6 +20,12 @@
       </condition>
     </extension>
 
+    <extension name="call_direction" continue="true">
+      <condition field="${call_direction}" expression="^(inbound|outbound|local)$">
+        <anti-action application="set" data="call_direction=local"/>
+      </condition>
+    </extension>
+
     <!-- Example of doing things based on time of day. 
 
 	 year = 4 digit year. Example year="2009"

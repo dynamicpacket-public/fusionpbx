@@ -261,6 +261,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 		}
 
+	//set call_direction
+		if (count($_SESSION["domains"]) > 1) {
+			$sql = "insert into v_public_includes_details ";
+			$sql .= "(";
+			$sql .= "v_id, ";
+			$sql .= "public_include_id, ";
+			$sql .= "tag, ";
+			$sql .= "fieldtype, ";
+			$sql .= "fielddata, ";
+			$sql .= "fieldorder ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$v_id', ";
+			$sql .= "'$public_include_id', ";
+			$sql .= "'action', ";
+			$sql .= "'set', ";
+			$sql .= "'call_direction=inbound', ";
+			$sql .= "'50' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
 	//set answer
 		$tmp_app = false;
 		if ($action_application_1 == "ivr") { $tmp_app = true; }
