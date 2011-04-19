@@ -206,7 +206,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/footer.php";
 				return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -319,41 +319,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_strategy'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_strategy == "ring-all") { 
+	if ($queue_strategy == "ring-all") {
 		echo "	<option value='ring-all' selected='selected' >ring-all</option>\n";
 	}
 	else {
 		echo "	<option value='ring-all'>ring-all</option>\n";
 	}
-	if ($queue_strategy == "longest-idle-agent") { 
+	if ($queue_strategy == "longest-idle-agent") {
 		echo "	<option value='longest-idle-agent' selected='selected' >longest-idle-agent</option>\n";
 	}
 	else {
 		echo "	<option value='longest-idle-agent'>longest-idle-agent</option>\n";
 	}
-	if ($queue_strategy == "agent-with-least-talk-time") { 
-		echo "	<option value='agent-with-least-talk-time' selected='selected' >agent-with-least-talk-time</option>\n";
+	if ($queue_strategy == "round-robin") {
+		echo "	<option value='round-robin' selected='selected'>round-robin</option>\n";
+	}
+	else {
+		echo "	<option value='round-robin'>round-robin</option>\n";
+	}
+	if ($queue_strategy == "top-down") {
+		echo "	<option value='top-down' selected='selected'>top-down</option>\n";
+	}
+	else {
+		echo "	<option value='top-down'>top-down</option>\n";
+	}
+	if ($queue_strategy == "agent-with-least-talk-time") {
+		echo "	<option value='agent-with-least-talk-time' selected='selected'>agent-with-least-talk-time</option>\n";
 	}
 	else {
 		echo "	<option value='agent-with-least-talk-time'>agent-with-least-talk-time</option>\n";
 	}
-	if ($queue_strategy == "agent-with-fewest-calls") { 
-		echo "	<option value='agent-with-fewest-calls' selected='selected' >agent-with-fewest-calls</option>\n";
+
+	if ($queue_strategy == "agent-with-fewest-calls") {
+		echo "	<option value='agent-with-fewest-calls' selected='selected'>agent-with-fewest-calls</option>\n";
 	}
 	else {
 		echo "	<option value='agent-with-fewest-calls'>agent-with-fewest-calls</option>\n";
 	}
-	if ($queue_strategy == "sequentially-by-agent-order") { 
-		echo "	<option value='sequentially-by-agent-order' selected='selected' >sequentially-by-agent-order</option>\n";
+	if ($queue_strategy == "sequentially-by-agent-order") {
+		echo "	<option value='sequentially-by-agent-order' selected='selected'>sequentially-by-agent-order</option>\n";
 	}
 	else {
 		echo "	<option value='sequentially-by-agent-order'>sequentially-by-agent-order</option>\n";
 	}
-	if ($queue_strategy == "sequentially-by-next-agent-order") { 
-		echo "	<option value='sequentially-by-next-agent-order' selected='selected' >sequentially-by-next-agent-order</option>\n";
+	if ($queue_strategy == "sequentially-by-next-agent-order") {
+		echo "	<option value='sequentially-by-next-agent-order' selected='selected'>sequentially-by-next-agent-order</option>\n";
 	}
 	else {
 		echo "	<option value='sequentially-by-next-agent-order'>sequentially-by-next-agent-order</option>\n";
+	}
+	if ($queue_strategy == "random") {
+		echo "	<option value='random' selected='selected'>random</option>\n";
+	}
+	else {
+		echo "	<option value='random'>random</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -390,13 +409,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_time_base_score'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_time_base_score == "system") { 
+	if ($queue_time_base_score == "system") {
 		echo "	<option value='system' SELECTED >system</option>\n";
 	}
 	else {
 		echo "	<option value='system'>system</option>\n";
 	}
-	if ($queue_time_base_score == "queue") { 
+	if ($queue_time_base_score == "queue") {
 		echo "	<option value='queue' SELECTED >queue</option>\n";
 	}
 	else {
@@ -437,13 +456,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rules_apply'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_tier_rules_apply == "true") { 
+	if ($queue_tier_rules_apply == "true") {
 		echo "	<option value='true' SELECTED >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($queue_tier_rules_apply == "false") { 
+	if ($queue_tier_rules_apply == "false") {
 		echo "	<option value='false' SELECTED >false</option>\n";
 	}
 	else {
@@ -473,13 +492,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rule_wait_multiply_level'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_tier_rule_wait_multiply_level == "true") { 
+	if ($queue_tier_rule_wait_multiply_level == "true") {
 		echo "	<option value='true' SELECTED >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($queue_tier_rule_wait_multiply_level == "false") { 
+	if ($queue_tier_rule_wait_multiply_level == "false") {
 		echo "	<option value='false' SELECTED >false</option>\n";
 	}
 	else {
@@ -498,13 +517,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rule_no_agent_no_wait'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_tier_rule_no_agent_no_wait == "true") { 
+	if ($queue_tier_rule_no_agent_no_wait == "true") {
 		echo "	<option value='true' SELECTED >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($queue_tier_rule_no_agent_no_wait == "false") { 
+	if ($queue_tier_rule_no_agent_no_wait == "false") {
 		echo "	<option value='false' SELECTED >false</option>\n";
 	}
 	else {
@@ -534,13 +553,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_abandoned_resume_allowed'>\n";
 	echo "	<option value=''></option>\n";
-	if ($queue_abandoned_resume_allowed == "true") { 
+	if ($queue_abandoned_resume_allowed == "true") {
 		echo "	<option value='true' SELECTED >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($queue_abandoned_resume_allowed == "false") { 
+	if ($queue_abandoned_resume_allowed == "false") {
 		echo "	<option value='false' SELECTED >false</option>\n";
 	}
 	else {
