@@ -49,6 +49,7 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 	//get the variables from the xml
 		$uuid = check_str(urldecode($xml->variables->uuid));
 		$domain_name = check_str(urldecode($xml->variables->domain_name));
+		$accountcode = check_str(urldecode($xml->variables->accountcode));
 		$direction = check_str(urldecode($xml->channel_data->direction));
 		$default_language = check_str(urldecode($xml->variables->default_language));
 		$xml_string = check_str($xml_string);
@@ -135,6 +136,8 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		$sql .= "(";
 		$sql .= "v_id, ";
 		$sql .= "uuid, ";
+		$sql .= "domain_name, ";
+		$sql .= "accountcode, ";
 		$sql .= "direction, ";
 		$sql .= "default_language, ";
 		$sql .= "context, ";
@@ -169,6 +172,8 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		$sql .= "(";
 		$sql .= "'".$v_id."', ";
 		$sql .= "'".$uuid."', ";
+		$sql .= "'".$domain_name."', ";
+		$sql .= "'".$accountcode."', ";
 		$sql .= "'".$direction."', ";
 		$sql .= "'".$default_language."', ";
 		$sql .= "'".$context."', ";
