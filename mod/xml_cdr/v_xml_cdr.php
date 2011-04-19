@@ -144,6 +144,12 @@ else {
 				else {
 					echo "			<option value='outbound'>outbound</option>\n";
 				}
+				if ($direction == "local") {
+					echo "			<option value='local' selected='selected'>local</option>\n";
+				}
+				else {
+					echo "			<option value='local'>local</option>\n";
+				}
 				echo "			</select>\n";
 				echo "		</td>";
 				echo "	</tr>";
