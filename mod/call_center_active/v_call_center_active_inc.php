@@ -116,54 +116,57 @@ else {
 			echo "</tr>\n";
 
 			foreach ($result as $row) {
-				$queue = $row['queue'];
-				$system = $row['system'];
-				$uuid = $row['uuid'];
-				$caller_number = $row['caller_number'];
-				$caller_name = $row['caller_name'];
-				$system_epoch = $row['system_epoch'];
-				$joined_epoch = $row['joined_epoch'];
-				$rejoined_epoch = $row['rejoined_epoch'];
-				$bridge_epoch = $row['bridge_epoch'];
-				$abandoned_epoch = $row['abandoned_epoch'];
-				$base_score = $row['base_score'];
-				$skill_score = $row['skill_score'];
-				$serving_agent = $row['serving_agent'];
-				$serving_system = $row['serving_system'];
-				$state = $row['state'];
-
-				$joined_seconds = time() - $joined_epoch;
-				$joined_length_hour = floor($joined_seconds/3600);
-				$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
-				$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
-				$joined_length_min = sprintf("%02d", $joined_length_min);
-				$joined_length_sec = sprintf("%02d", $joined_length_sec);
-				$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
-
-				//$system_seconds = time() - $system_epoch;
-				//$system_length_hour = floor($system_seconds/3600);
-				//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
-				//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
-				//$system_length_min = sprintf("%02d", $system_length_min);
-				//$system_length_sec = sprintf("%02d", $system_length_sec);
-				//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
-
-				//get the extensions that are assigned to this user 
-				$user_extension_array = explode("|", $_SESSION['user_extension_list']);
-				echo "<tr>\n";
-				echo "<td valign='top' class='".$rowstyle[$c]."'>".$joined_length."</td>\n";
-				//echo "<td valign='top' class='".$rowstyle[$c]."'>".$system_length."</td>\n";
-				echo "<td valign='top' class='".$rowstyle[$c]."'>".$caller_name."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$rowstyle[$c]."'>".$caller_number."&nbsp;</td>\n";
-				echo "<td valign='top' class='".$rowstyle[$c]."'>".$state."</td>\n";
-				if (ifgroup("admin") || ifgroup("superadmin")) {
-					echo "<td valign='top' class='".$rowstyle[$c]."'>";
-					echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+user/".$user_extension_array[0]."+%26eavesdrop(".$uuid.")');}\">eavesdrop</a>&nbsp;\n";
-					echo "</td>";
-				}
-				echo "</tr>\n";
-
-				if ($c==0) { $c=1; } else { $c=0; }
+				$switch_cmd = 'uuid_exists '.$row['session_uuid'];
+				if (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") {
+					$queue = $row['queue'];
+					$system = $row['system'];
+					$uuid = $row['uuid'];
+					$session_uuid = $row['session_uuid'];
+					$caller_number = $row['caller_number'];
+					$caller_name = $row['caller_name'];
+					$system_epoch = $row['system_epoch'];
+					$joined_epoch = $row['joined_epoch'];
+					$rejoined_epoch = $row['rejoined_epoch'];
+					$bridge_epoch = $row['bridge_epoch'];
+					$abandoned_epoch = $row['abandoned_epoch'];
+					$base_score = $row['base_score'];
+					$skill_score = $row['skill_score'];
+					$serving_agent = $row['serving_agent'];
+					$serving_system = $row['serving_system'];
+					$state = $row['state'];
+	
+					$joined_seconds = time() - $joined_epoch;
+					$joined_length_hour = floor($joined_seconds/3600);
+					$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
+					$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
+					$joined_length_min = sprintf("%02d", $joined_length_min);
+					$joined_length_sec = sprintf("%02d", $joined_length_sec);
+					$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
+	
+					//$system_seconds = time() - $system_epoch;
+					//$system_length_hour = floor($system_seconds/3600);
+					//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
+					//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
+					//$system_length_min = sprintf("%02d", $system_length_min);
+					//$system_length_sec = sprintf("%02d", $system_length_sec);
+					//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
+	
+					//get the extensions that are assigned to this user 
+					$user_extension_array = explode("|", $_SESSION['user_extension_list']);
+					echo "<tr>\n";
+					echo "<td valign='top' class='".$rowstyle[$c]."'>".$joined_length."</td>\n";
+					//echo "<td valign='top' class='".$rowstyle[$c]."'>".$system_length."</td>\n";
+					echo "<td valign='top' class='".$rowstyle[$c]."'>".$caller_name."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$rowstyle[$c]."'>".$caller_number."&nbsp;</td>\n";
+					echo "<td valign='top' class='".$rowstyle[$c]."'>".$state."</td>\n";
+					if (ifgroup("admin") || ifgroup("superadmin")) {
+						echo "<td valign='top' class='".$rowstyle[$c]."'>";
+						echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+user/".$user_extension_array[0]."+%26eavesdrop(".$uuid.")');}\">eavesdrop</a>&nbsp;\n";
+						echo "</td>";
+					}
+					echo "</tr>\n";
+					if ($c==0) { $c=1; } else { $c=0; }
+				} //end if uuid_exists
 			}
 			echo "</table>\n";
 
