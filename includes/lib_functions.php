@@ -32,7 +32,7 @@
 
 	if (!function_exists('check_str')) {
 		function check_str($strtemp) {
-			////when code in db is urlencoded the ' does not need to be modified
+			//when code in db is urlencoded the ' does not need to be modified
 			$strtemp = str_replace ("'", "''", $strtemp); //escape the single quote
 			$strtemp = trim ($strtemp); //remove white space
 			return $strtemp;
@@ -807,6 +807,34 @@ function format_string ($format, $data) {
 				throw new Exception("Problem reading data from $url, $php_errormsg");
 			}
 			return $response;
+		}
+	}
+
+//convert the string to a named array
+	if(!function_exists('csv_to_named_array')) {
+		function csv_to_named_array($tmp_str, $tmp_delimiter) {
+			$tmp_array = explode ("\n", $tmp_str);
+			$result = '';
+			if (trim(strtoupper($tmp_array[0])) != "+OK") {
+				$tmp_field_name_array = explode ($tmp_delimiter, $tmp_array[0]);
+				$x = 0;
+				foreach ($tmp_array as $row) {
+					if ($x > 0) {
+						$tmp_field_value_array = explode ($tmp_delimiter, $tmp_array[$x]);
+						$y = 0;
+						foreach ($tmp_field_value_array as $tmp_value) {
+							$tmp_name = $tmp_field_name_array[$y];
+							if (trim(strtoupper($tmp_value)) != "+OK") {
+								$result[$x][$tmp_name] = $tmp_value;
+							}
+							$y++;
+						}
+					}
+					$x++;
+				}
+				unset($row);
+			}
+			return $result;
 		}
 	}
 
