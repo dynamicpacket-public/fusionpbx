@@ -244,7 +244,16 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 									}
 								}
 								else {
-									$tmpsql = "alter table ".$table_name." add ".$column_row['column_name']." ".$column_row['column_data_type']."\n";
+									if ($db_type == "sqlite") {
+										$column_data_type .= $column_row['column_data_type'];
+									}
+									if ($db_type == "pgsql") {
+										$column_data_type = str_replace("NUMBER", "NUMERIC", $column_row['column_data_type']);
+									}
+									if ($db_type == "mysql") {
+										$column_data_type = str_replace("NUMBER", "NUMERIC", $column_row['column_data_type']);
+									}
+									$tmpsql = "alter table ".$table_name." add ".$column_row['column_name']." ".$column_data_type." \n";
 									$sqlupdate .= $tmpsql;
 									if ($display_results) {
 										echo "<td class='rowstyle1' style='background-color:#8D0D0D;'>false</td>\n";
@@ -321,7 +330,6 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 					if ($display_results) {
 						echo "error: " . $error->getMessage() . " sql: $sql<br/>";
 					}
-					//die();
 				}
 				$x++;
 			}
