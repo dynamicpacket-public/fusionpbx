@@ -43,16 +43,23 @@ $order = $_GET["order"];
 //get the http post values and set theme as php variables
 	if (count($_POST)>0) {
 		$extension_name = check_str($_POST["extension_name"]);
-		$gateway = check_str($_POST["gateway"]);
-		$gateway_array = explode(":",$gateway);
-		$gateway_id = $gateway_array[0];
-		$gateway_name = $gateway_array[1];
 		$dialplanorder = check_str($_POST["dialplanorder"]);
 		$dialplan_expression = check_str($_POST["dialplan_expression"]);
 		$condition_field_1 = check_str($_POST["condition_field_1"]);
 		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
 		$condition_field_2 = check_str($_POST["condition_field_2"]);
 		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
+
+		$gateway = check_str($_POST["gateway"]);
+		$gateway_array = explode(":",$gateway);
+		$gateway_id = $gateway_array[0];
+		$gateway_name = $gateway_array[1];
+		
+		$gateway_2 = check_str($_POST["gateway_2"]);
+		$gateway_2_array = explode(":",$gateway_2);
+		$gateway_2_id = $gateway_2_array[0];
+		$gateway_2_name = $gateway_2_array[1];
+
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
 		if (strlen($enabled) == 0) { $enabled = "true"; } //set default to enabled
@@ -62,6 +69,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
 		if (strlen($gateway_name) == 0) { $msg .= "Please provide: Gateway Name<br>\n"; }
+		//if (strlen($gateway_2_name) == 0) { $msg .= "Please provide: Gateway 2 Name<br>\n"; }
 		if (strlen($dialplan_expression) == 0) { $msg .= "Please provide: Dialplan Expression<br>\n"; }
 		//if (strlen($extension_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
 		//if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
@@ -102,126 +110,199 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach($tmp_array as $dialplan_expression) {
 			$dialplan_expression = trim($dialplan_expression);
 			if (strlen($dialplan_expression)>0) {
-
 				if (count($_SESSION["domains"]) > 1) {
 					$tmp_gateway_name = $_SESSION['domains'][$v_id]['domain'] .'-'.$gateway_name;
+					if (strlen($gateway_2_name) > 0) {
+						$tmp_gateway_2_name = $_SESSION['domains'][$v_id]['domain'] .'-'.$gateway_2_name;
+					}
 				}
 				else {
 					$tmp_gateway_name = $gateway_name;
+					if (strlen($gateway_2_name) > 0) {
+						$tmp_gateway_2_name = $gateway_2_name;
+					}
 				}
-
 				switch ($dialplan_expression) {
 				case "^(\d{7})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/1".$default_area_code."\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/1".$default_area_code."\$1";
+					}
 					$label = "7 digits";
 					$abbrv = "7d";
 					break;
 				case "^(\d{8})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "8 digits";
 					$abbrv = "8d";
 					break;
 				case "^(\d{9})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "9 digits";
 					$abbrv = "9d";
 					break;
 				case "^(\d{10})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/1\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "10 digits";
 					$abbrv = "10d";
 					break;
 				case "^\+?(\d{11})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "11 digits";
 					$abbrv = "11d";
 					break;
 				case "^(\d{12})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "12 digits";
 					$abbrv = "12d";
 					break;
 				case "^(\d{13})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "13 digits";
 					$abbrv = "13d";
 					break;
 				case "^(\d{14})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "14 digits";
 					$abbrv = "14d";
 					break;
 				case "^(0\d{12,14})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "International";
 					$abbrv = "Intl";
 					break;
 				case "^311$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/311";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/311";
+					}
 					$label = "311";
 					$abbrv = "311";
 					break;
 				case "^411$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/411";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/411";
+					}
 					$label = "411";
 					$abbrv = "411";
 					break;
 				case "^911$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/911";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/911";
+					}
 					$label = "911";
 					$abbrv = "911";
 					break;
 				case "^9(\d{3})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, 3 digits";
 					$abbrv = "9.3d";
 					break;
 				case "^9(\d{4})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, 4 digits";
 					$abbrv = "9.4d";
 					break;	
 				case "^9(\d{7})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/1".$default_area_code."\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/1".$default_area_code."\$1";
+					}
 					$label = "dial 9, 7 digits";
 					$abbrv = "9.7d";
 					break;
 				case "^9(\d{10})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/1\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, 10 digits";
 					$abbrv = "9.10d";
 					break;
 				case "^9(\d{11})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, 11 digits";
 					$abbrv = "9.11d";
 					break;
 				case "^9(\d{12})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, International";
 					$abbrv = "9.12d";
 					break;
 				case "^9(\d{13})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, International";
 					$abbrv = "9.13d";
 					break;
 				case "^9(\d{14})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, International";
 					break;
 				case "^9(\d{15})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "dial 9, International";
 					$abbrv = "9.15d";
 					break;
 				case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = "toll free";
 					$abbrv = "tollfree";
 					break;
 				default:
 					$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
+					if (strlen($gateway_2_name) > 0) {
+						$action_data .= ",sofia/gateway/".$tmp_gateway_2_name."/\$1";
+					}
 					$label = $dialplan_expression;
 					$abbrv = filename_safe($dialplan_expression);
 					//echo "abbrv: $abbrv<br />\n";
@@ -236,6 +317,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$enabled = 'true';
 				$opt1name = 'gateway_id';
 				$opt1value = $gateway_id;
+				$extension_continue = 'false';
 				//$dialplan_include_id = v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context, $enabled, $description, $opt1name, $opt1value);
 
 				//add the main dialplan include entry
@@ -256,7 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$v_id', ";
 					$sql .= "'$extension_name', ";
 					$sql .= "'$dialplanorder', ";
-					$sql .= "'$enabled', ";
+					$sql .= "'$extension_continue', ";
 					$sql .= "'$context', ";
 					$sql .= "'$opt1name', ";
 					$sql .= "'$opt1value', ";
@@ -451,7 +533,37 @@ echo "</tr>\n";
 
 
 echo "<tr>\n";
-echo "  <td valign=\"top\" class=\"vncellreq\">Dialplan Expression</td>\n";
+echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+echo "    Alternate Gateway:\n";
+echo "</td>\n";
+echo "<td class='vtable' align='left'>\n";
+$sql = "";
+$sql .= " select * from v_gateways ";
+$sql .= " where v_id = '$v_id' ";
+$prepstatement = $db->prepare(check_sql($sql));
+$prepstatement->execute();
+$result = $prepstatement->fetchAll();
+unset ($prepstatement, $sql);
+echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" style='width: 60%;'>\n";
+echo "<option value=''></option>\n";
+foreach($result as $row) {
+	if ($row['gateway'] == $gateway_2_name) {
+		echo "<option value=\"".$row['gateway_id'].":".$row['gateway']."\" selected>".$row['gateway']."</option>\n";
+	}
+	else {
+		echo "<option value=\"".$row['gateway_id'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
+	}
+}
+unset($sql, $result, $rowcount);
+echo "</select>\n";
+echo "<br />\n";
+echo "Select another gateway as an alternative to use if the first one fails.\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+
+echo "<tr>\n";
+echo "  <td valign=\"top\" class=\"vncellreq\">Dialplan Expression:</td>\n";
 echo "  <td align='left' class=\"vtable\">";
 echo "    <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" style='width: 60%;' cols=\"30\" rows=\"4\" wrap=\"off\"></textarea>\n";
 echo "    <br>\n";
