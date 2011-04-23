@@ -147,12 +147,17 @@ if ($action == "add") {
  	$sql .= "'" . $request['avatar'] . "', ";
  	$sql .= "'" . $request['candidate_acl'] . "', ";
  	$sql .= "'" . $request['local_network_acl'] . "'";
-	$sql .= ") RETURNING xmpp_profile_id;";
-
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-        $result = $prepstatement->fetchAll();
-	$xmpp_profile_id = $result[0]['xmpp_profile_id'];
+	$sql .= ") ";
+	if ($db_type = "pgsql") {
+	 	$sql .= "RETURNING xmpp_profile_id;";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+        	$result = $prepstatement->fetchAll();
+		$xmpp_profile_id = $result[0]['xmpp_profile_id'];
+	} elseif ($db_type == "sqlite" || $db_type == "mysql" ) {
+                $db->exec(check_sql($sql));
+		$xmpp_profile_id = $db->lastInsertId();
+	}
 
 	goto writeout;
 
