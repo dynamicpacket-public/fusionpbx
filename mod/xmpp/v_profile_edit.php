@@ -38,8 +38,6 @@ else {
         exit;
 }
 
-// print_r($_REQUEST);
-
 require_once "includes/header.php";
 
 $v_domain = $_SESSION['domains'][$v_id]['domain'];
@@ -95,7 +93,6 @@ foreach ($_REQUEST as $field => $data){
 	$request[$field] = check_str($data);
 }
 
-// print_r($request);
 // DataChecking Goes Here
 $error = "";
 if (strlen($request['profile_name']) < 1) $error .= "Profile name is a Required Field<br />\n";
@@ -111,9 +108,6 @@ if (strlen($error) > 0) {
 
 // Save New Entry
 if ($action == "add") {
-	
-	echo "ADD A RECORD<br />\n";
-
 	$sql = "";
 	$sql .= "insert into v_xmpp (";
  	$sql .= "v_id, ";
@@ -157,16 +151,12 @@ if ($action == "add") {
 
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-
         $result = $prepstatement->fetchAll();
-
 	$xmpp_profile_id = $result[0]['xmpp_profile_id'];
 
 	goto writeout;
 
 } elseif ($action == "update") {
-	
-	echo "UPDATE THE RECORDS<br />\n";
 	// Update the new Records
 	$sql = "";
 	$sql .= "UPDATE v_xmpp SET ";
@@ -191,10 +181,8 @@ if ($action == "add") {
 	$db->exec(check_sql($sql));
 		
 	$xmpp_profile_id = $request['id'];
-	echo "PROFILE_ID = " .  $request['id'] . "<br />\n";
 	
 	goto writeout;
-
 } 
 
 writeout:
@@ -203,23 +191,15 @@ $xml = make_xmpp_xml($request);
 
 $filename = $v_conf_dir . "/jingle_profiles/" . "v_" . $v_domain . "_" . preg_replace("/[^A-Za-z0-9]/", "", $request['profile_name']) . "_" . $xmpp_profile_id . ".xml";
 
-echo "filename: --$filename--<br>";
-
 $fh = fopen($filename,"w") or die("WTF");
 fwrite($fh, $xml);
 unset($file_name);
 fclose($fh);
 
+$_SESSION["reload_xml"] = true;
 
-/*
-if ($x > 0) {
-	$key = guid();
-	$client_ip = $_SERVER['REMOTE_ADDR'];
-	$sql = sprintf("INSERT INTO v_flashphone_auth (auth_key, hostaddr, createtime, profile_username) values ('%s', '%s', now(), '%s')",
-			$key, $client_ip, $_SESSION["profile_username"]);
-	$db->exec(check_sql($sql));
-}
-*/
+include "update_complete.php";
+
 
 end:
 //show the footer
