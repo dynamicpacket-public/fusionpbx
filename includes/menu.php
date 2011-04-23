@@ -120,7 +120,9 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 			}
 
 			$menulevel = 0;
-			$dbmenu .= builddbchildmenu($db, $menulevel, $menu_guid);
+			if (strlen($menu_guid) > 0) {
+				$dbmenu .= builddbchildmenu($db, $menulevel, $menu_guid);
+			}
 
 			if ($menulevel == "main") {
 				$dbmenu .= "</li>\n";
@@ -161,7 +163,7 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 		$sql = "select * from v_menu ";
 		$sql .= "where v_id = '$v_id' ";
 		$sql .= "and menu_parent_guid = '$menu_guid' ";
-		$sql .= "order by menuorder asc ";
+		$sql .= "order by menuorder, menutitle asc ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
 		$result2 = $prepstatement2->fetchAll();
@@ -196,7 +198,9 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 						$dbmenusub .= "<li>";
 
 						//get sub menu for children
-						$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+							if (strlen($menu_guid) > 0) {
+								$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+							}
 
 						if (strlen($strchildmenu) > 1) {
 							$dbmenusub .= "<a $menu_tags>$menu_title</a>";
@@ -214,7 +218,9 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 						$dbmenusub .= "<li>";
 
 						//get sub menu for children
-						$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+							if (strlen($menu_guid) > 0) {
+								$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+							}
 
 						if (strlen($strchildmenu) > 1) {
 							$dbmenusub .= "<a $menu_tags>$menu_title</a>";

@@ -25,17 +25,19 @@
 */
 include "root.php";
 require_once "includes/config.php";
-require_once "includes/checkauth.php";
 
-if (ifgroup("admin") || ifgroup("superadmin")) {
-	//access allowed
-}
-else {
-	echo "access denied";
-	return;
-}
+//check the permissions
+	require_once "includes/checkauth.php";
+	if (ifgroup("admin") || ifgroup("superadmin")) {
+		//access allowed
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
-require_once "includes/header.php";
+//show the header
+	require_once "includes/header.php";
 
 //if (ifpermission("add")) {
 	echo "<div class='' style='padding:0px;'>\n";
@@ -46,10 +48,8 @@ require_once "includes/header.php";
 	echo "<td width='50%'><b>Group List</b></td>";
 	echo "<td width='50%' align='right'>";
 	echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='User Manager'>";
-	//echo "  <input type='button' class='btn' name='' onclick=\"window.location='groupadd.php'\" value='Add Group'>\n";
 	echo "</td>\n";
 	echo "</tr></table>";
-
 
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where v_id = '$v_id' ";
@@ -92,22 +92,17 @@ require_once "includes/header.php";
 
 			//if (ifpermission("add")) {
 				$strlist .= "<td class='".$rowstyle[$c]."' align=\"center\" nowrap>\n";
+				$strlist .= "&nbsp;<a class='' href='v_group_permissions.php?group_id=$groupid' title='Group Members'>Permissions</a>&nbsp;&nbsp;";
 				$strlist .= "&nbsp;<a class='' href='groupmembers.php?groupid=$groupid' title='Group Members'>Members</a>&nbsp;";
 				$strlist .= "</td>\n";
-
-				//$strlist .= "<td align=\"center\" nowrap>\n";
-				//$strlist .= "&nbsp;<a class='' href='grouppermissions.php?groupid=$groupid' title='Group Permissions'>P</a>&nbsp;";
-				//$strlist .= "</td>\n";
 			//}
 
 			$strlist .= "<td align=\"right\" nowrap>\n";
-			//echo "		<a href='v_gateways_edit.php?id=".$id."' alt='edit'>$v_link_label_edit</a>\n";
 			$strlist .= "<a href='groupdelete.php?id=$id' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
 
 			$strlist .= "</td>\n";
 			$strlist .= "</tr>\n";
 		}
-
 		if ($c==0) { $c=1; } else { $c=0; }
 		$count++;
 	}
@@ -123,16 +118,14 @@ require_once "includes/header.php";
 		echo $strlist;
 	}
 
-
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
 	echo "<br>";
 	echo "</div>";
-
-
 //} //end if add permission
 
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 
 ?>

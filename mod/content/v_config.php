@@ -10,9 +10,9 @@
 		$apps[$x]['description']['en'] = 'Manage Content for any page in the interface.';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Content Manger';
+		$apps[$x]['menu'][0]['title']['en'] = 'Content Manager';
 		$apps[$x]['menu'][0]['guid'] = '90397352-395C-40F6-2087-887144ABC06D';
-		$apps[$x]['menu'][0]['parent_guid'] = '594D99C5-6128-9C88-CA35-4B33392CEC0F';
+		$apps[$x]['menu'][0]['parent_guid'] = '02194288-6D56-6D3E-0B1A-D53A2BC10788';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/mod/content/rsslist.php';
 		$apps[$x]['menu'][0]['groups'][] = 'user';

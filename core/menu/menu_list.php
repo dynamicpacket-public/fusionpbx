@@ -42,7 +42,7 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 		$sql = "select * from v_menu ";
 		$sql .= "where v_id = '".$v_id."' ";
 		$sql .= "and menu_parent_guid = '".$menu_guid."' ";
-		$sql .= "order by menuorder asc ";
+		$sql .= "order by menuorder, menutitle asc ";
 
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
@@ -269,11 +269,13 @@ $order = $_GET["order"];
 				$sql .= "menuorder = '".$tmp_menuorder."' ";
 				$sql .= "where v_id = '".$v_id."' ";
 				$sql .= "and menuid = '".$row[menuid]."' ";
-				$db->exec(check_sql($sql));
+				//$db->exec(check_sql($sql));
 			}
 			$tmp_menuorder++;
 			$menulevel = 0;
-			$c = builddbchildmenulist($db, $menulevel, $row[menu_guid], $c);
+			if (strlen($row['menu_guid']) > 0) {
+				$c = builddbchildmenulist($db, $menulevel, $row['menu_guid'], $c);
+			}
 
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach

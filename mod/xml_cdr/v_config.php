@@ -12,9 +12,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en'] = 'Apps';
 		$apps[$x]['menu'][0]['guid'] = 'FD29E39C-C936-F5FC-8E2B-611681B266B5';
-		$apps[$x]['menu'][0]['parent_guid'] = 'zzz';
+		$apps[$x]['menu'][0]['parent_guid'] = '';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/mod/xml_cdr/v_xml_cdr.php';
+		$apps[$x]['menu'][2]['order'] = '3';
 		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';

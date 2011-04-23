@@ -18,6 +18,21 @@
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
+		$apps[$x]['menu'][1]['title']['en'] = 'Registrations';
+		$apps[$x]['menu'][1]['guid'] = '17DBFD56-291D-8C1C-BC43-713283A9DD5A';
+		$apps[$x]['menu'][1]['parent_guid'] = '0438B504-8613-7887-C420-C837FFB20CB1';
+		$apps[$x]['menu'][1]['category'] = 'internal';
+		$apps[$x]['menu'][1]['path'] = '/core/status/v_status_registrations.php?show_reg=1&profile=internal';
+		$apps[$x]['menu'][1]['groups'][] = 'admin';
+		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['menu'][2]['title']['en'] = 'SIP Status';
+		$apps[$x]['menu'][2]['guid'] = 'B7AEA9F7-D3CF-711F-828E-46E56E2E5328';
+		$apps[$x]['menu'][2]['parent_guid'] = '0438B504-8613-7887-C420-C837FFB20CB1';
+		$apps[$x]['menu'][2]['category'] = 'internal';
+		$apps[$x]['menu'][2]['path'] = '/core/status/v_status.php';
+		$apps[$x]['menu'][2]['groups'][] = 'superadmin';
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'system_status_cpu';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
