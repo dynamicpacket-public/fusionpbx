@@ -39,29 +39,6 @@ require_once "includes/checkauth.php";
 		$rows = 0;
 	}
 
-/*
-//check session cache expire
-	if (strlen($_SESSION['session_start_time']) == 0) {
-		//$time_start = microtime(true);
-		$_SESSION['session_start_time'] = microtime(true);
-		//usleep(1000000);
-	}
-
-	$time_end = microtime(true);
-	$time = $time_end - $_SESSION['session_start_time'];
-	if ($time < 5.000) {
-		//echo "load time $time seconds\n";
-		//echo "use cache ";
-		echo $_SESSION['active_extension_content'];
-		return;
-	}
-	else {
-		//echo "load time $time seconds\n";
-		//echo "expired the cache so reset the cache start time ";
-		//$_SESSION['session_start_time'] = microtime(true);
-	}
-*/
-
 //define variables
 	$c = 0;
 	$rowstyle["0"] = "rowstyle1";
@@ -148,30 +125,31 @@ require_once "includes/checkauth.php";
 			}
 
 		//get information over event socket
-			$switch_cmd = 'show channels as xml';
-			$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-
-		//parse the xml
-			try {
-				$xml = new SimpleXMLElement($xml_str);
-			}
-			catch(Exception $e) {
-				//echo $e->getMessage();
-			}
+			$switch_cmd = 'show channels';
+		//send the event socket command 
+			$csv = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		//prepare the string
+			$channels_array = explode("\n\n",$csv);
+		//get the named array
+			$channels_array = csv_to_named_array($channels_array[0], ",");
 
 		//active channels array
-			$channel_array = "";
-			foreach ($xml as $row) {
-				$name = $row->name;
-				$name_array = explode("/", $name);
-				//$sip_profile = $name_array[1];
-				$sip_uri = $name_array[2];
-				$temp_array = explode("@", $sip_uri);
-				$number = $temp_array[0];
-				$number = str_replace("sip:", "", $number);
-				$row->addChild('number', $number);
-				//$row->addChild('sip_profile', $sip_profile);
-				//$row->addAttribute('number', $number);
+			$x = 0;
+			foreach ($channels_array as $row) {
+				//set the php variables
+					foreach ($row as $key => $value) {
+						$$key = $value;
+					}
+				//parse some of the php variables
+					$name_array = explode("/", $name);
+					//$sip_profile = $name_array[1];
+					$sip_uri = $name_array[2];
+					$temp_array = explode("@", $sip_uri);
+					$number = $temp_array[0];
+					$number = str_replace("sip:", "", $number);
+					$channels_array[$x]['number'] = $number;
+					//$channels_array[$x]['sip_profile'] = $sip_profile;
+				$x++;
 			}
 
 		//active extensions
@@ -257,16 +235,6 @@ require_once "includes/checkauth.php";
 					echo "<td valign='top'>\n";
 
 					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-					//echo "<tr>\n";
-					//echo "<td >\n";
-					//echo "	<strong>Count: $row_count</strong>\n";
-					//echo "</td>\n";
-					//echo "<td colspan='2'>\n";
-					//echo "	&nbsp;\n";
-					//echo "</td>\n";
-					//echo "<td colspan='1' align='right'>\n";
-					//echo "</tr>\n";
-
 					echo "<tr>\n";
 					echo "<th width='50px;'>Ext</th>\n";
 					if ($_SESSION['user_status_display'] == "false") {
@@ -302,30 +270,13 @@ require_once "includes/checkauth.php";
 						$effective_caller_id_name = $row['effective_caller_id_name'];
 
 						$found_extension = false;
-						foreach ($xml as $tmp_row) {
-							$uuid = (string) $tmp_row->uuid;
-							//$direction = $tmp_row->direction;
-							//$sip_profile = $tmp_row->sip_profile;
-							$created = (string) $tmp_row->created;
-							$created_epoch = (string) $tmp_row->created_epoch;
-							$name = (string) $tmp_row->name;
-							$state = (string) $tmp_row->state;
-							$cid_name = (string) $tmp_row->cid_name;
-							$cid_num = (string) $tmp_row->cid_num;
-							$ip_addr = (string) $tmp_row->ip_addr;
-							$dest = (string) $tmp_row->dest;
-							$application = (string) $tmp_row->application;
-							$application_data = (string) $tmp_row->application_data;
-							$dialplan = (string) $tmp_row->dialplan;
-							$context = (string) $tmp_row->context;
-							$read_codec = (string) $tmp_row->read_codec;
-							$read_rate = (string) $tmp_row->read_rate;
-							$write_codec = (string) $tmp_row->write_codec;
-							$write_rate = (string) $tmp_row->write_rate;
-							$secure = (string) $tmp_row->secure;
-
+						foreach ($channels_array as $row) {
+							//set the php variables
+								foreach ($row as $key => $value) {
+									$$key = $value;
+								}
 							//remove the '+' because it breaks the call recording
-							$cid_num = str_replace("+", "", $cid_num);
+								$cid_num = str_replace("+", "", $cid_num);
 
 							$call_length_seconds = time() - $created_epoch;
 							$call_length_hour = floor($call_length_seconds/3600);
@@ -336,12 +287,13 @@ require_once "includes/checkauth.php";
 							$call_length = $call_length_hour.':'.$call_length_min.':'.$call_length_sec;
 
 							//valet park
-							$valet_array[$uuid]['context'] = $context;
-							$valet_array[$uuid]['cid_name'] = $cid_name;
-							$valet_array[$uuid]['cid_num'] = $cid_num;
-							$valet_array[$uuid]['call_length'] = $call_length;
+								$valet_array[$uuid]['context'] = $context;
+								$valet_array[$uuid]['cid_name'] = $cid_name;
+								$valet_array[$uuid]['cid_num'] = $cid_num;
+								$valet_array[$uuid]['call_length'] = $call_length;
 
-							if ($tmp_row->number == $extension) {
+							//if ($tmp_row->number == $extension) {
+							if ($number == $extension) {
 								$found_extension = true;
 								break;
 							}

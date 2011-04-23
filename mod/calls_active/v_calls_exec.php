@@ -44,6 +44,13 @@ require_once "includes/checkauth.php";
 		$action = trim($_GET["action"]);
 		$data = trim($_GET["data"]);
 		$direction = trim($_GET["direction"]);
+		if (ifgroup("admin") || ifgroup("superadmin") || ifgroup("agent_admin")) {
+			$username = trim($_GET["username"]);
+		}
+		else {
+			$username = $_SESSION['username'];
+		}
+		
 	}
 
 //authorized commands
@@ -77,31 +84,31 @@ if (count($_GET)>0) {
 		case "Available":
 			$user_status = "Available";
 			//update the user state
-			$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$v_domain." Waiting";
 			$response = event_socket_request($fp, $cmd);
 			break;
 		case "Available_On_Demand":
 			$user_status = "Available (On Demand)";
 			//update the user state
-			$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$v_domain." Waiting";
 			$response = event_socket_request($fp, $cmd);
 			break;
 		case "Logged_Out":
 			$user_status = "Logged Out";
 			//update the user state
-			$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$v_domain." Waiting";
 			$response = event_socket_request($fp, $cmd);
 			break;
 		case "On_Break":
 			$user_status = "On Break";
 			//update the user state
-			$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$v_domain." Waiting";
 			$response = event_socket_request($fp, $cmd);
 			break;
 		case "Do_Not_Disturb":
 			$user_status = "Do Not Disturb";
 			//update the user state
-			$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
+			$cmd = "api callcenter_config agent set state ".$username."@".$v_domain." Waiting";
 			$response = event_socket_request($fp, $cmd);
 			break;
 		default:
@@ -112,7 +119,7 @@ if (count($_GET)>0) {
 			$sql  = "update v_users set ";
 			$sql .= "user_status = '$user_status' ";
 			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and username = '".$_SESSION['username']."' ";
+			$sql .= "and username = '".$username."' ";
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 

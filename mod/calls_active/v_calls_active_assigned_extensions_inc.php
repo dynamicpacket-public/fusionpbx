@@ -78,7 +78,6 @@ require_once "includes/checkauth.php";
 		echo "<th>Options</th>\n";
 		echo "</tr>\n";
 		foreach ($_SESSION['extension_array'] as $row) {
-
 			$v_id = $row['v_id'];
 			$extension = $row['extension'];
 			$enabled = $row['enabled'];
@@ -86,44 +85,28 @@ require_once "includes/checkauth.php";
 
 			foreach ($_SESSION['user_extension_array'] as &$user_row) {
 				if ($extension == $user_row['extension']) {
-
 					$found_extension = false;
 					$x = 1;
-					foreach ($xml as $tmp_row) {
-						if ($tmp_row->number == $extension) {
-							$found_extension = true;
-							$uuid = $tmp_row->uuid;
-							//$direction = $tmp_row->direction;
-							//$sip_profile = $tmp_row->sip_profile;
-							$created = $tmp_row->created;
-							$created_epoch = $tmp_row->created_epoch;
-							$name = $tmp_row->name;
-							$state = $tmp_row->state;
-							$cid_name = $tmp_row->cid_name;
-							$cid_num = $tmp_row->cid_num;
-							$ip_addr = $tmp_row->ip_addr;
-							$dest = $tmp_row->dest;
-							$application = $tmp_row->application;
-							$application_data = $tmp_row->application_data;
-							$dialplan = $tmp_row->dialplan;
-							$context = $tmp_row->context;
-							$read_codec = $tmp_row->read_codec;
-							$read_rate = $tmp_row->read_rate;
-							$write_codec = $tmp_row->write_codec;
-							$write_rate = $tmp_row->write_rate;
-							$secure = $tmp_row->secure;
-
-							//remove the '+' because it breaks the call recording
-							$cid_num = str_replace("+", "", $cid_num);
-
-							$call_length_seconds = time() - $created_epoch;
-							$call_length_hour = floor($call_length_seconds/3600);
-							$call_length_min = floor($call_length_seconds/60 - ($call_length_hour * 60));
-							$call_length_sec = $call_length_seconds - (($call_length_hour * 3600) + ($call_length_min * 60));
-							$call_length_min = sprintf("%02d", $call_length_min);
-							$call_length_sec = sprintf("%02d", $call_length_sec);
-							$call_length = $call_length_hour.':'.$call_length_min.':'.$call_length_sec;
-						}
+					foreach ($channels_array as $row) {
+						//set the php variables
+							foreach ($row as $key => $value) {
+								$$key = $value;
+							}
+						//find the matching extensions
+							if ($number == $extension) {
+								//set the found extension to true
+									$found_extension = true;
+								//remove the '+' because it breaks the call recording
+									$cid_num = str_replace("+", "", $cid_num);
+								//prepare the call length values
+									$call_length_seconds = time() - $created_epoch;
+									$call_length_hour = floor($call_length_seconds/3600);
+									$call_length_min = floor($call_length_seconds/60 - ($call_length_hour * 60));
+									$call_length_sec = $call_length_seconds - (($call_length_hour * 3600) + ($call_length_min * 60));
+									$call_length_min = sprintf("%02d", $call_length_min);
+									$call_length_sec = sprintf("%02d", $call_length_sec);
+									$call_length = $call_length_hour.':'.$call_length_min.':'.$call_length_sec;
+							}
 					} //end foreach
 
 					if ($found_extension) {

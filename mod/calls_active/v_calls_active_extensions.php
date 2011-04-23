@@ -206,10 +206,10 @@ var destination;
 
 echo "<div align='center'>";
 
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>Active Extensions</b><br>\n";
-echo "		Use this to view all extensions and monitor and interact with active calls.\n";
+echo "	<td align='left' colspan='2' nowrap='nowrap'>\n";
+echo "		<b>Active Extensions</b><br>\n";
 echo "	</td>\n";
 
 //get the user status when the page loads
@@ -229,11 +229,50 @@ if ($_SESSION['user_status_display'] == "false") {
 	//hide the user_status when it is set to false
 }
 else {
-	echo "		<td class='' valign='bottom' align='right' nowrap='nowrap'>\n";
+
+	echo "		<td class='' width='40%'>\n";
+	echo "			&nbsp;";
+	echo "		</td>\n";
+	echo "		<td class='' valign='bottom' align='right' style='width:200px' nowrap='nowrap'>\n";
+
+	//user account list
+		if (ifgroup("admin") || ifgroup("superadmin")) {
+			echo "		&nbsp;";
+			echo "		<strong>Username</strong>&nbsp;";
+			$sql = "SELECT * FROM v_users ";
+			$sql .= "where v_id = '$v_id' ";
+			$sql .= "order by username ";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			echo "<select name=\"username\" id=\"username\" class='formfld' style='width:125px'>\n";
+			echo "<option value=\"\"></option>\n";
+			$result = $prepstatement->fetchAll();
+			foreach($result as $field) {
+				if ($field['username'] == $_SESSION['username']) {
+					echo "<option value='".$field['username']."' selected='selected'>".$field['username']."</option>\n";
+				}
+				else {
+					echo "<option value='".$field['username']."'>".$field['username']."</option>\n";
+				}
+			}
+			echo "</select>";
+			unset($sql, $result);
+
+			echo "		</td>\n";
+			echo "		<td class='' valign='bottom' align='left' style='width:200px' nowrap='nowrap'>\n";
+		}
+
+	//status list
+	echo "			&nbsp;";
 	echo "			<strong>Status</strong>&nbsp;\n";
 	$cmd = "'v_calls_exec.php?action=user_status&data='+this.value+'";
-	$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$v_domain."+'+this.value";
-	echo "			<select id='agent_status' name='agent_status' class='formfld' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
+	if (ifgroup("admin") || ifgroup("superadmin") || ifgroup("agent_admin")) {
+		$cmd .= "&cmd=callcenter_config+agent+set+status+'+document.getElementById('username').value+'@".$v_domain."+'+this.value+'&username='+document.getElementById('username').value";
+	}
+	else {
+		$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$v_domain."+'+this.value";
+	}
+	echo "			<select id='agent_status' name='agent_status' class='formfld' style='width:125px' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
 	echo "				<option value='                '></option>\n";
 	if ($user_status == "Available") {
 		echo "		<option value='Available' selected='selected'>Available</option>\n";
@@ -269,20 +308,22 @@ else {
 	echo "		</td>\n";
 }
 
-echo "	<td align='right'>\n";
-echo "		<table>\n";
-echo "		<td align='left' valign='middle' nowrap='nowrap'>\n";
-echo "			<div id=\"form_label\"><strong>Transfer To</strong></div>\n";
-echo "			<div id=\"url\"></div>\n";
-echo "		</td>\n";
-echo "		<td align='left' valign='middle'>\n";
+echo "	<td align='right' nowrap='nowrap'>\n";
+echo "			&nbsp;";
+echo "			<strong>Transfer To</strong>\n";
 echo "			<input type=\"text\" id=\"form_value\" name=\"form_value\" class='formfld' style='width:125px'/>\n";
-echo "		</td>\n";
-echo "		</tr>\n";
-echo "		</table>\n";
 echo "	</td>\n";
 echo "	</tr>\n";
+echo "	<tr>\n";
+echo "		<td align='left' colspan='99'>\n";
+echo "			Use this to view all extensions and monitor and interact with active calls.\n";
+echo "		</td>\n";
+echo "	</tr>\n";
 echo "</table>\n";
+
+echo "<div id=\"url\"></div>\n";
+
+echo "<br />\n";
 
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 echo "	<tr class='border'>\n";
