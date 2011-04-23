@@ -21,6 +21,7 @@
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
+	Ken Rice <krice@tollfreegateway.com>
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 echo "<div align='center'>\n";

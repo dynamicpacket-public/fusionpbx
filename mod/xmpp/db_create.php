@@ -21,6 +21,7 @@
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
+	Ken Rice <krice@tollfreegateway.com>
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 function sql_tables() {
