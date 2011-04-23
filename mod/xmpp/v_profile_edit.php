@@ -205,7 +205,7 @@ $filename = $v_conf_dir . "/jingle_profiles/" . "v_" . $v_domain . "_" . preg_re
 
 echo "filename: --$filename--<br>";
 
-$fh = fopen($file_name,"w") or die("WTF");
+$fh = fopen($filename,"w") or die("WTF");
 fwrite($fh, $xml);
 unset($file_name);
 fclose($fh);
