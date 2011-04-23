@@ -37,8 +37,8 @@
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'xmpp_profile_id';
 		$apps[$x]['db'][0]['fields'][0]['type'] = 'serial'; // Adjust this for generic
 		$apps[$x]['db'][0]['fields'][0]['description'] = 'primary key';
-		$apps[$x]['db'][0]['fields'][1]['name'] = 'xmpp_profile_id';
-		$apps[$x]['db'][0]['fields'][1]['type'] = 'serial'; // Adjust this for generic
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric'; // Adjust this for generic
 		$apps[$x]['db'][0]['fields'][1]['description'] = 'primary key';
 		$apps[$x]['db'][0]['fields'][2]['name'] = 'profile_name';
 		$apps[$x]['db'][0]['fields'][2]['type'] = 'text'; 

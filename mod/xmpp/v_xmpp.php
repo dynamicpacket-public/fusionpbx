@@ -32,6 +32,27 @@ require_once "includes/checkauth.php";
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+if ($_SESSION['db_tables']['v_xmpp'] != 'valid') {
+	if ($db_type == "pgsql") {
+		$sql = "select count(*) from pg_tables where schemaname='public' and tablename = 'v_xmpp'";
+	} elseif ($db_type == "mysql") {
+		$sql = "select count(*) from information_schema.tables where TABLE_SCHEMA='" . $db_name . "' and TABLE_NAME='roomlist';";
+	} elseif ($db_type == "sqlite") {
+		$sql = "select count(*) from sqlite_master WHERE type IN ('table','view') AND name = 'registrations';";
+	}
+
+	$row = $db->query($sql)->fetch();
+	
+	if ($row['count'] < 1) {
+		include "db_create.php";
+
+		echo sql_tables();		
+
+		$create = $db->query(sql_tables())->fetch();
+		$_SESSION['db_tables']['v_xmpp'] = 'valid';
+	}
+}
+
 //get a list of assigned extensions for this user
 $sql = "";
 $sql .= "select * from v_xmpp ";
