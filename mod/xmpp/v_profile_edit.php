@@ -111,6 +111,8 @@ if (strlen($error) > 0) {
 
 // Save New Entry
 if ($action == "add") {
+	
+	echo "ADD A RECORD<br />\n";
 
 	$sql = "";
 	$sql .= "insert into v_xmpp (";
@@ -160,11 +162,11 @@ if ($action == "add") {
 
 	$xmpp_profile_id = $result[0]['xmpp_profile_id'];
 
-	goto writefile;
+	goto writeout;
 
 } elseif ($action == "update") {
 	
-	echo "UPDATE THE RECORDS";
+	echo "UPDATE THE RECORDS<br />\n";
 	// Update the new Records
 	$sql = "";
 	$sql .= "UPDATE v_xmpp SET ";
@@ -185,10 +187,11 @@ if ($action == "add") {
 	$sql .= "avatar = '" . $request['avatar'] . "', ";
 	$sql .= "candidate_acl = '" . $request['candidate_acl'] . "', ";
 	$sql .= "local_network_acl = '" . $request['local_network_acl'] . "' ";
-	$sql .= "where xmpp_profile_id = " . $request['profile_id'];
+	$sql .= "where xmpp_profile_id = " . $request['id'];
 	$db->exec(check_sql($sql));
 		
-	$xmpp_profile_id = $request['profile_id'];
+	$xmpp_profile_id = $request['id'];
+	echo "PROFILE_ID = " .  $request['id'] . "<br />\n";
 	
 	goto writeout;
 
@@ -198,9 +201,14 @@ writeout:
 include "client_template.php";
 $xml = make_xmpp_xml($request);
 
-$filename = "v_" . $v_domain . "_" . preg_replace("/[^A-Za-z0-9]/", "", $string_to_be_stripped ) . "_" . $xmpp_profile_id . ".xml";
+$filename = $v_conf_dir . "/jingle_profiles/" . "v_" . $v_domain . "_" . preg_replace("/[^A-Za-z0-9]/", "", $request['profile_name']) . "_" . $xmpp_profile_id . ".xml";
 
+echo "filename: --$filename--<br>";
 
+$fh = fopen($file_name,"w") or die("WTF");
+fwrite($fh, $xml);
+unset($file_name);
+fclose($fh);
 
 
 /*
