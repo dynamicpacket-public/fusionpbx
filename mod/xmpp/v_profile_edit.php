@@ -196,7 +196,22 @@ fwrite($fh, $xml);
 unset($file_name);
 fclose($fh);
 
-$_SESSION["reload_xml"] = true;
+$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+if ($fp) {
+	//reload the XML Configs
+	$tmp_cmd = 'api reloadxml';
+	$response = event_socket_request($fp, $tmp_cmd);
+	unset($tmp_cmd);
+
+	//Tell mod_dingaling to reload is config
+	$tmp_cmd = 'api dingaling reload';
+	$response = event_socket_request($fp, $tmp_cmd);
+	unset($tmp_cmd);
+
+	//close the connection
+	fclose($fp);
+}
+
 
 include "update_complete.php";
 
