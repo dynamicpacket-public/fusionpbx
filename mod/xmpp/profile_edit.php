@@ -64,9 +64,9 @@ Enter the profile name here.
     Username:
 </td> 
 <td class='vtable' align='left'> 
-    <input class='formfld' type='text' name='username' maxlength='255' value="<?php echo $profile['username'];?>"> 
+    <input class='formfld' type='text' name='profile_username' maxlength='255' value="<?php echo $profile['profile_username'];?>"> 
 <br /> 
-Enter the username here.
+Enter the XMPP username here.
 </td> 
 </tr> 
 <tr> 
@@ -74,9 +74,9 @@ Enter the username here.
     Password:
 </td> 
 <td class='vtable' align='left'> 
-    <input class='formfld' type='password' name='password' id='password' maxlength='50' onfocus="document.getElementById('show_password').innerHTML = 'Password: '+document.getElementById('password').value;" value="<?php echo $profile['password'];?>"> 
+    <input class='formfld' type='profile_password' name='profile_password' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = 'Password: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>"> 
 <br /> 
-<span onclick="document.getElementById('show_password').innerHTML = ''">Enter the password here. </span><span id='show_password'></span> 
+<span onclick="document.getElementById('show_profile_password').innerHTML = ''">Enter the password here. </span><span id='show_profile_password'></span> 
 </td> 
 </tr> 
 <tr> 

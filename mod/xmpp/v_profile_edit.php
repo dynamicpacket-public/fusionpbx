@@ -73,11 +73,11 @@ if ($action == "update") {
 	unset ($prepstatement);
 }
 
-if($_REQUEST['submit'] != 'Save') {
+if ((!isset($_REQUEST['submit'])) || ($_REQUEST['submit'] != 'Save')) {
 	// If we arent saving a Profile Display the form.
 	include "profile_edit.php";	
 	goto end;
-}
+} else { echo "<pre>"; print_r($_REQUEST); echo "</pre>"; }
 
 foreach ($_REQUEST as $field => $data){
 	$request[$field] = check_str($data);
@@ -89,17 +89,19 @@ foreach ($_REQUEST as $field => $data){
 
 
 // Save New Entry
-if ($action == "add"){
+if ($action == "add") {
 
 	$sql = "";
 	$sql .= "insert into v_xmpp (";
  	$sql .= "v_id, ";
  	$sql .= "profile_name, ";
- 	$sql .= "username, ";
- 	$sql .= "password, ";
+ 	$sql .= "profile_username, ";
+ 	$sql .= "profile_password, ";
  	$sql .= "dialplan, ";
  	$sql .= "context, ";
  	$sql .= "rtp_ip, ";
+ 	$sql .= "ext_rtp_ip, ";
+ 	$sql .= "auto_login, ";
  	$sql .= "sasl_type, ";
  	$sql .= "xmpp_server, ";
  	$sql .= "tls_enable, ";
@@ -107,13 +109,13 @@ if ($action == "add"){
  	$sql .= "default_exten, ";
  	$sql .= "vad, ";
  	$sql .= "avatar, ";
- 	$sql .= "candidate_acl";
+ 	$sql .= "candidate_acl, ";
  	$sql .= "local_network_acl";
 	$sql .= ") values (";
  	$sql .= "$v_id, ";
  	$sql .= "'" . $request['profile_name'] . "', ";
- 	$sql .= "'" . $request['username'] . "', ";
- 	$sql .= "'" . $request['password'] . "', ";
+ 	$sql .= "'" . $request['profile_username'] . "', ";
+ 	$sql .= "'" . $request['profile_password'] . "', ";
  	$sql .= "'" . $request['dialplan'] . "', ";
  	$sql .= "'" . $request['context'] . "', ";
  	$sql .= "'" . $request['rtp_ip'] . "', ";
@@ -135,15 +137,44 @@ if ($action == "add"){
 	include "update_complete.php";
 	goto end;
 
-} else { echo "wtf"; }
+} elseif  ($action == "update") {
+	
+	echo "UPDATE THE RECORDS";
+	// Update the new Records
+	$sql = "";
+	$sql .= "UPDATE v_xmpp SET ";
+	$sql .= "profile_name = '" . $request['profile_name'] . "', ";
+	$sql .= "username = '" . $request['username'] . "', ";
+	$sql .= "password = '" . $request['password'] . "', ";
+	$sql .= "dialplan = '" . $request['dialplan'] . "', ";
+	$sql .= "context = '" . $request['context'] . "', ";
+	$sql .= "rtp_ip = '" . $request['rtp_ip'] . "', ";
+	$sql .= "ext_rtp_ip = '" . $request['ext_rtp_ip'] . "', ";
+	$sql .= "auto_login = '" . $request['auto_login'] . "', ";
+	$sql .= "sasl_type = '" . $request['sasl_type'] . "', ";
+	$sql .= "xmpp_server = '" . $request['xmpp_server'] . "', ";
+	$sql .= "tls_enable = '" . $request['tls_enable'] . "', ";
+	$sql .= "usr_rtp_timer = '" . $request['usr_rtp_timer'] . "', ";
+	$sql .= "default_exten = '" . $request['default_exten'] . "', ";
+	$sql .= "vad = '" . $request['vad'] . "', ";
+	$sql .= "avatar = '" . $request['avatar'] . "', ";
+	$sql .= "candidate_acl = '" . $request['candidate_acl'] . "', ";
+	$sql .= "local_network_acl = '" . $request['local_network_acl'] . "' ";
+	$sql .= "where xmpp_profile_id = " . $request['profile_id'];
+	$db->exec(check_sql($sql));
+	
+	include "update_complete.php";
+	goto end;
+
+} else { echo "add/update Failure"; }
 
 
 /*
 if ($x > 0) {
 	$key = guid();
 	$client_ip = $_SERVER['REMOTE_ADDR'];
-	$sql = sprintf("INSERT INTO v_flashphone_auth (auth_key, hostaddr, createtime, username) values ('%s', '%s', now(), '%s')",
-			$key, $client_ip, $_SESSION["username"]);
+	$sql = sprintf("INSERT INTO v_flashphone_auth (auth_key, hostaddr, createtime, profile_username) values ('%s', '%s', now(), '%s')",
+			$key, $client_ip, $_SESSION["profile_username"]);
 	$db->exec(check_sql($sql));
 }
 */
