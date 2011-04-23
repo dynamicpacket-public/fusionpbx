@@ -81,28 +81,39 @@ Enter the XMPP username here.
 </tr> 
 <tr> 
 <td class='vncellreq' valign='top' align='left' nowrap> 
-    RTP IP:
-</td> 
-<td class='vtable' align='left'> 
-    <input class='formfld' type='text' name='rtp_ip' maxlength='255' value="<?php echo $profile['rtp_ip'];?>">
-<br /> 
-Enter the domain or IP address of the proxy.
-</td> 
-</tr> 
-<tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
     Auto-Login:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='auto_login'> 
-    <option value='true' SELECTED>true</option> 
-    <option value='false'>false</option> 
+    <option value='true' <?php if($profile['auto_login'] == "true") echo "SELECTED"; ?>>true</option> 
+    <option value='false' <?php if($profile['auto_login'] == "false") echo "SELECTED"; ?>>false</option> 
     </select> 
 <br /> 
 Choose whether to automattically login. 
 </td> 
 </tr> 
 <tr> 
+<td width='30%' class='vncell' valign='top' align='left' nowrap> 
+    XMPP Server:
+</td> 
+<td width='70%' class='vtable' align='left'> 
+    <input class='formfld' type='text' name='xmpp_server' maxlength='255' value="<?php echo $profile['xmpp_server'];?>"> 
+<br /> 
+Enter alternate XMPP server if the server is not the same as the one in the Username<br />
+Example GoogleTalk is: xmpp-server1.l.google.com
+</td> 
+</tr> 
+<tr> 
+<tr> 
+<td class='vncellreq' valign='top' align='left' nowrap> 
+    Default Extension:
+</td> 
+<td class='vtable' align='left'> 
+    <input class='formfld' type='text' name='default_exten' maxlength='255' value="<?php echo $profile['default_exten'];?>"> 
+<br /> 
+default extension (if one cannot be determined)
+</td> 
+</tr> 
 <td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap> 
 	<div id="showadvancedbox"> 
 		<table width="100%" border="0" cellpadding="6" cellspacing="0"> 
@@ -118,35 +129,35 @@ Choose whether to automattically login.
 	<table width="100%" border="0" cellpadding="6" cellspacing="0"> 
 <tr> 
 <td class='vncellreq' valign='top' align='left' nowrap> 
+    Context:
+</td> 
+<td class='vtable' align='left'> 
+    <input class='formfld' type='text' name='context' maxlength='255' value="<?php echo $profile['context'];?>"> 
+<br /> 
+Enter the context here. **Do Not Edit This Unless you REALLY mean it
+</td> 
+</tr> 
+<tr> 
+<td class='vncellreq' valign='top' align='left' nowrap> 
+    RTP IP:
+</td> 
+<td class='vtable' align='left'> 
+    <input class='formfld' type='text' name='rtp_ip' maxlength='255' value="<?php echo $profile['rtp_ip'];?>">
+<br /> 
+IP Address for RTP
+</td> 
+</tr> 
+<tr> 
+<td class='vncellreq' valign='top' align='left' nowrap> 
     SASL Type:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='sasl_type'> 
-    <option value='plain' SELECTED>plain</option> 
-    <option value='md5'>md5</option> 
+    <option value='plain' <?php if($profile['sasl_type'] == "plain") echo "SELECTED"; ?>>plain</option> 
+    <option value='md5' <?php if($profile['sasl_type'] == "plain") echo "SELECTED"; ?>>md5</option> 
     </select> 
 <br /> 
 Choose SASL Type. Plain or MD5
-</td> 
-</tr> 
-<tr> 
-<td width='30%' class='vncell' valign='top' align='left' nowrap> 
-    XMPP Server:
-</td> 
-<td width='70%' class='vtable' align='left'> 
-    <input class='formfld' type='text' name='xmpp_server' maxlength='255' value="<?php echo $profile['xmpp_server'];?>"> 
-<br /> 
-Enter alternate XMPP server if the server where the jabber is hosted is not the same as the one in the Username eg: Google
-</td> 
-</tr> 
-<tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
-    Default Extension:
-</td> 
-<td class='vtable' align='left'> 
-    <input class='formfld' type='text' name='default_exten' maxlength='255' value="<?php echo $profile['default_exten'];?>"> 
-<br /> 
-default extension (if one cannot be determined)
 </td> 
 </tr> 
 <tr> 
@@ -155,8 +166,8 @@ default extension (if one cannot be determined)
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='tls_enable'> 
-    <option value='true' SELECTED>true</option> 
-    <option value='false'>false</option> 
+    <option value='true' <?php if($profile['tls_enable'] == "true") echo "SELECTED"; ?>>true</option> 
+    <option value='false' <?php if($profile['tls_enable'] == "false") echo "SELECTED"; ?>>false</option> 
     </select> 
 <br /> 
 Enable TLS or not
@@ -168,8 +179,8 @@ Enable TLS or not
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='use_rtp_timer'> 
-    <option value='true' SELECTED>true</option> 
-    <option value='false'>false</option> 
+    <option value='true' <?php if($profile['tls_enable'] == "true") echo "SELECTED"; ?>>true</option> 
+    <option value='false' <?php if($profile['tls_enable'] == "false") echo "SELECTED"; ?>>false</option> 
     </select> 
 <br /> 
 disable to trade async for more calls
@@ -181,10 +192,10 @@ disable to trade async for more calls
 </td> 
 <td class='vtable' align='left'> 
 	<select class='formfld' name='vad'> 
-	<option value='none' SELECTED>none</option> 
-	<option value='in'>in</option> 
-	<option value='out'>out</option> 
-	<option value='both'>both</option> 
+	<option value='none' <?php if($profile['vad'] == "none") echo "SELECTED"; ?>>none</option> 
+	<option value='in' <?php if($profile['vad'] == "in") echo "SELECTED"; ?>>in</option> 
+	<option value='out' <?php if($profile['vad'] == "out") echo "SELECTED"; ?>>out</option> 
+	<option value='both' <?php if($profile['vad'] == "both") echo "SELECTED"; ?>>both</option> 
 </select> 
 <br /> 
 Which direction are we doing VAD?
@@ -215,22 +226,12 @@ local network ACL
 </tr> 
 <tr> 
 <td class='vncellreq' valign='top' align='left' nowrap> 
-    Context:
-</td> 
-<td class='vtable' align='left'> 
-    <input class='formfld' type='text' name='context' maxlength='255' value="public"> 
-<br /> 
-Enter the context here.
-</td> 
-</tr> 
-<tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
     Enabled:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='enabled'> 
-    <option value='true' SELECTED >true</option> 
-    <option value='false'>false</option> 
+    <option value='true' <?php if($profile['enabled'] == "true") echo "SELECTED"; ?>>true</option> 
+    <option value='false' <?php if($profile['enabled'] == "false") echo "SELECTED"; ?>>false</option> 
     </select> 
 <br /> 
  

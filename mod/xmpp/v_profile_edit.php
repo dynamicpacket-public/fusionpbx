@@ -42,6 +42,8 @@ else {
 
 require_once "includes/header.php";
 
+$v_domain = $_SESSION['domains'][$v_id]['domain'];
+
 //add or update the database
 if (isset($_REQUEST["id"])) {
 	$action = "update";
@@ -71,13 +73,23 @@ if ($action == "update") {
 
 	$profile = $profiles_array[0];
 	unset ($prepstatement);
+} else { 
+ 	$profile['dialplan'] = "XML";
+	$profile['context'] = $v_domain;
+	$profile['rtp_ip'] = '$${local_ip_v4}';
+ 	$profile['auto_login'] = "true";
+ 	$profile['sasl_type'] = "plain";
+ 	$profile['tls_enable'] = "true";
+ 	$profile['usr_rtp_timer'] = "true";
+ 	$profile['vad'] = "none";
+ 	$profile['local_network_acl'] = "localnet.auto";
 }
 
 if ((!isset($_REQUEST['submit'])) || ($_REQUEST['submit'] != 'Save')) {
 	// If we arent saving a Profile Display the form.
 	include "profile_edit.php";	
 	goto end;
-} else { echo "<pre>"; print_r($_REQUEST); echo "</pre>"; }
+}
 
 foreach ($_REQUEST as $field => $data){
 	$request[$field] = check_str($data);
@@ -85,8 +97,17 @@ foreach ($_REQUEST as $field => $data){
 
 // print_r($request);
 // DataChecking Goes Here
-
-
+$error = "";
+if (strlen($request['profile_name']) < 1) $error .= "Profile name is a Required Field<br />\n";
+if (strlen($request['profile_username']) < 1) $error .= "Username is a Required Field<br />\n";
+if (strlen($request['profile_password']) < 1) $error .= "Password is a Required Field<br />\n";
+if (strlen($request['default_exten']) < 1) $error .= "Default Extension is a Required Field<br />\n";
+if (strlen($error) > 0) { 
+	include "errors.php";
+	$profile = $request;
+	include "profile_edit.php";	
+	goto end;
+}
 
 // Save New Entry
 if ($action == "add") {
@@ -95,8 +116,8 @@ if ($action == "add") {
 	$sql .= "insert into v_xmpp (";
  	$sql .= "v_id, ";
  	$sql .= "profile_name, ";
- 	$sql .= "profile_username, ";
- 	$sql .= "profile_password, ";
+ 	$sql .= "username, ";
+ 	$sql .= "password, ";
  	$sql .= "dialplan, ";
  	$sql .= "context, ";
  	$sql .= "rtp_ip, ";
@@ -130,22 +151,26 @@ if ($action == "add") {
  	$sql .= "'" . $request['avatar'] . "', ";
  	$sql .= "'" . $request['candidate_acl'] . "', ";
  	$sql .= "'" . $request['local_network_acl'] . "'";
-	$sql .= ");";
+	$sql .= ") RETURNING xmpp_profile_id;";
 
-	$db->exec(check_sql($sql));
+	$prepstatement = $db->prepare(check_sql($sql));
+	$prepstatement->execute();
 
-	include "update_complete.php";
-	goto end;
+        $result = $prepstatement->fetchAll();
 
-} elseif  ($action == "update") {
+	$xmpp_profile_id = $result[0]['xmpp_profile_id'];
+
+	goto writefile;
+
+} elseif ($action == "update") {
 	
 	echo "UPDATE THE RECORDS";
 	// Update the new Records
 	$sql = "";
 	$sql .= "UPDATE v_xmpp SET ";
 	$sql .= "profile_name = '" . $request['profile_name'] . "', ";
-	$sql .= "username = '" . $request['username'] . "', ";
-	$sql .= "password = '" . $request['password'] . "', ";
+	$sql .= "username = '" . $request['profile_username'] . "', ";
+	$sql .= "password = '" . $request['profile_password'] . "', ";
 	$sql .= "dialplan = '" . $request['dialplan'] . "', ";
 	$sql .= "context = '" . $request['context'] . "', ";
 	$sql .= "rtp_ip = '" . $request['rtp_ip'] . "', ";
@@ -162,11 +187,20 @@ if ($action == "add") {
 	$sql .= "local_network_acl = '" . $request['local_network_acl'] . "' ";
 	$sql .= "where xmpp_profile_id = " . $request['profile_id'];
 	$db->exec(check_sql($sql));
+		
+	$xmpp_profile_id = $request['profile_id'];
 	
-	include "update_complete.php";
-	goto end;
+	goto writeout;
 
-} else { echo "add/update Failure"; }
+} 
+
+writeout:
+include "client_template.php";
+$xml = make_xmpp_xml($request);
+
+$filename = "v_" . $v_domain . "_" . preg_replace("/[^A-Za-z0-9]/", "", $string_to_be_stripped ) . "_" . $xmpp_profile_id . ".xml";
+
+
 
 
 /*
