@@ -1,7 +1,7 @@
 <?php
 	//application details
 		$apps[$x]['name'] = "FlashPhoner";
-		$apps[$x]['guid'] = 'FE45C76C-1A6E-0F0E-73DD-5B542AED2DD5';
+		$apps[$x]['guid'] = '740F1C0D-6D82-FCDE-3873-0FC9779789EC';
 		$apps[$x]['category'] = '';
 		$apps[$x]['subcategory'] = '';
 		$apps[$x]['version'] = '';
@@ -10,16 +10,14 @@
 		$apps[$x]['description']['en'] = 'Allow User to Open a Flash Phone for his Extension.';
 
 	//menu details
-	/* Turn this back on later
 		$apps[$x]['menu'][0]['title']['en'] = 'FlashPhoner';
-		$apps[$x]['menu'][0]['guid'] = '55E19438-63B9-DA36-415B-B0219F304426';
+		$apps[$x]['menu'][0]['guid'] = '1808365B-0F7C-7555-89D0-31B3D9A75ABB';
 		$apps[$x]['menu'][0]['parent_guid'] = 'FD29E39C-C936-F5FC-8E2B-611681B266B5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/mod/flashphoner/flashphoner.php';
 		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-	*/
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'flashphoner_view';
