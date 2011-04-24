@@ -24,7 +24,7 @@
 	Ken Rice <krice@tollfreegateway.com>
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-function sql_tables() {
+function sql_tables($db_type) {
 	$x = 0;
 
 	include "v_config.php";
@@ -35,7 +35,12 @@ function sql_tables() {
 		$fcount = 0;
 		foreach ($new_db['fields'] as $field) {
 			if ($fcount > 0 ) { $sql .= ",\n"; }
-			$sql .= $field['name'] . " " . $field['type'];
+			$sql .= $field['name'] . " ";
+			if (is_array($field['type'])) {
+				$sql .=	$field['type'][$db_type];
+			} else {
+				$sql .=	$field['type'];
+			}
 			$fcount++;
 		}
 		$sql .= ");\n\n";

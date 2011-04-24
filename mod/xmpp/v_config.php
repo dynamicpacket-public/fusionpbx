@@ -35,7 +35,9 @@
 	//database details
 		$apps[$x]['db'][0]['table'] = 'v_xmpp';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'xmpp_profile_id';
-		$apps[$x]['db'][0]['fields'][0]['type'] = 'serial'; // Adjust this for generic
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY AUTOINCREMENT';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][0]['fields'][0]['description'] = 'primary key';
 		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
 		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric'; // Adjust this for generic
@@ -91,6 +93,9 @@
 		$apps[$x]['db'][0]['fields'][18]['name'] = 'local_network_acl';
 		$apps[$x]['db'][0]['fields'][18]['type'] = 'text'; 
 		$apps[$x]['db'][0]['fields'][18]['description'] = '';
+		$apps[$x]['db'][0]['fields'][19]['name'] = 'enabled';
+		$apps[$x]['db'][0]['fields'][19]['type'] = 'text'; 
+		$apps[$x]['db'][0]['fields'][19]['description'] = '';
 
 
 ?>
