@@ -44,8 +44,8 @@ if ($_SESSION['db_tables']['v_xmpp'] != 'valid') {
 	
 	if ($row['count'] < 1) {
 		include "db_create.php";
-
-		$create = $db->query(sql_tables($db_type))->fetch();
+		$db->exec(sql_tables($db_type));
+		// $create = $db->query(sql_tables($db_type))->fetch();
 		$_SESSION['db_tables']['v_xmpp'] = 'valid';
 	}
 }
