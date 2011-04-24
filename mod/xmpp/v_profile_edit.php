@@ -148,7 +148,7 @@ if ($action == "add") {
  	$sql .= "'" . $request['candidate_acl'] . "', ";
  	$sql .= "'" . $request['local_network_acl'] . "'";
 	$sql .= ") ";
-	if ($db_type = "pgsql") {
+	if ($db_type == "pgsql") {
 	 	$sql .= "RETURNING xmpp_profile_id;";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
