@@ -71,6 +71,8 @@ if ($action == "update") {
 
 	$profile = $profiles_array[0];
 	unset ($prepstatement);
+	$profile['profile_username'] = $profile['username'];
+	$profile['profile_password'] = $profile['password'];
 } else { 
  	$profile['dialplan'] = "XML";
 	$profile['context'] = $v_domain;
