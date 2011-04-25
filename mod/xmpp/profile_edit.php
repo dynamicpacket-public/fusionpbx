@@ -50,7 +50,7 @@ function hide_advanced_config() {
 </td> 
 </tr> 
 <tr> 
-<td width="30%" class='vncellreq' valign='top' align='left' nowrap> 
+<td width="30%" class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Profile Name:
 </td> 
 <td width="70%" class='vtable' align='left'> 
@@ -60,7 +60,7 @@ Enter the profile name here.
 </td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Username:
 </td> 
 <td class='vtable' align='left'> 
@@ -70,7 +70,7 @@ Enter the XMPP username here.
 </td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Password:
 </td> 
 <td class='vtable' align='left'> 
@@ -80,20 +80,20 @@ Enter the XMPP username here.
 </td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Auto-Login:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='auto_login'> 
-    <option value='true' <?php if($profile['auto_login'] == "true") echo "SELECTED"; ?>>true</option> 
-    <option value='false' <?php if($profile['auto_login'] == "false") echo "SELECTED"; ?>>false</option> 
+    <option value='true' <?php if($profile['auto_login'] == "true") echo "selected='selected'"; ?>>true</option> 
+    <option value='false' <?php if($profile['auto_login'] == "false") echo "selected='selected'"; ?>>false</option> 
     </select> 
 <br /> 
-Choose whether to automattically login. 
+Choose whether to automatically login. 
 </td> 
 </tr> 
 <tr> 
-<td width='30%' class='vncell' valign='top' align='left' nowrap> 
+<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'> 
     XMPP Server:
 </td> 
 <td width='70%' class='vtable' align='left'> 
@@ -105,7 +105,7 @@ Example GoogleTalk is: xmpp-server1.l.google.com
 </tr> 
 <tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Default Extension:
 </td> 
 <td class='vtable' align='left'> 
@@ -114,7 +114,7 @@ Example GoogleTalk is: xmpp-server1.l.google.com
 default extension (if one cannot be determined)
 </td> 
 </tr> 
-<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap> 
+<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap='nowrap'> 
 	<div id="showadvancedbox"> 
 		<table width="100%" border="0" cellpadding="6" cellspacing="0"> 
 		<tr> 
@@ -128,7 +128,7 @@ default extension (if one cannot be determined)
 	<div id="showadvanced" style="display:none"> 
 	<table width="100%" border="0" cellpadding="6" cellspacing="0"> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Context:
 </td> 
 <td class='vtable' align='left'> 
@@ -138,7 +138,7 @@ Enter the context here. **Do Not Edit This Unless you REALLY mean it
 </td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     RTP IP:
 </td> 
 <td class='vtable' align='left'> 
@@ -148,61 +148,61 @@ IP Address for RTP
 </td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     SASL Type:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='sasl_type'> 
-    <option value='plain' <?php if($profile['sasl_type'] == "plain") echo "SELECTED"; ?>>plain</option> 
-    <option value='md5' <?php if($profile['sasl_type'] == "plain") echo "SELECTED"; ?>>md5</option> 
+    <option value='plain' <?php if($profile['sasl_type'] == "plain") echo "selected='selected'"; ?>>plain</option> 
+    <option value='md5' <?php if($profile['sasl_type'] == "plain") echo "selected='selected'"; ?>>md5</option> 
     </select> 
 <br /> 
 Choose SASL Type. Plain or MD5
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
     Enable TLS:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='tls_enable'> 
-    <option value='true' <?php if($profile['tls_enable'] == "true") echo "SELECTED"; ?>>true</option> 
-    <option value='false' <?php if($profile['tls_enable'] == "false") echo "SELECTED"; ?>>false</option> 
+    <option value='true' <?php if($profile['tls_enable'] == "true") echo "selected='selected'"; ?>>true</option> 
+    <option value='false' <?php if($profile['tls_enable'] == "false") echo "selected='selected'"; ?>>false</option> 
     </select> 
 <br /> 
 Enable TLS or not
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
     Use RTP Timer
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='use_rtp_timer'> 
-    <option value='true' <?php if($profile['tls_enable'] == "true") echo "SELECTED"; ?>>true</option> 
-    <option value='false' <?php if($profile['tls_enable'] == "false") echo "SELECTED"; ?>>false</option> 
+    <option value='true' <?php if($profile['tls_enable'] == "true") echo "selected='selected'"; ?>>true</option> 
+    <option value='false' <?php if($profile['tls_enable'] == "false") echo "selected='selected'"; ?>>false</option> 
     </select> 
 <br /> 
 disable to trade async for more calls
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
 	Voice Activity Detection
 </td> 
 <td class='vtable' align='left'> 
 	<select class='formfld' name='vad'> 
-	<option value='none' <?php if($profile['vad'] == "none") echo "SELECTED"; ?>>none</option> 
-	<option value='in' <?php if($profile['vad'] == "in") echo "SELECTED"; ?>>in</option> 
-	<option value='out' <?php if($profile['vad'] == "out") echo "SELECTED"; ?>>out</option> 
-	<option value='both' <?php if($profile['vad'] == "both") echo "SELECTED"; ?>>both</option> 
+	<option value='none' <?php if($profile['vad'] == "none") echo "selected='selected'"; ?>>none</option> 
+	<option value='in' <?php if($profile['vad'] == "in") echo "selected='selected'"; ?>>in</option> 
+	<option value='out' <?php if($profile['vad'] == "out") echo "selected='selected'"; ?>>out</option> 
+	<option value='both' <?php if($profile['vad'] == "both") echo "selected='selected'"; ?>>both</option> 
 </select> 
 <br /> 
 Which direction are we doing VAD?
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
     candidate-acl
 </td> 
 <td class='vtable' align='left'> 
@@ -212,7 +212,7 @@ candidate-acl
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
     local-network-acl
 </td> 
 <td class='vtable' align='left'> 
@@ -225,20 +225,20 @@ local network ACL
 	</div></td> 
 </tr> 
 <tr> 
-<td class='vncellreq' valign='top' align='left' nowrap> 
+<td class='vncellreq' valign='top' align='left' nowrap='nowrap'> 
     Enabled:
 </td> 
 <td class='vtable' align='left'> 
     <select class='formfld' name='enabled'> 
-    <option value='true' <?php if($profile['enabled'] == "true") echo "SELECTED"; ?>>true</option> 
-    <option value='false' <?php if($profile['enabled'] == "false") echo "SELECTED"; ?>>false</option> 
+    <option value='true' <?php if($profile['enabled'] == "true") echo "selected='selected'"; ?>>true</option> 
+    <option value='false' <?php if($profile['enabled'] == "false") echo "selected='selected'"; ?>>false</option> 
     </select> 
 <br /> 
  
 </td> 
 </tr> 
 <tr> 
-<td class='vncell' valign='top' align='left' nowrap> 
+<td class='vncell' valign='top' align='left' nowrap='nowrap'> 
     Profile Description:
 </td> 
 <td class='vtable' align='left'> 
