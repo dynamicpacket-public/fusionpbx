@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = "FlashPhoner";
+		$apps[$x]['name'] = "XMPP Manager";
 		$apps[$x]['guid'] = '740F1C0D-6D82-FCDE-3873-0FC9779789EC';
 		$apps[$x]['category'] = '';
 		$apps[$x]['subcategory'] = '';
@@ -10,11 +10,11 @@
 		$apps[$x]['description']['en'] = 'Allow User to Open a Flash Phone for his Extension.';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'FlashPhoner';
+		$apps[$x]['menu'][0]['title']['en'] = 'XMPP Manager';
 		$apps[$x]['menu'][0]['guid'] = '1808365B-0F7C-7555-89D0-31B3D9A75ABB';
 		$apps[$x]['menu'][0]['parent_guid'] = 'FD29E39C-C936-F5FC-8E2B-611681B266B5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/mod/flashphoner/flashphoner.php';
+		$apps[$x]['menu'][0]['path'] = '/mod/xmpp/v_xmpp.php';
 		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
