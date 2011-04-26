@@ -29,4 +29,28 @@
 
 		$apps[$x]['permissions'][3]['name'] = 'php_service_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_php_service 
+		$apps[$x]['db'][0]['table'] = 'v_php_service';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'php_service_id';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'service_name';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'service_script';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'service_enabled';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'service_description';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+
 ?>

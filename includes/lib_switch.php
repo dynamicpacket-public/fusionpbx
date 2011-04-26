@@ -2264,8 +2264,8 @@ function sync_package_v_vars() {
 
 		$prev_var_cat = $row[var_cat];
 	}
-	$tmpxml .= "\n";
-
+	$tmpxml .= "\n"; 
+	
 	fwrite($fout, $tmpxml);
 	unset($tmpxml);
 	fclose($fout);

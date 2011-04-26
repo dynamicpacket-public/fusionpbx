@@ -62,4 +62,40 @@
 		$apps[$x]['permissions'][8]['groups'][] = 'user';
 		$apps[$x]['permissions'][8]['groups'][] = 'admin';
 		$apps[$x]['permissions'][8]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_fax 
+		$apps[$x]['db'][0]['table'] = 'v_fax';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'fax_id';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'faxextension';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'faxname';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'faxemail';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'fax_pin_number';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+		$apps[$x]['db'][0]['fields'][6]['name'] = 'fax_caller_id_name';
+		$apps[$x]['db'][0]['fields'][6]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][6]['description'] = '';
+		$apps[$x]['db'][0]['fields'][7]['name'] = 'fax_caller_id_number';
+		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][7]['description'] = '';
+		$apps[$x]['db'][0]['fields'][8]['name'] = 'fax_user_list';
+		$apps[$x]['db'][0]['fields'][8]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][8]['description'] = '';
+		$apps[$x]['db'][0]['fields'][9]['name'] = 'faxdescription';
+		$apps[$x]['db'][0]['fields'][9]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][9]['description'] = '';
+
 ?>

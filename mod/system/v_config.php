@@ -37,4 +37,28 @@
 
 		$apps[$x]['permissions'][4]['name'] = 'system_view_backup';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_software 
+		$apps[$x]['db'][0]['table'] = 'v_software';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'id';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'software';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'softwarename';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'softwareurl';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'softwareversion';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+
 ?>

@@ -29,4 +29,34 @@
 
 		$apps[$x]['permissions'][3]['name'] = 'variables_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_vars 
+		$apps[$x]['db'][0]['table'] = 'v_vars';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][0]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'var_id';
+		$apps[$x]['db'][0]['fields'][1]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][1]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][1]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'var_name';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'var_value';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'var_cat';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'var_enabled';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+		$apps[$x]['db'][0]['fields'][6]['name'] = 'var_order';
+		$apps[$x]['db'][0]['fields'][6]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][6]['description'] = '';
+		$apps[$x]['db'][0]['fields'][7]['name'] = 'var_desc';
+		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][7]['description'] = '';
+
 ?>

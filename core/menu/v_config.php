@@ -84,4 +84,61 @@
 
 		$apps[$x]['permissions'][4]['name'] = 'menu_restore';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_menu 
+		$apps[$x]['db'][0]['table'] = 'v_menu';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'menuid';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'menulanguage';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'menutitle';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'menustr';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'menucategory';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+		$apps[$x]['db'][0]['fields'][6]['name'] = 'menugroup';
+		$apps[$x]['db'][0]['fields'][6]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][6]['description'] = '';
+		$apps[$x]['db'][0]['fields'][7]['name'] = 'menudesc';
+		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][7]['description'] = '';
+		$apps[$x]['db'][0]['fields'][8]['name'] = 'menuparentid';
+		$apps[$x]['db'][0]['fields'][8]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][8]['description'] = '';
+		$apps[$x]['db'][0]['fields'][9]['name'] = 'menuorder';
+		$apps[$x]['db'][0]['fields'][9]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][9]['description'] = '';
+		$apps[$x]['db'][0]['fields'][10]['name'] = 'menuadduser';
+		$apps[$x]['db'][0]['fields'][10]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][10]['description'] = '';
+		$apps[$x]['db'][0]['fields'][11]['name'] = 'menuadddate';
+		$apps[$x]['db'][0]['fields'][11]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][11]['description'] = '';
+		$apps[$x]['db'][0]['fields'][12]['name'] = 'menumoduser';
+		$apps[$x]['db'][0]['fields'][12]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][12]['description'] = '';
+		$apps[$x]['db'][0]['fields'][13]['name'] = 'menumoddate';
+		$apps[$x]['db'][0]['fields'][13]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][13]['description'] = '';
+		$apps[$x]['db'][0]['fields'][14]['name'] = 'menu_protected';
+		$apps[$x]['db'][0]['fields'][14]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][14]['description'] = '';
+		$apps[$x]['db'][0]['fields'][15]['name'] = 'menu_guid';
+		$apps[$x]['db'][0]['fields'][15]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][15]['description'] = '';
+		$apps[$x]['db'][0]['fields'][16]['name'] = 'menu_parent_guid';
+		$apps[$x]['db'][0]['fields'][16]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][16]['description'] = '';
+
 ?>

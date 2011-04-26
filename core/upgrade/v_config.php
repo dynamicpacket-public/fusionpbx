@@ -19,4 +19,25 @@
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'upgrade_schema';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_src 
+		$apps[$x]['db'][0]['table'] = 'v_src';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'src_id';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'type';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'last_mod';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'path';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+
 ?>

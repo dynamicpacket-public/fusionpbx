@@ -29,4 +29,34 @@
 
 		$apps[$x]['permissions'][3]['name'] = 'modules_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+	// CREATE TABLE v_modules 
+		$apps[$x]['db'][0]['table'] = 'v_modules';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'module_id';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'modulelabel';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'modulename';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'moduledesc';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'modulecat';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['description'] = '';
+		$apps[$x]['db'][0]['fields'][6]['name'] = 'moduleenabled';
+		$apps[$x]['db'][0]['fields'][6]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][6]['description'] = '';
+		$apps[$x]['db'][0]['fields'][7]['name'] = 'moduledefaultenabled';
+		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][7]['description'] = '';
+
 ?>
