@@ -245,7 +245,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 								}
 								else {
 									if ($db_type == "sqlite") {
-										$column_data_type .= $column_row['column_data_type'];
+										$column_data_type = $column_row['column_data_type'];
 									}
 									if ($db_type == "pgsql") {
 										$column_data_type = str_replace("NUMBER", "NUMERIC", $column_row['column_data_type']);
