@@ -25,8 +25,24 @@
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		//$apps[$x]['permissions'][1]['name'] = 'click_to_call_call';
-		//$apps[$x]['permissions'][1]['groups'][] = 'user';
-		//$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+	// CREATE TABLE v_flashphone_auth 
+		$apps[$x]['db'][0]['table'] = 'v_flashphone_auth';
+		$apps[$x]['db'][0]['fields'][0]['name'] = 'auth_serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][0]['fields'][0]['description'] = '';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'auth_key';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][1]['description'] = '';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'hostaddr';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][2]['description'] = '';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'createtime';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'timestamp without time zone';
+		$apps[$x]['db'][0]['fields'][3]['description'] = '';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'username';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][4]['description'] = '';
+
 ?>
