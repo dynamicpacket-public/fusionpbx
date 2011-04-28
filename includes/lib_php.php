@@ -78,24 +78,4 @@
 			unset($in);
 		}
 
-	//get the list of installed apps from the core and mod directories
-		if (count($_SESSION['v_apps']) == 0) {
-			$app_dir[] = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core';
-			$app_dir[] = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/mod';
-			$x=0;
-			foreach ($app_dir as &$dir) {
-				$dir_list = opendir($dir);
-				while (false !== ($file = readdir($dir_list))) {
-					if ($file != "." AND $file != ".."){
-						$new_path = $dir.'/'.$file;
-						$level = explode('/',$new_path);
-						include($new_path.'/v_config.php');
-						if ($x > 10000) { break; };
-						$x++;
-					}
-				}
-			}
-			$_SESSION['v_apps'] = $apps;
-		}
-
 ?>
