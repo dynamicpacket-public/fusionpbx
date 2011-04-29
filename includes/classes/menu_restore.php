@@ -51,8 +51,16 @@ include "root.php";
 				//set the variable
 					$v_id = $this->v_id;
 
+				//get the $apps array from the installed apps from the core and mod directories
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+					$x=0;
+					foreach ($config_list as &$config_path) {
+						include($config_path);
+						$x++;
+					}
+
 				//use the app array to restore the default menu
-					foreach ($_SESSION['v_apps'] as $row) {
+					foreach ($apps as $row) {
 						foreach ($row['menu'] as $menu) {
 							//set the variables
 								$menu_title = $menu['title']['en'];
