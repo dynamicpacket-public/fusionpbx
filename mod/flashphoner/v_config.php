@@ -33,16 +33,18 @@
 		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][0]['fields'][0]['description'] = '';
 		$apps[$x]['db'][0]['fields'][1]['name'] = 'auth_key';
-		$apps[$x]['db'][0]['fields'][1]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][1]['description'] = '';
 		$apps[$x]['db'][0]['fields'][2]['name'] = 'hostaddr';
-		$apps[$x]['db'][0]['fields'][2]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][2]['description'] = '';
 		$apps[$x]['db'][0]['fields'][3]['name'] = 'createtime';
-		$apps[$x]['db'][0]['fields'][3]['type'] = 'timestamp without time zone';
+		$apps[$x]['db'][0]['fields'][3]['type']['pgsql'] = 'timestamp';
+		$apps[$x]['db'][0]['fields'][3]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][0]['fields'][3]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][0]['fields'][3]['description'] = '';
 		$apps[$x]['db'][0]['fields'][4]['name'] = 'username';
-		$apps[$x]['db'][0]['fields'][4]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][4]['description'] = '';
 
 ?>

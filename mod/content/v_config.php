@@ -65,7 +65,9 @@
 		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][7]['description'] = '';
 		$apps[$x]['db'][0]['fields'][8]['name'] = 'rssimg';
-		$apps[$x]['db'][0]['fields'][8]['type'] = 'bytea';
+		$apps[$x]['db'][0]['fields'][8]['type']['pgsql'] = 'bytea';
+		$apps[$x]['db'][0]['fields'][8]['type']['sqlite'] = 'blob';
+		$apps[$x]['db'][0]['fields'][8]['type']['mysql'] = 'blob';
 		$apps[$x]['db'][0]['fields'][8]['description'] = '';
 		$apps[$x]['db'][0]['fields'][9]['name'] = 'rssoptional1';
 		$apps[$x]['db'][0]['fields'][9]['type'] = 'text';

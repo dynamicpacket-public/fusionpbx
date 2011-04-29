@@ -254,6 +254,7 @@ CREATE TABLE v_virtual_table_data (virtual_table_data_id INTEGER PRIMARY KEY, v_
 CREATE TABLE v_call_center_logs (cc_id INTEGER PRIMARY KEY, v_id NUMBER, cc_queue TEXT, cc_action TEXT, cc_count NUMBER, cc_agent TEXT, cc_agent_type TEXT, cc_agent_system TEXT, cc_agent_status TEXT, cc_agent_state TEXT, cc_agent_uuid TEXT, cc_member_uuid TEXT, cc_member_session_uuid TEXT, cc_member_cid_name TEXT, cc_member_cid_number TEXT, cc_selection TEXT, cc_cause TEXT, cc_agent_called_time NUMBER, cc_agent_answered_time NUMBER, cc_member_joined_time NUMBER, cc_member_leaving_time NUMBER, cc_wait_time NUMBER, cc_talk_time NUMBER, cc_total_time NUMBER, cc_bridge_terminated_time NUMBER, cc_hangup_cause TEXT, cc_epoch NUMBER, cc_date DATE);
 CREATE TABLE v_group_permissions (group_permission_id INTEGER PRIMARY KEY, v_id NUMBER, permission_id TEXT, group_id TEXT);
 CREATE TABLE v_flashphone_auth (auth_serial INTEGER PRIMARY KEY, auth_key TEXT, hostaddr TEXT, createtime DATE, username TEXT);
+CREATE TABLE v_group_permissions (group_permission_id INTEGER PRIMARY KEY, v_id NUMBER, permission_id TEXT, group_id TEXT);
 CREATE INDEX index_billsec ON v_xml_cdr(billsec ASC);
 CREATE INDEX index_caller_id_name ON v_xml_cdr(caller_id_name ASC);
 CREATE INDEX index_destination_number ON v_xml_cdr(destination_number ASC);

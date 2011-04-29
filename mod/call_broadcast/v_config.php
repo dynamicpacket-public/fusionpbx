@@ -35,45 +35,45 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_call_broadcast 
+	// table details v_call_broadcast 
 		$apps[$x]['db'][0]['table'] = 'v_call_broadcast';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'call_broadcast_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
 		$apps[$x]['db'][0]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
 		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][0]['fields'][0]['description'] = '';
-		$apps[$x]['db'][0]['fields'][1]['name'] = 'broadcast_name';
-		$apps[$x]['db'][0]['fields'][1]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][1]['description'] = '';
-		$apps[$x]['db'][0]['fields'][2]['name'] = 'broadcast_desc';
+		$apps[$x]['db'][0]['fields'][2]['name'] = 'broadcast_name';
 		$apps[$x]['db'][0]['fields'][2]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][2]['description'] = '';
-		$apps[$x]['db'][0]['fields'][3]['name'] = 'broadcast_timeout';
-		$apps[$x]['db'][0]['fields'][3]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][3]['name'] = 'broadcast_desc';
+		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][3]['description'] = '';
-		$apps[$x]['db'][0]['fields'][4]['name'] = 'broadcast_concurrent_limit';
+		$apps[$x]['db'][0]['fields'][4]['name'] = 'broadcast_timeout';
 		$apps[$x]['db'][0]['fields'][4]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][4]['description'] = '';
-		$apps[$x]['db'][0]['fields'][5]['name'] = 'recordingid';
-		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][5]['name'] = 'broadcast_concurrent_limit';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][5]['description'] = '';
-		$apps[$x]['db'][0]['fields'][6]['name'] = 'broadcast_caller_id_name';
+		$apps[$x]['db'][0]['fields'][6]['name'] = 'recordingid';
 		$apps[$x]['db'][0]['fields'][6]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][6]['description'] = '';
-		$apps[$x]['db'][0]['fields'][7]['name'] = 'broadcast_caller_id_number';
+		$apps[$x]['db'][0]['fields'][7]['name'] = 'broadcast_caller_id_name';
 		$apps[$x]['db'][0]['fields'][7]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][7]['description'] = '';
-		$apps[$x]['db'][0]['fields'][8]['name'] = 'broadcast_destination_type';
+		$apps[$x]['db'][0]['fields'][8]['name'] = 'broadcast_caller_id_number';
 		$apps[$x]['db'][0]['fields'][8]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][8]['description'] = '';
-		$apps[$x]['db'][0]['fields'][9]['name'] = 'broadcast_phone_numbers';
+		$apps[$x]['db'][0]['fields'][9]['name'] = 'broadcast_destination_type';
 		$apps[$x]['db'][0]['fields'][9]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][9]['description'] = '';
-		$apps[$x]['db'][0]['fields'][10]['name'] = 'broadcast_destination_data';
+		$apps[$x]['db'][0]['fields'][10]['name'] = 'broadcast_phone_numbers';
 		$apps[$x]['db'][0]['fields'][10]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][10]['description'] = '';
-		$apps[$x]['db'][0]['fields'][11]['name'] = 'v_id';
-		$apps[$x]['db'][0]['fields'][11]['type'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][11]['name'] = 'broadcast_destination_data';
+		$apps[$x]['db'][0]['fields'][11]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][11]['description'] = '';
 
 ?>
