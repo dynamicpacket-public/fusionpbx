@@ -62,7 +62,6 @@
 		$apps[$x]['menu'][5]['category'] = 'internal';
 		$apps[$x]['menu'][5]['path'] = '/mod/exec/v_exec.php';
 		$apps[$x]['menu'][5]['order'] = '5';
-		$apps[$x]['menu'][5]['groups'][] = 'user';
 		$apps[$x]['menu'][5]['groups'][] = 'superadmin';
 
 	//permission details
