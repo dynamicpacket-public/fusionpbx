@@ -65,6 +65,5 @@
 	require "includes/lib_pdo.php";
 	require_once "includes/lib_functions.php";
 	require_once "includes/lib_switch.php";
-	require_once "includes/dwoo/dwooAutoload.php";
 
 ?>
