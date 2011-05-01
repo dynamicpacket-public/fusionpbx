@@ -160,7 +160,11 @@ echo "	<td align=\"center\">\n";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= " and $field_name like '%$field_value%' ";
 	}
-	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
+	if (strlen($orderby)> 0) { 
+		$sql .= "order by $orderby $order "; 
+	} elseif (ifgroup("superadmin")) {
+		$sql .= "order by v_id, username ";
+	}
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
