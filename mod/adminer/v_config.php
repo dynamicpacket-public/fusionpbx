@@ -14,7 +14,7 @@
 		$apps[$x]['menu'][0]['guid'] = '1F59D07B-B4F7-4F9E-BDE9-312CF491D66E';
 		$apps[$x]['menu'][0]['parent_guid'] = '594D99C5-6128-9C88-CA35-4B33392CEC0F';
 		$apps[$x]['menu'][0]['category'] = 'external';
-		$apps[$x]['menu'][0]['path'] = '/mod/adminer/index.php';
+		$apps[$x]['menu'][0]['path'] = '<!--{project_path}-->/mod/adminer/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 ?>
