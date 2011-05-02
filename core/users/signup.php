@@ -270,13 +270,10 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	return;
 }
 
+//show the header
 	require_once "includes/header.php";
 
-
-	require_once "includes/getcontent.php";
-	//echo "<img src='/images/spacer.gif' width='100%' height='3' style='background-color: #FFFFFF;'>";
-
-
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='90%' border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -356,13 +353,11 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>
