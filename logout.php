@@ -28,19 +28,7 @@ include "root.php";
 
 //clear the session variables
 	session_start();
-	$_SESSION['v_id'] = '';
-	$_SESSION["username"] = "";
-	$_SESSION["permissions"] = "";
-	$_SESSION["http_compression"] = "";
-	$_SESSION['background_image'] = "";
-	$_SESSION["template_name"] = "";
-	$_SESSION["template_content"] = "";
-	$_SESSION['user_extension_list'] = '';
-	$_SESSION['user_context'] = '';
-	$_SESSION['domains'] = '';
-	$_SESSION['context'] = '';
-	$_SESSION['v_time_zone'] = '';
-	$_SESSION['user_time_zone'] = '';
+	session_unset();
 	session_destroy();
 
 //redirect the user to the login page
