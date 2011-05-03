@@ -307,7 +307,12 @@ if ($db_type == "pgsql") {
 					$_SESSION["v_domain"] = $row['v_domain'];
 					$_SESSION["v_time_zone"] = $row['v_time_zone'];
 					if (strlen($row["v_time_zone"]) > 0) {
-						date_default_timezone_set($_SESSION["v_time_zone"]);
+						//server time zone
+							$_SESSION["time_zone"]["system"] = date_default_timezone_get();
+						//domain time zone set in system settings
+							$_SESSION["time_zone"]["domain"] = $row['v_time_zone'];
+						//set the domain time zone as the default time zone
+							date_default_timezone_set($_SESSION["v_time_zone"]);
 					}
 				}
 		}
