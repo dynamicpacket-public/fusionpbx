@@ -1,7 +1,7 @@
 <?php
 /*
 	FusionPBX
-	Version: MPL 1.1
+      	Version: MPL 1.1
 
 	The contents of this file are subject to the Mozilla Public License Version
 	1.1 (the "License"); you may not use this file except in compliance with
@@ -21,6 +21,7 @@
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
+	Ken Rice <krice@tollfreegateway.com>
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
@@ -41,8 +42,7 @@
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].'/fusionpbx')){
 		define('PROJECT_PATH', '/fusionpbx');
 		set_include_path( get_include_path() . PATH_SEPARATOR . $_SERVER["DOCUMENT_ROOT"].'/fusionpbx' );
-	}
-	else {
+	} else {
 		define('PROJECT_PATH', '');
 		set_include_path( get_include_path() . PATH_SEPARATOR . $_SERVER['DOCUMENT_ROOT'] );
 	}
