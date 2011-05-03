@@ -41,6 +41,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$src_cid_number = $_REQUEST['src_cid_number'];
 		$dest_cid_name = $_REQUEST['dest_cid_name'];
 		$dest_cid_number = $_REQUEST['dest_cid_number'];
+		$rec = $_REQUEST['rec']; //true,false
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
 		if (strlen($_SESSION['context']) > 0) {
 			$context = $_SESSION['context'];
@@ -60,7 +61,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//destination needs to see the source caller id
 		if (strlen($dest) < 7) {
-			$switchcmd = "api originate $source &transfer('".$dest." XML ".$context."')";
+			$switch_cmd = "api originate $source &transfer('".$dest." XML ".$context."')";
 		}
 		else {
 			if (strlen($src) < 7) {
@@ -83,7 +84,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			}
 			$bridge_array = outbound_route_to_bridge ($dest);
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
-			$switchcmd = "api originate $source &bridge($destination)";
+			$switch_cmd = "api originate $source &bridge($destination)";
 		}
 
 	//display the last command
@@ -116,10 +117,20 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		}
 		else {
 			//show the command result
-				$switch_result = event_socket_request($fp, $switchcmd);
+				$result = trim(event_socket_request($fp, $switch_cmd));
+				if (substr($result, 0,3) == "+OK") {
+					$uuid = substr($result, 4);
+					if ($rec == "true") {
+						//use the server's time zone to ensure it matches the time zone used by freeswitch
+							date_default_timezone_set($_SESSION['time_zone']['system']);
+						//create the api record command and send it over event socket
+							$switch_cmd = "api uuid_record ".$uuid." start ".$v_recordings_dir."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
+							$result2 = trim(event_socket_request($fp, $switch_cmd));
+					}
+				}
 				echo "<div align='center'>\n";
 				echo "<br />\n";
-				echo $switch_result;
+				echo $result;
 				echo "<br />\n";
 				echo "<br />\n";
 				echo "</div>\n";
@@ -198,6 +209,30 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the number to call.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Record:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='rec'>\n";
+	echo "    <option value=''></option>\n";
+	if ($rec == "true") { 
+		echo "    <option value='true' selected='selected'>true</option>\n";
+	}
+	else {
+		echo "    <option value='true'>true</option>\n";
+	}
+	if ($rec == "false") { 
+		echo "    <option value='false' selected='selected'>false</option>\n";
+	}
+	else {
+		echo "    <option value='false'>false</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Select whether to record the call.\n";
+	echo "</td>\n";
+	echo "</tr>\n";	
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<input type=\"submit\" class='btn' value=\"Call\">\n";
