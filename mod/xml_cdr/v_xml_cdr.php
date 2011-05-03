@@ -432,7 +432,7 @@ else {
 			$tmp_month = date("M", strtotime($row['start_stamp']));
 			$tmp_day = date("d", strtotime($row['start_stamp']));
 
-			$tmp_start_epoch = date("h:i:s Y-m-d", $row['start_epoch']);
+			$tmp_start_epoch = date("j M Y G:i:s", $row['start_epoch']);
 
 			$hangup_cause = $row['hangup_cause'];
 			$hangup_cause = str_replace("_", " ", $hangup_cause);
