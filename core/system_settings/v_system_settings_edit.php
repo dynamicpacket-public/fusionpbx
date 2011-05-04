@@ -120,27 +120,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($v_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 		if (strlen($v_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		//if (strlen($v_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-		if (strlen($v_dir) == 0) { $msg .= "Please provide: Directory<br>\n"; }
+		//if (strlen($v_dir) == 0) { $msg .= "Please provide: FreeSWITCH Directory<br>\n"; }
 		//if (strlen($v_parent_dir) == 0) { $msg .= "Please provide: Parent Directory<br>\n"; }
 		if (strlen($v_backup_dir) == 0) { $msg .= "Please provide: Backup Directory<br>\n"; }
 		if (strlen($v_web_dir) == 0) { $msg .= "Please provide: Web Directory<br>\n"; }
 		if (strlen($v_web_root) == 0) { $msg .= "Please provide: Web Root<br>\n"; }
 		if (strlen($v_relative_url) == 0) { $msg .= "Please provide: Relative URL<br>\n"; }
-		if (strlen($v_conf_dir) == 0) { $msg .= "Please provide: Conf Directory<br>\n"; }
-		if (strlen($v_db_dir) == 0) { $msg .= "Please provide: Database Directory<br>\n"; }
+		//if (strlen($v_conf_dir) == 0) { $msg .= "Please provide: Conf Directory<br>\n"; }
+		//if (strlen($v_db_dir) == 0) { $msg .= "Please provide: Database Directory<br>\n"; }
 		if (strlen($v_htdocs_dir) == 0) { $msg .= "Please provide: htdocs Directory<br>\n"; }
 		if (strlen($v_log_dir) == 0) { $msg .= "Please provide: Log Directory<br>\n"; }
-		if (strlen($v_extensions_dir) == 0) { $msg .= "Please provide: Extensions Directory<br>\n"; }
-		if (strlen($v_gateways_dir) == 0) { $msg .= "Please provide: Gateways Directory<br>\n"; }
-		if (strlen($v_dialplan_public_dir) == 0) { $msg .= "Please provide: Dialplan Public Directory<br>\n"; }
-		if (strlen($v_dialplan_default_dir) == 0) { $msg .= "Please provide: Dialplan Default Directory<br>\n"; }
-		if (strlen($v_mod_dir) == 0) { $msg .= "Please provide: Mod Directory<br>\n"; }
-		if (strlen($v_scripts_dir) == 0) { $msg .= "Please provide: Scripts Directory<br>\n"; }
-		if (strlen($v_grammar_dir) == 0) { $msg .= "Please provide: Grammar Directory<br>\n"; }
-		if (strlen($v_storage_dir) == 0) { $msg .= "Please provide: Storage Directory<br>\n"; }
-		if (strlen($v_voicemail_dir) == 0) { $msg .= "Please provide: Voicemail Directory<br>\n"; }
-		if (strlen($v_recordings_dir) == 0) { $msg .= "Please provide: Recordings Directory<br>\n"; }
-		if (strlen($v_sounds_dir) == 0) { $msg .= "Please provide: Sounds Directory<br>\n"; }
+		//if (strlen($v_extensions_dir) == 0) { $msg .= "Please provide: Extensions Directory<br>\n"; }
+		//if (strlen($v_gateways_dir) == 0) { $msg .= "Please provide: Gateways Directory<br>\n"; }
+		//if (strlen($v_dialplan_public_dir) == 0) { $msg .= "Please provide: Dialplan Public Directory<br>\n"; }
+		//if (strlen($v_dialplan_default_dir) == 0) { $msg .= "Please provide: Dialplan Default Directory<br>\n"; }
+		//if (strlen($v_mod_dir) == 0) { $msg .= "Please provide: Mod Directory<br>\n"; }
+		//if (strlen($v_scripts_dir) == 0) { $msg .= "Please provide: Scripts Directory<br>\n"; }
+		//if (strlen($v_grammar_dir) == 0) { $msg .= "Please provide: Grammar Directory<br>\n"; }
+		//if (strlen($v_storage_dir) == 0) { $msg .= "Please provide: Storage Directory<br>\n"; }
+		//if (strlen($v_voicemail_dir) == 0) { $msg .= "Please provide: Voicemail Directory<br>\n"; }
+		//if (strlen($v_recordings_dir) == 0) { $msg .= "Please provide: Recordings Directory<br>\n"; }
+		//if (strlen($v_sounds_dir) == 0) { $msg .= "Please provide: Sounds Directory<br>\n"; }
 		//if (strlen($v_download_path) == 0) { $msg .= "Please provide: Download Path<br>\n"; }
 		//if (strlen($v_provisioning_tftp_dir) == 0) { $msg .= "Please provide: Provisioning TFTP Directory<br>\n"; }
 		//if (strlen($v_provisioning_ftp_dir) == 0) { $msg .= "Please provide: Provisioning FTP Directory<br>\n"; }
@@ -148,7 +148,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($v_provisioning_http_dir) == 0) { $msg .= "Please provide: Provisioning HTTP Directory<br>\n"; }
 		//if (strlen($v_template_name) == 0) { $msg .= "Please provide: Template Name<br>\n"; }
 		//if (strlen($v_time_zone) == 0) { $msg .= "Please provide: Time Zone<br>\n"; }
-		
+
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -252,7 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$v_provisioning_ftp_dir', ";
 					$sql .= "'$v_provisioning_https_dir', ";
 					$sql .= "'$v_provisioning_http_dir', ";
-					$sql .= "'$v_template_name', ";					
+					$sql .= "'$v_template_name', ";
 					$sql .= "'$v_time_zone', ";
 					$sql .= "'$v_description' ";
 					$sql .= ")";
