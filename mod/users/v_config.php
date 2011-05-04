@@ -29,4 +29,5 @@
 		$apps[$x]['permissions'][1]['groups'][] = 'user';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
 ?>

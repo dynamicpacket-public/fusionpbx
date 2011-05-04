@@ -26,10 +26,8 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/recaptchalib.php";
-
-// Get a key from https://www.google.com/recaptcha/admin/create
-$publickey = "";
-$privatekey = "";
+include "config.php";
+include "v_fields.php";
 
 # the response from reCAPTCHA
 $resp = null;
@@ -54,6 +52,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	foreach($required as $x) {
 		if (strlen($_REQUEST[$x[0]]) < 1) {
 			$msgerror .= $x[1];
+			$error_fields[] = $x[0];
 		}
 	}
 
@@ -73,8 +72,17 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		}
 	}
 
+	// make sure password fields match
 	if ($request['password'] != $request['confirmpassword']) {
 		$msgerror .= "Passwords did not match.<br>\n";
+	}
+
+	// email address atleast looks valid
+	if (!in_array('useremail', $error_fields)) {
+		$validator = new EmailAddressValidator;
+		if (!$validator->check_email_address($request['useremail'])) {
+			$msgerror .= "Please provide a VALID email address.<br>\n";
+		}
 	}
 
 	if ($_POST["recaptcha_response_field"]) {
