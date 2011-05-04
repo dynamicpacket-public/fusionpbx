@@ -34,16 +34,15 @@ require_once "includes/config.php";
 	if (strlen($_SESSION["template_name"]) == 0) { $_SESSION["template_name"] = 'default'; }
 
 //set a default template
-	//$_SESSION["template_content"] = ''; //force the template to generate on every page load
 	if (strlen($_SESSION["template_content"])==0) { //build template if session template has no length
 		$v_template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 		if (strlen($template_rsssubcategory) > 0) {
 			//this template was assigned by the content manager
 				//get the contents of the template and save it to the template variable
-				$template_full_path = $v_template_path.'/themes/'.$template_rsssubcategory.'/template.php';
+				$template_full_path = $v_template_path.'/'.$template_rsssubcategory.'/template.php';
 				if (!file_exists($template_full_path)) {
 					$_SESSION["template_name"] = 'default';
-					$template_full_path = $v_template_path.'/themes/default/template.php';
+					$template_full_path = $v_template_path.'/default/template.php';
 				}
 				$template = file_get_contents($template_full_path);
 				$_SESSION["template_content"] = $template;
@@ -53,7 +52,7 @@ require_once "includes/config.php";
 				$template_full_path = $v_template_path.'/'.$_SESSION["template_name"].'/template.php';
 				if (!file_exists($template_full_path)) {
 					$_SESSION["template_name"] = 'default';
-					$template_full_path = $v_template_path.'/themes/default/template.php';
+					$template_full_path = $v_template_path.'/default/template.php';
 				}
 				$template = file_get_contents($template_full_path);
 				$_SESSION["template_content"] = $template;

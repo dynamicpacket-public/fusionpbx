@@ -69,22 +69,21 @@ if (!function_exists('get_db_field_names')) {
 			return $fields;
 		} else {
 			$query 		= sprintf("SELECT * FROM information_schema.columns
-		WHERE table_schema='%s' AND table_name='%s';"
-		, $db_name, $table
-		);
-		$stmt 		= $db->prepare($query);
-		$result 	= $stmt->execute();
-		$rows 		= $stmt->fetchAll();
-		$row_count 	= count($rows);
-		//printf('<pre>%s</pre>', print_r($rows, true));
-		for ($i = 0; $i < $row_count; $i++) {
-			array_push($fields, $rows[$i]['COLUMN_NAME']);
-		}
-		return $fields;
+			WHERE table_schema='%s' AND table_name='%s';"
+			, $db_name, $table
+			);
+			$stmt 		= $db->prepare($query);
+			$result 	= $stmt->execute();
+			$rows 		= $stmt->fetchAll();
+			$row_count 	= count($rows);
+			//printf('<pre>%s</pre>', print_r($rows, true));
+			for ($i = 0; $i < $row_count; $i++) {
+				array_push($fields, $rows[$i]['COLUMN_NAME']);
+			}
+			return $fields;
 		}
 	}
 }
-
 
 if ($db_type == "sqlite") {
 
