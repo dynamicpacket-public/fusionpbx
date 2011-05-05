@@ -68,11 +68,11 @@ require_once "includes/checkauth.php";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$x = 0;
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			if (strlen($row["user_status"]) > 0) {
-				$user_array[$row["extension"]]['user_status'] = $row["user_status"];
 				$user_array[$row["extension"]]['username'] = $row["username"];
+				$user_array[$row["extension"]]['user_status'] = $row["user_status"];
 				$username_array[$row["username"]]['user_status'] = $row["user_status"];
 				if ($row["username"] == $_SESSION["username"]) {
 					$user_status = $row["user_status"];
@@ -101,6 +101,30 @@ require_once "includes/checkauth.php";
 		echo "</div>\n";
 	}
 	else {
+		//get the agent list from event socket
+			$switch_cmd = 'callcenter_config agent list';
+			$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			$agent_array = csv_to_named_array($event_socket_str, '|');
+		//set the status on the user_array by using the extension as the key
+			foreach ($agent_array as $row) {
+				if (count($_SESSION['domains']) == 1) {
+					//get the extension status from the call center agent list
+					preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
+					$extension = $matches[1];
+					$user_array[$extension]['username'] = $tmp[0];
+					$user_array[$extension]['user_status'] = $row['status'];
+				} else {
+					$tmp = explode('@',$row["name"]);
+					if ($tmp[1] == $v_domain) {
+						//get the extension status from the call center agent list
+						preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
+						$extension = $matches[1];
+						$user_array[$extension]['username'] = $tmp[0];
+						$user_array[$extension]['user_status'] = $row['status'];
+					}
+				}
+			}
+
 		//send the api command over event socket
 			$switch_cmd = 'valet_info';
 			$valet_xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
@@ -188,7 +212,7 @@ require_once "includes/checkauth.php";
 					$sql .= "order by extension asc ";
 					$prepstatement = $db->prepare(check_sql($sql));
 					$prepstatement->execute();
-					$result = $prepstatement->fetchAll();
+					$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
 					foreach ($result as &$row) {
 						if ($row["enabled"] == "true") {
 							$extension = $row["extension"];

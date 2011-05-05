@@ -299,5 +299,5 @@ require_once "includes/checkauth.php";
 		echo "<span id='cid_num_2' style='visibility:hidden;'>$cid_num_2</span>\n";
 
 		echo "<br />\n";
-		echo "<br />\n";
+
 ?>
