@@ -2799,15 +2799,15 @@ function sync_package_v_hunt_group() {
 					//set ring back
 						if (isset($row['huntgroupringback'])){
 							if ($row['huntgroupringback'] == "ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=ringback=\$\${us-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
 								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
 							}
 							if ($row['huntgroupringback'] == "us-ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=ringback=\$\${us-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
 								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
 							}
 							if ($row['huntgroupringback'] == "uk-ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=ringback=\$\${uk-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"ringback=\$\${uk-ring}\"); --set to ringtone\n";
 								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${uk-ring}\"); --set to ringtone\n";
 							}
 							if ($row['huntgroupringback'] == "music"){
