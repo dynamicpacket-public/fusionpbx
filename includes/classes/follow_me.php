@@ -125,7 +125,7 @@ include "root.php";
 				$db->exec(check_sql($sql));
 				$this->follow_me_id = $db->lastInsertId($id);
 			}
-			if ($this->$db_type == "pgsql") {
+			if ($this->db_type == "pgsql") {
 				$sql .= " RETURNING hunt_group_id ";
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
