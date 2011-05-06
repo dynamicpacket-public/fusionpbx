@@ -112,7 +112,9 @@ require_once "includes/checkauth.php";
 					preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
 					$extension = $matches[1];
 					$user_array[$extension]['username'] = $tmp[0];
-					$user_array[$extension]['user_status'] = $row['status'];
+					if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
+						$user_array[$extension]['user_status'] = $row['status'];
+					}
 				} else {
 					$tmp = explode('@',$row["name"]);
 					if ($tmp[1] == $v_domain) {
@@ -120,7 +122,9 @@ require_once "includes/checkauth.php";
 						preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
 						$extension = $matches[1];
 						$user_array[$extension]['username'] = $tmp[0];
-						$user_array[$extension]['user_status'] = $row['status'];
+						if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
+							$user_array[$extension]['user_status'] = $row['status'];
+						}
 					}
 				}
 			}
