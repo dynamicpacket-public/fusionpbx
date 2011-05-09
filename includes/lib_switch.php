@@ -4329,149 +4329,169 @@ function sync_package_v_dialplan_includes() {
 		$sql .= " select * from v_dialplan_includes_details ";
 		$sql .= " where dialplan_include_id = '".$row['dialplan_include_id']."' ";
 		$sql .= " and v_id = $v_id ";
-		$sql .= " and tag = 'condition' ";
-		$sql .= " order by fieldorder asc";
+		$sql .= " order by field_group asc, fieldorder asc";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
-		$result2 = $prepstatement2->fetchAll();
+		$result2 = $prepstatement2->fetchAll(PDO::FETCH_NAMED);
 		$resultcount2 = count($result2);
 		unset ($prepstatement2, $sql);
+		
+		//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
+			$details = '';
+			$previous_tag = '';
+			$details[$group]['condition_count'] = '';
+			//conditions
+				$x = 0;
+				foreach($result2 as $row2) {
+					if ($row2['tag'] == "condition") {
+						$group = $row2['field_group'];
+						foreach ($row2 as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			//actions
+				$x = 0;
+				foreach($result2 as $row2) {
+					if ($row2['tag'] == "action") {
+						$group = $row2['field_group'];
+						foreach ($row2 as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			//anti-actions
+				$x = 0;
+				foreach($result2 as $row2) {
+					if ($row2['tag'] == "anti-action") {
+						$group = $row2['field_group'];
+						foreach ($row2 as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			unset($result2);
+
 		$i=1;
-		if ($resultcount2 == 0) { //no results
-		}
-		else { //received results
-			foreach($result2 as $ent) {
-				//determine the correct attribute
-					switch ($ent['fieldtype']) {
-					case "hour":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "minute":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "minute-of-day":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "mday":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "mweek":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "mon":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "yday":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "year":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "wday":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					case "week":
-						$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-						$condition_expression = '';
-						break;
-					default:
-						$condition_attribute = 'field="'.$ent['fieldtype'].'"';
-						$condition_expression = 'expression="'.$ent['fielddata'].'"';
-					}
-
-				if ($resultcount2 == 1) { //single condition
-					//start tag
-					$tmp .= "   <condition $condition_attribute $condition_expression>\n";
-				}
-				else { //more than one condition
-					if ($i < $resultcount2) {
-						//all tags should be self-closing except the last one
-						$tmp .= "   <condition $condition_attribute $condition_expression/>\n";
-					}
-					else {
-						//for the last tag use the start tag
-						$tmp .= "   <condition $condition_attribute $condition_expression>\n";
-					}
-				}
-				$i++;
-			} //end foreach
-			$conditioncount = $resultcount2;
-			unset($sql, $resultcount2, $result2, $rowcount2);
-		} //end if results
-
-		$sql = "";
-		$sql .= " select * from v_dialplan_includes_details ";
-		$sql .= " where dialplan_include_id = '".$row['dialplan_include_id']."' ";
-		$sql .= " and v_id = $v_id ";
-		$sql .= " and tag = 'action' ";
-		$sql .= " order by fieldorder asc";
-		$prepstatement2 = $db->prepare($sql);
-		$prepstatement2->execute();
-		$result2 = $prepstatement2->fetchAll();
-		$resultcount2 = count($result2);
-		unset ($prepstatement2, $sql);
-		if ($resultcount2 == 0) { //no results
-		}
-		else { //received results
-			$i = 0;
-			foreach($result2 as $ent) {
-				//print_r( $row );
-				if ($ent['tag'] == "action" && $row['dialplanincludeid'] == $ent['dialplanincludeid']) {
-					if (strlen($ent['fielddata']) > 0) {
-						$tmp .= "       <action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\"/>\n";
-					}
-					else {
-						$tmp .= "       <action application=\"".$ent['fieldtype']."\"/>\n";
-					}
-				}
-				$i++;
-			} //end foreach
-			unset($sql, $resultcount2, $result2, $rowcount2);
-		} //end if results
-
-		$sql = "";
-		$sql .= " select * from v_dialplan_includes_details ";
-		$sql .= " where dialplan_include_id = '".$row['dialplan_include_id']."' ";
-		$sql .= " and v_id = $v_id ";
-		$sql .= " and tag = 'anti-action' ";
-		$sql .= " order by fieldorder asc";
-		$prepstatement2 = $db->prepare($sql);
-		$prepstatement2->execute();
-		$result2 = $prepstatement2->fetchAll();
-		$resultcount2 = count($result2);
-		unset ($prepstatement2, $sql);
-		if ($resultcount2 == 0) {
+		if ($resultcount2 == 0) { 
 			//no results
 		}
 		else { //received results
-			$i = 0;
-			foreach($result2 as $ent) {
-				if ($ent['tag'] == "anti-action" && $row['dialplanincludeid'] == $ent['dialplanincludeid']) {
-					if (strlen($ent['fielddata']) > 0) {
-						$tmp .= "       <anti-action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\"/>\n";
+
+			foreach($details as $group) {
+				$current_count = 0;
+				$x = 0;
+				foreach($group as $ent) {
+					$current_tag = $ent['tag'];
+					$c = 0;
+					if ($ent['tag'] == "condition") {
+						//determine the correct attribute
+							switch ($ent['fieldtype']) {
+							case "hour":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "minute":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "minute-of-day":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "mday":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "mweek":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "mon":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "yday":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "year":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "wday":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							case "week":
+								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
+								$condition_expression = '';
+								break;
+							default:
+								$condition_attribute = 'field="'.$ent['fieldtype'].'"';
+								$condition_expression = 'expression="'.$ent['fielddata'].'"';
+							}
+						
+						//get the count
+							$count = 0;
+							foreach($details as $group2) {
+								foreach($group2 as $ent2) {
+									if ($ent2['field_group'] == $ent['field_group'] && $ent2['tag'] == "condition") {
+										$count++;
+									}
+								}
+							}
+						//determine and then send the correct type of tag
+							if ($count == 1) { //single condition
+								//start tag
+								$tmp .= "   <condition $condition_attribute $condition_expression>\n";
+							}
+							else { //more than one condition
+								$current_count++;
+								if ($current_count < $count) {
+									//all tags should be self-closing except the last one
+									$tmp .= "   <condition $condition_attribute $condition_expression/>\n";
+								}
+								else {
+									//for the last tag use the start tag
+									$tmp .= "   <condition $condition_attribute $condition_expression>\n";
+								}
+
+							}
 					}
-					else {
-						$tmp .= "       <anti-action application=\"".$ent['fieldtype']."\"/>\n";
-					}
-				}
-				$i++;
-			} //end foreach
+					//actions
+						if ($ent['tag'] == "action") {
+							if (strlen($ent['fielddata']) > 0) {
+								$tmp .= "       <action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\"/>\n";
+							}
+							else {
+								$tmp .= "       <action application=\"".$ent['fieldtype']."\"/>\n";
+							}
+						}
+					//anti-actions
+						if ($ent['tag'] == "anti-action") {
+							if (strlen($ent['fielddata']) > 0) {
+								$tmp .= "       <anti-action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\"/>\n";
+							}
+							else {
+								$tmp .= "       <anti-action application=\"".$ent['fieldtype']."\"/>\n";
+							}
+						}
+					//set the previous tag
+						$previous_tag = $ent['tag'];
+					$i++;
+				} //end foreach
+				$tmp .= "   </condition>\n";
+				$x++;
+			}
+			if ($condition_count > 0) {
+				$condition_count = $resultcount2;
+			}
 			unset($sql, $resultcount2, $result2, $rowcount2);
 		} //end if results
-
-		if ($conditioncount > 0) {
-			$tmp .= "   </condition>\n";
-		}
-		unset ($conditioncount);
 		$tmp .= "</extension>\n";
 
 		$dialplan_order = $row['dialplanorder'];

@@ -111,8 +111,11 @@
 		$apps[$x]['db'][1]['fields'][7]['name'] = 'fielddata';
 		$apps[$x]['db'][1]['fields'][7]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][7]['description'] = '';
-		$apps[$x]['db'][1]['fields'][8]['name'] = 'fieldbreak';
-		$apps[$x]['db'][1]['fields'][8]['type'] = 'text';
+		$apps[$x]['db'][1]['fields'][8]['name'] = 'field_group';
+		$apps[$x]['db'][1]['fields'][8]['type'] = 'numeric';
 		$apps[$x]['db'][1]['fields'][8]['description'] = '';
+		$apps[$x]['db'][1]['fields'][9]['name'] = 'fieldbreak';
+		$apps[$x]['db'][1]['fields'][9]['type'] = 'text';
+		$apps[$x]['db'][1]['fields'][9]['description'] = '';
 
 ?>

@@ -34,43 +34,34 @@ else {
 	exit;
 }
 
-
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-if (isset($_REQUEST["id2"])) {
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-
-//POST to PHP variables
-if (count($_POST)>0) {
-	if (isset($_REQUEST["dialplan_include_id"])) {
-		$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+//set the action as an add or update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
 	}
-	$tag = check_str($_POST["tag"]);
-	$fieldorder = check_str($_POST["fieldorder"]);
-	$fieldtype = check_str($_POST["fieldtype"]);
-	$fielddata = check_str($_POST["fielddata"]);
-}
+	else {
+		$action = "add";
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+	if (isset($_REQUEST["id2"])) {
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+
+//get the http values and set them as php variables
+	if (count($_POST)>0) {
+		if (isset($_REQUEST["dialplan_include_id"])) {
+			$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+		}
+		$tag = check_str($_POST["tag"]);
+		$fieldorder = check_str($_POST["fieldorder"]);
+		$fieldtype = check_str($_POST["fieldtype"]);
+		$fielddata = check_str($_POST["fielddata"]);
+		$field_group = check_str($_POST["field_group"]);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$dialplan_includes_detail_id = check_str($_POST["dialplan_includes_detail_id"]);
 	}
@@ -94,7 +85,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//Add or update the database
+	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add") {
 				$sql = "insert into v_dialplan_includes_details ";
@@ -104,7 +95,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "tag, ";
 				$sql .= "fieldorder, ";
 				$sql .= "fieldtype, ";
-				$sql .= "fielddata ";
+				$sql .= "fielddata, ";
+				$sql .= "field_group ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -113,7 +105,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$tag', ";
 				$sql .= "'$fieldorder', ";
 				$sql .= "'$fieldtype', ";
-				$sql .= "'$fielddata' ";
+				$sql .= "'$fielddata', ";
+				$sql .= "'$field_group' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -136,16 +129,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "tag = '$tag', ";
 				$sql .= "fieldorder = '$fieldorder', ";
 				$sql .= "fieldtype = '$fieldtype', ";
-				$sql .= "fielddata = '$fielddata' ";
+				$sql .= "fielddata = '$fielddata', ";
+				if (strlen($field_group) == 0) {
+					$sql .= "field_group = null ";
+				}
+				else {
+					$sql .= "field_group = '$field_group' ";
+				}
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and dialplan_includes_detail_id = '$dialplan_includes_detail_id'";
 				$db->exec(check_sql($sql));
 				unset($sql);
-				
+	
 				//synchronize the xml config
 				sync_package_v_dialplan_includes();
 				
 				require_once "includes/header.php";
+
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_dialplan_includes_edit.php?id=".$dialplan_include_id."\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
@@ -154,44 +154,41 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 		   } //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true") { 
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-	$dialplan_includes_detail_id = $_GET["id"];
-	$sql = "";
-	$sql .= "select * from v_dialplan_includes_details ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and dialplan_includes_detail_id = '$dialplan_includes_detail_id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	foreach ($result as &$row) {
-		$dialplan_include_id = $row["dialplan_include_id"];
-		$tag = $row["tag"];
-		$fieldorder = $row["fieldorder"];
-		$fieldtype = $row["fieldtype"];
-		$fielddata = $row["fielddata"];
-		break; //limit to 1 row
+	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+		$dialplan_includes_detail_id = $_GET["id"];
+		$sql = "";
+		$sql .= "select * from v_dialplan_includes_details ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and dialplan_includes_detail_id = '$dialplan_includes_detail_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$dialplan_include_id = $row["dialplan_include_id"];
+			$tag = $row["tag"];
+			$fieldorder = $row["fieldorder"];
+			$fieldtype = $row["fieldtype"];
+			$fielddata = $row["fielddata"];
+			$field_group = $row["field_group"];
+			break; //limit to 1 row
+		}
+		unset ($prepstatement);
 	}
-	unset ($prepstatement);
-}
 
-
+//show the header
 	require_once "includes/header.php";
 
-
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "      <br>";
 
-
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
@@ -295,26 +292,23 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='fieldorder' class='formfld'>\n";
-	//echo "              <option></option>\n";
 	if (strlen(htmlspecialchars($fieldorder))> 0) {
-		echo "              <option selected='yes' value='".htmlspecialchars($fieldorder)."'>".htmlspecialchars($fieldorder)."</option>\n";
+		echo "              <option selected='selected' value='".htmlspecialchars($fieldorder)."'>".htmlspecialchars($fieldorder)."</option>\n";
 	}
 	$i=0;
 	while($i<=999) {
-	  if (strlen($i) == 1) {
-		echo "              <option value='00$i'>00$i</option>\n";
-	  }
-	  if (strlen($i) == 2) {
-		echo "              <option value='0$i'>0$i</option>\n";
-	  }
-	  if (strlen($i) == 3) {
-		echo "              <option value='$i'>$i</option>\n";
-	  }
-
-	  $i++;
+		if (strlen($i) == 1) {
+			echo "              <option value='00$i'>00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "              <option value='0$i'>0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "              <option value='$i'>$i</option>\n";
+		}
+		$i++;
 	}
 	echo "              </select>\n";
-
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -341,6 +335,28 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Group:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "              <select name='field_group' class='formfld'>\n";
+	echo "              <option></option>\n";
+	if (strlen(htmlspecialchars($field_group))> 0) {
+		echo "              <option selected='selected' value='".htmlspecialchars($field_group)."'>".htmlspecialchars($field_group)."</option>\n";
+	}
+	$i=0;
+	while($i<=999) {
+		echo "              <option value='$i'>$i</option>\n";
+		$i++;
+	}
+	echo "              </select>\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='dialplan_include_id' value='$dialplan_include_id'>\n";
@@ -439,7 +455,6 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	  <li><b>transfer</b> transfer the call to another extension or number</li>
 	  <li><b>voicemail</b> send the call to voicemail</li>
 	  </ul>
-
 
 	  <br />
 	  <br />

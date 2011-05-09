@@ -160,9 +160,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "select * from v_dialplan_includes ";
 		$sql .= "where v_id = '$v_id' ";
 		$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
 			$extensionname = $row["extensionname"];
 			$dialplanorder = $row["dialplanorder"];
@@ -172,7 +172,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$descr = $row["descr"];
 			break; //limit to 1 row
 		}
-		unset ($prepstatement);
+		unset ($prep_statement);
 	}
 
 //show the header
@@ -333,7 +333,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
@@ -343,15 +342,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<div align='center'>";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 		echo "<tr class='border'>\n";
 		echo "	<td align=\"center\">\n";
-		echo "      <br>";
 
-		//echo "<table width='100%' border='0'><tr>\n";
-		//echo "<td width='50%' nowrap><b>Conditions and Actions</b></td>\n";
-		//echo "<td width='50%' align='right'>&nbsp;</td>\n";
-		//echo "</tr></table>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "  <tr>\n";
 		echo "    <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>Conditions and Actions<br />\n";
@@ -364,165 +357,151 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</table>";
 		echo "<br />\n";
 
-
 		$sql = "";
 		$sql .= " select * from v_dialplan_includes_details ";
 		$sql .= " where v_id = '$v_id' ";
 		$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
-		$sql .= " and tag = 'condition' ";
-		$sql .= " order by fieldorder asc";
-		//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-		//echo $sql;
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
-		$resultcount = count($result);
-		unset ($prepstatement, $sql);
+		$sql .= " order by field_group asc, fieldorder asc";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset ($prep_statement, $sql);
+	
+		//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
+			$x = 0;
+			$details = '';
+			//conditions
+				foreach($result as $row) {
+					if ($row['tag'] == "condition") {
+						$group = $row['field_group'];
+						foreach ($row as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			//actions
+				foreach($result as $row) {
+					if ($row['tag'] == "action") {
+						$group = $row['field_group'];
+						foreach ($row as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			//anti-actions
+				foreach($result as $row) {
+					if ($row['tag'] == "anti-action") {
+						$group = $row['field_group'];
+						foreach ($row as $key => $val) {
+							$details[$group][$x][$key] = $val;
+						}
+					}
+					$x++;
+				}
+			unset($result);
+			
+		//define the alternating row styles
+			$c = 0;
+			$rowstyle["0"] = "rowstyle0";
+			$rowstyle["1"] = "rowstyle1";
 
-		$c = 0;
-		$rowstyle["0"] = "rowstyle0";
-		$rowstyle["1"] = "rowstyle1";
+		//display the results
+			echo "<div align='center'>\n";
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<tr>\n";
+			echo "<th align='center' width='90px;'>Tag</th>\n";
+			echo "<th align='center' width='150px;'>Type</th>\n";
+			echo "<th align='center' width='70%'>Data</th>\n";
+			echo "<th align='center'>Order</th>\n";
+			//echo "<th align='center'>Group</th>\n";
+			echo "<td align='right' width='42'>\n";
+			echo "	<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			echo "</td>\n";
+			echo "<tr>\n";
 
-		echo "<div align='center'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			if ($result_count == 0) {
+				//no results
+			}
+			else { //received results
+				$x = 0;
+				foreach($details as $group) {
+					if ($x > 0) {
+						echo "<tr>\n";
+						echo "<td colspan='6'>\n";
+						echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+						echo "	<tr>\n";
+						echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+						echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
+						echo "		<td width='33.3%' align='right'>\n";
+						echo "			<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+						echo "		</td>\n";
+						echo "	</tr>\n";
+						echo "	</table>\n";
+						echo "</td>\n";
+						echo "</tr>\n";
+						echo "</table>";
+						echo "</div>";
+						echo "<br><br>";
 
-		echo "<tr>\n";
-		echo "<th align='center'>Tag</th>\n";
-		echo "<th align='center'>Type</th>\n";
-		echo "<th align='center'>Data</th>\n";
-		echo "<th align='center'>Order</th>\n";
-		echo "<td align='right' width='42'>\n";
-		echo "	<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
-		echo "</td>\n";
-		echo "<tr>\n";
+						echo "<div align='center'>\n";
+						echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+						echo "<tr>\n";
+						echo "<th align='center' width='90px;'>Tag</th>\n";
+						echo "<th align='center' width='150px;'>Type</th>\n";
+						echo "<th align='center' width='70%'>Data</th>\n";
+						echo "<th align='center'>Order</th>\n";
+						//echo "<th align='center'>Group</th>\n";
+						echo "<td align='right' width='42'>\n";
+						echo "	<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+						echo "</td>\n";
+						echo "<tr>\n";
+					}
 
-		if ($resultcount == 0) {
-			//no results
-		}
-		else { //received results
-			foreach($result as $row) {
-				echo "<tr >\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".wordwrap($row[fielddata],180,"<br>",1)."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-				echo "	<td valign='top' align='right'>\n";
-				echo "		<a href='v_dialplan_includes_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_dialplan_includes_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
-			} //end foreach
-			unset($sql, $result, $rowcount);
-		} //end if results
+					foreach($group as $row) {
+						echo "<tr >\n";
+						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['tag']."</td>\n";
+						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['fieldtype']."</td>\n";
+						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".wordwrap($row['fielddata'],180,"<br>",1)."</td>\n";
+						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['fieldorder']."</td>\n";
+						//echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['field_group']."</td>\n";
+						echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
+						echo "		<a href='v_dialplan_includes_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+						echo "		<a href='v_dialplan_includes_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "	</td>\n";
+						echo "</tr>\n";
+					}
+					if ($c==0) { $c=1; } else { $c=0; }
+					$x++;
+				} //end foreach
+				unset($sql, $result, $rowcount);
+				
+			} //end if results
 
-		//--------------------------------------------------------------------------
+			echo "<tr>\n";
+			echo "<td colspan='6'>\n";
+			echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+			echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
+			echo "		<td width='33.3%' align='right'>\n";
+			echo "			<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "	</table>\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+			echo "</table>";
+			echo "</div>";
+			echo "<br><br>";
 
-		$sql = "";
-		$sql .= " select * from v_dialplan_includes_details ";
-		$sql .= " where v_id = '$v_id' ";
-		$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
-		$sql .= " and tag = 'action' ";
-		$sql .= " order by fieldorder asc";
-		//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-		//$sql .= " limit $rowsperpage offset $offset ";
-		//echo $sql;
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
-		$resultcount = count($result);
-		unset ($prepstatement, $sql);
-
-		//$c = 0;
-		//$rowstyle["0"] = "rowstyle0";
-		//$rowstyle["1"] = "rowstyle1";
-
-		if ($resultcount == 0) {
-			//no results
-		}
-		else {
-			foreach($result as $row) {
-				//print_r( $row );
-				echo "<tr >\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-				echo "	<td valign='top' align='right'>\n";
-				echo "		<a href='v_dialplan_includes_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_dialplan_includes_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
-			} //end foreach
-			unset($sql, $result, $rowcount);
-		} //end if results
-
-		//--------------------------------------------------------------------------
-
-		$sql = "";
-		$sql .= " select * from v_dialplan_includes_details ";
-		$sql .= " where v_id = '$v_id' ";
-		$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
-		$sql .= " and tag = 'anti-action' ";
-		$sql .= " order by fieldorder asc";
-		//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-		//$sql .= " limit $rowsperpage offset $offset ";
-		//echo $sql;
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
-		$resultcount = count($result);
-		unset ($prepstatement, $sql);
-
-		//$c = 0;
-		//$rowstyle["0"] = "rowstyle0";
-		//$rowstyle["1"] = "rowstyle1";
-
-		if ($resultcount == 0) {
-			//no results
-		}
-		else { //received results
-			foreach($result as $row) {
-				echo "<tr >\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-				echo "	<td valign='top' align='right'>\n";
-				echo "		<a href='v_dialplan_includes_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_dialplan_includes_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
-			} //end foreach
-			unset($sql, $result, $rowcount);
-		} //end if results
-
-		echo "<tr>\n";
-		echo "<td colspan='5'>\n";
-		echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-		echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
-		echo "		<td width='33.3%' align='right'>\n";
-		echo "			<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
-		echo "		</td>\n";
-		echo "	</tr>\n";
-		echo "	</table>\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "</table>";
-		echo "</div>";
-		echo "<br><br>";
-		echo "<br><br>";
-
-		echo "</td>";
-		echo "</tr>";
-		echo "</table>";
-		echo "</div>";
-		echo "<br><br>";
+			echo "</td>";
+			echo "</tr>";
+			echo "</table>";
+			echo "</div>";
+			echo "<br><br>";
 	} //end if update
 
 //show the footer
