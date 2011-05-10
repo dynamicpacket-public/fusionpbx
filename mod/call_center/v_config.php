@@ -206,7 +206,7 @@
 		$apps[$x]['db'][1]['fields'][27]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][27]['description'] = '';
 
-	// CREATE TABLE v_call_center_queue 
+	// CREATE TABLE v_call_center_queue
 		$apps[$x]['db'][2]['table'] = 'v_call_center_queue';
 		$apps[$x]['db'][2]['fields'][0]['name'] = 'call_center_queue_id';
 		$apps[$x]['db'][2]['fields'][0]['type']['pgsql'] = 'serial';
@@ -249,21 +249,24 @@
 		$apps[$x]['db'][2]['fields'][12]['name'] = 'queue_tier_rule_no_agent_no_wait';
 		$apps[$x]['db'][2]['fields'][12]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][12]['description'] = '';
-		$apps[$x]['db'][2]['fields'][13]['name'] = 'queue_discard_abandoned_after';
-		$apps[$x]['db'][2]['fields'][13]['type'] = 'numeric';
+		$apps[$x]['db'][2]['fields'][13]['name'] = 'queue_timeout_action';
+		$apps[$x]['db'][2]['fields'][13]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][13]['description'] = '';
-		$apps[$x]['db'][2]['fields'][14]['name'] = 'queue_abandoned_resume_allowed';
-		$apps[$x]['db'][2]['fields'][14]['type'] = 'text';
+		$apps[$x]['db'][2]['fields'][14]['name'] = 'queue_discard_abandoned_after';
+		$apps[$x]['db'][2]['fields'][14]['type'] = 'numeric';
 		$apps[$x]['db'][2]['fields'][14]['description'] = '';
-		$apps[$x]['db'][2]['fields'][15]['name'] = 'queue_tier_rule_wait_multiply_level';
+		$apps[$x]['db'][2]['fields'][15]['name'] = 'queue_abandoned_resume_allowed';
 		$apps[$x]['db'][2]['fields'][15]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][15]['description'] = '';
-		$apps[$x]['db'][2]['fields'][16]['name'] = 'queue_cid_prefix';
+		$apps[$x]['db'][2]['fields'][16]['name'] = 'queue_tier_rule_wait_multiply_level';
 		$apps[$x]['db'][2]['fields'][16]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][16]['description'] = '';
-		$apps[$x]['db'][2]['fields'][17]['name'] = 'queue_description';
+		$apps[$x]['db'][2]['fields'][17]['name'] = 'queue_cid_prefix';
 		$apps[$x]['db'][2]['fields'][17]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][17]['description'] = '';
+		$apps[$x]['db'][2]['fields'][18]['name'] = 'queue_description';
+		$apps[$x]['db'][2]['fields'][18]['type'] = 'text';
+		$apps[$x]['db'][2]['fields'][18]['description'] = '';
 
 	// CREATE TABLE v_call_center_tier 
 		$apps[$x]['db'][3]['table'] = 'v_call_center_tier';

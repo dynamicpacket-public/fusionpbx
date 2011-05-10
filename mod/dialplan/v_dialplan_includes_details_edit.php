@@ -56,6 +56,8 @@ else {
 		$fieldorder = check_str($_POST["fieldorder"]);
 		$fieldtype = check_str($_POST["fieldtype"]);
 		$fielddata = check_str($_POST["fielddata"]);
+		$fieldbreak = check_str($_POST["fieldbreak"]);
+		$field_inline = check_str($_POST["field_inline"]);
 		$field_group = check_str($_POST["field_group"]);
 	}
 
@@ -96,6 +98,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "fieldorder, ";
 				$sql .= "fieldtype, ";
 				$sql .= "fielddata, ";
+				$sql .= "fieldbreak, ";
+				$sql .= "field_inline, ";
 				$sql .= "field_group ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -106,6 +110,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$fieldorder', ";
 				$sql .= "'$fieldtype', ";
 				$sql .= "'$fielddata', ";
+				$sql .= "'$fieldbreak', ";
+				$sql .= "'$field_inline', ";
 				$sql .= "'$field_group' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -130,6 +136,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "fieldorder = '$fieldorder', ";
 				$sql .= "fieldtype = '$fieldtype', ";
 				$sql .= "fielddata = '$fielddata', ";
+				$sql .= "fieldbreak = '$fieldbreak', ";
+				$sql .= "field_inline = '$field_inline', ";
 				if (strlen($field_group) == 0) {
 					$sql .= "field_group = null ";
 				}
@@ -172,6 +180,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fieldorder = $row["fieldorder"];
 			$fieldtype = $row["fieldtype"];
 			$fielddata = $row["fielddata"];
+			$fieldbreak = $row["fieldbreak"];
+			$field_inline = $row["field_inline"];
 			$field_group = $row["field_group"];
 			break; //limit to 1 row
 		}
@@ -356,6 +366,74 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	
+	if ($action == "update") {
+		if ($tag == "condition") {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    Break:\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "              <select name='fieldbreak' class='formfld'>\n";
+			echo "              <option></option>\n";
+			if ($fieldbreak == "on-true") {
+				echo "              <option selected='selected' value='on-true'>on-true</option>\n";
+			}
+			else {
+				echo "              <option value='on-true'>on-true</option>\n";
+			}
+			if ($fieldbreak == "on-false") {
+				echo "              <option selected='selected' value='on-false'>on-false</option>\n";
+			}
+			else {
+				echo "              <option value='on-false'>on-false</option>\n";
+			}
+			if ($fieldbreak == "always") {
+				echo "              <option selected='selected' value='always'>always</option>\n";
+			}
+			else {
+				echo "              <option value='always'>always</option>\n";
+			}
+			if ($fieldbreak == "never") {
+				echo "              <option selected='selected' value='never'>never</option>\n";
+			}
+			else {
+				echo "              <option value='never'>never</option>\n";
+			}
+			echo "              </select>\n";
+			echo "<br />\n";
+			echo "\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+		
+		if ($tag == "action") {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    Inline:\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "              <select name='field_inline' class='formfld'>\n";
+			echo "              <option></option>\n";
+			if ($field_inline == "true") {
+				echo "              <option selected='selected' value='true'>true</option>\n";
+			}
+			else {
+				echo "              <option value='true'>true</option>\n";
+			}
+			if ($field_inline == "false") {
+				echo "              <option selected='selected' value='false'>false</option>\n";
+			}
+			else {
+				echo "              <option value='false'>false</option>\n";
+			}
+			echo "              </select>\n";
+			echo "<br />\n";
+			echo "\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+	}
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";

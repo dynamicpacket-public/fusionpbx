@@ -4435,6 +4435,12 @@ function sync_package_v_dialplan_includes() {
 								$condition_expression = 'expression="'.$ent['fielddata'].'"';
 							}
 						
+						//get the condition break attribute
+							$condition_break = '';
+							if (strlen($ent['fieldbreak']) > 0) {
+								$condition_break = "break=\"".$ent['fieldbreak']."\"";
+							}
+						
 						//get the count
 							$count = 0;
 							foreach($details as $group2) {
@@ -4447,28 +4453,34 @@ function sync_package_v_dialplan_includes() {
 						//determine and then send the correct type of tag
 							if ($count == 1) { //single condition
 								//start tag
-								$tmp .= "   <condition $condition_attribute $condition_expression>\n";
+								$tmp .= "   <condition $condition_attribute $condition_expression $condition_break>\n";
 							}
 							else { //more than one condition
 								$current_count++;
 								if ($current_count < $count) {
 									//all tags should be self-closing except the last one
-									$tmp .= "   <condition $condition_attribute $condition_expression/>\n";
+									$tmp .= "   <condition $condition_attribute $condition_expression $condition_break/>\n";
 								}
 								else {
 									//for the last tag use the start tag
-									$tmp .= "   <condition $condition_attribute $condition_expression>\n";
+									$tmp .= "   <condition $condition_attribute $condition_expression $condition_break>\n";
 								}
 
 							}
 					}
 					//actions
 						if ($ent['tag'] == "action") {
+							//get the action inline attribute
+							$action_inline = '';
+							if (strlen($ent['field_inline']) > 0) {
+								$action_inline = "inline=\"".$ent['field_inline']."\"";
+							}
+							
 							if (strlen($ent['fielddata']) > 0) {
-								$tmp .= "       <action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\"/>\n";
+								$tmp .= "       <action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\" $action_inline/>\n";
 							}
 							else {
-								$tmp .= "       <action application=\"".$ent['fieldtype']."\"/>\n";
+								$tmp .= "       <action application=\"".$ent['fieldtype']."\" $action_inline/>\n";
 							}
 						}
 					//anti-actions
@@ -5233,6 +5245,9 @@ if (!function_exists('sync_package_v_call_center')) {
 			$$name = $value;
 		}
 
+		//include the classes
+		include "includes/classes/dialplan.php";
+
 		$sql = "";
 		$sql .= "select * from v_call_center_queue ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -5255,6 +5270,7 @@ if (!function_exists('sync_package_v_call_center')) {
 				$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
 				$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
 				$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
+				$queue_timeout_action = $row["queue_timeout_action"];
 				$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
 				$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
 				$queue_cid_prefix = $row["queue_cid_prefix"];
@@ -5282,6 +5298,7 @@ if (!function_exists('sync_package_v_call_center')) {
 						unset ($sql, $prepstatement2);
 
 						if ($action == 'add') {
+
 							//create queue entry in the dialplan
 								$extensionname = $queue_name;
 								$dialplanorder ='9';
@@ -5293,35 +5310,141 @@ if (!function_exists('sync_package_v_call_center')) {
 								$opt1value = $row['call_center_queue_id'];
 								$dialplan_include_id = v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context, $enabled, $descr, $opt1name, $opt1value);
 
-								$tag = 'condition'; //condition, action, antiaction
-								$fieldtype = 'destination_number';
-								$fielddata = '^'.$row['queue_extension'].'$';
-								$fieldorder = '000';
-								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
-								$tag = 'action'; //condition, action, antiaction
-								$fieldtype = 'answer';
-								$fielddata = '';
-								$fieldorder = '001';
-								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+								//group 1
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'condition'; //condition, action, antiaction
+									$dialplan->fieldtype = '${caller_id_name}';
+									$dialplan->fielddata = '^([^#]+#)(.*)$';
+									$dialplan->fieldbreak = 'never';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '1';
+									$dialplan->fieldorder = '000';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
 
-								$tag = 'action'; //condition, action, antiaction
-								$fieldtype = 'set';
-								$fielddata = 'caller_id_name='.$queue_cid_prefix.'${caller_id_name}';
-								$fieldorder = '002';
-								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'set';
+									$dialplan->fielddata = 'caller_id_name=$2';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '1';
+									$dialplan->fieldorder = '001';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
 
-								$tag = 'action'; //condition, action, antiaction
-								$fieldtype = 'system';
-								$fielddata = 'mkdir -p $${base_dir}/recordings/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/';
-								$fieldorder = '003';
-								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+								//group 2
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'condition'; //condition, action, antiaction
+									$dialplan->fieldtype = 'destination_number';
+									$dialplan->fielddata = '^'.$row['queue_extension'].'$';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '000';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
 
-								$tag = 'action'; //condition, action, antiaction
-								$fieldtype = 'callcenter';
-								$fielddata = $queue_name."@".$_SESSION['domains'][$v_id]['domain'];
-								$fieldorder = '004';
-								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'answer';
+									$dialplan->fielddata = '';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '001';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'set';
+									$dialplan->fielddata = 'hangup_after_bridge=true';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '002';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'set';
+									$dialplan->fielddata = "caller_id_name=".$queue_cid_prefix."#\${caller_id_name}";
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '003';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'system';
+									$dialplan->fielddata = 'mkdir -p $${base_dir}/recordings/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '004';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'callcenter';
+									$dialplan->fielddata = $queue_name."@".$_SESSION['domains'][$v_id]['domain'];
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '005';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+
+									if (strlen($queue_timeout_action) > 0) {
+										$action_array = explode(":",$queue_timeout_action);
+										$dialplan = new dialplan;
+										$dialplan->v_id = $v_id;
+										$dialplan->dialplan_include_id = $dialplan_include_id;
+										$dialplan->tag = 'action'; //condition, action, antiaction
+										$dialplan->fieldtype = $action_array[0];
+										$dialplan->fielddata = substr($queue_timeout_action, strlen($action_array[0])+1, strlen($queue_timeout_action));
+										$dialplan->fieldbreak = '';
+										$dialplan->field_inline = '';
+										$dialplan->field_group = '2';
+										$dialplan->fieldorder = '006';
+										$dialplan->dialplan_detail_add();
+										unset($dialplan);
+									}
+
+									$dialplan = new dialplan;
+									$dialplan->v_id = $v_id;
+									$dialplan->dialplan_include_id = $dialplan_include_id;
+									$dialplan->tag = 'action'; //condition, action, antiaction
+									$dialplan->fieldtype = 'hangup';
+									$dialplan->fielddata = '';
+									$dialplan->fieldbreak = '';
+									$dialplan->field_inline = '';
+									$dialplan->field_group = '2';
+									$dialplan->fieldorder = '007';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
 						}
 						if ($action == 'update') {
 							//update the queue entry in the dialplan
@@ -5393,7 +5516,7 @@ if (!function_exists('sync_package_v_call_center')) {
 						}
 						unset($action);
 						unset($dialplanincludeid);
-					} //end if strlen ivr_menu_id; add the IVR Menu to the dialplan
+					} //end if strlen call_center_queue_id; add the call center queue to the dialplan
 			}
 
 			//prepare Queue XML string

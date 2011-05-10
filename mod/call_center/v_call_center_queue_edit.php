@@ -58,6 +58,7 @@ else {
 		$queue_tier_rule_wait_second = check_str($_POST["queue_tier_rule_wait_second"]);
 		$queue_tier_rule_wait_multiply_level = check_str($_POST["queue_tier_rule_wait_multiply_level"]);
 		$queue_tier_rule_no_agent_no_wait = check_str($_POST["queue_tier_rule_no_agent_no_wait"]);
+		$queue_timeout_action = check_str($_POST["queue_timeout_action"]);
 		$queue_discard_abandoned_after = check_str($_POST["queue_discard_abandoned_after"]);
 		$queue_abandoned_resume_allowed = check_str($_POST["queue_abandoned_resume_allowed"]);
 		$queue_cid_prefix = check_str($_POST["queue_cid_prefix"]);
@@ -74,7 +75,6 @@ else {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
 	if ($action == "update") {
 		$call_center_queue_id = check_str($_POST["call_center_queue_id"]);
 	}
@@ -93,6 +93,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($queue_tier_rule_wait_second) == 0) { $msg .= "Please provide: Tier Rule Wait Second<br>\n"; }
 		//if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $msg .= "Please provide: Tier Rule Wait Multiply Level<br>\n"; }
 		//if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $msg .= "Please provide: Tier Rule No Agent No Wait<br>\n"; }
+		//if (strlen($queue_timeout_action) == 0) { $msg .= "Please provide: Timeout Action<br>\n"; }		
 		//if (strlen($queue_discard_abandoned_after) == 0) { $msg .= "Please provide: Discard Abandoned After<br>\n"; }
 		//if (strlen($queue_abandoned_resume_allowed) == 0) { $msg .= "Please provide: Abandoned Resume Allowed<br>\n"; }
 		//if (strlen($queue_cid_prefix) == 0) { $msg .= "Please provide: Caller ID Prefix<br>\n"; }
@@ -129,6 +130,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_tier_rule_wait_second, ";
 				$sql .= "queue_tier_rule_wait_multiply_level, ";
 				$sql .= "queue_tier_rule_no_agent_no_wait, ";
+				$sql .= "queue_timeout_action, ";
 				$sql .= "queue_discard_abandoned_after, ";
 				$sql .= "queue_abandoned_resume_allowed, ";
 				$sql .= "queue_cid_prefix, ";
@@ -149,6 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$queue_tier_rule_wait_second', ";
 				$sql .= "'$queue_tier_rule_wait_multiply_level', ";
 				$sql .= "'$queue_tier_rule_no_agent_no_wait', ";
+				$sql .= "'$queue_timeout_action', ";
 				$sql .= "'$queue_discard_abandoned_after', ";
 				$sql .= "'$queue_abandoned_resume_allowed', ";
 				$sql .= "'$queue_cid_prefix', ";
@@ -185,6 +188,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_tier_rule_wait_second = '$queue_tier_rule_wait_second', ";
 				$sql .= "queue_tier_rule_wait_multiply_level = '$queue_tier_rule_wait_multiply_level', ";
 				$sql .= "queue_tier_rule_no_agent_no_wait = '$queue_tier_rule_no_agent_no_wait', ";
+				$sql .= "queue_timeout_action = '$queue_timeout_action', ";
 				$sql .= "queue_discard_abandoned_after = '$queue_discard_abandoned_after', ";
 				$sql .= "queue_abandoned_resume_allowed = '$queue_abandoned_resume_allowed', ";
 				$sql .= "queue_cid_prefix = '$queue_cid_prefix', ";
@@ -228,6 +232,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$queue_time_base_score = $row["queue_time_base_score"];
 			$queue_max_wait_time = $row["queue_max_wait_time"];
 			$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
+			$queue_timeout_action = $row["queue_timeout_action"];
 			$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
 			$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
 			$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
@@ -446,6 +451,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  <input class='formfld' type='text' name='queue_max_wait_time_with_no_agent' maxlength='255' value='$queue_max_wait_time_with_no_agent'>\n";
 	echo "<br />\n";
 	echo "Enter the max wait time with no agent.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Timeout Action:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
+	switch_select_destination("dialplan", "", "queue_timeout_action", $queue_timeout_action, "", "");
+	echo "<br />\n";
+	echo "Set the action to perform when the max wait time is reached.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

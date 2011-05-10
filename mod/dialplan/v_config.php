@@ -102,20 +102,23 @@
 		$apps[$x]['db'][1]['fields'][4]['name'] = 'tag';
 		$apps[$x]['db'][1]['fields'][4]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][4]['description'] = '';
-		$apps[$x]['db'][1]['fields'][5]['name'] = 'fieldorder';
-		$apps[$x]['db'][1]['fields'][5]['type'] = 'numeric';
+		$apps[$x]['db'][1]['fields'][5]['name'] = 'fieldtype';
+		$apps[$x]['db'][1]['fields'][5]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][5]['description'] = '';
-		$apps[$x]['db'][1]['fields'][6]['name'] = 'fieldtype';
+		$apps[$x]['db'][1]['fields'][6]['name'] = 'fielddata';
 		$apps[$x]['db'][1]['fields'][6]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][6]['description'] = '';
-		$apps[$x]['db'][1]['fields'][7]['name'] = 'fielddata';
+		$apps[$x]['db'][1]['fields'][7]['name'] = 'fieldbreak';
 		$apps[$x]['db'][1]['fields'][7]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][7]['description'] = '';
-		$apps[$x]['db'][1]['fields'][8]['name'] = 'field_group';
-		$apps[$x]['db'][1]['fields'][8]['type'] = 'numeric';
+		$apps[$x]['db'][1]['fields'][8]['name'] = 'field_inline';
+		$apps[$x]['db'][1]['fields'][8]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][8]['description'] = '';
-		$apps[$x]['db'][1]['fields'][9]['name'] = 'fieldbreak';
-		$apps[$x]['db'][1]['fields'][9]['type'] = 'text';
+		$apps[$x]['db'][1]['fields'][9]['name'] = 'field_group';
+		$apps[$x]['db'][1]['fields'][9]['type'] = 'numeric';
 		$apps[$x]['db'][1]['fields'][9]['description'] = '';
+		$apps[$x]['db'][1]['fields'][10]['name'] = 'fieldorder';
+		$apps[$x]['db'][1]['fields'][10]['type'] = 'numeric';
+		$apps[$x]['db'][1]['fields'][10]['description'] = '';
 
 ?>
