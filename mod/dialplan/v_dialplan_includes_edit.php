@@ -47,6 +47,7 @@ else {
 //get the http post values and set them as php variables
 	if (count($_POST)>0) {
 		$extensionname = check_str($_POST["extensionname"]);
+		$extension_number = check_str($_POST["extension_number"]);
 		$dialplanorder = check_str($_POST["dialplanorder"]);
 		$extensioncontinue = check_str($_POST["extensioncontinue"]);
 		if (strlen($extensioncontinue) == 0) { $extensioncontinue = "false"; }
@@ -91,6 +92,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "v_id, ";
 					$sql .= "extensionname, ";
+					$sql .= "extension_number, ";
 					$sql .= "dialplanorder, ";
 					$sql .= "extensioncontinue, ";
 					$sql .= "context, ";
@@ -101,6 +103,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "'$v_id', ";
 					$sql .= "'$extensionname', ";
+					$sql .= "'$extension_number', ";
 					$sql .= "'$dialplanorder', ";
 					$sql .= "'$extensioncontinue', ";
 					$sql .= "'$context', ";
@@ -128,6 +131,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_dialplan_includes set ";
 					$sql .= "v_id = '$v_id', ";
 					$sql .= "extensionname = '$extensionname', ";
+					$sql .= "extension_number = '$extension_number', ";
 					$sql .= "dialplanorder = '$dialplanorder', ";
 					$sql .= "extensioncontinue = '$extensioncontinue', ";
 					$sql .= "context = '$context', ";
@@ -165,6 +169,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
 			$extensionname = $row["extensionname"];
+			$extension_number = $row["extension_number"];
 			$dialplanorder = $row["dialplanorder"];
 			$extensioncontinue = $row["extensioncontinue"];
 			$context = $row["context"];
@@ -210,7 +215,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -221,7 +226,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Number:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='extension_number' maxlength='255' value=\"$extension_number\">\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Order:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -252,7 +268,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	//echo "<tr>\n";
-	//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	//echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	//echo "    Context:\n";
 	//echo "</td>\n";
 	//echo "<td class='vtable' align='left'>\n";
@@ -263,7 +279,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Continue:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -288,7 +304,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Enabled:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -313,7 +329,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Description:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -433,8 +449,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "<td colspan='6'>\n";
 						echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 						echo "	<tr>\n";
-						echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-						echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
+						echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+						echo "		<td width='33.3%' align='center' nowrap='nowrap'>$pagingcontrols</td>\n";
 						echo "		<td width='33.3%' align='right'>\n";
 						echo "			<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
 						echo "		</td>\n";
@@ -467,7 +483,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".wordwrap($row['fielddata'],180,"<br>",1)."</td>\n";
 						echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['fieldorder']."</td>\n";
 						//echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['field_group']."</td>\n";
-						echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
+						echo "	<td valign='top' align='right' nowrap='nowrap'='nowrap='nowrap''>\n";
 						echo "		<a href='v_dialplan_includes_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
 						echo "		<a href='v_dialplan_includes_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 						echo "	</td>\n";
@@ -484,8 +500,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<td colspan='6'>\n";
 			echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
-			echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-			echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
+			echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+			echo "		<td width='33.3%' align='center' nowrap='nowrap'>$pagingcontrols</td>\n";
 			echo "		<td width='33.3%' align='right'>\n";
 			echo "			<a href='v_dialplan_includes_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
 			echo "		</td>\n";

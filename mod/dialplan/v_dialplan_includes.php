@@ -116,7 +116,8 @@ $order = $_GET["order"];
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo thorderby('extensionname', 'Extension Name', $orderby, $order);
+	echo thorderby('extensionname', 'Name', $orderby, $order);
+	echo thorderby('extension_number', 'Number', $orderby, $order);
 	echo thorderby('dialplanorder', 'Order', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
@@ -132,15 +133,43 @@ $order = $_GET["order"];
 	}
 	else { //received results
 		foreach($result as $row) {
+			if (strlen($row['extension_number']) == 0) {
+				$sql = "";
+				$sql .= "select * from v_dialplan_includes_details ";
+				$sql .= "where v_id = '$v_id' ";
+				$sql .= "and dialplan_include_id = '".$row['dialplan_include_id']."' ";
+				$sql .= "and fieldtype = 'destination_number' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$tmp_result = $prep_statement->fetchAll();
+				foreach ($tmp_result as &$tmp) {
+					//prepare the extension number
+						preg_match_all('/[\|0-9\*]/',$tmp["fielddata"], $tmp_match);
+						$extension_number = implode("",$tmp_match[0])."<br/><br/>";
+						$extension_number = str_replace("|", " ", $extension_number);
+						$row['extension_number'] = $extension_number;
+					//update the extension number
+						$sql = "update v_dialplan_includes set ";
+						$sql .= "extension_number = '$extension_number', ";
+						$sql .= "where v_id = '$v_id' ";
+						$sql .= "and dialplan_include_id = '".$row['dialplan_include_id']."'";
+						$db->exec($sql);
+						unset($sql);
+					break; //limit to 1 row
+				}
+				unset ($prep_statement);
+			}
+	
 			echo "<tr >\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[extensionname]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[dialplanorder]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
-			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[descr]."&nbsp;</td>\n";
+			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['extensionname']."</td>\n";
+			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['extension_number']."</td>\n";
+			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['dialplanorder']."</td>\n";
+			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['enabled']."</td>\n";
+			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row['descr']."&nbsp;</td>\n";
 			if (ifgroup("superadmin")) {
 				echo "   <td valign='top' align='right'>\n";
-				echo "		<a href='v_dialplan_includes_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_dialplan_includes_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='v_dialplan_includes_edit.php?id=".$row['dialplan_include_id']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='v_dialplan_includes_delete.php?id=".$row['dialplan_include_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 				echo "   </td>\n";
 			}
 			echo "</tr>\n";
@@ -151,7 +180,7 @@ $order = $_GET["order"];
 
 
 	echo "<tr>\n";
-	echo "<td colspan='5'>\n";
+	echo "<td colspan='6'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
@@ -172,7 +201,6 @@ $order = $_GET["order"];
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
 	echo "<br />\n";
-	//echo "<br />\n";
 	if ($v_path_show) {
 		echo $v_dialplan_default_dir;
 	}
