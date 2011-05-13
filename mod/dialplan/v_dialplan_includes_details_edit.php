@@ -92,7 +92,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "add") {
 				$sql = "insert into v_dialplan_includes_details ";
 				$sql .= "(";
-				$sql .= "v_id, ";
 				$sql .= "dialplan_include_id, ";
 				$sql .= "tag, ";
 				$sql .= "fieldorder, ";
@@ -100,11 +99,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "fielddata, ";
 				$sql .= "fieldbreak, ";
 				$sql .= "field_inline, ";
-				$sql .= "field_group ";
+				$sql .= "field_group, ";
+				$sql .= "v_id ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'$v_id', ";
 				$sql .= "'$dialplan_include_id', ";
 				$sql .= "'$tag', ";
 				$sql .= "'$fieldorder', ";
@@ -112,7 +111,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$fielddata', ";
 				$sql .= "'$fieldbreak', ";
 				$sql .= "'$field_inline', ";
-				$sql .= "'$field_group' ";
+				if (strlen($field_group) == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'$field_group', ";
+				}
+				$sql .= "'$v_id' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
