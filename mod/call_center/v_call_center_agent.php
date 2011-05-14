@@ -36,8 +36,11 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
-$orderby = $_GET["orderby"];
-$order = $_GET["order"];
+//get http values and set them to php variables
+	$orderby = $_GET["orderby"];
+	$order = $_GET["order"];
+
+//show content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -48,6 +51,7 @@ $order = $_GET["order"];
 	echo "<tr>\n";
 	echo "<td width='50%' align='left' nowrap='nowrap'><b>Call Center Agent List</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_call_center_agent_status.php'\" value='Status'>\n";
 	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_call_center_queue.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
