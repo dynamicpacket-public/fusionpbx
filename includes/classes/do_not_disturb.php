@@ -113,6 +113,9 @@ include "root.php";
 			$sql .= "'$hunt_group_enabled', ";
 			$sql .= "'$hunt_group_descr' ";
 			$sql .= ")";
+			if ($this->debug) {
+				echo $sql."<br />";
+			}
 			$db->exec(check_sql($sql));
 			unset($sql);
 		} //function
@@ -154,6 +157,9 @@ include "root.php";
 			$sql .= "huntgroupdescr = '$hunt_group_descr' ";
 			$sql .= "where v_id = '$this->v_id' ";
 			$sql .= "and hunt_group_id = '$this->dnd_id' ";
+			if ($this->debug) {
+				echo $sql."<br />";
+			}
 			$db->exec(check_sql($sql));
 			unset($sql);
 		} //function
