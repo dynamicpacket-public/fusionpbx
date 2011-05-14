@@ -19,6 +19,15 @@
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
+		$apps[$x]['menu'][0]['title']['en'] = 'Agent Status';
+		$apps[$x]['menu'][0]['guid'] = '597C483A-51A9-F95A-8D54-EA7D87ADA2B8';
+		$apps[$x]['menu'][0]['parent_guid'] = '0438B504-8613-7887-C420-C837FFB20CB1';
+		$apps[$x]['menu'][0]['category'] = 'internal';
+		$apps[$x]['menu'][0]['path'] = '/mod/call_center/v_call_center_agent_status.php';
+		$apps[$x]['menu'][0]['groups'][] = 'agent_admin';
+		$apps[$x]['menu'][0]['groups'][] = 'admin';
+		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_center_queues_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'agent';
