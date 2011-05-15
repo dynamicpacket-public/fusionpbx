@@ -44,13 +44,7 @@ require_once "includes/checkauth.php";
 		$action = trim($_GET["action"]);
 		$data = trim($_GET["data"]);
 		$direction = trim($_GET["direction"]);
-		if (ifgroup("admin") || ifgroup("superadmin") || ifgroup("agent_admin")) {
-			$username = trim($_GET["username"]);
-		}
-		else {
-			$username = $_SESSION['username'];
-		}
-		
+		$username = $_SESSION['username'];
 	}
 
 //authorized commands
@@ -137,7 +131,6 @@ if (count($_GET)>0) {
 				$result = $prepstatement->fetchAll();
 				foreach ($result as &$row) {
 					$extension = $row["extension"];
-					//echo "ext: $extension<br />\n";
 
 					//set the default action
 						if ($user_status == "Do Not Disturb") {
@@ -181,7 +174,7 @@ if (count($_GET)>0) {
 								$dnd->dnd_update();
 							}
 						}
-
+						$dnd->debug = false;
 						$dnd->dnd_status();
 						unset($dnd);
 				}
@@ -242,12 +235,7 @@ if (count($_GET)>0) {
 		}
 		*/
 
-		//echo "<b>switch command:</b>\n";
-		//echo "<pre>\n";
 		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		//echo htmlentities($switch_result);
-		//echo "</pre>\n";
-
 		if ($action == "record") {
 			if (trim($_GET["action2"]) == "stop") {
 				$x=0;
@@ -267,7 +255,6 @@ if (count($_GET)>0) {
 			}
 		}
 	}
-
 }
 
 ?>

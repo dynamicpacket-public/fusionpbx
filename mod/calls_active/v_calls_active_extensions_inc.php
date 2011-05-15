@@ -43,7 +43,6 @@ require_once "includes/checkauth.php";
 	$c = 0;
 	$rowstyle["0"] = "rowstyle1";
 	$rowstyle["1"] = "rowstyle1";
-	//$rowstyle["1"] = "rowstyle1";
 
 //get the user status
 	if ($_SESSION['user_status_display'] == "false") {
@@ -161,23 +160,52 @@ require_once "includes/checkauth.php";
 		//get the named array
 			$channels_array = csv_to_named_array($channels_array[0], ",");
 
-		//active channels array
-			$x = 0;
+		//remove other domains
+			$x = 1;
 			foreach ($channels_array as $row) {
+				//set the original array id
+					$channels_array[$x]['x'] = $x;
+				//unset domains that are not related to this tenant
+					$temp_array = explode("@", $row['presence_id']);
+					if ($temp_array[1] != $v_domain) {
+						unset($channels_array[$x]);
+					}
+				$x++;
+			}
+
+		//active channels array
+			foreach ($channels_array as $row) {
+
 				//set the php variables
 					foreach ($row as $key => $value) {
 						$$key = $value;
 					}
-				//parse some of the php variables
-					$name_array = explode("/", $name);
-					//$sip_profile = $name_array[1];
-					$sip_uri = $name_array[2];
-					$temp_array = explode("@", $sip_uri);
-					$number = $temp_array[0];
-					$number = str_replace("sip:", "", $number);
-					$channels_array[$x]['number'] = $number;
-					//$channels_array[$x]['sip_profile'] = $sip_profile;
-				$x++;
+	
+				//get the original array id
+					//$x = $row['x'];
+
+				//parse some of the php variables\
+					$temp_array = explode("@", $presence_id);
+					$channels_array[$x]['number'] = $temp_array[0];
+
+				//remove the '+' because it breaks the call recording
+					$channels_array[$x]['cid_num'] = $temp_array[0] = str_replace("+", "", $cid_num);
+
+				//calculate and set the call length
+					$call_length_seconds = time() - $created_epoch;
+					$call_length_hour = floor($call_length_seconds/3600);
+					$call_length_min = floor($call_length_seconds/60 - ($call_length_hour * 60));
+					$call_length_sec = $call_length_seconds - (($call_length_hour * 3600) + ($call_length_min * 60));
+					$call_length_min = sprintf("%02d", $call_length_min);
+					$call_length_sec = sprintf("%02d", $call_length_sec);
+					$call_length = $call_length_hour.':'.$call_length_min.':'.$call_length_sec;
+					$channels_array[$x]['call_length'] = $call_length;
+
+				//valet park
+					$valet_array[$uuid]['context'] = $context;
+					$valet_array[$uuid]['cid_name'] = $cid_name;
+					$valet_array[$uuid]['cid_num'] = $cid_num;
+					$valet_array[$uuid]['call_length'] = $call_length;
 			}
 
 		//active extensions
@@ -274,8 +302,6 @@ require_once "includes/checkauth.php";
 					echo "<th>Time</th>\n";
 					if (ifgroup("admin") || ifgroup("superadmin")) {
 						if (strlen(($_GET['rows'])) == 0) {
-							//echo "<th>Direction</th>\n";
-							//echo "<th>Profile</th>\n";
 							echo "<th>CID Name</th>\n";
 							echo "<th>CID Number</th>\n";
 							echo "<th>Dest</th>\n";
@@ -303,28 +329,11 @@ require_once "includes/checkauth.php";
 								foreach ($row as $key => $value) {
 									$$key = $value;
 								}
-							//remove the '+' because it breaks the call recording
-								$cid_num = str_replace("+", "", $cid_num);
-
-							$call_length_seconds = time() - $created_epoch;
-							$call_length_hour = floor($call_length_seconds/3600);
-							$call_length_min = floor($call_length_seconds/60 - ($call_length_hour * 60));
-							$call_length_sec = $call_length_seconds - (($call_length_hour * 3600) + ($call_length_min * 60));
-							$call_length_min = sprintf("%02d", $call_length_min);
-							$call_length_sec = sprintf("%02d", $call_length_sec);
-							$call_length = $call_length_hour.':'.$call_length_min.':'.$call_length_sec;
-
-							//valet park
-								$valet_array[$uuid]['context'] = $context;
-								$valet_array[$uuid]['cid_name'] = $cid_name;
-								$valet_array[$uuid]['cid_num'] = $cid_num;
-								$valet_array[$uuid]['call_length'] = $call_length;
-
-							//if ($tmp_row->number == $extension) {
-							if ($number == $extension) {
-								$found_extension = true;
-								break;
-							}
+							//check to see if the extension is found in the channel array
+								if ($number == $extension) {
+									$found_extension = true;
+									break;
+								}
 						}
 
 						if ($found_extension) {
@@ -336,6 +345,9 @@ require_once "includes/checkauth.php";
 								$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_conference.gif');\"";
 								break;
 							case "fifo":
+								$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_fifo.gif');\"";
+								break;
+							case "valet_park":
 								$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_fifo.gif');\"";
 								break;
 							default:
@@ -352,8 +364,6 @@ require_once "includes/checkauth.php";
 							echo "<td class='".$rowstyle[$c]."' $style_alternate width='20px;'>".$call_length."</td>\n";
 							if (ifgroup("admin") || ifgroup("superadmin")) {
 								if (strlen(($_GET['rows'])) == 0) {
-									//echo "<td class='".$rowstyle[$c]."' $style_alternate>$direction</td>\n";
-									//echo "<td class='".$rowstyle[$c]."' $style_alternate>$sip_profile</td>\n";
 									if (strlen($url) == 0) {
 										echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_name."</td>\n";
 										echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_num."</td>\n";
@@ -366,21 +376,10 @@ require_once "includes/checkauth.php";
 							}
 							if (ifgroup("admin") || ifgroup("superadmin")) {
 								if (strlen(($_GET['rows'])) == 0) {
-									if ($found_extension) {
-										echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
-									else {
-										echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
+									echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
 									echo "".$dest."<br />\n";
 									echo "</td>\n";
-
-									if ($found_extension) {
-										echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
-									else {
-										echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
+									echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
 									if ($application == "fifo") {
 										echo "queue &nbsp;\n";
 									}
@@ -388,13 +387,7 @@ require_once "includes/checkauth.php";
 										echo $application." &nbsp;\n";
 									}
 									echo "</td>\n";
-
-									if ($found_extension) {
-										echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
-									else {
-										echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
-									}
+									echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
 									echo "".$secure."<br />\n";
 									echo "</td>\n";
 								}
@@ -413,17 +406,8 @@ require_once "includes/checkauth.php";
 							echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 							if (ifgroup("admin") || ifgroup("superadmin")) {
 								if (strlen(($_GET['rows'])) == 0) {
-									//echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
-									//echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 									echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 									echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
-								}
-							}
-						}
-
-						if (!$found_extension) {
-							if (ifgroup("admin") || ifgroup("superadmin")) {
-								if (strlen(($_GET['rows'])) == 0) {
 									echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 									echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 									echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
@@ -440,8 +424,6 @@ require_once "includes/checkauth.php";
 								if ($found_extension) {
 									echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
 										//transfer
-											//uuid_transfer c985c31b-7e5d-3844-8b3b-aa0835ff6db9 -bleg *9999 xml default
-											//document.getElementById('url').innerHTML='v_calls_exec.php?action=energy&direction=down&cmd='+prepare_cmd(escape('$uuid'));
 											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">transfer</a>&nbsp;\n";
 										//park
 											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">park</a>&nbsp;\n";
@@ -469,30 +451,8 @@ require_once "includes/checkauth.php";
 						}
 						echo "</tr>\n";
 
-						unset($found_extension);
-						unset($uuid);
-						//unset($direction);
-						//unset($sip_profile);
-						unset($created);
-						unset($created_epoch);
-						unset($name);
-						unset($state);
-						unset($cid_name);
-						unset($cid_num);
-						unset($ip_addr);
-						unset($dest);
-						unset($application);
-						unset($application_data);
-						unset($dialplan);
-						unset($context);
-						unset($read_codec);
-						unset($read_rate);
-						unset($write_codec);
-						unset($write_rate);
-						unset($secure);
-
-						if ($x == $rows) {
-							$x = 0;
+						if ($y == $_GET['rows']) {
+							$y = 0;
 							echo "</table>\n";
 
 							echo "</td>\n";
@@ -510,8 +470,6 @@ require_once "includes/checkauth.php";
 							echo "<th>Time</th>\n";
 							if (ifgroup("admin") || ifgroup("superadmin")) {
 								if (strlen(($_GET['rows'])) == 0) {
-									//echo "<th>Direction</th>\n";
-									//echo "<th>Profile</th>\n";
 									echo "<th>CID Name</th>\n";
 									echo "<th>CID Number</th>\n";
 									echo "<th>Dest</th>\n";
@@ -527,7 +485,7 @@ require_once "includes/checkauth.php";
 							}
 							echo "</tr>\n";
 						}
-						$x++;
+						$y++;
 						if ($c==0) { $c=1; } else { $c=0; }
 					}
 
@@ -565,7 +523,6 @@ require_once "includes/checkauth.php";
 		}
 		$user_status = str_replace(" ", "_", $user_status);
 		echo "<span id='db_user_status' style='visibility:hidden;'>$user_status</span>\n";
-
 		echo "<div id='cmd_reponse'>\n";
 		echo "</div>\n";
 	}

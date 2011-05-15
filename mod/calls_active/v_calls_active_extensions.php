@@ -125,21 +125,6 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 		if (document.getElementById('db_user_status')) {
 			db_user_status = document.getElementById('db_user_status').innerHTML;
 		}
-	//get the agent_status from select list value
-		if (document.getElementById('agent_status')) {
-			agent_status = document.getElementById('agent_status').value;
-			//if the status from the db doesn't match the one from the select list then update the select
-			if (agent_status != db_user_status) {
-				//prepare teh variable to match the value of the select list
-					tmp_db_user_status = db_user_status.replace(" ", "_");
-					tmp_db_user_status = tmp_db_user_status.replace(" ", "_");
-					if (tmp_db_user_status == "Available_On_Demand") {
-						tmp_db_user_status == "Available (On Demand)";
-					}
-				//update the select list
-					document.getElementById('agent_status').value = tmp_db_user_status;
-			}
-		}
 
 	if (previous_uuid_1 != uuid_1) {
 		if (cid_num_1.length > 6) {
@@ -229,49 +214,15 @@ if ($_SESSION['user_status_display'] == "false") {
 	//hide the user_status when it is set to false
 }
 else {
-
 	echo "		<td class='' width='40%'>\n";
 	echo "			&nbsp;";
 	echo "		</td>\n";
 	echo "		<td class='' valign='bottom' align='right' style='width:200px' nowrap='nowrap'>\n";
-
-	//user account list
-		if (ifgroup("admin") || ifgroup("superadmin")) {
-			echo "		&nbsp;";
-			echo "		<strong>Username</strong>&nbsp;";
-			$sql = "SELECT * FROM v_users ";
-			$sql .= "where v_id = '$v_id' ";
-			$sql .= "order by username ";
-			$prepstatement = $db->prepare(check_sql($sql));
-			$prepstatement->execute();
-			echo "<select name=\"username\" id=\"username\" class='formfld' style='width:125px'>\n";
-			echo "<option value=\"\"></option>\n";
-			$result = $prepstatement->fetchAll();
-			foreach($result as $field) {
-				if ($field['username'] == $_SESSION['username']) {
-					echo "<option value='".$field['username']."' selected='selected'>".$field['username']."</option>\n";
-				}
-				else {
-					echo "<option value='".$field['username']."'>".$field['username']."</option>\n";
-				}
-			}
-			echo "</select>";
-			unset($sql, $result);
-
-			echo "		</td>\n";
-			echo "		<td class='' valign='bottom' align='left' style='width:200px' nowrap='nowrap'>\n";
-		}
-
 	//status list
 	echo "			&nbsp;";
 	echo "			<strong>Status</strong>&nbsp;\n";
 	$cmd = "'v_calls_exec.php?action=user_status&data='+this.value+'";
-	if (ifgroup("admin") || ifgroup("superadmin") || ifgroup("agent_admin")) {
-		$cmd .= "&cmd=callcenter_config+agent+set+status+'+document.getElementById('username').value+'@".$v_domain."+'+this.value+'&username='+document.getElementById('username').value";
-	}
-	else {
-		$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$v_domain."+'+this.value";
-	}
+	$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$v_domain."+'+this.value";
 	echo "			<select id='agent_status' name='agent_status' class='formfld' style='width:125px' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
 	echo "				<option value='                '></option>\n";
 	if ($user_status == "Available") {
@@ -322,7 +273,6 @@ echo "	</tr>\n";
 echo "</table>\n";
 
 echo "<div id=\"url\"></div>\n";
-
 echo "<br />\n";
 
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
