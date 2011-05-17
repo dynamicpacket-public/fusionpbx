@@ -26,17 +26,20 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
+if (permission_exists('extensions_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //http get and set variables
 	if (strlen($_GET['url']) > 0) {
 		$url = $_GET['url'];
 	}
-	if (strlen($_GET['rows']) > 0) {
-		$rows = $_GET['rows'];
-	}
-	else {
-		$rows = 0;
+	if (strlen($_GET['rows']) == 0) {
+		$_GET['rows'] = 0;
 	}
 
 //define variables
@@ -451,7 +454,7 @@ require_once "includes/checkauth.php";
 						}
 						echo "</tr>\n";
 
-						if ($y == $_GET['rows']) {
+						if ($y == $_GET['rows'] && $_GET['rows'] > 0) {
 							$y = 0;
 							echo "</table>\n";
 
@@ -469,7 +472,7 @@ require_once "includes/checkauth.php";
 							}
 							echo "<th>Time</th>\n";
 							if (ifgroup("admin") || ifgroup("superadmin")) {
-								if (strlen(($_GET['rows'])) == 0) {
+								if ($_GET['rows'] == 0) {
 									echo "<th>CID Name</th>\n";
 									echo "<th>CID Number</th>\n";
 									echo "<th>Dest</th>\n";
@@ -479,7 +482,7 @@ require_once "includes/checkauth.php";
 							}
 							echo "<th>Name</th>\n";
 							if (ifgroup("admin") || ifgroup("superadmin")) {
-								if (strlen(($_GET['rows'])) == 0) {
+								if ($_GET['rows'] == 0) {
 									echo "<th>Options</th>\n";
 								}
 							}
