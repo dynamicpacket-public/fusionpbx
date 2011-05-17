@@ -35,7 +35,11 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// table details v_call_broadcast 
+		$apps[$x]['permissions'][4]['name'] = 'call_broadcast_send';
+		$apps[$x]['permissions'][4]['groups'][] = 'admin';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_call_broadcast';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'call_broadcast_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
