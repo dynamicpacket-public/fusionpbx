@@ -17,4 +17,8 @@
 		$apps[$x]['menu'][0]['path'] = '<!--{project_path}-->/mod/adminer/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
+	//permission details
+		$apps[$x]['permissions'][0]['name'] = 'adminer';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
 ?>

@@ -5,6 +5,15 @@
 	require_once "includes/config.php";
 	require_once "includes/checkauth.php";
 
+//check permission
+	if (permission_exists('adminer')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //only allow users in the superadmin group to use this feature
 	if (ifgroup("superadmin")) {
 		//echo "access granted";
