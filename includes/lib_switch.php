@@ -3135,7 +3135,7 @@ function sync_package_v_fax() {
 					$fielddata = "api_hangup_hook=system ".$php_dir."/".$php_exe." ".$v_secure."/fax_to_email.php email=".$row['faxemail']." extension=".$row['faxextension']." name=\\\\\\\${last_fax} ";
 					$fielddata .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
 					$fieldorder = '001';
-					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, check_str($fielddata));
 
 					//<action application="answer" />
 					$tag = 'action'; //condition, action, antiaction
