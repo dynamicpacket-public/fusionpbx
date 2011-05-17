@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('music_on_hold_view')) {
 	//access granted
 }
 else {
@@ -75,7 +75,7 @@ if ($_GET['a'] == "download") {
 
 
 if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
-	if ($_POST['type'] == 'moh') {
+	if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
 		move_uploaded_file($_FILES['ulfile']['tmp_name'], $dir_music_on_hold_8000."/".$_FILES['ulfile']['name']);
 		$savemsg = "Uploaded file to ".$dir_music_on_hold_8000."/".htmlentities($_FILES['ulfile']['name']);
 		//system('chmod -R 744 $dir_music_on_hold_8000*');
@@ -84,7 +84,7 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_na
 }
 
 
-if ($_GET['act'] == "del") {
+if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	if ($_GET['type'] == 'moh') {
 		unlink($dir_music_on_hold_8000."/".base64_decode($_GET['filename']));
 		header("Location: v_music_on_hold.php");
@@ -123,30 +123,33 @@ if ($_GET['act'] == "del") {
 	echo "\n";
 	echo "    <br />\n";
 	echo "\n";
-	echo "  	<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-	echo "  	<table width='100%' border='0'>\n";
-	echo "  		<tr>\n";
-	echo "  		<td align='left' width='50%'>";
-
-	if ($v_path_show) {
-		echo "<b>location:</b> ";
-		echo $dir_music_on_hold_8000;
+	if (permission_exists('music_on_hold_add')) {
+		echo "  	<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+		echo "  	<table width='100%' border='0'>\n";
+		echo "  		<tr>\n";
+		echo "  		<td align='left' width='50%'>";
+	
+		if ($v_path_show) {
+			echo "<b>location:</b> ";
+			echo $dir_music_on_hold_8000;
+		}
+	
+		echo "			</td>\n";
+		echo "			<td valign=\"top\" class=\"label\">\n";
+		echo "				<input name=\"type\" type=\"hidden\" value=\"moh\">\n";
+		echo "			</td>\n";
+		echo "  		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+		echo "  			File to upload:\n";
+		echo "  			<input name=\"ulfile\" type=\"file\" class=\"button\" id=\"ulfile\">\n";
+		echo "  			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"Upload\">\n";
+		echo "  		</td>\n";
+		echo "  		</tr>\n";
+		echo "  	</table>\n";
+		echo "  	</form>\n";
+		echo "\n";
+		echo "\n";
 	}
 
-	echo "			</td>\n";
-	echo "			<td valign=\"top\" class=\"label\">\n";
-	echo "				<input name=\"type\" type=\"hidden\" value=\"moh\">\n";
-	echo "			</td>\n";
-	echo "  		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
-	echo "  			File to upload:\n";
-	echo "  			<input name=\"ulfile\" type=\"file\" class=\"button\" id=\"ulfile\">\n";
-	echo "  			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"Upload\">\n";
-	echo "  		</td>\n";
-	echo "  		</tr>\n";
-	echo "  	</table>\n";
-	echo "  	</form>\n";
-	echo "\n";
-	echo "\n";
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<th width=\"30%\" class=\"listhdrr\">File Name (download)</th>\n";
@@ -189,7 +192,9 @@ if ($_GET['act'] == "del") {
 				echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"5\">\n";
 				echo "      <tr>\n";
 				//echo "        <td valign=\"middle\"><a href=\"v_music_on_hold.php?id=$i\"><img src=\"/themes/".$g['theme']."/images/icons/icon_e.gif\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
-				echo "        <td><a href=\"v_music_on_hold.php?type=moh&act=del&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+				if (permission_exists('music_on_hold_delete')) {
+					echo "        <td><a href=\"v_music_on_hold.php?type=moh&act=del&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+				}
 				echo "      </tr>\n";
 				echo "   </table>\n";
 				echo "  </td>\n";
