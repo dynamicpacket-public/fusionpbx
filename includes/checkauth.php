@@ -34,7 +34,6 @@ session_start();
 
 //if the username session is not set the check username and password
 	if (strlen($_SESSION["username"]) == 0) {
-
 		//clear the menu
 			$_SESSION["menu"] = "";
 
@@ -62,7 +61,7 @@ session_start();
 			$prepstatement->bindParam(':username', check_str($_POST["username"]));
 			$prepstatement->bindParam(':password', md5($v_salt.check_str($_POST["password"])));
 			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
+			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
 			$resultcount = count($result);
 			if (count($result) == 0) {
 				$strphpself = $_SERVER["PHP_SELF"];
@@ -102,43 +101,71 @@ session_start();
 			$prepstatement->bindParam(':v_id', $v_id);
 			$prepstatement->bindParam(':username', $_SESSION["username"]);
 			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
-			$resultcount = count($result);
+			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
+			$_SESSION["groups"] = $result;
+			unset($sql, $rowcount, $prepstatement);
 
+		//get and set the permissions to a session
+			$x = 0;
+			$sql = "select distinct(permission_id) from v_group_permissions ";
+			foreach($result as $field) {
+				if (strlen($field[groupid]) > 0) {
+					if ($x == 0) {
+						$sql .= "where (v_id = '1' and group_id = '".$field[groupid]."') ";
+					}
+					else {
+						$sql .= "or (v_id = '1' and group_id = '".$field[groupid]."') ";
+					}
+					$x++;
+				}
+			}
+			$prepstatementsub = $db->prepare($sql);
+			$prepstatementsub->execute();
+			$_SESSION["permissions"] = $prepstatementsub->fetchAll(PDO::FETCH_NAMED);
+			unset($sql, $prepstatementsub);
 
-		$groups = "||";
-		foreach($result as $field) {
-			//get the list of groups
-			if (strlen($field[groupid]) > 0) {
-				$groups .= $field[groupid]."||";
+		//if there are no permissions listed in v_group_permissions then set the default permissions
+			$sql = "";
+			$sql .= "select count(*) as count from v_group_permissions ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll();
+			foreach ($result as &$row) {
+				$group_permission_count = $row["count"];
+				break; //limit to 1 row
+			}
+			unset ($prep_statement);
+			if ($group_permission_count == 0) {
+				//no permissions found add the defaults
+				foreach($apps as $app) {
+					foreach ($app['permissions'] as $row) {
+						foreach ($row['groups'] as $group) {
+							//add the record
+							$sql = "insert into v_group_permissions ";
+							$sql .= "(";
+							$sql .= "v_id, ";
+							$sql .= "permission_id, ";
+							$sql .= "group_id ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'$v_id', ";
+							$sql .= "'".$row['name']."', ";
+							$sql .= "'".$group."' ";
+							$sql .= ")";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+					}
+				}
 			}
 
-			//get the permissions assigned to the groups
-			//save the permissions in a list to a session
-				//$sql = "SELECT * FROM tblgrouppermissions ";
-				//$sql .= "where groupid = '".$field[groupid]."' ";
-				//echo $sql."<br>";
-				//$prepstatementsub = $db->prepare($sql);
-				//$prepstatementsub->execute();
-				//$resultsub = $prepstatementsub->fetchAll();
-				//$permissions = "||";
-				//foreach($resultsub as $fieldsub) {
-				//    //echo "permissionid: ".$fieldsub[permissionid]."<br>";
-				//    $permissions .= $fieldsub[permissionid]."||";
-				//}
-				//$_SESSION["permissions"] = $permissions;
-				//echo $_SESSION["permissions"];
-				//unset($sql, $resultsub, $permissions);
-
-		}
-		$_SESSION["groups"] = $groups;
-		unset($sql, $result, $rowcount, $prepstatement);
-
-		$path = check_str($_POST["path"]);
-		if(isset($path) && !empty($path) && $path!="index2.php") {
-			header("Location: ".$path);
-			die();
-		}
+		//redirect the user
+			$path = check_str($_POST["path"]);
+			if(isset($path) && !empty($path) && $path!="index2.php") {
+				header("Location: ".$path);
+				die();
+			}
 	}
 
 //set the time zone
@@ -155,22 +182,5 @@ session_start();
 	if (!ifgroup("superadmin")) {
 		$v_path_show = false;
 	}
-
-/*
-//permissions
-	//if (ifpermission("view")) {
-	//    echo "true";
-	//}
-	tblpermissions
-		permissionid
-	v_groups
-		groupid
-	v_group_members
-		groupid
-		username
-	tblgrouppermissions
-		groupid
-		permissionid
-*/
 
 ?>

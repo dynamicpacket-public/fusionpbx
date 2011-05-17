@@ -85,15 +85,35 @@
 
 	if (!function_exists('ifgroup')) {
 		function ifgroup($group) {
-			if (stripos($_SESSION["groups"], "||".$group."||") === false) {
-				return false; //group does not exist
-			}
-			else {
-				return true; //group exists
-			}
+			//set default false
+				$result = false;
+			//search for the permission
+				foreach($_SESSION["groups"] as $row) {
+					if ($row['groupid'] == $group) {
+						$result = true;
+						break;
+					}				
+				}
+			//return the result
+				return $result;
 		}
 	}
 
+	if (!function_exists('permission_exists')) {
+		function permission_exists($permission) {
+			//set default false
+				$result = false;
+			//search for the permission
+				foreach($_SESSION["permissions"] as $row) {
+					if ($row['permission_id'] == $permission) {
+						$result = true;
+						break;
+					}				
+				}
+			//return the result
+				return $result;
+		}
+	}
 
 	if (!function_exists('groupmemberlist')) {
 		function groupmemberlist($db, $username) {
@@ -101,7 +121,6 @@
 			$sql = "select * from v_group_members ";
 			$sql .= "where v_id = '$v_id' ";
 			$sql .= "and username = '".$username."' ";
-			//echo $sql;
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 			$result = $prepstatement->fetchAll();
