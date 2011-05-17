@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
 	//access granted
 }
 else {
@@ -99,7 +99,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('ivr_menu_add')) {
 				$sql = "insert into v_ivr_menu_options ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -135,7 +135,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('ivr_menu_edit')) {
 				$sql = "update v_ivr_menu_options set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "ivr_menu_id = '$ivr_menu_id', ";
@@ -160,7 +160,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
 	//access granted
 }
 else {
@@ -157,113 +157,111 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//add or update the database
+		if ($_POST["persistformvar"] != "true") {
+			if ($action == "add" && permission_exists('ivr_menu_add')) {
+				$sql = "insert into v_ivr_menu ";
+				$sql .= "(";
+				$sql .= "v_id, ";
+				$sql .= "ivr_menu_name, ";
+				$sql .= "ivr_menu_extension, ";
+				$sql .= "ivr_menu_greet_long, ";
+				$sql .= "ivr_menu_greet_short, ";
+				$sql .= "ivr_menu_invalid_sound, ";
+				$sql .= "ivr_menu_exit_sound, ";
+				$sql .= "ivr_menu_confirm_macro, ";
+				$sql .= "ivr_menu_confirm_key, ";
+				$sql .= "ivr_menu_tts_engine, ";
+				$sql .= "ivr_menu_tts_voice, ";
+				$sql .= "ivr_menu_confirm_attempts, ";
+				$sql .= "ivr_menu_timeout, ";
+				$sql .= "ivr_menu_inter_digit_timeout, ";
+				$sql .= "ivr_menu_max_failures, ";
+				$sql .= "ivr_menu_max_timeouts, ";
+				$sql .= "ivr_menu_digit_len, ";
+				$sql .= "ivr_menu_direct_dial, ";
+				$sql .= "ivr_menu_enabled, ";
+				$sql .= "ivr_menu_desc ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$v_id', ";
+				$sql .= "'$ivr_menu_name', ";
+				$sql .= "'$ivr_menu_extension', ";
+				$sql .= "'$ivr_menu_greet_long', ";
+				$sql .= "'$ivr_menu_greet_short', ";
+				$sql .= "'$ivr_menu_invalid_sound', ";
+				$sql .= "'$ivr_menu_exit_sound', ";
+				$sql .= "'$ivr_menu_confirm_macro', ";
+				$sql .= "'$ivr_menu_confirm_key', ";
+				$sql .= "'$ivr_menu_tts_engine', ";
+				$sql .= "'$ivr_menu_tts_voice', ";
+				$sql .= "'$ivr_menu_confirm_attempts', ";
+				$sql .= "'$ivr_menu_timeout', ";
+				$sql .= "'$ivr_menu_inter_digit_timeout', ";
+				$sql .= "'$ivr_menu_max_failures', ";
+				$sql .= "'$ivr_menu_max_timeouts', ";
+				$sql .= "'$ivr_menu_digit_len', ";
+				$sql .= "'$ivr_menu_direct_dial', ";
+				$sql .= "'$ivr_menu_enabled', ";
+				$sql .= "'$ivr_menu_desc' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-//add or update the database
-if ($_POST["persistformvar"] != "true") {
-	if ($action == "add") {
-		$sql = "insert into v_ivr_menu ";
-		$sql .= "(";
-		$sql .= "v_id, ";
-		$sql .= "ivr_menu_name, ";
-		$sql .= "ivr_menu_extension, ";
-		$sql .= "ivr_menu_greet_long, ";
-		$sql .= "ivr_menu_greet_short, ";
-		$sql .= "ivr_menu_invalid_sound, ";
-		$sql .= "ivr_menu_exit_sound, ";
-		$sql .= "ivr_menu_confirm_macro, ";
-		$sql .= "ivr_menu_confirm_key, ";
-		$sql .= "ivr_menu_tts_engine, ";
-		$sql .= "ivr_menu_tts_voice, ";
-		$sql .= "ivr_menu_confirm_attempts, ";
-		$sql .= "ivr_menu_timeout, ";
-		$sql .= "ivr_menu_inter_digit_timeout, ";
-		$sql .= "ivr_menu_max_failures, ";
-		$sql .= "ivr_menu_max_timeouts, ";
-		$sql .= "ivr_menu_digit_len, ";
-		$sql .= "ivr_menu_direct_dial, ";
-		$sql .= "ivr_menu_enabled, ";
-		$sql .= "ivr_menu_desc ";
-		$sql .= ")";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'$v_id', ";
-		$sql .= "'$ivr_menu_name', ";
-		$sql .= "'$ivr_menu_extension', ";
-		$sql .= "'$ivr_menu_greet_long', ";
-		$sql .= "'$ivr_menu_greet_short', ";
-		$sql .= "'$ivr_menu_invalid_sound', ";
-		$sql .= "'$ivr_menu_exit_sound', ";
-		$sql .= "'$ivr_menu_confirm_macro', ";
-		$sql .= "'$ivr_menu_confirm_key', ";
-		$sql .= "'$ivr_menu_tts_engine', ";
-		$sql .= "'$ivr_menu_tts_voice', ";
-		$sql .= "'$ivr_menu_confirm_attempts', ";
-		$sql .= "'$ivr_menu_timeout', ";
-		$sql .= "'$ivr_menu_inter_digit_timeout', ";
-		$sql .= "'$ivr_menu_max_failures', ";
-		$sql .= "'$ivr_menu_max_timeouts', ";
-		$sql .= "'$ivr_menu_digit_len', ";
-		$sql .= "'$ivr_menu_direct_dial', ";
-		$sql .= "'$ivr_menu_enabled', ";
-		$sql .= "'$ivr_menu_desc' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
+				//synchronize the xml config
+				sync_package_v_ivr_menu();
 
-		//synchronize the xml config
-		sync_package_v_ivr_menu();
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Add Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
+			} //if ($action == "add")
 
-		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
-		echo "<div align='center'>\n";
-		echo "Add Complete\n";
-		echo "</div>\n";
-		require_once "includes/footer.php";
-		return;
-	} //if ($action == "add")
+			if ($action == "update" && permission_exists('ivr_menu_edit')) {
+				$sql = "update v_ivr_menu set ";
+				$sql .= "v_id = '$v_id', ";
+				$sql .= "ivr_menu_name = '$ivr_menu_name', ";
+				$sql .= "ivr_menu_extension = '$ivr_menu_extension', ";
+				$sql .= "ivr_menu_greet_long = '$ivr_menu_greet_long', ";
+				$sql .= "ivr_menu_greet_short = '$ivr_menu_greet_short', ";
+				$sql .= "ivr_menu_invalid_sound = '$ivr_menu_invalid_sound', ";
+				$sql .= "ivr_menu_exit_sound = '$ivr_menu_exit_sound', ";
+				$sql .= "ivr_menu_confirm_macro = '$ivr_menu_confirm_macro', ";
+				$sql .= "ivr_menu_confirm_key = '$ivr_menu_confirm_key', ";
+				$sql .= "ivr_menu_tts_engine = '$ivr_menu_tts_engine', ";
+				$sql .= "ivr_menu_tts_voice = '$ivr_menu_tts_voice', ";
+				$sql .= "ivr_menu_confirm_attempts = '$ivr_menu_confirm_attempts', ";
+				$sql .= "ivr_menu_timeout = '$ivr_menu_timeout', ";
+				$sql .= "ivr_menu_inter_digit_timeout = '$ivr_menu_inter_digit_timeout', ";
+				$sql .= "ivr_menu_max_failures = '$ivr_menu_max_failures', ";
+				$sql .= "ivr_menu_max_timeouts = '$ivr_menu_max_timeouts', ";
+				$sql .= "ivr_menu_digit_len = '$ivr_menu_digit_len', ";
+				$sql .= "ivr_menu_direct_dial = '$ivr_menu_direct_dial', ";
+				$sql .= "ivr_menu_enabled = '$ivr_menu_enabled', ";
+				$sql .= "ivr_menu_desc = '$ivr_menu_desc' ";
+				$sql .= "where ivr_menu_id = '$ivr_menu_id'";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-	if ($action == "update") {
-		$sql = "update v_ivr_menu set ";
-		$sql .= "v_id = '$v_id', ";
-		$sql .= "ivr_menu_name = '$ivr_menu_name', ";
-		$sql .= "ivr_menu_extension = '$ivr_menu_extension', ";
-		$sql .= "ivr_menu_greet_long = '$ivr_menu_greet_long', ";
-		$sql .= "ivr_menu_greet_short = '$ivr_menu_greet_short', ";
-		$sql .= "ivr_menu_invalid_sound = '$ivr_menu_invalid_sound', ";
-		$sql .= "ivr_menu_exit_sound = '$ivr_menu_exit_sound', ";
-		$sql .= "ivr_menu_confirm_macro = '$ivr_menu_confirm_macro', ";
-		$sql .= "ivr_menu_confirm_key = '$ivr_menu_confirm_key', ";
-		$sql .= "ivr_menu_tts_engine = '$ivr_menu_tts_engine', ";
-		$sql .= "ivr_menu_tts_voice = '$ivr_menu_tts_voice', ";
-		$sql .= "ivr_menu_confirm_attempts = '$ivr_menu_confirm_attempts', ";
-		$sql .= "ivr_menu_timeout = '$ivr_menu_timeout', ";
-		$sql .= "ivr_menu_inter_digit_timeout = '$ivr_menu_inter_digit_timeout', ";
-		$sql .= "ivr_menu_max_failures = '$ivr_menu_max_failures', ";
-		$sql .= "ivr_menu_max_timeouts = '$ivr_menu_max_timeouts', ";
-		$sql .= "ivr_menu_digit_len = '$ivr_menu_digit_len', ";
-		$sql .= "ivr_menu_direct_dial = '$ivr_menu_direct_dial', ";
-		$sql .= "ivr_menu_enabled = '$ivr_menu_enabled', ";
-		$sql .= "ivr_menu_desc = '$ivr_menu_desc' ";
-		$sql .= "where ivr_menu_id = '$ivr_menu_id'";
-		$db->exec(check_sql($sql));
-		unset($sql);
+				//synchronize the xml config
+				sync_package_v_ivr_menu();
 
-		//synchronize the xml config
-		sync_package_v_ivr_menu();
+				//synchronize the xml config
+				sync_package_v_dialplan_includes();
 
-		//synchronize the xml config
-		sync_package_v_dialplan_includes();
-
-		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
-		echo "<div align='center'>\n";
-		echo "Update Complete\n";
-		echo "</div>\n";
-		require_once "includes/footer.php";
-		return;
-	} //if ($action == "update")
-} //if ($_POST["persistformvar"] != "true") { 
-
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Update Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
+			} //if ($action == "update")
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form

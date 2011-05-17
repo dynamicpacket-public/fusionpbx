@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('ivr_menu_edit')) {
 	//access granted
 }
 else {

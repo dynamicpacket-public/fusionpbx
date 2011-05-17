@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('ivr_menu_delete')) {
 	//access granted
 }
 else {
@@ -62,7 +62,6 @@ if (strlen($id)>0) {
 		$sql .= "where v_id = '$v_id' ";
 		$sql .= "and opt1name = 'ivr_menu_id' ";
 		$sql .= "and opt1value = '".$id."' ";
-		//echo "sql: ".$sql."<br />\n";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
 		while($row2 = $prepstatement2->fetch()) {

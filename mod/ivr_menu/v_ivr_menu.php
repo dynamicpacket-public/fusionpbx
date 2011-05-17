@@ -26,13 +26,14 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('ivr_menu_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -101,27 +102,30 @@ $order = $_GET["order"];
 	echo thorderby('ivr_menu_enabled', 'Enabled', $orderby, $order);
 	echo thorderby('ivr_menu_desc', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_ivr_menu_edit.php'\" value='+'>\n";
+	if (permission_exists('ivr_menu_add')) {
+		echo "	<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[ivr_menu_name]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[ivr_menu_extension]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[ivr_menu_direct_dial]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[ivr_menu_enabled]."</td>\n";
-			echo "	<td valign='top' class='rowstylebg'>".$row[ivr_menu_desc]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['ivr_menu_name']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['ivr_menu_extension']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['ivr_menu_direct_dial']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['ivr_menu_enabled']."</td>\n";
+			echo "	<td valign='top' class='rowstylebg'>".$row['ivr_menu_desc']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_ivr_menu_edit.php?id=".$row[ivr_menu_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_ivr_menu_delete.php?id=".$row[ivr_menu_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_ivr_menu_edit.php?id=".$row[ivr_menu_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_ivr_menu_delete.php?id=".$row[ivr_menu_id]."' }\" value='x'>\n";
+			if (permission_exists('ivr_menu_edit')) {
+				echo "		<a href='v_ivr_menu_edit.php?id=".$row['ivr_menu_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('ivr_menu_delete')) {
+				echo "		<a href='v_ivr_menu_delete.php?id=".$row['ivr_menu_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -137,8 +141,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "		<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_ivr_menu_edit.php'\" value='+'>\n";
+	if (permission_exists('ivr_menu_add')) {
+		echo "			<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -158,11 +163,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>

@@ -93,37 +93,6 @@ session_start();
 				//echo "username: ".$_SESSION["username"]." and password are correct";
 			}
 
-		//get the groups the user is a member of
-			$sql = "SELECT * FROM v_group_members ";
-			$sql .= "where v_id=:v_id ";
-			$sql .= "and username=:username ";
-			$prepstatement = $db->prepare(check_sql($sql));
-			$prepstatement->bindParam(':v_id', $v_id);
-			$prepstatement->bindParam(':username', $_SESSION["username"]);
-			$prepstatement->execute();
-			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
-			$_SESSION["groups"] = $result;
-			unset($sql, $rowcount, $prepstatement);
-
-		//get and set the permissions to a session
-			$x = 0;
-			$sql = "select distinct(permission_id) from v_group_permissions ";
-			foreach($result as $field) {
-				if (strlen($field[groupid]) > 0) {
-					if ($x == 0) {
-						$sql .= "where (v_id = '1' and group_id = '".$field[groupid]."') ";
-					}
-					else {
-						$sql .= "or (v_id = '1' and group_id = '".$field[groupid]."') ";
-					}
-					$x++;
-				}
-			}
-			$prepstatementsub = $db->prepare($sql);
-			$prepstatementsub->execute();
-			$_SESSION["permissions"] = $prepstatementsub->fetchAll(PDO::FETCH_NAMED);
-			unset($sql, $prepstatementsub);
-
 		//if there are no permissions listed in v_group_permissions then set the default permissions
 			$sql = "";
 			$sql .= "select count(*) as count from v_group_permissions ";
@@ -159,6 +128,37 @@ session_start();
 					}
 				}
 			}
+
+		//get the groups the user is a member of
+			$sql = "SELECT * FROM v_group_members ";
+			$sql .= "where v_id=:v_id ";
+			$sql .= "and username=:username ";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->bindParam(':v_id', $v_id);
+			$prepstatement->bindParam(':username', $_SESSION["username"]);
+			$prepstatement->execute();
+			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
+			$_SESSION["groups"] = $result;
+			unset($sql, $rowcount, $prepstatement);
+
+		//get and set the permissions to a session
+			$x = 0;
+			$sql = "select distinct(permission_id) from v_group_permissions ";
+			foreach($result as $field) {
+				if (strlen($field[groupid]) > 0) {
+					if ($x == 0) {
+						$sql .= "where (v_id = '".$v_id."' and group_id = '".$field['groupid']."') ";
+					}
+					else {
+						$sql .= "or (v_id = '".$v_id."' and group_id = '".$field['groupid']."') ";
+					}
+					$x++;
+				}
+			}
+			$prepstatementsub = $db->prepare($sql);
+			$prepstatementsub->execute();
+			$_SESSION['permissions'] = $prepstatementsub->fetchAll(PDO::FETCH_NAMED);
+			unset($sql, $prepstatementsub);
 
 		//redirect the user
 			$path = check_str($_POST["path"]);
