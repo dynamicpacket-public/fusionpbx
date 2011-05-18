@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('gateways_add') || permission_exists('gateways_edit')) {
 	//access granted
 }
 else {
@@ -73,7 +73,6 @@ else {
 		$context = check_str($_POST["context"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
-
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -127,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('gateways_add')) {
 				$sql = "insert into v_gateways ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -198,7 +197,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('gateways_edit')) {
 				$sql = "update v_gateways set ";
 				//$sql .= "v_id = '$v_id', ";
 				$sql .= "gateway = '$gateway', ";
@@ -502,7 +501,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	//--- begin: showadvanced -----------------------
 	echo "<tr>\n";
 	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
@@ -803,12 +801,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//show footer
+	require_once "includes/footer.php";
 ?>

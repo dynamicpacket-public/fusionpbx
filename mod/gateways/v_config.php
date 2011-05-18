@@ -35,7 +35,7 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_gateways 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_gateways';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'gateway_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

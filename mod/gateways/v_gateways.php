@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('gateways_view')) {
 	//access granted
 }
 else {
@@ -79,7 +79,6 @@ if ($fp) {
 
 echo "<div align='center'>";
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 echo "<tr class='border'>\n";
 echo "	<td align=\"center\">\n";
 echo "		<br>";
@@ -103,7 +102,6 @@ echo "</table>";
 
 echo "<br />\n";
 echo "<br />\n";
-
 
 $sql = "";
 $sql .= " select * from v_gateways ";
@@ -150,11 +148,14 @@ if ($fp) {
 echo thorderby('enabled', 'Enabled', $orderby, $order);
 echo thorderby('description', 'Gateway Description', $orderby, $order);
 echo "<td align='right' width='42'>\n";
-echo "	<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('gateways_add')) {
+	echo "	<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "</td>\n";
 echo "<tr>\n";
 
-if ($resultcount == 0) { //no results
+if ($resultcount == 0) {
+	//no results
 }
 else { //received results
 	foreach($result as $row) {
@@ -195,15 +196,18 @@ else { //received results
 		echo "	<td valign='top' class='".$rowstyle[$c]."' style='align: center;'>".$row["enabled"]."</td>\n";
 		echo "	<td valign='top' class='rowstylebg'>".$row["description"]."</td>\n";
 		echo "	<td valign='top' align='right'>\n";
-		echo "		<a href='v_gateways_edit.php?id=".$row["gateway_id"]."' alt='edit'>$v_link_label_edit</a>\n";
-		echo "		<a href='v_gateways_delete.php?id=".$row["gateway_id"]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+		if (permission_exists('gateways_edit')) {
+			echo "		<a href='v_gateways_edit.php?id=".$row["gateway_id"]."' alt='edit'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('gateways_delete')) {
+			echo "		<a href='v_gateways_delete.php?id=".$row["gateway_id"]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+		}
 		echo "	</td>\n";
 		echo "</tr>\n";
 		if ($c==0) { $c=1; } else { $c=0; }
 	} //end foreach
 	unset($sql, $result, $rowcount);
 } //end if results
-
 
 echo "<tr>\n";
 echo "<td colspan='8'>\n";
@@ -212,7 +216,9 @@ echo "		<tr>\n";
 echo "			<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "			<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 echo "			<td width='33.3%' align='right'>\n";
-echo "				<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('gateways_add')) {
+	echo "				<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "			</td>\n";
 echo "		</tr>\n";
 echo "	</table>\n";
@@ -233,18 +239,11 @@ echo "</div>";
 echo "<br><br>";
 echo "<br><br>";
 
-
 echo "</td>";
 echo "</tr>";
 echo "</table>";
 echo "</div>";
 echo "<br><br>";
 
-
 require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>
