@@ -35,6 +35,11 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
+		$apps[$x]['permissions'][4]['name'] = 'hunt_group_call_forward';
+		$apps[$x]['permissions'][4]['groups'][] = 'user';
+		$apps[$x]['permissions'][4]['groups'][] = 'admin';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
 	// CREATE TABLE v_hunt_group 
 		$apps[$x]['db'][0]['table'] = 'v_hunt_group';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'hunt_group_id';
