@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //set the fax directory
 	if (count($_SESSION["domains"]) > 1) {
@@ -36,7 +43,7 @@ require_once "includes/checkauth.php";
 	}
 
 //delete a fax
-	if ($_GET['a'] == "del") {
+	if ($_GET['a'] == "del" && permission_exists('fax_inbox_delete')) {
 		$faxextension = check_str($_GET["faxextension"]);
 		if ($_GET['type'] == "fax_inbox") {
 			unlink($v_fax_dir.'/'.$faxextension.'/inbox/'.$_GET['filename']);
@@ -225,7 +232,7 @@ require_once "includes/checkauth.php";
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-	if ($action == "update") {
+	if ($action == "update" && permission_exists('fax_extension_edit')) {
 		$fax_id = check_str($_POST["fax_id"]);
 	}
 
@@ -254,48 +261,47 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if (ifgroup("admin") || ifgroup("superadmin")) {
-				if ($action == "add") {
-					$sql = "insert into v_fax ";
-					$sql .= "(";
-					$sql .= "v_id, ";
-					$sql .= "faxextension, ";
-					$sql .= "faxname, ";
-					$sql .= "faxemail, ";
-					$sql .= "fax_pin_number, ";
-					$sql .= "fax_caller_id_name, ";
-					$sql .= "fax_caller_id_number, ";
-					$sql .= "fax_user_list, ";
-					$sql .= "faxdescription ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$v_id', ";
-					$sql .= "'$faxextension', ";
-					$sql .= "'$faxname', ";
-					$sql .= "'$faxemail', ";
-					$sql .= "'$fax_pin_number', ";
-					$sql .= "'$fax_caller_id_name', ";
-					$sql .= "'$fax_caller_id_number', ";
-					$sql .= "'$fax_user_list', ";
-					$sql .= "'$faxdescription' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
+			if ($action == "add" && permission_exists('fax_extension_add')) {
+				$sql = "insert into v_fax ";
+				$sql .= "(";
+				$sql .= "v_id, ";
+				$sql .= "faxextension, ";
+				$sql .= "faxname, ";
+				$sql .= "faxemail, ";
+				$sql .= "fax_pin_number, ";
+				$sql .= "fax_caller_id_name, ";
+				$sql .= "fax_caller_id_number, ";
+				$sql .= "fax_user_list, ";
+				$sql .= "faxdescription ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$v_id', ";
+				$sql .= "'$faxextension', ";
+				$sql .= "'$faxname', ";
+				$sql .= "'$faxemail', ";
+				$sql .= "'$fax_pin_number', ";
+				$sql .= "'$fax_caller_id_name', ";
+				$sql .= "'$fax_caller_id_number', ";
+				$sql .= "'$fax_user_list', ";
+				$sql .= "'$faxdescription' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-					sync_package_v_fax();
+				sync_package_v_fax();
 
-					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
-					echo "<div align='center'>\n";
-					echo "Add Complete\n";
-					echo "</div>\n";
-					require_once "includes/footer.php";
-					return;
-				} //if ($action == "add")
-			}
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Add Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
+			} //if ($action == "add")
 
-			if ($action == "update") {
+
+			if ($action == "update" && permission_exists('fax_extension_edit')) {
 				$sql = "update v_fax set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "faxextension = '$faxextension', ";
@@ -389,10 +395,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //delete the fax
 	if ($_GET['a'] == "del") {
 		$faxextension = check_str($_GET["faxextension"]);
-		if ($_GET['type'] == "fax_inbox") {
+		if ($_GET['type'] == "fax_inbox" && permission_exists('fax_inbox_delete')) {
 			unlink($v_fax_dir.'/'.$faxextension.'/inbox/'.$_GET['filename']);
 		}
-		if ($_GET['type'] == "fax_sent") {
+		if ($_GET['type'] == "fax_sent" && permission_exists('fax_sent_delete')) {
 			unlink($v_fax_dir.'/'.$faxextension.'/sent/'.$_GET['filename']);
 		}
 	}
@@ -401,11 +407,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($_GET['a'] == "download") {
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
-			if ($_GET['type'] == "fax_inbox") {
+			if ($_GET['type'] == "fax_inbox" && permission_exists('fax_inbox_view')) {
 				if (file_exists($v_fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'])) {
 					$tmp_faxdownload_file = "".$v_fax_dir.'/'.$_GET['ext'].'/inbox/'.$_GET['filename'];
 				}
-			}else if ($_GET['type'] == "fax_sent") {
+			}else if ($_GET['type'] == "fax_sent" && permission_exists('fax_sent_view')) {
 				if  (file_exists($v_fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'])) {
 					$tmp_faxdownload_file = "".$v_fax_dir.'/'.$_GET['ext'].'/sent/'.$_GET['filename'];
 				}
@@ -448,7 +454,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	require_once "includes/header.php";
 
-//show the content
+//fax extension form
 	echo "<div align='center'>";
 	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -678,259 +684,262 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</div>\n";
 	echo "</form>\n";
 
-	echo "\n";
-	echo "\n";
-	echo "\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Inbox</strong></span>\n";
-	echo "		</td>\n";
-	echo "		<td align='right'>";
+//show the inbox
+	if (permission_exists('fax_inbox_view')) {
+		echo "\n";
+		echo "\n";
+		echo "\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "\n";
+		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
+		echo "	<tr>\n";
+		echo "		<td align='left'>\n";
+		echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Inbox</strong></span>\n";
+		echo "		</td>\n";
+		echo "		<td align='right'>";
 
-	if ($v_path_show) {
-		echo "<b>location:</b>&nbsp;";
-		echo $dir_fax_inbox."&nbsp; &nbsp; &nbsp;";
-	}
-
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "    </table>\n";
-	echo "\n";
-
-	$c = 0;
-	$rowstyle["0"] = "rowstyle0";
-	$rowstyle["1"] = "rowstyle1";
-
-	echo "	<div id=\"\">\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<th width=\"60%\" class=\"listhdrr\">File Name (download)</td>\n";
-	echo "		<th width=\"10%\" class=\"listhdrr\">View</td>\n";
-	echo "		<th width=\"20%\" class=\"listhdr\">Last Modified</td>\n";
-	echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size</td>\n";
-	echo "	</tr>";
-
-	if ($handle = opendir($dir_fax_inbox)) {
-		while (false !== ($file = readdir($handle))) {
-			if ($file != "." && $file != ".." && is_file($dir_fax_inbox.'/'.$file)) {
-
-				$tmp_filesize = filesize($dir_fax_inbox.'/'.$file);
-				$tmp_filesize = byte_convert($tmp_filesize);
-
-				$tmp_file_array = explode(".",$file);
-				//print_r($tmp_file_array);
-				$file_name = $tmp_file_array[0];
-				$file_ext = $tmp_file_array[count($tmp_file_array)-1];
-				if (strtolower($file_ext) == "tif") {
-
-					if (!file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
-						//convert the tif to pdf
-							chdir($dir_fax_inbox);
-							if (is_file("/usr/local/bin/tiff2pdf")) {
-								exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
-							}
-							if (is_file("/usr/bin/tiff2pdf")) {
-								exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
-							}
-					}
-					//if (!file_exists($dir_fax_inbox.'/'.$file_name.".jpg")) {
-					//	//convert the tif to jpg
-					//		chdir($dir_fax_inbox);
-					//		if (is_file("/usr/local/bin/tiff2rgba")) {
-					//			exec("/usr/local/bin/tiff2rgba ".$file_name.".tif ".$dir_fax_inbox.'/'.$file_name.".jpg");
-					//		}
-					//		if (is_file("/usr/bin/tiff2rgba")) {
-					//			exec("/usr/bin/tiff2rgba ".$file_name.".tif ".$dir_fax_inbox.'/'.$file_name.".jpg");
-					//		}
-					//}
-					echo "<tr>\n";
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file)."\">\n";
-					echo "    	$file";
-					echo "	  </a>";
-					echo "  </td>\n";
-
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					if (file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
-						echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file_name).".pdf\">\n";
-						echo "    	PDF";
-						echo "	  </a>";
-					}
-					else {
-						echo "&nbsp;\n";
-					}
-					echo "  </td>\n";
-
-					//echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					//if (file_exists($dir_fax_inbox.'/'.$file_name.".jpg")) {
-					//	echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=jpg&ext=".$faxextension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
-					//	echo "    	jpg";
-					//	echo "	  </a>";
-					//}
-					//else {
-					//	echo "&nbsp;\n";
-					//}
-					//echo "  &nbsp;</td>\n";
-
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					echo 		date ("F d Y H:i:s", filemtime($dir_fax_inbox.'/'.$file));
-					echo "  </td>\n";
-
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					echo "	".$tmp_filesize;
-					echo "  </td>\n";
-
-					echo "  <td valign=\"middle\" nowrap class=\"list\">\n";
-					echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
-					echo "      <tr>\n";
-					echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_inbox&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
-					echo "      </tr>\n";
-					echo "   </table>\n";
-					echo "  </td>\n";
-					echo "</tr>\n";
-				}
-
-			}
+		if ($v_path_show) {
+			echo "<b>location:</b>&nbsp;";
+			echo $dir_fax_inbox."&nbsp; &nbsp; &nbsp;";
 		}
-		closedir($handle);
-	}
 
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "    </table>\n";
+		echo "\n";
 
-	echo "	<tr>\n";
-	echo "		<td class=\"list\" colspan=\"3\"></td>\n";
-	echo "		<td class=\"list\"></td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "\n";
-	echo "  <table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Sent</strong></span>\n";
-	echo "		</td>\n";
-	echo "		<td align='right'>\n";
+		$c = 0;
+		$rowstyle["0"] = "rowstyle0";
+		$rowstyle["1"] = "rowstyle1";
 
-	if ($v_path_show) {
-		echo "<b>location:</b>\n";
-		echo $dir_fax_sent."&nbsp; &nbsp; &nbsp;\n";
-	}
+		echo "	<div id=\"\">\n";
+		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "	<tr>\n";
+		echo "		<th width=\"60%\" class=\"listhdrr\">File Name (download)</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdrr\">View</td>\n";
+		echo "		<th width=\"20%\" class=\"listhdr\">Last Modified</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size</td>\n";
+		echo "	</tr>";
 
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "    </table>\n";
-	echo "\n";
-	echo "    <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "    <tr>\n";
-	echo "		<th width=\"60%\">File Name (download)</td>\n";
-	echo "		<th width=\"10%\">View</td>\n";
-	echo "		<th width=\"20%\">Last Modified</td>\n";
-	echo "		<th width=\"10%\" nowrap>Size</td>\n";
-	echo "		</tr>";
+		if ($handle = opendir($dir_fax_inbox)) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != ".." && is_file($dir_fax_inbox.'/'.$file)) {
 
-	if ($handle = opendir($dir_fax_sent)) {
-		while (false !== ($file = readdir($handle))) {
-			if ($file != "." && $file != ".." && is_file($dir_fax_sent.'/'.$file)) {
+					$tmp_filesize = filesize($dir_fax_inbox.'/'.$file);
+					$tmp_filesize = byte_convert($tmp_filesize);
 
-				$tmp_filesize = filesize($dir_fax_sent.'/'.$file);
-				$tmp_filesize = byte_convert($tmp_filesize);
+					$tmp_file_array = explode(".",$file);
+					//print_r($tmp_file_array);
+					$file_name = $tmp_file_array[0];
+					$file_ext = $tmp_file_array[count($tmp_file_array)-1];
+					if (strtolower($file_ext) == "tif") {
 
-				$tmp_file_array = explode(".",$file);
-				//print_r($tmp_file_array);
-				$file_name = $tmp_file_array[0];
-				$file_ext = $tmp_file_array[count($tmp_file_array)-1];
-				if (strtolower($file_ext) == "tif") {
-
-					if (!file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
-						//convert the tif to pdf
-							chdir($dir_fax_sent);
-							if (is_file("/usr/local/bin/tiff2pdf")) {
-								exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
-							}
-							if (is_file("/usr/bin/tiff2pdf")) {
-								exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
-							}
-					}
-					if (!file_exists($dir_fax_sent.'/'.$file_name.".jpg")) {
-						//convert the tif to jpg
-							//chdir($dir_fax_sent);
-							//if (is_file("/usr/local/bin/tiff2rgba")) {
-							//	exec("/usr/local/bin/tiff2rgba -c jpeg -n ".$file_name.".tif ".$dir_fax_sent.'/'.$file_name.".jpg");
-							//}
-							//if (is_file("/usr/bin/tiff2rgba")) {
-							//	exec("/usr/bin/tiff2rgba -c lzw -n ".$file_name.".tif ".$dir_fax_sent.'/'.$file_name.".jpg");
-							//}
-					}
-					echo "<tr>\n";
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file)."\">\n";
-					echo "    	$file";
-					echo "	  </a>";
-					echo "  </td>\n";
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					if (file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
-						echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file_name).".pdf\">\n";
-						echo "    	PDF";
+						if (!file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
+							//convert the tif to pdf
+								chdir($dir_fax_inbox);
+								if (is_file("/usr/local/bin/tiff2pdf")) {
+									exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
+								}
+								if (is_file("/usr/bin/tiff2pdf")) {
+									exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_inbox.'/'.$file_name.".tif");
+								}
+						}
+						//if (!file_exists($dir_fax_inbox.'/'.$file_name.".jpg")) {
+						//	//convert the tif to jpg
+						//		chdir($dir_fax_inbox);
+						//		if (is_file("/usr/local/bin/tiff2rgba")) {
+						//			exec("/usr/local/bin/tiff2rgba ".$file_name.".tif ".$dir_fax_inbox.'/'.$file_name.".jpg");
+						//		}
+						//		if (is_file("/usr/bin/tiff2rgba")) {
+						//			exec("/usr/bin/tiff2rgba ".$file_name.".tif ".$dir_fax_inbox.'/'.$file_name.".jpg");
+						//		}
+						//}
+						echo "<tr>\n";
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file)."\">\n";
+						echo "    	$file";
 						echo "	  </a>";
-					}
-					else {
-						echo "&nbsp;\n";
-					}
-					echo "  </td>\n";
-					//echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					//if (file_exists($dir_fax_sent.'/'.$file_name.".jpg")) {
-					//	echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=jpg&ext=".$faxextension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
-					//	echo "    	jpg";
-					//	echo "	  </a>";
-					//}
-					//else {
-					//	echo "&nbsp;\n";
-					//}
-					//echo "  &nbsp;</td>\n";
-					echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-					echo 		date ("F d Y H:i:s", filemtime($dir_fax_sent.$file));
-					echo "  </td>\n";
+						echo "  </td>\n";
 
-					echo "  <td class=\"".$rowstyle[$c]."\" ondblclick=\"list\">\n";
-					echo "	".$tmp_filesize;
-					echo "  </td>\n";
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						if (file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
+							echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file_name).".pdf\">\n";
+							echo "    	PDF";
+							echo "	  </a>";
+						}
+						else {
+							echo "&nbsp;\n";
+						}
+						echo "  </td>\n";
 
-					echo "  <td class='' valign=\"middle\" nowrap>\n";
-					echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
-					echo "      <tr>\n";
-					echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_sent&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
-					echo "      </tr>\n";
-					echo "   </table>\n";
-					echo "  </td>\n";
-					echo "</tr>\n";
-					if ($c==0) { $c=1; } else { $c=0; }
-				} //check if the file is a .tif file
+						//echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						//if (file_exists($dir_fax_inbox.'/'.$file_name.".jpg")) {
+						//	echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_inbox&t=jpg&ext=".$faxextension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
+						//	echo "    	jpg";
+						//	echo "	  </a>";
+						//}
+						//else {
+						//	echo "&nbsp;\n";
+						//}
+						//echo "  &nbsp;</td>\n";
+
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						echo 		date ("F d Y H:i:s", filemtime($dir_fax_inbox.'/'.$file));
+						echo "  </td>\n";
+
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						echo "	".$tmp_filesize;
+						echo "  </td>\n";
+
+						echo "  <td valign=\"middle\" nowrap class=\"list\">\n";
+						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
+						echo "      <tr>\n";
+						if (permission_exists('fax_inbox_delete')) {
+							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_inbox&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
+						}
+						echo "      </tr>\n";
+						echo "   </table>\n";
+						echo "  </td>\n";
+						echo "</tr>\n";
+					}
+				}
 			}
-		} //end while
-		closedir($handle);
+			closedir($handle);
+		}
+		echo "	<tr>\n";
+		echo "		<td class=\"list\" colspan=\"3\"></td>\n";
+		echo "		<td class=\"list\"></td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
+		echo "\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "\n";
 	}
 
-	echo "     <tr>\n";
-	echo "       <td class=\"list\" colspan=\"3\"></td>\n";
-	echo "       <td class=\"list\"></td>\n";
-	echo "     </tr>\n";
-	echo "     </table>\n";
-	echo "\n";
-	echo "\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
+//show the sent box
+	if (permission_exists('fax_sent_view')) {
+		echo "  <table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
+		echo "	<tr>\n";
+		echo "		<td align='left'>\n";
+		echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Sent</strong></span>\n";
+		echo "		</td>\n";
+		echo "		<td align='right'>\n";
 
+		if ($v_path_show) {
+			echo "<b>location:</b>\n";
+			echo $dir_fax_sent."&nbsp; &nbsp; &nbsp;\n";
+		}
+
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "    </table>\n";
+		echo "\n";
+		echo "    <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "    <tr>\n";
+		echo "		<th width=\"60%\">File Name (download)</td>\n";
+		echo "		<th width=\"10%\">View</td>\n";
+		echo "		<th width=\"20%\">Last Modified</td>\n";
+		echo "		<th width=\"10%\" nowrap>Size</td>\n";
+		echo "		</tr>";
+
+		if ($handle = opendir($dir_fax_sent)) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != ".." && is_file($dir_fax_sent.'/'.$file)) {
+					$tmp_filesize = filesize($dir_fax_sent.'/'.$file);
+					$tmp_filesize = byte_convert($tmp_filesize);
+					$tmp_file_array = explode(".",$file);
+					$file_name = $tmp_file_array[0];
+					$file_ext = $tmp_file_array[count($tmp_file_array)-1];
+					if (strtolower($file_ext) == "tif") {
+
+						if (!file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
+							//convert the tif to pdf
+								chdir($dir_fax_sent);
+								if (is_file("/usr/local/bin/tiff2pdf")) {
+									exec("/usr/local/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
+								}
+								if (is_file("/usr/bin/tiff2pdf")) {
+									exec("/usr/bin/tiff2pdf -f -o ".$file_name.".pdf ".$dir_fax_sent.'/'.$file_name.".tif");
+								}
+						}
+						if (!file_exists($dir_fax_sent.'/'.$file_name.".jpg")) {
+							//convert the tif to jpg
+								//chdir($dir_fax_sent);
+								//if (is_file("/usr/local/bin/tiff2rgba")) {
+								//	exec("/usr/local/bin/tiff2rgba -c jpeg -n ".$file_name.".tif ".$dir_fax_sent.'/'.$file_name.".jpg");
+								//}
+								//if (is_file("/usr/bin/tiff2rgba")) {
+								//	exec("/usr/bin/tiff2rgba -c lzw -n ".$file_name.".tif ".$dir_fax_sent.'/'.$file_name.".jpg");
+								//}
+						}
+						echo "<tr>\n";
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file)."\">\n";
+						echo "    	$file";
+						echo "	  </a>";
+						echo "  </td>\n";
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						if (file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
+							echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=bin&ext=".urlencode($faxextension)."&filename=".urlencode($file_name).".pdf\">\n";
+							echo "    	PDF";
+							echo "	  </a>";
+						}
+						else {
+							echo "&nbsp;\n";
+						}
+						echo "  </td>\n";
+						//echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						//if (file_exists($dir_fax_sent.'/'.$file_name.".jpg")) {
+						//	echo "	  <a href=\"v_fax_edit.php?id=".$fax_id."&a=download&type=fax_sent&t=jpg&ext=".$faxextension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
+						//	echo "    	jpg";
+						//	echo "	  </a>";
+						//}
+						//else {
+						//	echo "&nbsp;\n";
+						//}
+						//echo "  &nbsp;</td>\n";
+						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+						echo 		date ("F d Y H:i:s", filemtime($dir_fax_sent.$file));
+						echo "  </td>\n";
+
+						echo "  <td class=\"".$rowstyle[$c]."\" ondblclick=\"list\">\n";
+						echo "	".$tmp_filesize;
+						echo "  </td>\n";
+
+						echo "  <td class='' valign=\"middle\" nowrap>\n";
+						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
+						echo "      <tr>\n";
+						if (permission_exists('fax_sent_delete')) {
+							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_sent&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
+						}
+						echo "      </tr>\n";
+						echo "   </table>\n";
+						echo "  </td>\n";
+						echo "</tr>\n";
+						if ($c==0) { $c=1; } else { $c=0; }
+					} //check if the file is a .tif file
+				}
+			} //end while
+			closedir($handle);
+		}
+		echo "     <tr>\n";
+		echo "       <td class=\"list\" colspan=\"3\"></td>\n";
+		echo "       <td class=\"list\"></td>\n";
+		echo "     </tr>\n";
+		echo "     </table>\n";
+		echo "\n";
+		echo "\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+		echo "	<br />\n";
+	}
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";

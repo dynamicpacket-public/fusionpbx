@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('fax_extension_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -89,7 +96,6 @@ require_once "includes/paging.php";
 		//show all fax extensions
 	}
 	else {
-		//$sql .= "and fax_user_list like '%|".$_SESSION["username"]."|%' ";
 		$sql .= "and fax_user_list like '%".$_SESSION["username"]."|%' ";
 	}
 	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
@@ -114,16 +120,16 @@ require_once "includes/paging.php";
 	echo thorderby('faxemail', 'Email', $orderby, $order);
 	echo thorderby('faxdescription', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('fax_extension_add')) {
 		echo "	<a href='v_fax_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
-
 		foreach($result as $row) {
 			//print_r( $row );
 			echo "<tr >\n";
@@ -132,8 +138,10 @@ require_once "includes/paging.php";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[faxemail]."&nbsp;</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='35%'>".$row[faxdescription]."</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_fax_edit.php?id=".$row[fax_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			if (ifgroup("admin") || ifgroup("superadmin")) {
+			if (permission_exists('fax_extension_edit')) {
+				echo "		<a href='v_fax_edit.php?id=".$row[fax_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('fax_extension_delete')) {
 				echo "		<a href='v_fax_delete.php?id=".$row[fax_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "   </td>\n";
@@ -150,7 +158,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('fax_extension_add')) {
 		echo "			<a href='v_fax_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
@@ -172,9 +180,4 @@ require_once "includes/paging.php";
 
 //show the footer
 	require_once "includes/footer.php";
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 ?>

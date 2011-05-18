@@ -63,7 +63,7 @@
 		$apps[$x]['permissions'][8]['groups'][] = 'admin';
 		$apps[$x]['permissions'][8]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_fax 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_fax';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'fax_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
