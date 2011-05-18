@@ -27,7 +27,7 @@ require_once "includes/config.php";
 
 //check permissions
 	require_once "includes/checkauth.php";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('phone_add') || permission_exists('phone_edit')) {
 		//access granted
 	}
 	else {
@@ -95,7 +95,7 @@ require_once "includes/config.php";
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				if ($action == "add") {
+				if ($action == "add" && permission_exists('phone_add')) {
 					//sql add
 						$sql = "insert into v_hardware_phones ";
 						$sql .= "(";
@@ -143,7 +143,7 @@ require_once "includes/config.php";
 						return;
 				} //if ($action == "add")
 
-				if ($action == "update") {
+				if ($action == "update" && permission_exists('phone_edit')) {
 					//sql update
 						$sql = "update v_hardware_phones set ";
 						$sql .= "phone_mac_address = '$phone_mac_address', ";

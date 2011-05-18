@@ -25,7 +25,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('phone_view')) {
 	//access granted
 }
 else {
@@ -100,7 +100,9 @@ echo thorderby('phone_vendor', 'Vendor', $orderby, $order);
 echo thorderby('phone_provision_enable', 'Enabled', $orderby, $order);
 echo thorderby('phone_description', 'Description', $orderby, $order);
 echo "<td align='right' width='42'>\n";
-echo "	<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('phone_add')) {
+	echo "	<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "</td>\n";
 echo "<tr>\n";
 
@@ -108,7 +110,6 @@ if ($resultcount == 0) { //no results
 }
 else { //received results
 	foreach($result as $row) {
-		//print_r( $row );
 		echo "<tr >\n";
 		echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[phone_mac_address]."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[phone_template]."&nbsp;</td>\n";
@@ -117,10 +118,12 @@ else { //received results
 		echo "	<td valign='top' class='".$rowstyle[$c]."' width='10px'>".$row[phone_provision_enable]."&nbsp;</td>\n";
 		echo "	<td valign='top' class='rowstylebg'>".$row[phone_description]."&nbsp;</td>\n";
 		echo "	<td valign='top' align='right'>\n";
-		echo "		<a href='v_hardware_phones_edit.php?id=".$row[hardware_phone_id]."' alt='edit'>$v_link_label_edit</a>\n";
-		echo "		<a href='v_hardware_phones_delete.php?id=".$row[hardware_phone_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-		//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_hardware_phones_edit.php?id=".$row[hardware_phone_id]."'\" value='e'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_hardware_phones_delete.php?id=".$row[hardware_phone_id]."' }\" value='x'>\n";
+		if (permission_exists('phone_edit')) {
+			echo "		<a href='v_hardware_phones_edit.php?id=".$row[hardware_phone_id]."' alt='edit'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('phone_delete')) {
+			echo "		<a href='v_hardware_phones_delete.php?id=".$row[hardware_phone_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+		}
 		echo "	</td>\n";
 		echo "</tr>\n";
 		if ($c==0) { $c=1; } else { $c=0; }
@@ -135,7 +138,9 @@ echo "	<tr>\n";
 echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 echo "		<td width='33.3%' align='right'>\n";
-echo "			<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('phone_add')) {
+	echo "			<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "	</table>\n";

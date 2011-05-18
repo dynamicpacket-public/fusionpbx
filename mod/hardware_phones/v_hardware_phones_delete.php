@@ -25,7 +25,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('phone_delete')) {
 	//access granted
 }
 else {
@@ -37,24 +37,25 @@ if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_hardware_phones ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and hardware_phone_id = '$id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	unset($sql);
-}
+//delete the data
+	if (strlen($id)>0) {
+		$sql = "";
+		$sql .= "delete from v_hardware_phones ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and hardware_phone_id = '$id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		unset($sql);
+	}
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hardware_phones.php\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hardware_phones.php\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
 
