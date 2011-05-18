@@ -26,7 +26,6 @@
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][1]['name'] = 'conferences_add';
-		$apps[$x]['permissions'][1]['groups'][] = 'user';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
@@ -38,4 +37,21 @@
 		$apps[$x]['permissions'][3]['name'] = 'conferences_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		
+		$apps[$x]['permissions'][4]['name'] = 'conferences_advanced_view';
+		$apps[$x]['permissions'][4]['groups'][] = 'admin';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][5]['name'] = 'conferences_advanced_add';
+		$apps[$x]['permissions'][5]['groups'][] = 'admin';
+		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][6]['name'] = 'conferences_advanced_edit';
+		$apps[$x]['permissions'][6]['groups'][] = 'admin';
+		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][7]['name'] = 'conferences_advanced_delete';
+		$apps[$x]['permissions'][7]['groups'][] = 'admin';
+		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
+
 ?>
