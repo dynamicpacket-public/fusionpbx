@@ -35,7 +35,7 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_rss 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_rss';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'rssid';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -105,7 +105,6 @@
 		$apps[$x]['db'][0]['fields'][20]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][20]['description'] = '';
 
-	// CREATE TABLE v_rss_sub 
 		$apps[$x]['db'][1]['table'] = 'v_rss_sub';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'rsssubid';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
@@ -161,7 +160,6 @@
 		$apps[$x]['db'][1]['fields'][16]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][16]['description'] = '';
 
-	// CREATE TABLE v_rss_sub_category 
 		$apps[$x]['db'][2]['table'] = 'v_rss_sub_category';
 		$apps[$x]['db'][2]['fields'][0]['name'] = 'rsssubcategoryid';
 		$apps[$x]['db'][2]['fields'][0]['type']['pgsql'] = 'serial';

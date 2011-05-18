@@ -24,9 +24,17 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 return; //disable
-
 include "root.php";
-require "includes/config.php";
+require_once "includes/config.php";
+require_once "includes/checkauth.php";
+require_once "config.php";
+if (permission_exists('content_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //include module specific information
 if (strlen($modconfigpath)==0) {

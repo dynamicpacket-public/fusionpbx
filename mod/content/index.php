@@ -26,8 +26,16 @@
 return; //disable
 
 include "root.php";
-//require_once "includes/config.php";
-//require_once "includes/checkauth.php";
+require_once "includes/config.php";
+require_once "includes/checkauth.php";
+if (permission_exists('content_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
 require_once "config.php";
 session_start();
 

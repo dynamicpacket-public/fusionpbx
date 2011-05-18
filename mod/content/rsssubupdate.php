@@ -27,16 +27,17 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "config.php";
-
-$rssid = $_GET["rssid"];
-if (!ifgroup("admin")) {
+if (permission_exists('content_edit')) {
+	//access granted
+}
+else {
 	echo "access denied";
-	return;
+	exit;
 }
 
+$rssid = $_GET["rssid"];
 
 if (count($_POST)>0 && $_POST["persistform"] == "0") {
-
 	$rsssubid = check_str($_POST["rsssubid"]);
 	$rssid = check_str($_POST["rssid"]);
 	$rsssubtitle = check_str($_POST["rsssubtitle"]);

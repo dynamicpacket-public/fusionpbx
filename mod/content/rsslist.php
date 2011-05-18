@@ -27,6 +27,13 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "config.php";
+if (permission_exists('content_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 if (!function_exists('thorderby')) {
 	//html table header order by

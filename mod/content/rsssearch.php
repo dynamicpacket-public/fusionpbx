@@ -29,9 +29,12 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "config.php";
-if (!ifgroup("admin")) {
+if (permission_exists('content_view')) {
+	//access granted
+}
+else {
 	echo "access denied";
-	return;
+	exit;
 }
 
 if (count($_POST)>0) {
