@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('outbound_route_add') || permission_exists('outbound_route_edit')) {
 	//access granted
 }
 else {
@@ -36,42 +36,34 @@ else {
 
 
 //action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-if (isset($_REQUEST["id2"])) {
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-
-//POST to PHP variables
-if (count($_POST)>0) {
-	//$v_id = check_str($_POST["v_id"]);
-	if (isset($_REQUEST["dialplan_include_id"])) {
-		$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
 	}
-	$tag = check_str($_POST["tag"]);
-	$fieldorder = check_str($_POST["fieldorder"]);
-	$fieldtype = check_str($_POST["fieldtype"]);
-	$fielddata = check_str($_POST["fielddata"]);
-}
+	else {
+		$action = "add";
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+
+	if (isset($_REQUEST["id2"])) {
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+
+
+//get the http values and set them as php variables
+	if (count($_POST)>0) {
+		if (isset($_REQUEST["dialplan_include_id"])) {
+			$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+		}
+		$tag = check_str($_POST["tag"]);
+		$fieldorder = check_str($_POST["fieldorder"]);
+		$fieldtype = check_str($_POST["fieldtype"]);
+		$fielddata = check_str($_POST["fielddata"]);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$dialplan_includes_detail_id = check_str($_POST["dialplan_includes_detail_id"]);
 	}
@@ -95,10 +87,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('outbound_route_add')) {
 				$sql = "insert into v_dialplan_includes_details ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -132,7 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('outbound_route_edit')) {
 				$sql = "update v_dialplan_includes_details set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "dialplan_include_id = '$dialplan_include_id', ";
@@ -156,8 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/footer.php";
 				return;
 		   } //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") { 
-
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -182,17 +172,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prepstatement);
 	}
 
-//begin the content
+//show the header
 	require_once "includes/header.php";
 
-
+//begin the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "      <br>";
-
 
 	echo "<form method='post' name='frm' action=''>\n";
 
@@ -370,7 +359,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br />\n";
 		echo "<a href='http://wiki.freeswitch.org/wiki/Dialplan_XML' target='_blank'>http://wiki.freeswitch.org/wiki/Dialplan_XML</a>";
 	}
-	  ?>
+	?>
 	  <br />
 	  <br />
 	  <br />
@@ -443,7 +432,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	  <li><b>voicemail</b> send the call to voicemail</li>
 	  </ul>
 
-
 	  <br />
 	  <br />
 
@@ -480,12 +468,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	</tr>
 	</table>
 
-	<?php
+<?php
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>

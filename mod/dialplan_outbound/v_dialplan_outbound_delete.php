@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('outbound_route_delete')) {
 	//access granted
 }
 else {
@@ -39,7 +39,6 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-
 	//delete child data
 		$sql = "";
 		$sql .= "delete from v_dialplan_includes_details ";

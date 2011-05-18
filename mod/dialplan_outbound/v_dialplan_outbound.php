@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('outbound_route_view')) {
 	//access granted
 }
 else {
@@ -58,12 +58,8 @@ $order = $_GET["order"];
 		//$fieldorder = $row["fieldorder"];
 		//$fieldtype = $row["fieldtype"];
 		//$fielddata = $row["fielddata"];
-		//if ($fieldtype == "conference") {
-			//echo "dialplan_include_id: $dialplan_include_id<br />";
-			//echo "fielddata: $fielddata<br />";
-			$dialplan_array[$x]['dialplan_include_id'] = $dialplan_include_id;
-			$x++;
-		//}
+		$dialplan_array[$x]['dialplan_include_id'] = $dialplan_include_id;
+		$x++;
 	}
 	unset ($prepstatement);
 
@@ -118,7 +114,6 @@ $order = $_GET["order"];
 			$x++;
 		}
 	}
-	//echo $sql; //exit;
 	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; } else { $sql .= "order by dialplanorder, extensionname asc "; }
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
@@ -162,7 +157,6 @@ $order = $_GET["order"];
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
 
-
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
@@ -175,39 +169,41 @@ $order = $_GET["order"];
 	echo thorderby('dialplanorder', 'Order', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
-	if (ifgroup("superadmin")) {
+	if (permission_exists('outbound_route_edit')) {
 		echo "<td align='right' width='42'>\n";
 	}
 	else {
 		echo "<td align='right' width='21'>\n";
 	}
-	echo "	<a href='v_dialplan_outbound_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('outbound_route_add')) {
+		echo "	<a href='v_dialplan_outbound_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
-
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[extensionname]."</td>\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[dialplanorder]."</td>\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[descr]."&nbsp;</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			if (ifgroup("superadmin")) {
+			if (permission_exists('outbound_route_edit')) {
 				echo "		<a href='v_dialplan_outbound_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			echo "		<a href='v_dialplan_outbound_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('outbound_route_delete')) {
+				echo "		<a href='v_dialplan_outbound_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $rowcount);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='5'>\n";
@@ -216,7 +212,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_dialplan_outbound_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('outbound_route_add')) {
+		echo "			<a href='v_dialplan_outbound_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -226,7 +224,6 @@ $order = $_GET["order"];
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
 	echo "<br />\n";
-	//echo "<br />\n";
 	if ($v_path_show) {
 		echo $v_dialplan_default_dir;
 	}
@@ -245,11 +242,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>
