@@ -28,7 +28,6 @@
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][2]['name'] = 'fifo_edit';
-		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][3]['name'] = 'fifo_delete';

@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (ifgroup("fifo_delete")) {
 	//access granted
 }
 else {
@@ -40,16 +40,16 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_dialplan_includes_details ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and dialplan_includes_detail_id = '$id' ";
-	$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-	$db->query($sql);
-	unset($sql);
-
+	//delete the data
+		$sql = "";
+		$sql .= "delete from v_dialplan_includes_details ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and dialplan_includes_detail_id = '$id' ";
+		$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
+		$db->query($sql);
+		unset($sql);
 	//synchronize the xml config
-	sync_package_v_dialplan_includes();
+		sync_package_v_dialplan_includes();
 }
 
 //redirect the user

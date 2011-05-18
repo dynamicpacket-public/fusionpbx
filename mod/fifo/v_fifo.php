@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('fifo_view')) {
 	//access granted
 }
 else {
@@ -78,7 +78,6 @@ require_once "includes/paging.php";
 		//	echo "--".$row['dialplan_include_id']."--<br />\n";
 		//}
 
-
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -129,7 +128,6 @@ require_once "includes/paging.php";
 			$x++;
 		}
 	}
-	//echo $sql; //exit;
 	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; } else { $sql .= "order by dialplanorder, extensionname asc "; }
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
@@ -185,7 +183,9 @@ require_once "includes/paging.php";
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('fifo_add')) {
+		echo "	<a href='v_fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -200,10 +200,12 @@ require_once "includes/paging.php";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[descr]."&nbsp;</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			if (ifgroup("superadmin")) {
+			if (permission_exists('fifo_edit')) {
 				echo "		<a href='v_fifo_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			echo "		<a href='v_fifo_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('fifo_delete')) {
+				echo "		<a href='v_fifo_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -218,7 +220,9 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('fifo_add')) {
+		echo "			<a href='v_fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";

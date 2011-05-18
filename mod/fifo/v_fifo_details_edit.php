@@ -26,13 +26,14 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('fifo_add') || permission_exists('fifo_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+//if (permission_exists('fifo_add')) {
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -86,7 +87,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('fifo_add')) {
 				$sql = "insert into v_dialplan_includes_details ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -120,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('fifo_edit')) {
 				$sql = "update v_dialplan_includes_details set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "dialplan_include_id = '$dialplan_include_id', ";

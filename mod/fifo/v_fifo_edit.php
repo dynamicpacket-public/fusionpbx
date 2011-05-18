@@ -27,14 +27,13 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('fifo_add') || permission_exists('fifo_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
 
 //set the action to an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -88,7 +87,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('fifo_add')) {
 				$sql = "insert into v_dialplan_includes ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -124,7 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('fifo_edit')) {
 				$sql = "update v_dialplan_includes set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "extensionname = '$extensionname', ";
@@ -339,7 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</div>";
 
 	//v_dialplan_details
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('fifo_edit')) {
 			echo "<div align='center'>";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -347,11 +346,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<td align=\"center\">\n";
 			echo "      <br>";
 
-
-			//echo "<table width='100%' border='0'><tr>\n";
-			//echo "<td width='50%' nowrap><b>Conditions and Actions</b></td>\n";
-			//echo "<td width='50%' align='right'>&nbsp;</td>\n";
-			//echo "</tr></table>\n";
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 			echo "  <tr>\n";
 			echo "    <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>Conditions and Actions<br />\n";
@@ -364,15 +358,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</table>";
 			echo "<br />\n";
 
-
 			$sql = "";
 			$sql .= " select * from v_dialplan_includes_details ";
 			$sql .= " where v_id = '$v_id' ";
 			$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
 			$sql .= " and tag = 'condition' ";
 			$sql .= " order by fieldorder asc";
-			//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-			//echo $sql;
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 			$result = $prepstatement->fetchAll();
@@ -392,24 +383,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<th align='center'>Data</th>\n";
 			echo "<th align='center'>Order</th>\n";
 			echo "<td align='right' width='42'>\n";
-			echo "	<a href='v_fifo_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			if (permission_exists('fifo_add')) {
+				echo "	<a href='v_fifo_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			}
 			echo "</td>\n";
 			echo "<tr>\n";
 
-			if ($resultcount == 0) { //no results
+			if ($resultcount == 0) {
+				//no results
 			}
 			else { //received results
-
 				foreach($result as $row) {
-					//print_r( $row );
 					echo "<tr >\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
-					echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-					echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					if (permission_exists('fifo_edit')) {
+						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('fifo_delete')) {
+						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
 					echo "	</td>\n";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }
@@ -424,19 +420,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
 			$sql .= " and tag = 'action' ";
 			$sql .= " order by fieldorder asc";
-			//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-			//$sql .= " limit $rowsperpage offset $offset ";
-			//echo $sql;
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 			$result = $prepstatement->fetchAll();
 			$resultcount = count($result);
 			unset ($prepstatement, $sql);
-
-			//$c = 0;
-			//$rowstyle["0"] = "rowstyle0";
-			//$rowstyle["1"] = "rowstyle1";
-
 			if ($resultcount == 0) {
 				//no results
 			}
@@ -448,8 +436,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
-					echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-					echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					if (permission_exists('fifo_edit')) {
+						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('fifo_delete')) {
+						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
 					echo "	</td>\n";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }
@@ -464,32 +456,28 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= " and dialplan_include_id = '$dialplan_include_id' ";
 			$sql .= " and tag = 'anti-action' ";
 			$sql .= " order by fieldorder asc";
-			//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-			//$sql .= " limit $rowsperpage offset $offset ";
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 			$result = $prepstatement->fetchAll();
 			$resultcount = count($result);
 			unset ($prepstatement, $sql);
-
-			//$c = 0;
-			//$rowstyle["0"] = "rowstyle0";
-			//$rowstyle["1"] = "rowstyle1";
-
 			if ($resultcount == 0) {
 				//no results
 			}
 			else { //received results
 				foreach($result as $row) {
-					//print_r( $row );
 					echo "<tr >\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
 					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
-					echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-					echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					if (permission_exists('fifo_edit')) {
+						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('fifo_delete')) {
+						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_includes_detail_id]."&id2=".$dialplan_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
 					echo "	</td>\n";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }
@@ -504,19 +492,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 			echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 			echo "		<td width='33.3%' align='right'>\n";
-			echo "			<a href='v_fifo_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			if (permission_exists('fifo_add')) {
+				echo "			<a href='v_fifo_details_edit.php?id2=".$dialplan_include_id."' alt='add'>$v_link_label_add</a>\n";
+			}
 			echo "		</td>\n";
 			echo "	</tr>\n";
 			echo "	</table>\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 
-
 			echo "</table>";
 			echo "</div>";
 			echo "<br><br>";
 			echo "<br><br>";
-
 
 			echo "</td>";
 			echo "</tr>";
