@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('extension_view')) {
 	//access granted
 }
 else {
@@ -36,13 +36,13 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
-$orderby = $_GET["orderby"];
-$order = $_GET["order"];
+//get the http values and set them as php variables
+	$orderby = $_GET["orderby"];
+	$order = $_GET["order"];
 
-
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
 	echo "      <br>";
@@ -100,18 +100,17 @@ $order = $_GET["order"];
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
-
 	echo "<tr>\n";
 	echo thorderby('extension', 'Extension', $orderby, $order);
 	echo thorderby('vm_mailto', 'Voicemail Mail To', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('description', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('extension_add')) {
+		echo "	<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
-	//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 
 	if ($resultcount == 0) { //no results
 	}
@@ -124,16 +123,18 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[enabled]."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row[description]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_extensions_edit.php?id=".$row[extension_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_extensions_delete.php?id=".$row[extension_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('extension_edit')) {
+				echo "		<a href='v_extensions_edit.php?id=".$row[extension_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('extension_delete')) {
+				echo "		<a href='v_extensions_delete.php?id=".$row[extension_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
-			//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%'' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $rowcount);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
@@ -142,7 +143,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('extension_add')) {
+		echo "			<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -151,7 +154,6 @@ $order = $_GET["order"];
 
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
-	//echo "<br />\n";
 	echo "<br />\n";
 	if ($v_path_show) {
 		echo $v_extensions_dir."\n";
@@ -165,18 +167,12 @@ $order = $_GET["order"];
 	echo "<br><br>";
 	echo "<br><br>";
 
-
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>

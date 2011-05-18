@@ -35,7 +35,7 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_extensions 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_extensions';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'extension_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -111,11 +111,14 @@
 		$apps[$x]['db'][0]['fields'][23]['name'] = 'nibble_account';
 		$apps[$x]['db'][0]['fields'][23]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][23]['description'] = '';
-		$apps[$x]['db'][0]['fields'][24]['name'] = 'enabled';
-		$apps[$x]['db'][0]['fields'][24]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][24]['name'] = 'sip_force_expires';
+		$apps[$x]['db'][0]['fields'][24]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][24]['description'] = '';
-		$apps[$x]['db'][0]['fields'][25]['name'] = 'description';
+		$apps[$x]['db'][0]['fields'][25]['name'] = 'enabled';
 		$apps[$x]['db'][0]['fields'][25]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][25]['description'] = '';
+		$apps[$x]['db'][0]['fields'][26]['name'] = 'description';
+		$apps[$x]['db'][0]['fields'][26]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][26]['description'] = '';
 
 ?>

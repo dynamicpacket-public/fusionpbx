@@ -25,7 +25,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 	//access granted
 }
 else {
@@ -78,6 +78,7 @@ else {
 		$auth_acl = check_str($_POST["auth_acl"]);
 		$cidr = check_str($_POST["cidr"]);
 		$sip_force_contact = check_str($_POST["sip_force_contact"]);
+		$sip_force_expires = check_str($_POST["sip_force_expires"]);		
 		$nibble_account = check_str($_POST["nibble_account"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
@@ -145,7 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('extension_add')) {
 			$userfirstname='extension';$useremail='';
 			if ($autogen_users == "true") {
 				$auto_user = $extension;
@@ -193,6 +194,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "auth_acl, ";
 				$sql .= "cidr, ";
 				$sql .= "sip_force_contact, ";
+				if (strlen($sip_force_expires) > 0) {
+					$sql .= "sip_force_expires, ";
+				}
 				if (strlen($nibble_account) > 0) {
 					$sql .= "nibble_account, ";
 				}
@@ -226,6 +230,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$auth_acl', ";
 				$sql .= "'$cidr', ";
 				$sql .= "'$sip_force_contact', ";
+				if (strlen($sip_force_expires) > 0) {
+					$sql .= "'$sip_force_expires', ";
+				}
 				if (strlen($nibble_account) > 0) {
 					$sql .= "'$nibble_account', ";
 				}
@@ -266,7 +273,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('extension_edit')) {
 			$userfirstname='extension';$userlastname=$extension;$useremail='';
 			$user_list_array = explode("|", $user_list);
 			//print_r($user_list_array);
@@ -297,6 +304,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "auth_acl = '$auth_acl', ";
 			$sql .= "cidr = '$cidr', ";
 			$sql .= "sip_force_contact = '$sip_force_contact', ";
+			if (strlen($sip_force_expires) > 0) {
+				$sql .= "sip_force_expires = '$sip_force_expires', ";
+			}
 			if (strlen($nibble_account) > 0) {
 				$sql .= "nibble_account = '$nibble_account', ";
 			}
@@ -359,7 +369,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$auth_acl = $row["auth_acl"];
 			$cidr = $row["cidr"];
 			$sip_force_contact = $row["sip_force_contact"];
-			$nibble_account=$row["nibble_account"];
+			$sip_force_expires = $row["sip_force_expires"];
+			$nibble_account = $row["nibble_account"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 			break; //limit to 1 row
@@ -854,6 +865,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo "Choose sip-force-contact can be used to NDLB-connectile-dysfunction rewrites contact IP and port,
 	and NDLB-tls-connectile-dysfunction rewrites the contact port.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    SIP Force Expires:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='sip_force_expires' maxlength='255' value=\"$sip_force_expires\">\n";
+	echo "<br />\n";
+	echo "Enter the sip force expire seconds.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
