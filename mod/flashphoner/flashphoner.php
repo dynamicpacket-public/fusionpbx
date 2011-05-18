@@ -29,6 +29,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('flashphoner_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/header.php";
 
 $extension_id = $_SESSION['user_extension_array'][0]['extension_id'];
