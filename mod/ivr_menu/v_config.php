@@ -103,7 +103,7 @@
 		$apps[$x]['db'][0]['fields'][20]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][20]['description'] = '';
 
-	// CREATE TABLE v_ivr_menu_options 
+	//schema details
 		$apps[$x]['db'][1]['table'] = 'v_ivr_menu_options';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'ivr_menu_option_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
