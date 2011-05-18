@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('modules_view')) {
 	//access granted
 }
 else {
@@ -170,7 +170,8 @@ if (!function_exists('switch_module_active')) {
 	$tmp_module_header .= "</td>\n";
 	$tmp_module_header .= "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		$prevmodulecat = '';
@@ -185,7 +186,9 @@ if (!function_exists('switch_module_active')) {
 					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
-					echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+					if (permission_exists('modules_add')) {
+						echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
 					echo "	</table>\n";
@@ -221,8 +224,12 @@ if (!function_exists('switch_module_active')) {
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row["moduleenabled"]."</td>\n";
 			//echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row["moduledefaultenabled"]."</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_modules_edit.php?id=".$row["module_id"]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_modules_delete.php?id=".$row["module_id"]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('modules_edit')) {
+				echo "		<a href='v_modules_edit.php?id=".$row["module_id"]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('modules_delete')) {
+				echo "		<a href='v_modules_delete.php?id=".$row["module_id"]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
 			echo "</tr>\n";
 
@@ -239,7 +246,9 @@ if (!function_exists('switch_module_active')) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('modules_add')) {
+		echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";

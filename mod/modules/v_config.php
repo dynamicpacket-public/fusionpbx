@@ -30,7 +30,7 @@
 		$apps[$x]['permissions'][3]['name'] = 'modules_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_modules 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_modules';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'module_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

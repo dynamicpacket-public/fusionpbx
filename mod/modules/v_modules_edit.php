@@ -26,14 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('modules_add') || permission_exists('modules_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
 
 //determin the action add or update
 	if (isset($_REQUEST["id"])) {
@@ -84,7 +83,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('modules_add')) {
 				$sql = "insert into v_modules ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -119,7 +118,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('modules_edit')) {
 				$sql = "update v_modules set ";
 				$sql .= "modulelabel = '$modulelabel', ";
 				$sql .= "modulename = '$modulename', ";
@@ -142,7 +141,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
