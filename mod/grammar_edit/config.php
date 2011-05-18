@@ -60,8 +60,6 @@ else { //not writable
 	*/
 }
 
-
-
 //$fullstring = "this is my [tag]dog[/tag]";
 //$parsed = get_string_between($fullstring, "[tag]", "[/tag]");
 

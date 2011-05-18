@@ -26,7 +26,7 @@
 include "root.php";
 require_once "edit/includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('grammar_view')) {
 	//access granted
 }
 else {

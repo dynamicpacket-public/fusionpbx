@@ -26,6 +26,16 @@
 include "root.php";
 require_once "admin/edit/config.php";
 require_once "admin/edit/header.php";
+require_once "includes/checkauth.php";
+if (permission_exists('grammar_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
+//show the content
     echo "<div align='left'>";
     echo "<table width='175'  border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -67,7 +77,6 @@ require_once "admin/edit/header.php";
         echo "<tr><td colspan='1'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 
         foreach($result as $row) {
-        //print_r( $row );
             echo "<tr style='".$rowstyle[$c]."'>\n";
                 //echo "<td valign='top'><a href='update.php?id=".$row[id]."'>".$row[id]."</a></td>";
                 echo "<td valign='top'><a href='/edit/update.php?id=".$row[id]."'>".$row[clipname]."</a></td>";
@@ -80,20 +89,14 @@ require_once "admin/edit/header.php";
 
             echo "<tr><td colspan='1'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
             if ($c==0) { $c=1; } else { $c=0; }
-        } //end foreach        unset($sql, $result, $rowcount);
-        
-        
-
+        } //end foreach
+		unset($sql, $result, $rowcount);
         echo "</table>\n";
         echo "</div>\n";
 
-
-        //echo "  <br><br>";
         echo "  </td>\n";
         echo "</tr>\n";
-
     } //end if results
-
     echo "</table>\n";
     
     echo "<table width='175'><tr><td align='right'>\n"; 
@@ -101,14 +104,8 @@ require_once "admin/edit/header.php";
     echo "<input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='Add'>&nbsp; &nbsp;\n";
     echo "</td></tr><table>\n";
     echo "</div>";
-
     echo "<br><br>";
+
+//show the footer
     require_once "admin/edit/footer.php";
-
-    unset ($resultcount);
-    unset ($result);
-    unset ($key);
-    unset ($val);
-    unset ($c);
-
 ?>
