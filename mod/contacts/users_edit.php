@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('contacts_add') || permission_exists('contacts_edit')) {
 	//access granted
 }
 else {
@@ -160,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				if ($action == "add") {
+				if ($action == "add" && permission_exists('contacts_add')) {
 					$sql = "insert into v_users ";
 					$sql .= "(";
 					$sql .= "v_id, ";
@@ -271,7 +271,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					return;
 				} //if ($action == "add")
 
-				if ($action == "update") {
+				if ($action == "update" || permission_exists('contacts_edit')) {
 					$sql = "update v_users set ";
 					//$sql .= "username = '$username', ";
 					//if (strlen($password) > 0) {

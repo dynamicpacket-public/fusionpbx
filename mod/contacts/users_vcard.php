@@ -26,13 +26,14 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('contacts_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
 require_once "includes/class_vcard.php";
 $vc = new vcard();
 

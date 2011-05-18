@@ -26,13 +26,14 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('contacts_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -97,11 +98,14 @@ require_once "includes/paging.php";
 	echo thorderby('usercompanyname', 'Organization', $orderby, $order);
 	echo thorderby('userphone1', 'Phone', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='users_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('contacts_add')) {
+		echo "	<a href='users_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
@@ -119,10 +123,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[usercompanyname]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[userphone1]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='users_edit.php?id=".$row[id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='users_delete.php?id=".$row[id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='users_edit.php?id=".$row[id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='users_delete.php?id=".$row[id]."' }\" value='x'>\n";
+			if (permission_exists('contacts_edit')) {
+				echo "		<a href='users_edit.php?id=".$row[id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('contacts_delete')) {
+				echo "		<a href='users_delete.php?id=".$row[id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -137,7 +143,9 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='users_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('contacts_add')) {
+		echo "			<a href='users_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -157,9 +165,4 @@ require_once "includes/paging.php";
 
 //show the footer
 	require_once "includes/footer.php";
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 ?>
