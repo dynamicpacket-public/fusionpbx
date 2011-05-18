@@ -20,22 +20,17 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'calls_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'user';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'calls_add';
+		$apps[$x]['permissions'][1]['name'] = 'follow_me';
 		$apps[$x]['permissions'][1]['groups'][] = 'user';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'calls_edit';
+		$apps[$x]['permissions'][2]['name'] = 'call_forward';
 		$apps[$x]['permissions'][2]['groups'][] = 'user';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'calls_delete';
+		$apps[$x]['permissions'][3]['name'] = 'do_not_disturb';
 		$apps[$x]['permissions'][3]['groups'][] = 'user';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';

@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('conferences_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -177,12 +184,12 @@ require_once "includes/paging.php";
 	echo "<tr>\n";
 	echo thorderby('extensionname', 'Conference Name', $orderby, $order);
 	echo "<th>Tools</th>\n";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('conferences_add')) {
 		echo thorderby('dialplanorder', 'Order', $orderby, $order);
 	}
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('conferences_add')) {
 		echo "<td align='right' width='42'>\n";
 		echo "	<a href='v_conferences_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
@@ -200,14 +207,16 @@ require_once "includes/paging.php";
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['extensionname']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='".PROJECT_PATH."/mod/conferences_active/v_conference_interactive.php?c=".$row['extensionname']."'>view</a></td>\n";
-			if (ifgroup("admin") || ifgroup("superadmin")) {
+			if (permission_exists('conferences_add')) {
 				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['dialplanorder']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['enabled']."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row['descr']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_conferences_edit.php?id=".$row['dialplan_include_id']."' alt='edit'>$v_link_label_edit</a>\n";
-			if (ifgroup("admin") || ifgroup("superadmin")) {
+			if (permission_exists('conferences_edit')) {
+				echo "		<a href='v_conferences_edit.php?id=".$row['dialplan_include_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('conferences_delete')) {
 				echo "		<a href='v_conferences_delete.php?id=".$row['dialplan_include_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
@@ -225,7 +234,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('conferences_add')) {
 		echo "			<a href='v_conferences_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";

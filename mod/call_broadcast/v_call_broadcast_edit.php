@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("tenant")) {
+if (permission_exists('call_broadcast_edit')) {
 	//access granted
 }
 else {
@@ -90,7 +90,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('call_broadcast_add')) {
 			$sql = "insert into v_call_broadcast ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -131,7 +131,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('call_broadcast_edit')) {
 			$sql = "update v_call_broadcast set ";
 			$sql .= "broadcast_name = '$broadcast_name', ";
 			$sql .= "broadcast_desc = '$broadcast_desc', ";

@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('conferences_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //get the http get or post and set it as php variables
 	$conference_name = trim($_REQUEST["c"]);

@@ -34,7 +34,7 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_auto_attendant 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_auto_attendant';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'auto_attendant_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('call_center_agents_add') || permission_exists('call_center_agents_edit')) {
 	//access granted
 }
 else {

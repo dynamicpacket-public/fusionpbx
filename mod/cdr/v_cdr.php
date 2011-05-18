@@ -26,7 +26,7 @@
 include "root.php";
 require "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('cdr_csv_view')) {
 	//access granted
 }
 else {
@@ -38,18 +38,9 @@ require_once "includes/paging.php";
 
 require_once "v_cdr_import.php";
 require "includes/lib_cdr.php";
-
-//to do list
-	//set these fields to numbers
-		// duration
-		// billsec
-	//sqlite CDR data should be in its own database
-	//future: channel variable would be nice
-	//move the importing into an include
 	
 $orderby = $_GET["orderby"];
 $order = $_GET["order"];
-
 
 if (count($_REQUEST)>0) {
 	$cdr_id = $_REQUEST["cdr_id"];
@@ -440,9 +431,4 @@ if (count($_REQUEST)>0) {
 
 require "includes/config.php";
 require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>

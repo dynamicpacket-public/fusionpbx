@@ -26,6 +26,13 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 function destination_select($select_name, $select_value, $select_default) {
 	if (strlen($select_value) == 0) { $select_value = $select_default; }
@@ -272,82 +279,88 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		include "includes/classes/do_not_disturb.php";
 
 	//call forward config
-		$call_forward = new call_forward;
-		$call_forward->call_forward_id = $call_forward_id;
-		$call_forward->v_id = $v_id;
-		$call_forward->db_type = $db_type;
-		$call_forward->extension = $extension;
-		$call_forward->call_forward_number = $call_forward_number;
-		$call_forward->call_forward_enabled = $call_forward_enabled;
-
-		if ($call_forward_enabled == "true") {
-			if ($call_forward_action == "add") {
-				$call_forward->call_forward_add();
+		if (permission_exists('call_forward')) {
+			$call_forward = new call_forward;
+			$call_forward->call_forward_id = $call_forward_id;
+			$call_forward->v_id = $v_id;
+			$call_forward->db_type = $db_type;
+			$call_forward->extension = $extension;
+			$call_forward->call_forward_number = $call_forward_number;
+			$call_forward->call_forward_enabled = $call_forward_enabled;
+	
+			if ($call_forward_enabled == "true") {
+				if ($call_forward_action == "add") {
+					$call_forward->call_forward_add();
+				}
 			}
+			if ($call_forward_action == "update") {
+				$call_forward->call_forward_update();
+			}
+			unset($call_forward);
 		}
-		if ($call_forward_action == "update") {
-			$call_forward->call_forward_update();
-		}
-		unset($call_forward);
 
 	//follow me config
-		$follow_me = new follow_me;
-		$follow_me->v_id = $v_id;
-		$follow_me->db_type = $db_type;
-		$follow_me->follow_me_id = $follow_me_id;
-		$follow_me->extension = $extension;
-		$follow_me->follow_me_enabled = $follow_me_enabled;
-		$follow_me->follow_me_type = $follow_me_type;
-		$follow_me->hunt_group_call_prompt = $hunt_group_call_prompt;
-		$follow_me->hunt_group_timeout = $hunt_group_timeout;
-
-		$follow_me->destination_data_1 = $destination_data_1;
-		$follow_me->destination_type_1 = $destination_type_1;
-		$follow_me->destination_timeout_1 = $destination_timeout_1;
-
-		$follow_me->destination_data_2 = $destination_data_2;
-		$follow_me->destination_type_2 = $destination_type_2;
-		$follow_me->destination_timeout_2 = $destination_timeout_2;
-
-		$follow_me->destination_data_3 = $destination_data_3;
-		$follow_me->destination_type_3 = $destination_type_3;
-		$follow_me->destination_timeout_3 = $destination_timeout_3;
-
-		$follow_me->destination_data_4 = $destination_data_4;
-		$follow_me->destination_type_4 = $destination_type_4;
-		$follow_me->destination_timeout_4 = $destination_timeout_4;
-
-		$follow_me->destination_data_5 = $destination_data_5;
-		$follow_me->destination_type_5 = $destination_type_5;
-		$follow_me->destination_timeout_5 = $destination_timeout_5;
-
-		if ($follow_me_enabled == "true") {
-			if ($follow_me_action == "add") {
-				$follow_me->follow_me_add();
+		if (permission_exists('follow_me')) {
+			$follow_me = new follow_me;
+			$follow_me->v_id = $v_id;
+			$follow_me->db_type = $db_type;
+			$follow_me->follow_me_id = $follow_me_id;
+			$follow_me->extension = $extension;
+			$follow_me->follow_me_enabled = $follow_me_enabled;
+			$follow_me->follow_me_type = $follow_me_type;
+			$follow_me->hunt_group_call_prompt = $hunt_group_call_prompt;
+			$follow_me->hunt_group_timeout = $hunt_group_timeout;
+	
+			$follow_me->destination_data_1 = $destination_data_1;
+			$follow_me->destination_type_1 = $destination_type_1;
+			$follow_me->destination_timeout_1 = $destination_timeout_1;
+	
+			$follow_me->destination_data_2 = $destination_data_2;
+			$follow_me->destination_type_2 = $destination_type_2;
+			$follow_me->destination_timeout_2 = $destination_timeout_2;
+	
+			$follow_me->destination_data_3 = $destination_data_3;
+			$follow_me->destination_type_3 = $destination_type_3;
+			$follow_me->destination_timeout_3 = $destination_timeout_3;
+	
+			$follow_me->destination_data_4 = $destination_data_4;
+			$follow_me->destination_type_4 = $destination_type_4;
+			$follow_me->destination_timeout_4 = $destination_timeout_4;
+	
+			$follow_me->destination_data_5 = $destination_data_5;
+			$follow_me->destination_type_5 = $destination_type_5;
+			$follow_me->destination_timeout_5 = $destination_timeout_5;
+	
+			if ($follow_me_enabled == "true") {
+				if ($follow_me_action == "add") {
+					$follow_me->follow_me_add();
+				}
 			}
+			if ($follow_me_action == "update") {
+				$follow_me->follow_me_update();
+			}
+			unset($follow_me);
 		}
-		if ($follow_me_action == "update") {
-			$follow_me->follow_me_update();
-		}
-		unset($follow_me);
 
 	//do not disturb (dnd) config
-		$dnd = new do_not_disturb;
-		$dnd->v_id = $v_id;
-		$dnd->dnd_id = $dnd_id;
-		$dnd->v_domain = $v_domain;
-		$dnd->extension = $extension;
-		$dnd->dnd_enabled = $dnd_enabled;
-		if ($dnd_enabled == "true") {
-			if ($dnd_action == "add") {
-				$dnd->dnd_add();
+		if (permission_exists('do_not_disturb')) {
+			$dnd = new do_not_disturb;
+			$dnd->v_id = $v_id;
+			$dnd->dnd_id = $dnd_id;
+			$dnd->v_domain = $v_domain;
+			$dnd->extension = $extension;
+			$dnd->dnd_enabled = $dnd_enabled;
+			if ($dnd_enabled == "true") {
+				if ($dnd_action == "add") {
+					$dnd->dnd_add();
+				}
 			}
+			if ($dnd_action == "update") {
+				$dnd->dnd_update();
+			}
+			$dnd->dnd_status();
+			unset($dnd);
 		}
-		if ($dnd_action == "update") {
-			$dnd->dnd_update();
-		}
-		$dnd->dnd_status();
-		unset($dnd);
 
 	//synchronize the xml config
 		sync_package_v_hunt_group();

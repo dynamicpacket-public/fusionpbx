@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -102,26 +109,31 @@ $order = $_GET["order"];
 	$rowstyle["1"] = "rowstyle1";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<divc class='th'>\n";
 	echo "<tr>\n";
 	echo "<th>Extension</th>\n";
 	echo "<th>Tools</th>\n";
 	echo "<th>Description</th>\n";
 	echo "</tr>\n";
-	echo "<div>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[extension]."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>\n";
-			echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
-			echo "		&nbsp;&nbsp;\n";
-			echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=follow_me' alt='Follow Me'>Follow Me</a> \n";
-			echo "		&nbsp;&nbsp;\n";
-			echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=do_not_disturb' alt='Do Not Disturb'>Do Not Disturb</a> \n";
+			if (permission_exists('call_forward')) {
+				echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
+				echo "		&nbsp;&nbsp;\n";
+			}
+			if (permission_exists('follow_me')) {
+				echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=follow_me' alt='Follow Me'>Follow Me</a> \n";
+				echo "		&nbsp;&nbsp;\n";
+			}
+			if (permission_exists('do_not_disturb')) {
+				echo "		<a href='".PROJECT_PATH."/mod/calls/v_call_edit.php?id=".$row[extension_id]."&a=do_not_disturb' alt='Do Not Disturb'>Do Not Disturb</a> \n";
+			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='40%'>".$row[description]."&nbsp;</td>\n";
 			echo "</tr>\n";

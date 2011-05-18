@@ -29,8 +29,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("agent") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('call_center_active_view')) {
 	//access granted
 }
 else {

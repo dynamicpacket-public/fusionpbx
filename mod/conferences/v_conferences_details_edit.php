@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('conferences_advanced_add') || permission_exists('conferences_advanced_edit')) {
 	//access granted
 }
 else {
@@ -48,16 +48,16 @@ else {
 	}
 
 //get the http post values and set them as php variables
-if (count($_POST)>0) {
-	//$v_id = check_str($_POST["v_id"]);
-	if (isset($_REQUEST["dialplan_include_id"])) {
-		$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+	if (count($_POST)>0) {
+		//$v_id = check_str($_POST["v_id"]);
+		if (isset($_REQUEST["dialplan_include_id"])) {
+			$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+		}
+		$tag = check_str($_POST["tag"]);
+		$fieldorder = check_str($_POST["fieldorder"]);
+		$fieldtype = check_str($_POST["fieldtype"]);
+		$fielddata = check_str($_POST["fielddata"]);
 	}
-	$tag = check_str($_POST["tag"]);
-	$fieldorder = check_str($_POST["fieldorder"]);
-	$fieldtype = check_str($_POST["fieldtype"]);
-	$fielddata = check_str($_POST["fielddata"]);
-}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -87,7 +87,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('conferences_advanced_add')) {
 				$sql = "insert into v_dialplan_includes_details ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -121,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('conferences_advanced_edit')) {
 				$sql = "update v_dialplan_includes_details set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "dialplan_include_id = '$dialplan_include_id', ";

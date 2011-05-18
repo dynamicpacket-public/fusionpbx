@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('extensions_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //http get and set variables
 	if (strlen($_GET['url']) > 0) {

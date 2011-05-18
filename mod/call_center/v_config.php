@@ -80,7 +80,7 @@
 		$apps[$x]['permissions'][11]['groups'][] = 'admin';
 		$apps[$x]['permissions'][11]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_call_center_agent 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_call_center_agent';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'call_center_agent_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -124,7 +124,6 @@
 		$apps[$x]['db'][0]['fields'][12]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][12]['description'] = '';
 
-	// CREATE TABLE v_call_center_logs 
 		$apps[$x]['db'][1]['table'] = 'v_call_center_logs';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'cc_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
@@ -215,7 +214,6 @@
 		$apps[$x]['db'][1]['fields'][27]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][27]['description'] = '';
 
-	// CREATE TABLE v_call_center_queue
 		$apps[$x]['db'][2]['table'] = 'v_call_center_queue';
 		$apps[$x]['db'][2]['fields'][0]['name'] = 'call_center_queue_id';
 		$apps[$x]['db'][2]['fields'][0]['type']['pgsql'] = 'serial';
@@ -277,7 +275,6 @@
 		$apps[$x]['db'][2]['fields'][18]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][18]['description'] = '';
 
-	// CREATE TABLE v_call_center_tier 
 		$apps[$x]['db'][3]['table'] = 'v_call_center_tier';
 		$apps[$x]['db'][3]['fields'][0]['name'] = 'call_center_tier_id';
 		$apps[$x]['db'][3]['fields'][0]['type']['pgsql'] = 'serial';

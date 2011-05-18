@@ -23,7 +23,4 @@
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'call_center_active_status_edit';
-		$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 ?>

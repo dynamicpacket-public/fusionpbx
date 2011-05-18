@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('conferences_advanced_add') || permission_exists('conferences_advanced_edit')) {
 	//access granted
 }
 else {
@@ -85,7 +85,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//Add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('conferences_advanced_add')) {
 				$sql = "insert into v_dialplan_includes ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -121,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('conferences_advanced_view')) {
 				$sql = "update v_dialplan_includes set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "extensionname = '$extensionname', ";
@@ -388,10 +388,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<tr>\n";
 
-		if ($resultcount == 0) { //no results
+		if ($resultcount == 0) {
+			//no results
 		}
 		else { //received results
-
 			foreach($result as $row) {
 				//print_r( $row );
 				echo "<tr >\n";
@@ -461,7 +461,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$resultcount = count($result);
 		unset ($prepstatement, $sql);
 
-		if ($resultcount == 0) { //no results
+		if ($resultcount == 0) {
+			//no results
 		}
 		else { //received results
 			foreach($result as $row) {

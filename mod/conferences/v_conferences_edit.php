@@ -26,6 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('conferences_add') || permission_exists('conferences_edit')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/paging.php";
 
 $orderby = $_GET["orderby"];
@@ -137,7 +144,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$tmp_fielddata = $extension_name.'-'.$v_domain."@".$profile.$tmp_pin_number.$tmp_flags;
 		}
 
-	if ($action == "add") {
+	if ($action == "add" && permission_exists('conferences_add')) {
 
 		//add the main dialplan include entry
 			$sql = "insert into v_dialplan_includes ";
@@ -269,7 +276,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	} //if ($action == "add")
 
 	//update the data
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('conferences_edit')) {
 			$sql = "update v_dialplan_includes set ";
 			$sql .= "extensionname = '$extension_name', ";
 			$sql .= "dialplanorder = '$dialplan_order', ";
@@ -447,7 +454,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    Conference Name:\n";
@@ -612,9 +618,4 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the footer
 	require_once "includes/footer.php";
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 ?>

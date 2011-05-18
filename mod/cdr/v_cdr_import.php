@@ -31,7 +31,7 @@ if(php_sapi_name() == 'cli') {
 else {
 	//require authentication
 	require_once "includes/checkauth.php";
-	if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('cdr_csv_view')) {
 		//access granted
 	}
 	else {

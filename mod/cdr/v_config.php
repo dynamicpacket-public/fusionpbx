@@ -22,7 +22,7 @@
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_cdr 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_cdr';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'cdr_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

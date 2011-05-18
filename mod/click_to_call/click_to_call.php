@@ -29,6 +29,14 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('click_to_call_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
 require_once "includes/header.php";
 
 if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
@@ -84,7 +92,9 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			}
 			$bridge_array = outbound_route_to_bridge ($dest);
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
-			$switch_cmd = "api originate $source &bridge($destination)";
+			if (permission_exists('click_to_call_call')) {
+				$switch_cmd = "api originate $source &bridge($destination)";
+			}
 		}
 
 	//display the last command

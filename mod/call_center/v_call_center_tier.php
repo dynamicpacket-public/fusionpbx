@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('call_center_tiers_view')) {
 	//access granted
 }
 else {
@@ -113,7 +113,9 @@ require_once "includes/paging.php";
 	echo thorderby('tier_level', 'Tier Level', $orderby, $order);
 	echo thorderby('tier_position', 'Tier Position', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('call_center_tiers_add')) {
+		echo "	<a href='v_call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -127,10 +129,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_level]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_position]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_call_center_tier_edit.php?id=".$row[call_center_tier_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_call_center_tier_delete.php?id=".$row[call_center_tier_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_call_center_tier_edit.php?id=".$row[call_center_tier_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_call_center_tier_delete.php?id=".$row[call_center_tier_id]."' }\" value='x'>\n";
+			if (permission_exists('call_center_tiers_edit')) {
+				echo "		<a href='v_call_center_tier_edit.php?id=".$row[call_center_tier_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('call_center_tiers_delete')) {
+				echo "		<a href='v_call_center_tier_delete.php?id=".$row[call_center_tier_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -146,7 +150,9 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('call_center_tiers_add')) {
+		echo "			<a href='v_call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

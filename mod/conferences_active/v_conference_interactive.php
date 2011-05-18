@@ -26,7 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
+if (permission_exists('conferences_active_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 $conference_name = trim($_REQUEST["c"]);
 $tmp_conference_name = str_replace("_", " ", $conference_name);
 

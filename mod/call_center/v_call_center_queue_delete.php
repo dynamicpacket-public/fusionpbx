@@ -25,6 +25,14 @@
 */
 require_once "root.php";
 require_once "includes/config.php";
+require_once "includes/checkauth.php";
+if (permission_exists('call_center_queues_delete')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);

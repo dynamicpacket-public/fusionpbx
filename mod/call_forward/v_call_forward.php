@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('call_forward_view')) {
 	//access granted
 }
 else {
@@ -112,7 +112,9 @@ $order = $_GET["order"];
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_call_forward_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('call_forward_add')) {
+		echo "	<a href='v_call_forward_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -121,15 +123,18 @@ $order = $_GET["order"];
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[extensionname]."</td>\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[dialplanorder]."</td>\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[descr]."&nbsp;</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_call_forward_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_call_forward_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('call_forward_edit')) {
+				echo "		<a href='v_call_forward_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('call_forward_delete')) {
+				echo "		<a href='v_call_forward_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -144,7 +149,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_call_forward_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('call_forward_add')) {
+		echo "			<a href='v_call_forward_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -170,10 +177,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//show the footer
+	require_once "includes/footer.php";
 ?>
