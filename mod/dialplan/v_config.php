@@ -48,7 +48,7 @@
 		$apps[$x]['permissions'][5]['name'] = 'dialplan_advanced_edit';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_dialplan_includes 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_dialplan_includes';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'dialplan_include_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -86,7 +86,6 @@
 		$apps[$x]['db'][0]['fields'][10]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][10]['description'] = '';
 
-	// CREATE TABLE v_dialplan_includes_details 
 		$apps[$x]['db'][1]['table'] = 'v_dialplan_includes_details';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'dialplan_includes_detail_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';

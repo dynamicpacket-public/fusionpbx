@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('dialplan_add') || permission_exists('dialplan_edit')) {
 	//access granted
 }
 else {
@@ -86,7 +86,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('dialplan_add')) {
 				//add the data into the database
 					$sql = "insert into v_dialplan_includes ";
 					$sql .= "(";
@@ -126,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('dialplan_edit')) {
 				//update the database
 					$sql = "update v_dialplan_includes set ";
 					$sql .= "v_id = '$v_id', ";

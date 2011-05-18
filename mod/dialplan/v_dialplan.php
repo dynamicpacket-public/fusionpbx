@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('dialplan_advanced_view')) {
 	//access granted
 }
 else {
@@ -35,7 +35,7 @@ else {
 }
 require_once "includes/header.php";
 
-if ($_GET['a'] == "default") {
+if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
 	//get the contents of the dialplan/default.xml
 		$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/dialplan/default.xml");
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
@@ -61,7 +61,7 @@ if ($_GET['a'] == "default") {
 		$savemsg = "Default Restored";
 }
 
-if ($_POST['a'] == "save") {
+if ($_POST['a'] == "save" && permission_exists('dialplan_advanced_edit')) {
 	$v_content = str_replace("\r","",$_POST['code']);
 	if (file_exists($v_conf_dir."/dialplan/$v_domain.xml")) {
 		$fd = fopen($v_conf_dir."/dialplan/$v_domain.xml", "w");
@@ -73,7 +73,6 @@ if ($_POST['a'] == "save") {
 	fclose($fd);
 	$savemsg = "Saved";
 }
-
 
 if (file_exists($v_conf_dir."/dialplan/$v_domain.xml")) {
 	$fd = fopen($v_conf_dir."/dialplan/$v_domain.xml", "r");
@@ -106,78 +105,66 @@ function sf() { document.forms[0].savetopath.focus(); }
 </script>
 
 <div align='center'>
-
-
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
    <tr>
      <td class="" >
-
-<form action="v_dialplan.php" method="post" name="iform" id="iform">
-<?php
-
-?>
-	<table width="100%" border="0" cellpadding="0" cellspacing="0">
-	  <tr>
-		<td align='left' width='100%'><span class="vexpl"><span class="red"><strong>Default Dialplan<br>
-			</strong></span>
-			The default dialplan is used to setup call destinations based on conditions and context. 
-			You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.
-			<br />
-			<br />
-		</td>
-		<td width='10%' align='right' valign='top'><input type='submit' class='btn' value='save' /></td>
-      </tr>
-
-	<tr>
-	<td colspan='2' class='' valign='top' align='left' nowrap>
-		<textarea style="width:100%" id="code" name="code" rows="31"><?php echo htmlentities($v_content); ?></textarea>
-		<br />
-		<br />
-	</td>
-	</tr>
-
-	<tr>
-		<td align='left'>
-		<?php
-		if ($v_path_show) {
-			echo "<b>location:</b> ".$v_conf_dir."/dialplan/default.xml\n";
-		}
-		?>
-		</td>
-		<td align='right'>
-			<input type='hidden' name='f' value='<?php echo $_GET['f']; ?>' />
-			<input type='hidden' name='a' value='save' />
-			<?php
-			echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='v_dialplan.php?a=default&f=default.xml';\" />";
-			?>
-		</td>
-	</tr>
-
-	<tr>
-	<td colspan='2'>
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-		<br /><br /><br />
-	</td>
-	</tr>
-	</table>
-
-</form>
-
+		<form action="v_dialplan.php" method="post" name="iform" id="iform">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			  <tr>
+				<td align='left' width='100%'><span class="vexpl"><span class="red"><strong>Default Dialplan<br>
+					</strong></span>
+					The default dialplan is used to setup call destinations based on conditions and context. 
+					You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.
+					<br />
+					<br />
+				</td>
+				<td width='10%' align='right' valign='top'><input type='submit' class='btn' value='save' /></td>
+			  </tr>
+			<tr>
+			<td colspan='2' class='' valign='top' align='left' nowrap>
+				<textarea style="width:100%" id="code" name="code" rows="31"><?php echo htmlentities($v_content); ?></textarea>
+				<br />
+				<br />
+			</td>
+			</tr>
+			<tr>
+				<td align='left'>
+				<?php
+				if ($v_path_show) {
+					echo "<b>location:</b> ".$v_conf_dir."/dialplan/default.xml\n";
+				}
+				?>
+				</td>
+				<td align='right'>
+					<input type='hidden' name='f' value='<?php echo $_GET['f']; ?>' />
+					<input type='hidden' name='a' value='save' />
+					<?php
+					if (permission_exists('dialplan_advanced_edit')) {
+						echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='v_dialplan.php?a=default&f=default.xml';\" />";
+					}
+					?>
+				</td>
+			</tr>
+			<tr>
+			<td colspan='2'>
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+				<br /><br /><br />
+			</td>
+			</tr>
+			</table>
+		</form>
 </td>
 </tr>
 </table>
-
 </div>
-
-
 
 <?php
 	require_once "includes/footer.php";

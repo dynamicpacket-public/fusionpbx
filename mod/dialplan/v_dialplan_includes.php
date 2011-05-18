@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('dialplan_view')) {
 	//access granted
 }
 else {
@@ -39,7 +39,7 @@ require_once "includes/paging.php";
 $orderby = $_GET["orderby"];
 $order = $_GET["order"];
 
-
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -52,7 +52,7 @@ $order = $_GET["order"];
 	echo "		</strong></span></span>\n";
 	echo "	</td>\n";
 	echo "	<td align='right'>\n";
-	if (ifgroup("superadmin")) {
+	if (permission_exists('dialplan_advanced_view')) {
 		echo "		<input type='button' class='btn' value='advanced' onclick=\"document.location.href='v_dialplan.php';\">\n";
 	}
 	else {
@@ -108,7 +108,6 @@ $order = $_GET["order"];
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
 
-
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
@@ -121,11 +120,11 @@ $order = $_GET["order"];
 	echo thorderby('dialplanorder', 'Order', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
-	if (ifgroup("superadmin")) {
-		echo "<td align='right' width='42'>\n";
+	echo "<td align='right' width='42'>\n";
+	if (permission_exists('dialplan_add')) {
 		echo "	<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
-		echo "</td>\n";
 	}
+	echo "</td>\n";
 	echo "<tr>\n";
 
 	if ($resultcount == 0) { 
@@ -166,12 +165,14 @@ $order = $_GET["order"];
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['dialplanorder']."</td>\n";
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['enabled']."</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row['descr']."&nbsp;</td>\n";
-			if (ifgroup("superadmin")) {
-				echo "   <td valign='top' align='right'>\n";
+			echo "   <td valign='top' align='right'>\n";
+			if (permission_exists('dialplan_add')) {
 				echo "		<a href='v_dialplan_includes_edit.php?id=".$row['dialplan_include_id']."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_dialplan_includes_delete.php?id=".$row['dialplan_include_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-				echo "   </td>\n";
 			}
+			if (permission_exists('dialplan_edit')) {
+				echo "		<a href='v_dialplan_includes_delete.php?id=".$row['dialplan_include_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
+			echo "   </td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
@@ -186,7 +187,7 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (ifgroup("superadmin")) {
+	if (permission_exists('dialplan_add')) {
 		echo "			<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	else {

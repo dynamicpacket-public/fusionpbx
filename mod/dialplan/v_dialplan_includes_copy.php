@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('dialplan_add')) {
 	//access granted
 }
 else {
