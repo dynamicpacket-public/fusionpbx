@@ -158,6 +158,9 @@ else {
 			$switch_cmd = 'show channels';
 		//send the event socket command 
 			$csv = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		//remove text between [] and {} which can contain commas that corrupt the csv
+			$csv = preg_replace('({.*?})', '$1', $csv);
+			$csv = preg_replace('(\[.*?\])', '$1', $csv);
 		//prepare the string
 			$channels_array = explode("\n\n",$csv);
 		//get the named array
