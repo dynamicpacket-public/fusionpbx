@@ -43,6 +43,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	//get the http variables and set them as variables
 		$src = $_REQUEST['src'];
 		$dest = $_REQUEST['dest'];
+		$ringback = $_REQUEST['ringback'];
 		$src = str_replace(array('.', '(', ')', '-', ' '), '', $src);
 		$dest = str_replace(array('.', '(', ')', '-', ' '), '', $dest);
 		$src_cid_name = $_REQUEST['src_cid_name'];
@@ -58,13 +59,35 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$context = 'default';
 		}
 
+	//translate ringback
+		switch ($ringback) {
+			case "us-ring":
+				$ringback_value = '%(2000, 4000, 440.0, 480.0)';
+				break;
+			case "uk-ring":
+				$ringback_value = '%(400,200,400,450);%(400,2200,400,450)';
+				break;
+			case "fr-ring":
+				$ringback_value = '%(1500, 3500, 440.0, 0.0)';
+				break;
+			case "rs-ring":
+				$ringback_value = '%(1000, 4000, 425.0, 0.0)';
+				break;
+			case "music":
+				$ringback_value = 'local_stream://moh';
+				break;
+			default:
+				$ringback = 'us-ring';
+				$ringback_value = '%(2000, 4000, 440.0, 480.0)';
+		}
+
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,presence_id=$src@".$_SESSION['domains'][$v_id]['domain']."}sofia/internal/$src%".$_SESSION['domains'][$v_id]['domain'];
+			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$v_id]['domain']."}sofia/internal/$src%".$_SESSION['domains'][$v_id]['domain'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($src);
-			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,presence_id=$src@".$_SESSION['domains'][$v_id]['domain']."}".$bridge_array[0];
+			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$v_id]['domain']."}".$bridge_array[0];
 		}
 
 	//destination needs to see the source caller id
@@ -179,6 +202,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the name to show to the source caller.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>Source Caller ID Number:</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -187,6 +211,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the number to show to the source caller.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td class='vncell' width='40%'>Destination Caller ID Name:</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -195,6 +220,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the name to send to the destination callee.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td class='vncell'>Destination Caller ID Number:</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -203,6 +229,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the number to show to the destination callee.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>Source Number:</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -211,6 +238,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the number to call from.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td class='vncellreq'>Destination Number:</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -219,6 +247,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		Enter the number to call.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    Record:\n";
@@ -242,7 +271,51 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "<br />\n";
 	echo "Select whether to record the call.\n";
 	echo "</td>\n";
-	echo "</tr>\n";	
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "    Ring Back:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='ringback'>\n";
+	echo "    <option value=''></option>\n";
+	if ($ringback == "us-ring") { 
+		echo "    <option value='us-ring' selected='selected'>us-ring</option>\n";
+	}
+	else {
+		echo "    <option value='us-ring'>us-ring</option>\n";
+	}
+	if ($ringback == "fr-ring") { 
+		echo "    <option value='fr-ring' selected='selected'>fr-ring</option>\n";
+	}
+	else {
+		echo "    <option value='fr-ring'>fr-ring</option>\n";
+	}
+	if ($ringback == "uk-ring") { 
+		echo "    <option value='uk-ring' selected='selected'>uk-ring</option>\n";
+	}
+	else {
+		echo "    <option value='uk-ring'>uk-ring</option>\n";
+	}
+	if ($ringback == "rs-ring") { 
+		echo "    <option value='rs-ring' selected='selected'>rs-ring</option>\n";
+	}
+	else {
+		echo "    <option value='rs-ring'>rs-ring</option>\n";
+	}
+	if ($ringback == "music") { 
+		echo "    <option value='music' selected='selected'>music</option>\n";
+	}
+	else {
+		echo "    <option value='music'>music</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Defines what the caller will hear while destination is being called. The choices are music (music on hold) ring (ring tone.)\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
 	echo "		<input type=\"submit\" class='btn' value=\"Call\">\n";
