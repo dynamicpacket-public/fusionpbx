@@ -37,6 +37,7 @@ else {
 //menu restore default
 	require_once "includes/classes/menu_restore.php";
 	$menu_restore = new menu_restore;
+	$menu_restore->db = $db;
 	$menu_restore->v_id = $v_id;
 	$menu_restore->delete();
 	$menu_restore->restore();

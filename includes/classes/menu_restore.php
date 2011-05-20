@@ -31,9 +31,8 @@ include "root.php";
 
 		//delete items in the menu that are not protected
 			function delete() {
-				//define the global variables
-					global $db;
 				//set the variable
+					$db = $this->db;
 					$v_id = $this->v_id;
 				//remove the old menu
 					$sql  = "delete from v_menu ";
@@ -46,9 +45,8 @@ include "root.php";
 
 		//restore the menu
 			function restore() {
-				global $db;
-
 				//set the variable
+					$db = $this->db;
 					$v_id = $this->v_id;
 
 				//get the $apps array from the installed apps from the core and mod directories
