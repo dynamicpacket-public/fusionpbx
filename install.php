@@ -60,46 +60,6 @@ $v_id = '1';
 		}
 	}
 
-//create the database schema
-	if ( !function_exists('schema_sql_add')) {
-		function schema_sql_add($db, $apps) {
-
-		//exit;
-			$sql = '';
-			$sql_schema = '';
-			foreach ($apps as $app) {
-
-				foreach ($app['db'] as $row) {
-					//create the sql string
-						$table_name = $row['table'];
-						$sql = "CREATE TABLE " . $row['table'] . " (\n";
-						$field_count = 0;
-						foreach ($row['fields'] as $field) {
-							if ($field_count > 0 ) { $sql .= ",\n"; }
-							$sql .= $field['name'] . " ";
-							if (is_array($field['type'])) {
-								$sql .= $field['type'][$db_type];
-							}
-							else {
-								$sql .= $field['type'];
-							}
-							$field_count++;
-						}
-						$sql .= ");";
-					//execute the sql query
-						try {
-							$db->query($sql);
-						}
-						catch (PDOException $error) {
-							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-							//die();
-						}
-						unset($sql);
-				}
-			}
-		}
-	}
-
 //if the config file exists then disable the install page
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php")) {
 		$msg .= "Already installed.<br />\n";
@@ -397,7 +357,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					}
 
 				//add the database structure
-					schema_sql_add($db_tmp, $apps);
+					require_once "includes/classes/schema.php";
+					$schema = new schema;
+					$schema->db = $db_tmp;
+					$schema->v_id = $v_id;
+					$schema->db_type = $db_type;
+					$schema->add();
 
 				//get the contents of the sql file
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
@@ -473,7 +438,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					}
 
 				//add the database structure
-					schema_sql_add($db_tmp, $apps);
+					require_once "includes/classes/schema.php";
+					$schema = new schema;
+					$schema->db = $db_tmp;
+					$schema->v_id = $v_id;
+					$schema->db_type = $db_type;
+					$schema->add();
 
 				//get the contents of the sql file
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/pgsql.sql';
@@ -623,7 +593,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					}
 
 				//add the database structure
-					schema_sql_add($db_tmp, $apps);
+					require_once "includes/classes/schema.php";
+					$schema = new schema;
+					$schema->db = $db_tmp;
+					$schema->v_id = $v_id;
+					$schema->db_type = $db_type;
+					$schema->add();
 
 				//add the defaults data into the database
 					//get the contents of the sql file
