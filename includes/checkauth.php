@@ -96,40 +96,44 @@ session_start();
 		//if there are no permissions listed in v_group_permissions then set the default permissions
 			$sql = "";
 			$sql .= "select count(*) as count from v_group_permissions ";
+			$sql .= "where v_id = $v_id ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
-			foreach ($result as &$row) {
-				$group_permission_count = $row["count"];
-				break; //limit to 1 row
-			}
+			$result = $prep_statement->fetch();
 			unset ($prep_statement);
-			if ($group_permission_count == 0) {
+			if ($result['count'] == 0) {
+				//get the list of installed apps from the core and mod directories
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+					$x=0;
+					foreach ($config_list as &$config_path) {
+						include($config_path);
+						$x++;
+					}
 				//no permissions found add the defaults
-				foreach($apps as $app) {
-					foreach ($app['permissions'] as $row) {
-						foreach ($row['groups'] as $group) {
-							//add the record
-							$sql = "insert into v_group_permissions ";
-							$sql .= "(";
-							$sql .= "v_id, ";
-							$sql .= "permission_id, ";
-							$sql .= "group_id ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$v_id', ";
-							$sql .= "'".$row['name']."', ";
-							$sql .= "'".$group."' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+					foreach($apps as $app) {
+						foreach ($app['permissions'] as $row) {
+							foreach ($row['groups'] as $group) {
+								//add the record
+								$sql = "insert into v_group_permissions ";
+								$sql .= "(";
+								$sql .= "v_id, ";
+								$sql .= "permission_id, ";
+								$sql .= "group_id ";
+								$sql .= ")";
+								$sql .= "values ";
+								$sql .= "(";
+								$sql .= "'$v_id', ";
+								$sql .= "'".$row['name']."', ";
+								$sql .= "'".$group."' ";
+								$sql .= ")";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
 						}
 					}
-				}
 			}
 
-		//get the groups the user is a member of
+		//get the groups assigned to the user
 			$sql = "SELECT * FROM v_group_members ";
 			$sql .= "where v_id=:v_id ";
 			$sql .= "and username=:username ";
