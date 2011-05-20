@@ -144,7 +144,7 @@ $order = $_GET["order"];
 				foreach ($tmp_result as &$tmp) {
 					//prepare the extension number
 						preg_match_all('/[\|0-9\*]/',$tmp["fielddata"], $tmp_match);
-						$extension_number = implode("",$tmp_match[0])."<br/><br/>";
+						$extension_number = implode("",$tmp_match[0]);
 						$extension_number = str_replace("|", " ", $extension_number);
 						$row['extension_number'] = $extension_number;
 					//update the extension number
