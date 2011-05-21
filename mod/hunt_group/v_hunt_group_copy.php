@@ -27,13 +27,15 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//check permissions
+	if (permission_exists('hunt_group_add')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //set the http get/post variable(s) to a php variable
 	if (isset($_REQUEST["id"])) {
@@ -49,7 +51,6 @@ else {
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	foreach ($result as &$row) {
-		//$v_id = $row["v_id"];
 		$huntgroupextension = $row["huntgroupextension"];
 		$huntgroupname = $row["huntgroupname"];
 		$huntgrouptype = $row["huntgrouptype"];

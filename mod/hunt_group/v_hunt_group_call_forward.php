@@ -29,9 +29,17 @@ require_once "includes/checkauth.php";
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+//check permissions
+	if (permission_exists('hunt_group_call_forward')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 $orderby = $_GET["orderby"];
 $order = $_GET["order"];
-
 
 echo "<div align='center'>";
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -84,7 +92,8 @@ else {
 	echo "</tr>\n";
 }
 
-if ($result_count == 0) { //no results
+if ($result_count == 0) {
+	//no results
 }
 else { //received results
 	foreach($result as $row) {
@@ -118,6 +127,5 @@ echo "</div>";
 if ($is_included != "true") {
 	require_once "includes/footer.php";
 }
-
 
 ?>

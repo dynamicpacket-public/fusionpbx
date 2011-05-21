@@ -40,7 +40,7 @@
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_hunt_group 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_hunt_group';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'hunt_group_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -96,7 +96,6 @@
 		$apps[$x]['db'][0]['fields'][16]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][16]['description'] = '';
 
-	// CREATE TABLE v_hunt_group_destinations 
 		$apps[$x]['db'][1]['table'] = 'v_hunt_group_destinations';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'hunt_group_destination_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';

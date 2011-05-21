@@ -26,14 +26,15 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
+//check permissions
+	if (permission_exists('hunt_group_delete')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 if (count($_GET)>0) {
 	$id = $_GET["id"];
@@ -41,27 +42,26 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_hunt_group_destinations ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and hunt_group_destination_id = '$id' ";
-	$sql .= "and hunt_group_id = '$hunt_group_id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	unset($sql);
-
+	//delete the data
+		$sql = "";
+		$sql .= "delete from v_hunt_group_destinations ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and hunt_group_destination_id = '$id' ";
+		$sql .= "and hunt_group_id = '$hunt_group_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		unset($sql);
 	//synchronize the xml config
-	sync_package_v_hunt_group();
+		sync_package_v_hunt_group();
 }
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group_edit.php?id=".$hunt_group_id."\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group_edit.php?id=".$hunt_group_id."\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
-

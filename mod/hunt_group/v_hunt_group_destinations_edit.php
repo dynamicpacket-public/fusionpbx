@@ -27,15 +27,16 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
-//if (ifgroup("admin") || ifgroup("superadmin")) {
-//	//access granted
-//}
-//else {
-//	echo "access denied";
-//	exit;
-//}
+//check permissions
+	if (permission_exists('hunt_group_add') || permission_exists('hunt_group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
-//Action add or update
+//set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
 		$hunt_group_destination_id = check_str($_REQUEST["id"]);
@@ -48,7 +49,7 @@ require_once "includes/checkauth.php";
 		$hunt_group_id = check_str($_REQUEST["id2"]);
 	}
 
-//POST to PHP variables
+//get the http values and set them as variables
 	if (count($_POST)>0) {
 		if (isset($_POST["hunt_group_id"])) {
 			$hunt_group_id = check_str($_POST["hunt_group_id"]);
@@ -93,7 +94,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('hunt_group_add')) {
 				$sql = "insert into v_hunt_group_destinations ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -133,7 +134,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('hunt_group_edit')) {
 				$sql = "update v_hunt_group_destinations set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "hunt_group_id = '$hunt_group_id', ";
@@ -160,7 +161,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -174,7 +174,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll();
 		foreach ($result as &$row) {
-			//$v_id = $row["v_id"];
 			$hunt_group_id = $row["hunt_group_id"];
 			$destinationdata = $row["destinationdata"];
 			$destinationtype = $row["destinationtype"];
@@ -388,13 +387,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>

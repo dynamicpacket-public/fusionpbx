@@ -27,6 +27,15 @@ require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
+//check permissions
+	if (permission_exists('hunt_group_add') || permission_exists('hunt_group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 function destination_select($select_name, $select_value, $select_default) {
 	if (strlen($select_value) == 0) { $select_value = $select_default; }
 	echo "	<select class='formfld' style='width: 40px;' name='$select_name'>\n";
@@ -57,7 +66,6 @@ function destination_select($select_name, $select_value, $select_default) {
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and hunt_group_id = '$hunt_group_id' ";
 	$sql .= "and hunt_group_user_list like '%|".$_SESSION["username"]."|%' ";
-	//echo $sql;
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
@@ -157,7 +165,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$hunt_group_enabled = $call_forward_enabled;
 		$hunt_group_descr = 'call forward '.$hunt_group_extension;
 
-		if ($call_forward_action == "add") {
+		if ($call_forward_action == "add" && permission_exists('hunt_group_add')) {
 			$sql = "insert into v_hunt_group ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -255,10 +263,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
-
 	} //if ($call_forward_action == "add")
 
-	if ($call_forward_action == "update") {
+	if ($call_forward_action == "update" && permission_exists('hunt_group_edit')) {
 		$sql = "update v_hunt_group set ";
 		$sql .= "huntgroupextension = '$hunt_group_extension', ";
 		$sql .= "huntgroupname = '$huntgroup_name', ";
@@ -341,7 +348,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //show the header
@@ -397,7 +403,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	}
 	unset ($prepstatement);
-
 
 //show the content
 	echo "<div align='center'>";
@@ -484,6 +489,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>

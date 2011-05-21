@@ -28,6 +28,15 @@ require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
 
+//check permissions
+	if (permission_exists('hunt_group_add') || permission_exists('hunt_group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -37,7 +46,7 @@ require_once "includes/paging.php";
 		$action = "add";
 	}
 
-//POST to PHP variables
+//get the http values and set them as variables
 	if (count($_POST)>0) {
 		$huntgroupextension = check_str($_POST["huntgroupextension"]);
 		$huntgroupname = check_str($_POST["huntgroupname"]);
@@ -72,7 +81,6 @@ require_once "includes/paging.php";
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
 	if ($action == "update") {
 		$hunt_group_id = check_str($_POST["hunt_group_id"]);
 	}
@@ -108,7 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('hunt_group_add')) {
 				$sql = "insert into v_hunt_group ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -160,7 +168,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('hunt_group_edit')) {
 				$sql = "update v_hunt_group set ";
 				$sql .= "huntgroupextension = '$huntgroupextension', ";
 				$sql .= "huntgroupname = '$huntgroupname', ";
@@ -265,9 +273,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-		echo "        A Hunt Group is a list of destinations that can be called in sequence or simultaneously. \n";
-		echo "        </span><br />\n";
-		echo "<br />\n";
+	echo "        A Hunt Group is a list of destinations that can be called in sequence or simultaneously. \n";
+	echo "        </span><br />\n";
+	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -571,7 +579,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
@@ -586,7 +593,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr class='border'>\n";
 		echo "	<td align=\"center\">\n";
 		echo "      <br>";
-
 
 		echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 		echo "  <tr>\n";
@@ -624,23 +630,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<th align='center'>Order</th>\n";
 		echo "<th align='center'>Description</th>\n";
 		echo "<td align='right' width='42'>\n";
-		echo "	<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_id."' alt='add'>$v_link_label_add</a>\n";
+		if (permission_exists('hunt_group_add')) {
+			echo "	<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_id."' alt='add'>$v_link_label_add</a>\n";
+		}
 		echo "</td>\n";
 		echo "<tr>\n";
 
-		if ($resultcount == 0) { //no results
+		if ($resultcount == 0) {
+			//no results
 		}
 		else { //received results
 			foreach($result as $row) {
 				echo "<tr >\n";
-				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[destinationdata]."</td>\n";
-				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[destinationtype]."</td>\n";
-				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[destinationprofile]."</td>\n";
-				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[destinationorder]."</td>\n";
-				echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[destinationdescr]."&nbsp;</td>\n";
+				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['destinationdata']."</td>\n";
+				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['destinationtype']."</td>\n";
+				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['destinationprofile']."</td>\n";
+				echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['destinationorder']."</td>\n";
+				echo "   <td valign='top' class='rowstylebg' width='30%'>".$row['destinationdescr']."&nbsp;</td>\n";
 				echo "   <td valign='top' align='right'>\n";
-				echo "		<a href='v_hunt_group_destinations_edit.php?id=".$row[hunt_group_destination_id]."&id2=".$hunt_group_id."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='v_hunt_group_destinations_delete.php?id=".$row[hunt_group_destination_id]."&id2=".$hunt_group_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				if (permission_exists('hunt_group_edit')) {
+					echo "		<a href='v_hunt_group_destinations_edit.php?id=".$row['hunt_group_destination_id']."&id2=".$hunt_group_id."' alt='edit'>$v_link_label_edit</a>\n";
+				}
+				if (permission_exists('hunt_group_delete')) {
+					echo "		<a href='v_hunt_group_destinations_delete.php?id=".$row['hunt_group_destination_id']."&id2=".$hunt_group_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				}
 				echo "   </td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
@@ -655,7 +668,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 		echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
-		echo "			<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_id."' alt='add'>$v_link_label_add</a>\n";
+		if (permission_exists('hunt_group_add')) {
+			echo "			<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_id."' alt='add'>$v_link_label_add</a>\n";
+		}
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
@@ -667,7 +682,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br><br>";
 		echo "<br><br>";
 
-
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
@@ -675,5 +689,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br><br>";
 	} //end if update
 
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>

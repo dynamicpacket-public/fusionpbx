@@ -26,13 +26,16 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+
+//check permissions
+	if (permission_exists('hunt_group_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -54,7 +57,6 @@ echo "        </span></p></td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 echo "<br />\n";
-
 
 $sql = "";
 $sql .= " select * from v_hunt_group ";
@@ -83,7 +85,6 @@ $result = $prepstatement->fetchAll();
 $resultcount = count($result);
 unset ($prepstatement, $sql);
 
-
 $c = 0;
 $rowstyle["0"] = "rowstyle0";
 $rowstyle["1"] = "rowstyle1";
@@ -97,23 +98,29 @@ echo thorderby('huntgroupname', 'Hunt Group Name', $orderby, $order);
 echo thorderby('huntgroupname', 'Enabled', $orderby, $order);
 echo thorderby('huntgroupdescr', 'Description', $orderby, $order);
 echo "<td align='right' width='42'>\n";
-echo "	<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('hunt_group_add')) {
+	echo "	<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "</td>\n";
 echo "<tr>\n";
 
-if ($resultcount == 0) { //no results
+if ($resultcount == 0) {
+	//no results
 }
 else { //received results
 	foreach($result as $row) {
-		//print_r( $row );
 		echo "<tr >\n";
-		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[huntgroupextension]."</td>\n";
-		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[huntgroupname]."</td>\n";
-		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[hunt_group_enabled]."</td>\n";
-		echo "   <td valign='top' class='rowstylebg' width='40%'>".$row[huntgroupdescr]."&nbsp;</td>\n";
+		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row['huntgroupextension']."</td>\n";
+		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row['huntgroupname']."</td>\n";
+		echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row['hunt_group_enabled']."</td>\n";
+		echo "   <td valign='top' class='rowstylebg' width='40%'>".$row['huntgroupdescr']."&nbsp;</td>\n";
 		echo "   <td valign='top' align='right'>\n";
-		echo "		<a href='v_hunt_group_edit.php?id=".$row[hunt_group_id]."' alt='edit'>$v_link_label_edit</a>\n";
-		echo "		<a href='v_hunt_group_delete.php?id=".$row[hunt_group_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+		if (permission_exists('hunt_group_edit')) {
+			echo "		<a href='v_hunt_group_edit.php?id=".$row['hunt_group_id']."' alt='edit'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('hunt_group_delete')) {
+			echo "		<a href='v_hunt_group_delete.php?id=".$row['hunt_group_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+		}
 		echo "   </td>\n";
 		echo "</tr>\n";
 		if ($c==0) { $c=1; } else { $c=0; }
@@ -128,7 +135,9 @@ echo "	<tr>\n";
 echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 echo "		<td width='33.3%' align='right'>\n";
-echo "			<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+if (permission_exists('hunt_group_add')) {
+	echo "			<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+}
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "	</table>\n";
