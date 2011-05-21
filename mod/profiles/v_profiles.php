@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('sip_profiles_view')) {
 	//access granted
 }
 else {
@@ -34,7 +34,7 @@ else {
 	exit;
 }
 
-if ($_GET['a'] == "default") {
+if ($_GET['a'] == "default" && permission_exists('sip_profiles_edit')) {
 	$fd = fopen($v_conf_dir.".orig/sip_profiles/".$_GET['f'], "r");
 	$v_content = fread($fd, filesize($v_conf_dir.".orig/sip_profiles/".$_GET['f']));
 	fclose($fd);
@@ -47,7 +47,7 @@ if ($_GET['a'] == "default") {
 	$savemsg = "Restore Default";
 }
 
-if ($_POST['a'] == "save") {
+if ($_POST['a'] == "save" && permission_exists('sip_profiles_edit')) {
 	$v_content = $_POST['code'];
 	$fd = fopen($v_conf_dir."/sip_profiles/".$_POST['f'], "w");
 	fwrite($fd, $v_content);
@@ -55,7 +55,7 @@ if ($_POST['a'] == "save") {
 	$savemsg = "Saved";
 }
 
-if ($_GET['a'] == "del") {
+if ($_GET['a'] == "del" && permission_exists('sip_profiles_edit')) {
 	if ($_GET['type'] == 'profile') {
 		unlink($v_conf_dir."/sip_profiles/".$_GET['f']);
 		header("Location: v_profiles.php");
@@ -132,8 +132,12 @@ $rowstyle["1"] = "rowstyle1";
 			echo "	<td valign='middle' nowrap class='list' valign='top'>\n";
 			echo "	  <table border='0' cellspacing='2' cellpadding='1'>\n";
 			echo "		<tr>\n";
-			echo "		  <td valign='middle'><a href='v_profile_edit.php?type=profile&f=".$file."' alt='edit'>$v_link_label_edit</a></td>\n";
-			echo "		  <td><a href='v_profiles.php?type=profile&a=del&f=".$file."'  alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a></td>\n";
+			if (permission_exists('sip_profiles_edit')) {
+				echo "		  <td valign='middle'><a href='v_profile_edit.php?type=profile&f=".$file."' alt='edit'>$v_link_label_edit</a></td>\n";
+			}
+			if (permission_exists('sip_profiles_delete')) {
+				echo "		  <td><a href='v_profiles.php?type=profile&a=del&f=".$file."'  alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a></td>\n";
+			}
 			echo "		</tr>\n";
 			echo "	 </table>\n";
 			echo "	</td>\n";
