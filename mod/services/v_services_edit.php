@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('services_add') || permission_exists('services_edit')) {
 	//access granted
 }
 else {
@@ -43,7 +43,6 @@ else {
 		$action = "add";
 	}
 
-
 //get http post and set it to php variables
 	if (count($_POST)>0) {
 		$v_service_name = check_str($_POST["v_service_name"]);
@@ -57,7 +56,6 @@ else {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
 	if ($action == "update") {
 		$service_id = check_str($_POST["service_id"]);
 	}
@@ -83,9 +81,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//Add or update the database
+	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('services_add')) {
 				$sql = "insert into v_services ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -118,7 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('services_edit')) {
 				$sql = "update v_services set ";
 				$sql .= "v_service_name = '$v_service_name', ";
 				$sql .= "v_service_type = '$v_service_type', ";
@@ -140,7 +138,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
