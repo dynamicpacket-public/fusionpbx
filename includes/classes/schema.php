@@ -77,7 +77,7 @@ include "root.php";
 								unset($sql);
 						}
 					}
-					$this->db->commit();
 				}
+				$this->db->commit();
 			}
 	}

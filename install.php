@@ -677,7 +677,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		unset($sql);
 
 	//assign the default permissions to the groups
-		$db->beginTransaction();
+		$db_tmp->beginTransaction();
 		foreach($apps as $app) {
 			foreach ($app['permissions'] as $row) {
 				foreach ($row['groups'] as $group) {
@@ -699,7 +699,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 				}
 			}
 		}
-		$db->commit();
+		$db_tmp->commit();
 
 	//unset the temporary database connection
 		unset($db_tmp);
