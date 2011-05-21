@@ -24,6 +24,14 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
+if (permission_exists('php_editor_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
 require_once "admin/edit/config.php";
 require_once "admin/edit/header.php";
     echo "<div align='left'>";

@@ -31,7 +31,6 @@ error_reporting (E_ALL ^ E_NOTICE);
 $applicationname = 'Edit';
 $bodyoptions = "";
 
-
 $dbfilename = "clip.db";
 $dbfilepath = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/mod/php_edit/";
 
@@ -58,8 +57,6 @@ else { //not writable
 	}
 	*/
 }
-
-
 
 //$fullstring = "this is my [tag]dog[/tag]";
 //$parsed = get_string_between($fullstring, "[tag]", "[/tag]");
@@ -156,7 +153,6 @@ if(!function_exists('escapejs')){
   	return $strtemp;
   }
 }
-
 
 if(!function_exists('check_str')){
   function check_str($strtemp) {

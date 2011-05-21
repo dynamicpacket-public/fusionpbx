@@ -26,15 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin")) {
+if (permission_exists('php_editor_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
 
 echo "<html>\n";
 echo "<head>\n";
@@ -242,5 +240,6 @@ echo "    	<input type='button' onclick='test_setSelectedText(\"edit1\");' value
 echo "    	<input type='button' onclick='editAreaLoader.insertTags(\"edit1\", \"[OPEN]\", \"[CLOSE]\");' value='insertTags' />\n";
 echo "    </p>";
 */
-?></body>
+?>
+</body>
 </html>

@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('php_editor_save')) {
 	//access granted
 }
 else {
@@ -98,6 +98,5 @@ else { //display form
     require_once "footer.php";
 
 }
-
 
 ?>

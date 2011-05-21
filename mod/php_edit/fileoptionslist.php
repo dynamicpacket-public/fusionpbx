@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('php_editor_view')) {
 	//access granted
 }
 else {
@@ -82,7 +82,6 @@ function recur_dir($dir) {
                //$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
                $htmldirlist .= recur_dir($newpath);
                $htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
-
            }
            else {
                 /*$mod_array[] = array(
@@ -99,16 +98,12 @@ function recur_dir($dir) {
                $htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.getElementById('filename').value='".$filename."'; parent.document.getElementById('folder').value='".$newpath."';\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'>$filename</a><DIV style='display:none'>\n";
                $htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
           }
-
-
        }
    }
 
    closedir($dirlist);
    return $htmldirlist ."\n". $htmlfilelist;
 }
-
-
 
 
     echo "<script type=\"text/javascript\" language=\"javascript\">\n";
@@ -177,9 +172,6 @@ function recur_dir($dir) {
     echo "    }\n";
     echo "</script>\n";
 
-
-
-
     echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
     //echo "// ---------------------------------------------\n";
     //echo "// --- http://www.codeproject.com/jscript/dhtml_treeview.asp\n";
@@ -216,17 +208,11 @@ function recur_dir($dir) {
     echo "}\n";
     echo "</SCRIPT>\n";
 
-
-
     echo "<div align='center' valign='1'>";
     echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
     echo "<tr class='border'>\n";
     echo "	<td align=\"left\" valign='top' nowrap>\n";
-    //echo "      <br>";
-
-
-
     echo "\n";    
     echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"images/folder.gif\" border='0'> Files <DIV style=''>\n"; //display:none
     //echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this, '')\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
@@ -266,7 +252,6 @@ function recur_dir($dir) {
     echo "\n";
     echo "      </DIV></TD></TR></TABLE>\n";
     */
-
 
     echo "</td>\n";
     echo "</tr>\n";

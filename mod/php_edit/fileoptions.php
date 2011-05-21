@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('php_editor_view')) {
 	//access granted
 }
 else {
@@ -36,17 +36,10 @@ else {
 require_once "config.php";
 require_once "header.php";
 
-
 $file = $_GET["file"];
 $file = str_replace ("\\", "/", $file);
 $folder = $_GET["folder"];
 $folder = str_replace ($file, "", $folder);
-
-//$file = end($folder);
-//echo "folder $folder<br>";
-//echo "file $file<br>";
-//echo "DOCUMENT_ROOT "."<br>";
-
 $urlpath = str_replace ($_SERVER["DOCUMENT_ROOT"], "", $folder);
 //echo "urlpath $urlpath<br>";
 
@@ -75,11 +68,8 @@ echo "  </IFRAME>";
 echo "</td>\n";
 echo "<td valign='top' style=\"height: 100%;\">";
 
-
-
 echo "<div align='left'>";
 echo "<table width='100%' class='border'>";
-
 
 //echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='$urlpath'+document.getElementById('folder').value;\" value=' www          '></td></tr>\n";
 
@@ -93,9 +83,6 @@ echo "  <tr><td><input type='button' class='btn' name='' onclick='javascript:sel
 
 echo "</table>";
 echo "</div>";
-
-
-
 
 echo "</td>\n";
 echo "</tr>\n";
