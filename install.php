@@ -349,7 +349,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					try {
 						$db_tmp = new PDO('sqlite:'.$db_filepath.'/'.$db_filename); //sqlite 3
 						//$db_tmp = new PDO('sqlite::memory:'); //sqlite 3
-						$db_tmp->beginTransaction();
 					}
 					catch (PDOException $error) {
 						print "error: " . $error->getMessage() . "<br/>";
@@ -373,6 +372,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					$file_contents = str_replace("\r\n", "\n", $file_contents);
 
 				//loop line by line through all the lines of sql code
+					$db_tmp->beginTransaction();
 					$stringarray = explode("\n", $file_contents);
 					$x = 0;
 					foreach($stringarray as $sql) {
