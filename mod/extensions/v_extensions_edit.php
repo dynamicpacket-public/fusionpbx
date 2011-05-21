@@ -78,7 +78,7 @@ else {
 		$auth_acl = check_str($_POST["auth_acl"]);
 		$cidr = check_str($_POST["cidr"]);
 		$sip_force_contact = check_str($_POST["sip_force_contact"]);
-		$sip_force_expires = check_str($_POST["sip_force_expires"]);		
+		$sip_force_expires = check_str($_POST["sip_force_expires"]);
 		$nibble_account = check_str($_POST["nibble_account"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
