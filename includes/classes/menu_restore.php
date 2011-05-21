@@ -58,6 +58,7 @@ include "root.php";
 					}
 
 				//use the app array to restore the default menu
+					$db->beginTransaction();
 					foreach ($apps as $row) {
 						foreach ($row['menu'] as $menu) {
 							//set the variables
@@ -139,6 +140,7 @@ include "root.php";
 								}
 						}
 					}
+					$db->commit();
 			} //end function
 	} //class
 

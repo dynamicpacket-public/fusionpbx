@@ -47,6 +47,7 @@ include "root.php";
 			public function add() {
 				$sql = '';
 				$sql_schema = '';
+				$this->db->beginTransaction();
 				foreach ($this->apps as $app) {
 					if (count($app['db'])) {
 						foreach ($app['db'] as $row) {
@@ -76,6 +77,7 @@ include "root.php";
 								unset($sql);
 						}
 					}
+					$this->db->commit();
 				}
 			}
 	}
