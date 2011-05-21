@@ -68,8 +68,7 @@ include "root.php";
 								$sql .= ");";
 							//execute the sql query
 								try {
-									echo $sql."<br /><br />";
-									//$this->db->query($sql);
+									$this->db->query($sql);
 								}
 								catch (PDOException $error) {
 									echo "error: " . $error->getMessage() . " sql: $sql<br/>";
