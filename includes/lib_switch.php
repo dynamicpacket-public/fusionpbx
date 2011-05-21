@@ -40,7 +40,7 @@ require_once "includes/config.php";
 		$sql .= "and var_cat = 'Defaults' ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 			switch ($row["var_name"]) {
 				case "username":
@@ -111,7 +111,7 @@ function v_settings() {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		//detected automatically with includes/lib_php.php
 		$v_settings_array["v_secure"] = $v_secure;
@@ -290,7 +290,7 @@ foreach($v_settings_array as $name => $value) {
 			$sql .= "where v_id = '1' ";
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
+			$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as &$row) {
 				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
 				$_SESSION['event_socket_port'] = $row["event_socket_port"];
@@ -310,7 +310,7 @@ foreach($v_settings_array as $name => $value) {
 			$sql .= "and enabled = 'true' ";
 			$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 			$sql .= "order by extension asc ";
-			$result = $db->query($sql)->fetchAll();
+			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 			if (count($result) == 0) {
 				//no result found
 			}
@@ -338,7 +338,7 @@ foreach($v_settings_array as $name => $value) {
 				$sql .= "limit 1 ";
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
-				$result = $prepstatement->fetchAll();
+				$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($result as &$row) {
 					$_SESSION['user_context'] = $row["user_context"];
 					break; //limit to 1 row
@@ -540,7 +540,7 @@ function event_socket_request_cmd($cmd) {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		$event_socket_ip_address = $row["event_socket_ip_address"];
 		$event_socket_port = $row["event_socket_port"];
@@ -695,7 +695,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$sql .= "order by queue_name asc ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='Call Center'>\n";
 		}
@@ -738,7 +738,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$x = 0;
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='Conferences'>\n";
 		}
@@ -784,7 +784,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$sql .= "order by extension asc ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 
 		if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
 			echo "<optgroup label='Extensions'>\n";
@@ -829,7 +829,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			$sql .= "order by faxextension asc ";
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
+			$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 			echo "<optgroup label='FAX'>\n";
 			foreach ($result as &$row) {
 				$fax_name = $row["faxname"];
@@ -864,7 +864,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$x = 0;
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='FIFO'>\n";
 		}
@@ -879,7 +879,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						$sql .= "where v_id = '$v_id' ";
 						$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
 						$sql .= "and fieldtype = 'destination_number' ";
-						$tmp = $db->query($sql)->fetch();
+						$tmp = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
 						$extension_number = $tmp['extension_number'];
 						$extension_number = ltrim($extension_number, "^");
 						$extension_number = ltrim($extension_number, "\\");
@@ -891,7 +891,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						$sql .= "from v_dialplan_includes ";
 						$sql .= "where v_id = '$v_id' ";
 						$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-						$tmp = $db->query($sql)->fetch();
+						$tmp = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
 						$extension_name = $tmp['extensionname'];
 						$extension_name = str_replace("_", " ", $extension_name);
 						unset($tmp);
@@ -937,7 +937,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			$sql .= "order by gateway asc ";
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
+			$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 			$resultcount = count($result);
 			unset ($prepstatement, $sql);
 			$tmp_selected = '';
@@ -974,7 +974,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$sql .= "order by huntgroupextension asc ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='Hunt Groups'>\n";
 		}
@@ -1012,7 +1012,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$sql .= "order by ivr_menu_extension asc ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='IVR Menu'>\n";
 		}
@@ -1057,7 +1057,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$sql .= "order by ivr_menu_name asc ";
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
-				$result = $prepstatement->fetchAll();
+				$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 				if ($select_type == "dialplan" || $select_type == "ivr") {
 					echo "<optgroup label='IVR Sub'>\n";
 				}
@@ -1263,7 +1263,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$x = 0;
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 			//$tag = $row["tag"];
 			switch ($row['fieldtype']) {
@@ -1314,7 +1314,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
 				$sql .= "and fieldtype = 'destination_number' ";
 				$sql .= "order by extension_number asc ";
-				$tmp = $db->query($sql)->fetch();
+				$tmp = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
 				$extension_number = $tmp['extension_number'];
 				$extension_number = ltrim($extension_number, "^");
 				$extension_number = ltrim($extension_number, "\\");
@@ -1326,7 +1326,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$sql .= "from v_dialplan_includes ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-				$tmp = $db->query($sql)->fetch();
+				$tmp = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
 				$extension_name = $tmp['extensionname'];
 				$extension_name = str_replace("_", " ", $extension_name);
 				unset($tmp);
@@ -1364,7 +1364,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$sql .= "order by extension asc ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			echo "<optgroup label='Voicemail'>\n";
 		}
@@ -1566,7 +1566,7 @@ function sync_package_v_settings() {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		//$numbering_plan = $row["numbering_plan"];
 		//$default_gateway = $row["default_gateway"];
@@ -1777,7 +1777,7 @@ function sync_package_v_extensions() {
 		$fout = fopen($v_extensions_dir."/v_extensions.xml","w");
 		$tmpxml = "<include>\n";
 	}
-	while($row = $prepstatement->fetch()) {
+	while($row = $prepstatement->fetch(PDO::FETCH_ASSOC)) {
 		$callgroup = $row['callgroup'];
 		$callgroup = str_replace(";", ",", $callgroup);
 		$tmp_array = explode(",", $callgroup);
@@ -1874,7 +1874,7 @@ function sync_package_v_extensions() {
 				$tmpxml .= "      <variable name=\"sip-force-contact\" value=\"" . $row['sip_force_contact'] . "\"/>\n";
 			}
 			if (strlen($row['sip_force_expires']) > 0) {
-				$tmpxml .= "      <variable name=\"sip_force_expires\" value=\"" . $row['sip_force_expires'] . "\"/>\n";
+				$tmpxml .= "      <variable name=\"sip-force-expires\" value=\"" . $row['sip_force_expires'] . "\"/>\n";
 			}
 			if (strlen($row['nibble_account']) > 0) {
 				$tmpxml .= "      <variable name=\"nibble_account\" value=\"" . $row['nibble_account'] . "\"/>\n";
@@ -2049,7 +2049,7 @@ function sync_package_v_gateways() {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		if ($row['enabled'] != "false") {
 				if (count($_SESSION["domains"]) > 1) {
@@ -2189,7 +2189,7 @@ function sync_package_v_modules() {
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$prevmodulecat = '';
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		$modulelabel = $row["modulelabel"];
 		$modulename = $row["modulename"];
@@ -2245,7 +2245,7 @@ function sync_package_v_vars() {
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$prev_var_cat = '';
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 
 		$var_name = $row["var_name"];
@@ -2452,7 +2452,7 @@ function sync_package_v_hunt_group() {
 		//$sql .= "where v_id = '$v_id' ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 				//get the Hunt Group information such as the name and description
 					//$row['hunt_group_id']
@@ -2482,7 +2482,7 @@ function sync_package_v_hunt_group() {
 
 						$prepstatement2 = $db->prepare($sql);
 						$prepstatement2->execute();
-						while($row2 = $prepstatement2->fetch()) {
+						while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 							$action = 'update';
 							$dialplan_include_id = $row2['dialplan_include_id'];
 							break; //limit to 1 row
@@ -2588,7 +2588,7 @@ function sync_package_v_hunt_group() {
 							$sql .= "and opt1value = '".$row['hunt_group_id']."' ";
 							$prepstatement2 = $db->prepare($sql);
 							$prepstatement2->execute();
-							while($row2 = $prepstatement2->fetch()) {
+							while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 								$dialplan_include_id = $row2['dialplan_include_id'];
 								$action = 'update';
 								break; //limit to 1 row
@@ -3061,7 +3061,7 @@ function sync_package_v_fax() {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		//get the fax information such as the name and description
 			//$row['fax_id']
@@ -3088,7 +3088,7 @@ function sync_package_v_fax() {
 			$sql .= "and opt1value = '".$row['fax_id']."' ";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			while($row2 = $prepstatement2->fetch()) {
+			while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 				$action = 'update';
 
 				$dialplan_include_id = $row2['dialplan_include_id'];
@@ -3264,7 +3264,7 @@ function get_recording_filename($id) {
 	$sql .= "and v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		//$filename = $row["filename"];
 		//$recordingname = $row["recordingname"];
@@ -3313,7 +3313,7 @@ function sync_package_v_auto_attendant() {
 	$sql .= "where v_id = '$v_id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		//add the auto attendant to the dialplan
 			if (strlen($row['auto_attendant_id']) > 0) {
@@ -3326,7 +3326,7 @@ function sync_package_v_auto_attendant() {
 					$sql .= "and opt1value = '".$row['auto_attendant_id']."' ";
 					$prepstatement2 = $db->prepare($sql);
 					$prepstatement2->execute();
-					while($row2 = $prepstatement2->fetch()) {
+					while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 						$action = 'update';
 						$dialplan_include_id = $row2['dialplan_include_id'];
 						break; //limit to 1 row
@@ -3430,7 +3430,7 @@ function sync_package_v_auto_attendant() {
 		$sql .= "where v_id = '$v_id' ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
-		while($row2 = $prepstatement2->fetch()) {
+		while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 			$event_socket_ip_address = $row2["event_socket_ip_address"];
 			$event_socket_port = $row2["event_socket_port"];
 			$event_socket_password = $row2["event_socket_password"];
@@ -3591,7 +3591,7 @@ function sync_package_v_auto_attendant() {
 		//echo $sql;
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
-		while($row2 = $prepstatement2->fetch()) {
+		while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 			//$auto_attendant_id = $row2["auto_attendant_id"];
 			//$optionaction = $row2["optionaction"];
 			//$optionnumber = $row2["optionnumber"];
@@ -3689,7 +3689,7 @@ function sync_package_v_auto_attendant() {
 					$sql .= "and v_id = '$v_id' ";
 					$prepstatement2 = $db->prepare($sql);
 					$prepstatement2->execute();
-					while($row2 = $prepstatement2->fetch()) {
+					while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 						//$auto_attendant_id = $row2["auto_attendant_id"];
 						//$optionaction = $row2["optionaction"];
 						//$optionnumber = $row2["optionnumber"];
@@ -3767,7 +3767,7 @@ function sync_package_v_auto_attendant() {
 			$sql .= "and v_id = '$v_id' ";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			while($row2 = $prepstatement2->fetch()) {
+			while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 				//$auto_attendant_id = $row2["auto_attendant_id"];
 				//$optionaction = $row2["optionaction"];
 				//$optionnumber = $row2["optionnumber"];
@@ -3909,7 +3909,7 @@ function sync_package_v_auto_attendant() {
 		$sql .= "and v_id = '$v_id' ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
-		while($row2 = $prepstatement2->fetch()) {
+		while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 			//$auto_attendant_id = $row2["auto_attendant_id"];
 			//$optionaction = $row2["optionaction"];
 			//$optionnumber = $row2["optionnumber"];
@@ -3996,7 +3996,7 @@ function sync_package_v_auto_attendant() {
 				$sql .= "and v_id = '$v_id' ";
 				$prepstatement2 = $db->prepare($sql);
 				$prepstatement2->execute();
-				while($row2 = $prepstatement2->fetch()) {
+				while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 					$auto_attendant_id = $row2["auto_attendant_id"];
 					$optionaction = $row2["optionaction"];
 					$optionnumber = $row2["optionnumber"];
@@ -4070,7 +4070,7 @@ function sync_package_v_auto_attendant() {
 			$sql .= "and v_id = '$v_id' ";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			while($row2 = $prepstatement2->fetch()) {
+			while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 				$auto_attendant_id = $row2["auto_attendant_id"];
 				$optionaction = $row2["optionaction"];
 				$optionnumber = $row2["optionnumber"];
@@ -4250,7 +4250,7 @@ function v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context
 		$sql .= " RETURNING dialplan_include_id ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 			$dialplan_include_id = $row["dialplan_include_id"];
 		}
@@ -4316,7 +4316,7 @@ function sync_package_v_dialplan_includes() {
 	$sql .= "and enabled = 'true' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		$tmp = "";
 		$tmp .= "\n";
@@ -4562,7 +4562,7 @@ function sync_package_v_public_includes() {
 		$sql .= "where enabled = 'true' ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 			$extensioncontinue = '';
 			if ($row['extensioncontinue'] == "true") {
@@ -4580,7 +4580,7 @@ function sync_package_v_public_includes() {
 			$sql .= " order by fieldorder asc";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			$result2 = $prepstatement2->fetchAll();
+			$result2 = $prepstatement2->fetchAll(PDO::FETCH_ASSOC);
 			$resultcount2 = count($result2);
 			unset ($prepstatement2, $sql);
 			$i=1;
@@ -4616,7 +4616,7 @@ function sync_package_v_public_includes() {
 			$sql .= " order by fieldorder asc";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			$result2 = $prepstatement2->fetchAll();
+			$result2 = $prepstatement2->fetchAll(PDO::FETCH_ASSOC);
 			$resultcount2 = count($result2);
 			unset ($prepstatement2, $sql);
 			if ($resultcount2 == 0) { //no results
@@ -4644,7 +4644,7 @@ function sync_package_v_public_includes() {
 			$sql .= " order by fieldorder asc";
 			$prepstatement2 = $db->prepare($sql);
 			$prepstatement2->execute();
-			$result2 = $prepstatement2->fetchAll();
+			$result2 = $prepstatement2->fetchAll(PDO::FETCH_ASSOC);
 			$resultcount2 = count($result2);
 			unset ($prepstatement2, $sql);
 			if ($resultcount2 == 0) { //no results
@@ -4819,16 +4819,13 @@ if (!function_exists('sync_directory')) {
 			$prepstatement = $db->prepare(check_sql($sql));
 			$prepstatement->execute();
 			$x = 0;
-			$result = $prepstatement->fetchAll();
+			$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as &$row) {
-				//print_r($row);
 				$extension = $row["extension"];
 				$effective_caller_id_name = $row["effective_caller_id_name"];
 				$user_list = $row["user_list"];
 				$user_list = trim($user_list, "|");
-				//echo $user_list."<br />\n";
 				$username_array = explode ("|", $user_list);
-				//print_r($username_array);
 				foreach ($username_array as &$username) {
 					if (strlen($username) > 0) {
 						$sql = "";
@@ -4837,7 +4834,7 @@ if (!function_exists('sync_directory')) {
 						$sql .= "and username = '$username' ";
 						$prepstatement = $db->prepare(check_sql($sql));
 						$prepstatement->execute();
-						$tmp_result = $prepstatement->fetchAll();
+						$tmp_result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 						foreach ($tmp_result as &$row_tmp) {
 							$userfirstname = $row_tmp["userfirstname"];
 							$userlastname = $row_tmp["userlastname"];
@@ -4992,7 +4989,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 		$sql .= " ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		$resultcount = count($result);
 		unset ($prepstatement, $sql);
 		if ($resultcount == 0) { //no results
@@ -5036,7 +5033,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 
 						$prepstatement2 = $db->prepare($sql);
 						$prepstatement2->execute();
-						while($row2 = $prepstatement2->fetch()) {
+						while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 							$action = 'update';
 							$dialplan_include_id = $row2['dialplan_include_id'];
 							break; //limit to 1 row
@@ -5197,7 +5194,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 					$sub_sql .= "order by ivr_menu_options_order asc "; 
 					$sub_prepstatement = $db->prepare(check_sql($sub_sql));
 					$sub_prepstatement->execute();
-					$sub_result = $sub_prepstatement->fetchAll();
+					$sub_result = $sub_prepstatement->fetchAll(PDO::FETCH_ASSOC);
 					foreach ($sub_result as &$sub_row) {
 						//$ivr_menu_id = $sub_row["ivr_menu_id"];
 						$ivr_menu_options_digits = $sub_row["ivr_menu_options_digits"];
@@ -5255,7 +5252,7 @@ if (!function_exists('sync_package_v_call_center')) {
 		$sql .= "select * from v_call_center_queue ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		$result_count = count($result);
 		unset ($prepstatement, $sql);
 		if ($result_count > 0) { //found results
@@ -5293,7 +5290,7 @@ if (!function_exists('sync_package_v_call_center')) {
 						$sql .= "and opt1value = '".$row['call_center_queue_id']."' ";
 						$prepstatement2 = $db->prepare($sql);
 						$prepstatement2->execute();
-						while($row2 = $prepstatement2->fetch()) {
+						while($row2 = $prepstatement2->fetch(PDO::FETCH_ASSOC)) {
 							$action = 'update';
 							$dialplan_include_id = $row2['dialplan_include_id'];
 							break; //limit to 1 row
@@ -5528,7 +5525,7 @@ if (!function_exists('sync_package_v_call_center')) {
 				$sql .= "select * from v_call_center_queue ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				$x=0;
 				foreach ($result as &$row) {
 					$queue_name = $row["queue_name"];
@@ -5576,7 +5573,7 @@ if (!function_exists('sync_package_v_call_center')) {
 				$sql .= "select * from v_call_center_agent ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				$x=0;
 				foreach ($result as &$row) {
 					//get the values from the db and set as php variables
@@ -5663,7 +5660,7 @@ if (!function_exists('sync_package_v_call_center')) {
 				$sql .= "select * from v_call_center_tier ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				$x=0;
 				foreach ($result as &$row) {
 					$agent_name = $row["agent_name"];
