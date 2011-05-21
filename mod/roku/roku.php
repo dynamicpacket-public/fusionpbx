@@ -23,17 +23,6 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-//include "root.php";
-//require_once "includes/config.php";
-//require_once "includes/checkauth.php";
-//if (ifgroup("admin") || ifgroup("superadmin")) {
-	//access granted
-//}
-//else {
-//	echo "access denied";
-//	exit;
-//}
-
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
 //roku commands
@@ -91,8 +80,6 @@ if (strlen($cmd)==0) {
 	if (strlen($_GET['cmd']) > 0) { $cmd = $_GET['cmd']; }
 }
 
-//echo "cmd ".$cmd;
-//exit;
 $host = $_SERVER['argv'][2];
 $port = $_SERVER['argv'][3];
 
@@ -100,6 +87,5 @@ $cmd = "press ".$cmd;
 
 $fp = fsockopen($host, $port, $errno, $errdesc) or die("Connection to $host $errno $errdesc failed");
 fputs($fp, $cmd."\r\n");
-
 
 ?>
