@@ -48,7 +48,7 @@ include "root.php";
 				$sql = '';
 				$sql_schema = '';
 				foreach ($this->apps as $app) {
-					if (count($app['db']) {
+					if (count($app['db'])) {
 						foreach ($app['db'] as $row) {
 							//create the sql string
 								$table_name = $row['table'];
