@@ -30,7 +30,7 @@
 		$apps[$x]['permissions'][3]['name'] = 'php_service_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_php_service 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_php_service';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'php_service_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

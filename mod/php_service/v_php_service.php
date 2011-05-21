@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('php_service_view')) {
 	//access granted
 }
 else {
@@ -56,6 +56,7 @@ function pkg_is_service_running($servicename)
 $orderby = $_GET["orderby"];
 $order = $_GET["order"];
 
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -113,25 +114,29 @@ $order = $_GET["order"];
 	echo thorderby('service_enabled', 'Enabled', $orderby, $order);
 	echo thorderby('service_description', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_php_service_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('php_service_add')) {
+		echo "	<a href='v_php_service_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[service_name]."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[service_group]."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[service_enabled]."</td>\n";
 			echo "	<td valign='top' class='rowstylebg'>".$row[service_description]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_php_service_edit.php?id=".$row[php_service_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_php_service_delete.php?id=".$row[php_service_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_php_service_edit.php?id=".$row[php_service_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_php_service_delete.php?id=".$row[php_service_id]."' }\" value='x'>\n";
+			if (permission_exists('php_service_edit')) {
+				echo "		<a href='v_php_service_edit.php?id=".$row[php_service_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('php_service_delete')) {
+				echo "		<a href='v_php_service_delete.php?id=".$row[php_service_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -146,7 +151,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_php_service_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('php_service_add')) {
+		echo "			<a href='v_php_service_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -164,5 +171,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-require_once "includes/footer.php";
+//show the footer
+	require_once "includes/footer.php";
 ?>

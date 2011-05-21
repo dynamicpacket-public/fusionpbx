@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('php_service_add') || permission_exists('php_service_edit')) {
 	//access granted
 }
 else {
@@ -269,17 +269,16 @@ function phpservice_sync_package_php() {
 	}
 }
 
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$php_service_id = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+	}
 
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$php_service_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-}
-
-//POST to PHP variables
+//set the http values to variabless
 if (count($_POST)>0) {
 	$service_name = check_str($_POST["service_name"]);
 	$service_script = $_POST["service_script"];
@@ -340,7 +339,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('php_service_add')) {
 			$sql = "insert into v_php_service ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -372,7 +371,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('php_service_edit')) {
 			$sql = "update v_php_service set ";
 			$sql .= "service_name = '$service_name', ";
 			$sql .= "service_script = '".base64_encode($service_script)."', ";
@@ -394,37 +393,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-
 	} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-	$php_service_id = $_GET["id"];
-	$sql = "";
-	$sql .= "select * from v_php_service ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and php_service_id = '$php_service_id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	foreach ($result as &$row) {
-		$service_name = $row["service_name"];
-		$tmp_service_name = str_replace(" ", "_", $service_name);
-		$service_script = base64_decode($row["service_script"]);
-		$service_enabled = $row["service_enabled"];
-		$service_description = $row["service_description"];
-		break; //limit to 1 row
+	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+		$php_service_id = $_GET["id"];
+		$sql = "";
+		$sql .= "select * from v_php_service ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and php_service_id = '$php_service_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$service_name = $row["service_name"];
+			$tmp_service_name = str_replace(" ", "_", $service_name);
+			$service_script = base64_decode($row["service_script"]);
+			$service_enabled = $row["service_enabled"];
+			$service_description = $row["service_description"];
+			break; //limit to 1 row
+		}
+		unset ($prepstatement);
 	}
-	unset ($prepstatement);
 
-}
+//include the header
+	require_once "includes/header.php";
 
-require_once "includes/header.php";
-
-
-//--- Begin: Edit Area -----------------------------------------------------
+// edit area
 	echo "    <script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/includes/edit_area/edit_area_full.js\"></script>\n";
 	echo "    <!-- -->\n";
 
@@ -450,107 +446,108 @@ require_once "includes/header.php";
 	echo "    });\n";
 	echo "\n";
 	echo "    </script>";
-//--- End: Edit Area -------------------------------------------------------
 
-echo "<div align='center'>";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
+//show the form
+	echo "<div align='center'>";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-echo "	  <br>";
+	echo "<tr class='border'>\n";
+	echo "	<td align=\"left\">\n";
+	echo "	  <br>";
 
-echo "<form method='post' name='frm' action=''>\n";
+	echo "<form method='post' name='frm' action=''>\n";
 
-echo "<div align='center'>\n";
-echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<div align='center'>\n";
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
-echo "<tr>\n";
-if ($action == "add") {
-	echo "<td align='left' width='30%' nowrap><b>PHP Service Add</b></td>\n";
-}
-if ($action == "update") {
-	echo "<td align='left' width='30%' nowrap><b>PHP Service Edit</b></td>\n";
-}
-echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_php_service.php'\" value='Back'></td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td colspan='2'>\n";
-echo "Manages multiple dynamic and customizable services. There are many possible uses including alerts, ssh access control, scheduling commands to run, and many others uses that are yet to be discovered.<br /><br />\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	if ($action == "add") {
+		echo "<td align='left' width='30%' nowrap><b>PHP Service Add</b></td>\n";
+	}
+	if ($action == "update") {
+		echo "<td align='left' width='30%' nowrap><b>PHP Service Edit</b></td>\n";
+	}
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_php_service.php'\" value='Back'></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td colspan='2'>\n";
+	echo "Manages multiple dynamic and customizable services. There are many possible uses including alerts, ssh access control, scheduling commands to run, and many others uses that are yet to be discovered.<br /><br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "	Name:\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='service_name' maxlength='255' value=\"$service_name\">\n";
-echo "<br />\n";
-echo "Enter a name.\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	Name:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='service_name' maxlength='255' value=\"$service_name\">\n";
+	echo "<br />\n";
+	echo "Enter a name.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "	Script:\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "	<textarea class='formfld' style='width: 90%;' wrap='off' rows='17' name='service_script' id='service_script' rows='4'>$service_script</textarea>\n";
-echo "<br />\n";
-echo "Enter the PHP script here.\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	Script:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<textarea class='formfld' style='width: 90%;' wrap='off' rows='17' name='service_script' id='service_script' rows='4'>$service_script</textarea>\n";
+	echo "<br />\n";
+	echo "Enter the PHP script here.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "	Enabled:\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "	<select class='formfld' name='service_enabled'>\n";
-echo "	<option value=''></option>\n";
-if ($service_enabled == "true") { 
-	echo "	<option value='true' selected >true</option>\n";
-}
-else {
-	echo "	<option value='true'>true</option>\n";
-}
-if ($service_enabled == "false") { 
-	echo "	<option value='false' selected >false</option>\n";
-}
-else {
-	echo "	<option value='false'>false</option>\n";
-}
-echo "	</select>\n";
-echo "<br />\n";
-echo "\n";
-echo "</td>\n";
-echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	Enabled:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='service_enabled'>\n";
+	echo "	<option value=''></option>\n";
+	if ($service_enabled == "true") { 
+		echo "	<option value='true' selected >true</option>\n";
+	}
+	else {
+		echo "	<option value='true'>true</option>\n";
+	}
+	if ($service_enabled == "false") { 
+		echo "	<option value='false' selected >false</option>\n";
+	}
+	else {
+		echo "	<option value='false'>false</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Description:\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='service_description' maxlength='255' value=\"$service_description\">\n";
-echo "<br />\n";
-echo "\n";
-echo "</td>\n";
-echo "</tr>\n";
-echo "	<tr>\n";
-echo "		<td colspan='2' align='right'>\n";
-if ($action == "update") {
-	echo "				<input type='hidden' name='php_service_id' value='$php_service_id'>\n";
-}
-echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
-echo "		</td>\n";
-echo "	</tr>";
-echo "</table>";
-echo "</form>";
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	Description:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='service_description' maxlength='255' value=\"$service_description\">\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	if ($action == "update") {
+		echo "				<input type='hidden' name='php_service_id' value='$php_service_id'>\n";
+	}
+	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</form>";
 
-echo "	</td>";
-echo "	</tr>";
-echo "</table>";
-echo "</div>";
+	echo "	</td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</div>";
 
-require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>
