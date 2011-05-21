@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('public_includes_view')) {
 	//access granted
 }
 else {
@@ -43,7 +43,7 @@ $order = $_GET["order"];
 // Shortcut tool to add inbound routes (public include xml entries)
 //-------------------------------------------------------------------------------------------
 
-	//POST to PHP variables
+	//set http values to variables
 		if (count($_POST)>0) {
 			$extension_name = check_str($_POST["extension_name"]);
 			$condition_field_1 = check_str($_POST["condition_field_1"]);
@@ -57,7 +57,7 @@ $order = $_GET["order"];
 			$description = check_str($_POST["description"]);
 		}
 
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0 && permission_exists('public_includes_add')) {
 		//check for all required data
 			if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
 			if (strlen($extension_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
@@ -243,7 +243,6 @@ $order = $_GET["order"];
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
-
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 ?>
@@ -399,14 +398,12 @@ function type_onchange(field_type) {
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
 
-
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
 
 	echo "<tr>\n";
 	echo thorderby('extensionname', 'Extension Name', $orderby, $order);
@@ -419,32 +416,35 @@ function type_onchange(field_type) {
 	else {
 		echo "<td align='right' width='21'>\n";
 	}
-	echo "	<a href='v_public_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('public_includes_view')) {
+		echo "	<a href='v_public_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[extensionname]."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[publicorder]."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='35%'>&nbsp;&nbsp;".$row[descr]."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (ifgroup("superadmin")) {
+			if (permission_exists('public_includes_view')) {
 				echo "		<a href='v_public_includes_edit.php?id=".$row[public_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			echo "		<a href='v_public_includes_delete.php?id=".$row[public_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('public_includes_view')) {
+				echo "		<a href='v_public_includes_delete.php?id=".$row[public_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
+		}
 		unset($sql, $result, $rowcount);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='5'>\n";
@@ -453,7 +453,9 @@ function type_onchange(field_type) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_public_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('public_includes_view')) {
+		echo "			<a href='v_public_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -481,11 +483,6 @@ function type_onchange(field_type) {
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//include the footer
+	require_once "includes/footer.php";
 ?>

@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('public_includes_copy')) {
 	//access granted
 }
 else {
@@ -49,7 +49,6 @@ else {
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	foreach ($result as &$row) {
-		//$v_id = $row["v_id"];
 		$extensionname = $row["extensionname"];
 		$publicorder = $row["publicorder"];
 		$extensioncontinue = $row["extensioncontinue"];

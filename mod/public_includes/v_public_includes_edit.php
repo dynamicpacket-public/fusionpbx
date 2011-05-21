@@ -27,8 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('public_includes_add') || permission_exists('public_includes_edit')) {
 	//access granted
 }
 else {
@@ -36,37 +35,29 @@ else {
 	exit;
 }
 
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$public_include_id = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+	}
 
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$public_include_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-}
-
-//POST to PHP variables
-if (count($_POST)>0) {
-	//$v_id = check_str($_POST["v_id"]);
-	$extensionname = check_str($_POST["extensionname"]);
-	$extensioncontinue = check_str($_POST["extensioncontinue"]);
-	$publicorder = check_str($_POST["publicorder"]);
-	$context = check_str($_POST["context"]);
-	$enabled = check_str($_POST["enabled"]);
-	$descr = check_str($_POST["descr"]);
-}
+//set the http values as variables
+	if (count($_POST)>0) {
+		//$v_id = check_str($_POST["v_id"]);
+		$extensionname = check_str($_POST["extensionname"]);
+		$extensioncontinue = check_str($_POST["extensioncontinue"]);
+		$publicorder = check_str($_POST["publicorder"]);
+		$context = check_str($_POST["context"]);
+		$enabled = check_str($_POST["enabled"]);
+		$descr = check_str($_POST["descr"]);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$public_include_id = check_str($_POST["public_include_id"]);
 	}
@@ -92,9 +83,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//Add or update the database
+	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('public_includes_add')) {
 			$sql = "insert into v_public_includes ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -130,8 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
-
+		if ($action == "update" && permission_exists('public_includes_edit')) {
 			$sql = "";
 			$sql .= "select * from v_public_includes ";
 			$sql .= "where v_id = '$v_id' ";
@@ -142,9 +132,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			foreach ($result as &$row) {
 				$orig_extensionname = $row["extensionname"];
 				$orig_publicorder = $row["publicorder"];
-				//$context = $row["context"];
 				//$enabled = $row["enabled"];
-				//$descr = $row["descr"];
 				break; //limit to 1 row
 			}
 			unset ($prepstatement, $sql);
@@ -156,7 +144,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($publicincludefilename, $orig_publicorder, $orig_extensionname);
 
 			$sql = "update v_public_includes set ";
-			//$sql .= "v_id = '$v_id', ";
 			$sql .= "extensionname = '$extensionname', ";
 			$sql .= "publicorder = '$publicorder', ";
 			$sql .= "extensioncontinue = '$extensioncontinue', ";
@@ -167,8 +154,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "and public_include_id = '$public_include_id'";
 			$db->exec(check_sql($sql));
 			unset($sql);
-
-
 
 			//synchronize the xml config
 			sync_package_v_public_includes();
@@ -182,10 +167,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
-	//Pre-populate the form
+//pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$public_include_id = $_GET["id"];
 		$sql = "";
@@ -208,9 +192,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prepstatement);
 	}
 
-
+//include the header
 	require_once "includes/header.php";
 
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -218,15 +203,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<td align='left'>\n";
 	echo "      <br>";
 
-
-
-
-	//Write the HTML form
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	if ($action == "add") {
 		echo "<td width='30%' align='left'nowrap><b>Public Include Add</b></td>\n";
@@ -365,198 +344,184 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-//---- begin: v_public_details ---------------------------
-if ($action == "update") {
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+//show the  v_public_details
+	if ($action == "update") {
+		echo "<div align='center'>";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "      <br>";
+		echo "<tr class='border'>\n";
+		echo "	<td align=\"center\">\n";
+		echo "      <br>";
 
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+		echo "  <tr>\n";
+		echo "    <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>Conditions and Actions<br />\n";
+		echo "        </strong></span>\n";
+		echo "        The following conditions, actions and anti-actions are used in the public to direct call flow. Each is processed in order until you reach the action tag which tells the system what action to perform. You are not limited to only one condition or action tag for a given extension.\n";
+		echo "        </span></p></td>\n";
+		echo "  </tr>\n";
+		echo "</table>";
+		echo "<br />\n";
 
-	//echo "<table width='100%' border='0'><tr>\n";
-	//echo "<td width='50%' nowrap><b>Conditions and Actions</b></td>\n";
-	//echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	//echo "</tr></table>\n";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-	echo "  <tr>\n";
-	echo "    <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>Conditions and Actions<br />\n";
-	echo "        </strong></span>\n";
-	echo "        The following conditions, actions and anti-actions are used in the public to direct call flow. Each is processed in order until you reach the action tag which tells the system what action to perform. You are not limited to only one condition or action tag for a given extension.\n";
-	echo "        </span></p></td>\n";
-	echo "  </tr>\n";
-	echo "</table>";
-	echo "<br />\n";
+		$c = 0;
+		$rowstyle["0"] = "rowstyle0";
+		$rowstyle["1"] = "rowstyle1";
 
+		echo "<div align='center'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<th align='center'>Tag</th>\n";
+		echo "<th align='center'>Type</th>\n";
+		echo "<th align='center'>Data</th>\n";
+		echo "<th align='center'>Order</th>\n";
+		echo "<td align='right' width='42'>\n";
+		if (permission_exists('public_includes_add')) {
+			echo "	<a href='v_public_includes_details_edit.php?id2=".$public_include_id."' alt='add'>$v_link_label_add</a>\n";
+		}
+		echo "</td>\n";
+		echo "<tr>\n";
 
-	$sql = "";
-	$sql .= " select * from v_public_includes_details ";
-	$sql .= " where public_include_id = '$public_include_id' ";
-	$sql .= " and v_id = $v_id ";
-	$sql .= " and tag = 'condition' ";
-	$sql .= " order by fieldorder asc";
-	//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-	//$sql .= " limit $rowsperpage offset $offset ";
-	//echo $sql;
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$resultcount = count($result);
-	unset ($prepstatement, $sql);
+		//list the conditions
+			$sql = "";
+			$sql .= " select * from v_public_includes_details ";
+			$sql .= " where public_include_id = '$public_include_id' ";
+			$sql .= " and v_id = $v_id ";
+			$sql .= " and tag = 'condition' ";
+			$sql .= " order by fieldorder asc";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			$result = $prepstatement->fetchAll();
+			$resultcount = count($result);
+			unset ($prepstatement, $sql);
+			if ($resultcount == 0) {
+				//no results
+			}
+			else { //received results
+				foreach($result as $row) {
+					echo "<tr >\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
+					echo "   <td valign='top' align='right'>\n";
+					if (permission_exists('public_includes_edit')) {
+						echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('public_includes_delete')) {
+						echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
+					echo "   </td>\n";
+					echo "</tr>\n";
+					if ($c==0) { $c=1; } else { $c=0; }
+				} //end foreach
+				unset($sql, $result, $rowcount);
+			} //end if results
 
-	$c = 0;
-	$rowstyle["0"] = "rowstyle0";
-	$rowstyle["1"] = "rowstyle1";
+		//list the actions
+			$sql = "";
+			$sql .= " select * from v_public_includes_details ";
+			$sql .= " where public_include_id = '$public_include_id' ";
+			$sql .= " and v_id = $v_id ";
+			$sql .= " and tag = 'action' ";
+			$sql .= " order by fieldorder asc";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			$result = $prepstatement->fetchAll();
+			$resultcount = count($result);
+			unset ($prepstatement, $sql);
+			if ($resultcount == 0) {
+				//no results
+			}
+			else { //received results
+				foreach($result as $row) {
+					echo "<tr >\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
+					echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
+					echo "   <td valign='top' align='right'>\n";
+					if (permission_exists('public_includes_edit')) {
+						echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('public_includes_delete')) {
+						echo "		<a href='v_public_icludes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
+					echo "   </td>\n";
+					echo "</tr>\n";
+					if ($c==0) { $c=1; } else { $c=0; }
+				} //end foreach
+				unset($sql, $result, $rowcount);
+			} //end if results
 
-	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		//list the anti-actions
+			$sql = "";
+			$sql .= " select * from v_public_includes_details ";
+			$sql .= " where public_include_id = '$public_include_id' ";
+			$sql .= " and v_id = $v_id ";
+			$sql .= " and tag = 'anti-action' ";
+			$sql .= " order by fieldorder asc";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			$result = $prepstatement->fetchAll();
+			$resultcount = count($result);
+			unset ($prepstatement, $sql);
+			if ($resultcount == 0) {
+				//no results
+			}
+			else { //received results
+				foreach($result as $row) {
+					echo "<tr >\n";
+					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
+					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
+					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
+					echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
+					echo "	<td valign='top' align='right'>\n";
+					if (permission_exists('public_includes_edit')) {
+						echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('public_includes_delete')) {
+						echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					}
+					echo "	</td>\n";
+					echo "</tr>\n";
+					if ($c==0) { $c=1; } else { $c=0; }
+				} //end foreach
+				unset($sql, $result, $rowcount);
+			} //end if results
 
-	echo "<tr>\n";
-	echo "<th align='center'>Tag</th>\n";
-	echo "<th align='center'>Type</th>\n";
-	echo "<th align='center'>Data</th>\n";
-	echo "<th align='center'>Order</th>\n";
-	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_public_includes_details_edit.php?id2=".$public_include_id."' alt='add'>$v_link_label_add</a>\n";
-	echo "</td>\n";
-	echo "<tr>\n";
+		echo "<tr>\n";
+		echo "<td colspan='5'>\n";
+		echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+		echo "	<tr>\n";
+		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+		echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
+		echo "		<td width='33.3%' align='right'>\n";
+		if (permission_exists('public_includes_add')) {
+			echo "			<a href='v_public_includes_details_edit.php?id2=".$public_include_id."' alt='add'>$v_link_label_add</a>\n";
+		}
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	if ($resultcount == 0) { //no results
-	}
-	else { //received results
-		foreach($result as $row) {
-			//print_r( $row );
-			echo "<tr >\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			echo "   </td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $rowcount);
-	} //end if results
+		echo "</table>";
+		echo "</div>";
+		echo "<br><br>";
+		echo "<br><br>";
 
-	//--------------------------------------------------------------------------
+		echo "</td>";
+		echo "</tr>";
+		echo "</table>";
+		echo "</div>";
+		echo "<br><br>";
+	} //end if update
 
-	$sql = "";
-	$sql .= " select * from v_public_includes_details ";
-	$sql .= " where public_include_id = '$public_include_id' ";
-	$sql .= " and v_id = $v_id ";
-	$sql .= " and tag = 'action' ";
-	$sql .= " order by fieldorder asc";
-	//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-	//$sql .= " limit $rowsperpage offset $offset ";
-	//echo $sql;
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$resultcount = count($result);
-	unset ($prepstatement, $sql);
-
-	//$c = 0;
-	//$rowstyle["0"] = "rowstyle0";
-	//$rowstyle["1"] = "rowstyle1";
-
-	if ($resultcount == 0) { //no results
-	}
-	else { //received results
-		foreach($result as $row) {
-			//print_r( $row );
-			echo "<tr >\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
-			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			echo "   </td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $rowcount);
-	} //end if results
-
-	//--------------------------------------------------------------------------
-
-	$sql = "";
-	$sql .= " select * from v_public_includes_details ";
-	$sql .= " where public_include_id = '$public_include_id' ";
-	$sql .= " and v_id = $v_id ";
-	$sql .= " and tag = 'anti-action' ";
-	$sql .= " order by fieldorder asc";
-	//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-	//$sql .= " limit $rowsperpage offset $offset ";
-	//echo $sql;
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$resultcount = count($result);
-	unset ($prepstatement, $sql);
-
-	//$c = 0;
-	//$rowstyle["0"] = "rowstyle0";
-	//$rowstyle["1"] = "rowstyle1";
-
-	if ($resultcount == 0) { //no results
-	}
-	else { //received results
-		foreach($result as $row) {
-			//print_r( $row );
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[tag]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldtype]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fielddata]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[fieldorder]."</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $rowcount);
-	} //end if results
-
-	echo "<tr>\n";
-	echo "<td colspan='5'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_public_includes_details_edit.php?id2=".$public_include_id."' alt='add'>$v_link_label_add</a>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-	echo "<br><br>";
-
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-} //end if update
-//---- end: v_public_details ---------------------------
-
-require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>

@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('public_includes_delete')) {
 	//access granted
 }
 else {
@@ -35,30 +34,31 @@ else {
 	exit;
 }
 
-if (count($_GET)>0) {
-	$id = $_GET["id"];
-	$public_include_id = check_str($_REQUEST["id2"]);
-}
+//http values set as variables
+	if (count($_GET)>0) {
+		$id = $_GET["id"];
+		$public_include_id = check_str($_REQUEST["id2"]);
+	}
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_public_includes_details ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and public_includes_detail_id = '$id' ";
-	$sql .= "and public_include_id = '$public_include_id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	unset($sql);
-}
+//delete the data
+	if (strlen($id)>0) {
+		$sql = "";
+		$sql .= "delete from v_public_includes_details ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and public_includes_detail_id = '$id' ";
+		$sql .= "and public_include_id = '$public_include_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		unset($sql);
+	}
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
-

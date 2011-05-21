@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('public_includes_delete')) {
 	//access granted
 }
 else {
@@ -51,9 +50,7 @@ if (strlen($id)>0) {
 	foreach ($result as &$row) {
 		$extensionname = $row["extensionname"];
 		$publicorder = $row["publicorder"];
-		//$context = $row["context"];
 		//$enabled = $row["enabled"];
-		//$descr = $row["descr"];
 		break; //limit to 1 row
 	}
 	unset ($prepstatement, $sql);
@@ -86,14 +83,13 @@ if (strlen($id)>0) {
 	sync_package_v_public_includes();
 }
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes.php\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes.php\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
-

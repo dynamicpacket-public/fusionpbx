@@ -26,52 +26,42 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('public_includes_add') || permission_exists('public_includes_edit') ) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$public_includes_detail_id = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+		$public_include_id = check_str($_REQUEST["id2"]);
+	}
 
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$public_includes_detail_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-    $public_include_id = check_str($_REQUEST["id2"]);
-}
+	if (isset($_REQUEST["id2"])) {
+		$public_include_id = check_str($_REQUEST["id2"]);
+	}
 
-if (isset($_REQUEST["id2"])) {
-	$public_include_id = check_str($_REQUEST["id2"]);
-}
+//set the http values as variables
+	if (count($_POST)>0) {
+		//$v_id = check_str($_POST["v_id"]);
+		if (isset($_POST["public_include_id"])) {
+			$public_include_id = check_str($_POST["public_include_id"]);
+		}
+		$tag = check_str($_POST["tag"]);
+		$fieldtype = check_str($_POST["fieldtype"]);
+		$fielddata = check_str($_POST["fielddata"]);
+		$fieldorder = check_str($_POST["fieldorder"]);
+	}
 
-//echo "public_include_id $public_include_id<br />\n";
-//POST to PHP variables
-if (count($_POST)>0) {
-    //$v_id = check_str($_POST["v_id"]);
-    if (isset($_POST["public_include_id"])) {
-        $public_include_id = check_str($_POST["public_include_id"]);
-    }
-    $tag = check_str($_POST["tag"]);
-    $fieldtype = check_str($_POST["fieldtype"]);
-    $fielddata = check_str($_POST["fielddata"]);
-    $fieldorder = check_str($_POST["fieldorder"]);
-}
-//echo "public_include_id $public_include_id<br />\n";
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
     $msg = '';
-
-    ////recommend moving this to the config.php file
-    $uploadtempdir = $_ENV["TEMP"]."\\";
-    ini_set('upload_tmp_dir', $uploadtempdir);
-    ////$imagedir = $_ENV["TEMP"]."\\";
-    ////$filedir = $_ENV["TEMP"]."\\";
-
     if ($action == "update") {
         $public_includes_detail_id = check_str($_POST["public_includes_detail_id"]);
     }
@@ -96,119 +86,103 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
             return;
         }
 
-    $tmp = "\n";
-    //$tmp .= "v_id: $v_id\n";
-    $tmp .= "public_include_id: $public_include_id\n";
-    $tmp .= "Tag: $tag\n";
-    $tmp .= "Type: $fieldtype\n";
-    $tmp .= "Data: $fielddata\n";
-    $tmp .= "Order: $fieldorder\n";
+	//add or update the database
+	if ($_POST["persistformvar"] != "true") {
+		if ($action == "add" && permission_exists('public_includes_add')) {
+			$sql = "insert into v_public_includes_details ";
+			$sql .= "(";
+			$sql .= "v_id, ";
+			$sql .= "public_include_id, ";
+			$sql .= "tag, ";
+			$sql .= "fieldtype, ";
+			$sql .= "fielddata, ";
+			$sql .= "fieldorder ";
+			$sql .= ")";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$v_id', ";
+			$sql .= "'$public_include_id', ";
+			$sql .= "'$tag', ";
+			$sql .= "'$fieldtype', ";
+			$sql .= "'$fielddata', ";
+			$sql .= "'$fieldorder' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
+			//synchronize the xml config
+			sync_package_v_public_includes();
 
+			require_once "includes/header.php";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
+			echo "<div align='center'>\n";
+			echo "Add Complete\n";
+			echo "</div>\n";
+			require_once "includes/footer.php";
+			return;
+		} //if ($action == "add")
 
-//Add or update the database
-if ($_POST["persistformvar"] != "true") {
-    if ($action == "add") {
-        $sql = "insert into v_public_includes_details ";
-        $sql .= "(";
-        $sql .= "v_id, ";
-        $sql .= "public_include_id, ";
-        $sql .= "tag, ";
-        $sql .= "fieldtype, ";
-        $sql .= "fielddata, ";
-        $sql .= "fieldorder ";
-        $sql .= ")";
-        $sql .= "values ";
-        $sql .= "(";
-        $sql .= "'$v_id', ";
-        $sql .= "'$public_include_id', ";
-        $sql .= "'$tag', ";
-        $sql .= "'$fieldtype', ";
-        $sql .= "'$fielddata', ";
-        $sql .= "'$fieldorder' ";
-        $sql .= ")";
-        $db->exec(check_sql($sql));
-        unset($sql);
+		if ($action == "update" && permission_exists('public_includes_edit')) {
+			$sql = "update v_public_includes_details set ";
+			//$sql .= "v_id = '$v_id', ";
+			$sql .= "public_include_id = '$public_include_id', ";
+			$sql .= "tag = '$tag', ";
+			$sql .= "fieldtype = '$fieldtype', ";
+			$sql .= "fielddata = '$fielddata', ";
+			$sql .= "fieldorder = '$fieldorder' ";
+			$sql .= "where public_includes_detail_id = '$public_includes_detail_id'";
+			$db->exec(check_sql($sql));
+			unset($sql);
 
-        //synchronize the xml config
-        sync_package_v_public_includes();
+			//synchronize the xml config
+			sync_package_v_public_includes();
 
-        require_once "includes/header.php";
-        echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
-        echo "<div align='center'>\n";
-        echo "Add Complete\n";
-        echo "</div>\n";
-        require_once "includes/footer.php";
-        return;
-    } //if ($action == "add")
-
-    if ($action == "update") {
-        $sql = "update v_public_includes_details set ";
-        //$sql .= "v_id = '$v_id', ";
-        $sql .= "public_include_id = '$public_include_id', ";
-        $sql .= "tag = '$tag', ";
-        $sql .= "fieldtype = '$fieldtype', ";
-        $sql .= "fielddata = '$fielddata', ";
-        $sql .= "fieldorder = '$fieldorder' ";
-        $sql .= "where public_includes_detail_id = '$public_includes_detail_id'";
-        $db->exec(check_sql($sql));
-        unset($sql);
-
-        //synchronize the xml config
-        sync_package_v_public_includes();
-
-        require_once "includes/header.php";
-        echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
-        echo "<div align='center'>\n";
-        echo "Update Complete\n";
-        echo "</div>\n";
-        require_once "includes/footer.php";
-        return;
-   } //if ($action == "update")
-} //if ($_POST["persistformvar"] != "true") { 
-
+			require_once "includes/header.php";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_public_includes_edit.php?id=".$public_include_id."\">\n";
+			echo "<div align='center'>\n";
+			echo "Update Complete\n";
+			echo "</div>\n";
+			require_once "includes/footer.php";
+			return;
+	   } //if ($action == "update")
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
-//Pre-populate the form
-if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-    $public_includes_detail_id = $_GET["id"];
-    $sql = "";
-    $sql .= "select * from v_public_includes_details ";
-    $sql .= "where public_includes_detail_id = '$public_includes_detail_id' ";
-    $sql .= "and v_id = '$v_id' ";
-    $prepstatement = $db->prepare(check_sql($sql));
-    $prepstatement->execute();
-    $result = $prepstatement->fetchAll();
-    foreach ($result as &$row) {
-        $v_id = $row["v_id"];
-        $public_include_id = $row["public_include_id"];
-        $tag = $row["tag"];
-        $fieldtype = $row["fieldtype"];
-        $fielddata = $row["fielddata"];
-        $fieldorder = $row["fieldorder"];
-        break; //limit to 1 row
-    }
-    unset ($prepstatement);
-}
+//pre-populate the form
+	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+		$public_includes_detail_id = $_GET["id"];
+		$sql = "";
+		$sql .= "select * from v_public_includes_details ";
+		$sql .= "where public_includes_detail_id = '$public_includes_detail_id' ";
+		$sql .= "and v_id = '$v_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$v_id = $row["v_id"];
+			$public_include_id = $row["public_include_id"];
+			$tag = $row["tag"];
+			$fieldtype = $row["fieldtype"];
+			$fielddata = $row["fielddata"];
+			$fieldorder = $row["fieldorder"];
+			break; //limit to 1 row
+		}
+		unset ($prepstatement);
+	}
 
-
+//include the header
     require_once "includes/header.php";
 
-
+//show the content
     echo "<div align='center'>";
     echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
     echo "<tr class='border'>\n";
     echo "	<td align=\"left\">\n";
     echo "      <br>";
 
-
-
     echo "<form method='post' name='frm' action=''>\n";
-
     echo "<div align='center'>\n";
     echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
     echo "<tr>\n";
     if ($action == "add") {
         echo "<td align='left' width='30%' nowrap><b>Public Includes Detail Add</b></td>\n";
@@ -536,12 +510,11 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
     echo "    <br />\n";
     echo "    <br />";
 
-
     echo "	</td>";
     echo "	</tr>";
     echo "</table>";
     echo "</div>";
 
-
-require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>

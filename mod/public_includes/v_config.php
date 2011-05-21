@@ -37,7 +37,7 @@
 		$apps[$x]['permissions'][4]['name'] = 'public_includes_copy';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_public_includes 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_public_includes';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'public_include_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -72,7 +72,6 @@
 		$apps[$x]['db'][0]['fields'][9]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][9]['description'] = '';
 
-	// CREATE TABLE v_public_includes_details 
 		$apps[$x]['db'][1]['table'] = 'v_public_includes_details';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'public_includes_detail_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
