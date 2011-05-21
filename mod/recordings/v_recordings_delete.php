@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('recordings_delete')) {
 	//access granted
 }
 else {
@@ -39,7 +39,6 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-
 	//get filename
 		$sql = "";
 		$sql .= "select * from v_recordings ";
@@ -65,17 +64,14 @@ if (strlen($id)>0) {
 
 	//delete the recording file
 		unlink($v_recordings_dir."/".$filename);
-
 }
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_recordings.php\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
-
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_recordings.php\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 ?>
-

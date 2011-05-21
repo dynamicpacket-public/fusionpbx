@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('recordings_view')) {
 	//access granted
 }
 else {
@@ -43,7 +43,7 @@ require_once "includes/paging.php";
 	$order = $_GET["order"];
 
 //download the recordings
-	if ($_GET['a'] == "download") {
+	if ($_GET['a'] == "download" && permission_exists('recordings_download')) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
 			if (file_exists($v_recordings_dir.'/'.base64_decode($_GET['filename']))) {
@@ -73,17 +73,8 @@ require_once "includes/paging.php";
 		exit;
 	}
 
-//check the permissions
-	if (ifgroup("admin") || ifgroup("superadmin")) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
-
 //upload the recording
-	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
+	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recordings_upload')) {
 		if ($_POST['type'] == 'rec') {
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $v_recordings_dir.'/'.$_FILES['ulfile']['name']);
 			$savemsg = "Uploaded file to ".$v_recordings_dir."/". htmlentities($_FILES['ulfile']['name']);
@@ -102,10 +93,6 @@ require_once "includes/paging.php";
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	foreach ($result as &$row) {
-		//$filename = $row["filename"];
-		//$recordingname = $row["recordingname"];
-		//$recordingid = $row["recordingid"];
-		//$descr = $row["descr"];
 		$config_recording_list .= $row['filename']."|";
 	}
 	unset ($prepstatement);
@@ -138,12 +125,6 @@ require_once "includes/paging.php";
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
-
-						//$recordingent = array();
-						//$recordingent['filename'] = $file;
-						//$recordingent['recordingname'] = $a_file[0];
-						//$recordingent['recordingid'] = guid();
-						//$recordingent['descr'] = 'Auto';
 					}
 					else {
 						//echo "The $file was found.<br/>";
@@ -246,7 +227,9 @@ require_once "includes/paging.php";
 	echo "<th width=\"10%\" class=\"listhdr\" nowrap>Size</th>\n";
 	echo thorderby('descr', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('recordings_add')) {
+		echo "	<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -255,27 +238,31 @@ require_once "includes/paging.php";
 	}
 	else { //received results
 		foreach($result as $row) {
-			$tmp_filesize = filesize($v_recordings_dir.'/'.$row[filename]);
+			$tmp_filesize = filesize($v_recordings_dir.'/'.$row['filename']);
 			$tmp_filesize = byte_convert($tmp_filesize);
 
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>";
-			echo "		<a href=\"v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($row[filename])."\">\n";
-			echo $row[filename];
+			echo "		<a href=\"v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($row['filename'])."\">\n";
+			echo $row['filename'];
 			echo "	  </a>";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>";
-			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('v_recordings_play.php?a=download&type=moh&filename=".base64_encode($row[filename])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-			echo $row[recordingname];
+			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('v_recordings_play.php?a=download&type=moh&filename=".base64_encode($row['filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			echo $row['recordingname'];
 			echo "	  </a>";
 			echo 	"</td>\n";
 			echo "	<td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
 			echo "	".$tmp_filesize;
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."' width='30%'>".$row[descr]."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."' width='30%'>".$row['descr']."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_recordings_edit.php?id=".$row[recording_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_recordings_delete.php?id=".$row[recording_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('recordings_edit')) {
+				echo "		<a href='v_recordings_edit.php?id=".$row['recording_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('recordings_delete')) {
+				echo "		<a href='v_recordings_delete.php?id=".$row['recording_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -290,7 +277,9 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('recordings_add')) {
+		echo "			<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";

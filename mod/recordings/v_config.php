@@ -39,7 +39,17 @@
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_recordings 
+		$apps[$x]['permissions'][5]['name'] = 'recordings_play';
+		$apps[$x]['permissions'][5]['groups'][] = 'user';
+		$apps[$x]['permissions'][5]['groups'][] = 'admin';
+		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][6]['name'] = 'recordings_download';
+		$apps[$x]['permissions'][6]['groups'][] = 'user';
+		$apps[$x]['permissions'][6]['groups'][] = 'admin';
+		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_recordings';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'recording_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

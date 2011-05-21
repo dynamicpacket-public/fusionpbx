@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('recordings_add') || permission_exists('recordings_edit')) {
 	//access granted
 }
 else {
@@ -34,40 +34,32 @@ else {
 	exit;
 }
 
-
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$recording_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-}
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$recording_id = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+	}
 
 //get the form value and set to php variables
-if (count($_POST)>0) {
-	$filename = check_str($_POST["filename"]);
-	$recordingname = check_str($_POST["recordingname"]);
-	//$recordingid = check_str($_POST["recordingid"]);
-	$descr = check_str($_POST["descr"]);
+	if (count($_POST)>0) {
+		$filename = check_str($_POST["filename"]);
+		$recordingname = check_str($_POST["recordingname"]);
+		//$recordingid = check_str($_POST["recordingid"]);
+		$descr = check_str($_POST["descr"]);
 
-	//clean the filename and recording name
-	$filename = str_replace(" ", "_", $filename);
-	$filename = str_replace("'", "", $filename);
-	$recordingname = str_replace(" ", "_", $recordingname);
-	$recordingname = str_replace("'", "", $recordingname);
-}
+		//clean the filename and recording name
+		$filename = str_replace(" ", "_", $filename);
+		$filename = str_replace("'", "", $filename);
+		$recordingname = str_replace(" ", "_", $recordingname);
+		$recordingname = str_replace("'", "", $recordingname);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	//recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	//$imagedir = $_ENV["TEMP"]."\\";
-	//$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$recording_id = check_str($_POST["recording_id"]);
 	}
@@ -93,8 +85,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('recordings_add')) {
 			$sql = "insert into v_recordings ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -123,8 +114,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
-
+		if ($action == "update" && permission_exists('recordings_edit')) {
 			//get the original filename
 				$sql = "";
 				$sql .= "select * from v_recordings ";
@@ -167,9 +157,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-
 	} //if ($_POST["persistformvar"] != "true")
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -217,7 +205,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_recordings.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
-
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -273,12 +260,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>
