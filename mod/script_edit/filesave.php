@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_save')) {
 	//access granted
 }
 else {
@@ -41,11 +41,6 @@ $content = $_POST["content"];
 $handle = fopen($filename, 'wb') or die("Error!!");
 fwrite($handle, $content);
 fclose($handle);
-
-//echo "File Saved: \n $filename";
-//echo "\n\nContent: $content\n";
-
 echo $content;
-
 
 ?>

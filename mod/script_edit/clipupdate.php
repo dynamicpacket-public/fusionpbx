@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_save')) {
 	//access granted
 }
 else {
@@ -96,50 +96,47 @@ else {
 
 	echo "<form method='post' action=''>";
 	echo "<table border='0' width='100%'>";
-      echo "	<tr>";
-      echo "		<td>Name:</td>";
-      echo "		<td><input type='text' class='txt' name='clipname' value='$clipname'></td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td>Folder:</td>";
-      echo "		<td><input type='text' class='txt'  name='clipfolder' value='$clipfolder'></td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td colspan='2'>Before Selection:<br>";
-      echo "		  <textarea  class='txt' name='cliptextstart'>$cliptextstart</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td colspan='2'>After Selection:<br>";
-      echo "		  <textarea  class='txt' name='cliptextend'>$cliptextend</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>Name:</td>";
+	echo "		<td><input type='text' class='txt' name='clipname' value='$clipname'></td>";
+	echo "	</tr>";
 
-      echo "	<tr>";
-      echo "		<td colspan='2'>Notes:<br>";
-      echo "		  <textarea  class='txt' name='clipdesc'>$clipdesc</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>Folder:</td>";
+	echo "		<td><input type='text' class='txt'  name='clipfolder' value='$clipfolder'></td>";
+	echo "	</tr>";
 
+	echo "	<tr>";
+	echo "		<td colspan='2'>Before Selection:<br>";
+	echo "		  <textarea  class='txt' name='cliptextstart'>$cliptextstart</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
-    echo "	<tr>";
-    echo "		<td colspan='2' align='right'>";
-    echo "     <input type='hidden' name='id' value='$id'>";
-    echo "     <input type='submit' name='submit' value='Update'>";
-    echo "		</td>";
-    echo "	</tr>";
-    echo "</table>";
-    echo "</form>";
+	echo "	<tr>";
+	echo "		<td colspan='2'>After Selection:<br>";
+	echo "		  <textarea  class='txt' name='cliptextend'>$cliptextend</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
+	echo "	<tr>";
+	echo "		<td colspan='2'>Notes:<br>";
+	echo "		  <textarea  class='txt' name='clipdesc'>$clipdesc</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
-    echo "	</td>";
-    echo "	</tr>";
-    echo "</table>";
-    echo "</div>";
+	echo "	<tr>";
+	echo "		<td colspan='2' align='right'>";
+	echo "     <input type='hidden' name='id' value='$id'>";
+	echo "     <input type='submit' name='submit' value='Update'>";
+	echo "		</td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</form>";
 
+	echo "	</td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</div>";
 
-  require_once "footer.php";
+	require_once "footer.php";
 ?>

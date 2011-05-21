@@ -25,15 +25,13 @@
 */
 include "root.php";
 require_once "includes/config.php";
-require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
 
 $filename = $_POST["file"];
 $filename = str_replace ("\\", "/", $filename);
@@ -46,6 +44,5 @@ if ($handle) {
 	}
 	fclose($handle);
 }
-
 
 ?>

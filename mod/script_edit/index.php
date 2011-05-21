@@ -26,21 +26,17 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
-
 echo "<html>\n";
 echo "<head>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
 echo "	<title></title>";
-
 
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 	echo "// Replaces all instances of the given substring.\n";
@@ -76,7 +72,6 @@ echo "	<title></title>";
 
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 	echo "    function makeRequest(url, strpost) {\n";
-	//echo "        alert(url); \n";
 	echo "        var http_request = false;\n";
 	echo "\n";
 	echo "        if (window.XMLHttpRequest) { // Mozilla, Safari, ...\n";

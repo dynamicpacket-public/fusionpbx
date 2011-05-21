@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_save')) {
 	//access granted
 }
 else {
@@ -78,8 +78,6 @@ if (count($_POST)>0) {
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 
-	//echo "Clip Library";
-	//echo "<hr size='1'>";
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' border='0'>";
 	  echo "	<tr>";
@@ -115,12 +113,10 @@ if (count($_POST)>0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
 
 require_once "footer.php";
 ?>

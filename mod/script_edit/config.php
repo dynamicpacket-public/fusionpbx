@@ -28,15 +28,12 @@ include "root.php";
 
 error_reporting (E_ALL ^ E_NOTICE);
 
-
 $applicationname = 'Edit';
 $bodyoptions = "";
-
 
 $dbfilename = "clip.db";
 $dbfilepath = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/mod/php_edit/";
 
-//$temp = $_ENV["TEMP"]."\\";
 if (is_writable($dbfilepath.$dbfilename)) { //is writable
 	//use database in current location
 }
@@ -60,11 +57,8 @@ else { //not writable
 	*/
 }
 
-
-
 //$fullstring = "this is my [tag]dog[/tag]";
 //$parsed = get_string_between($fullstring, "[tag]", "[/tag]");
-
 
 //database connection
 try {

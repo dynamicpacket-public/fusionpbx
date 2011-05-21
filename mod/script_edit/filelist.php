@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_view')) {
 	//access granted
 }
 else {
@@ -48,7 +48,6 @@ function space($count) {
 	}
 	return $r;
 }
-
 
 function recur_dir($dir) {
 	clearstatcache();
@@ -120,8 +119,6 @@ function recur_dir($dir) {
 	return $htmldirlist ."\n". $htmlfilelist;
 }
 
-
-
 //begin the content
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 	echo "    function makeRequest(url, strpost) {\n";
@@ -191,9 +188,6 @@ function recur_dir($dir) {
 	echo "    }\n";
 	echo "</script>";
 
-
-
-
 	echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
 	//echo "// ---------------------------------------------\n";
 	//echo "// --- http://www.codeproject.com/jscript/dhtml_treeview.asp\n";
@@ -227,17 +221,11 @@ function recur_dir($dir) {
 	echo "}\n";
 	echo "</SCRIPT>";
 
-
-
 	echo "<div align='center' valign='1'>";
 	echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\" valign='top' nowrap>\n";
-	//echo "      <br>";
-
-
-
 	echo "\n";
 	echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"if (typeof(clipwin)!='undefined') { clipwin.close(); } clipwin = window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Files </a><DIV style=''>\n"; //display:none
 	//echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
@@ -287,12 +275,6 @@ function recur_dir($dir) {
 
 	echo "<br><br>";
 	require_once "footer.php";
-
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 
 	echo "</body>";
 	echo "</html>";

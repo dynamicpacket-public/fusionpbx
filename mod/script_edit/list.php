@@ -24,15 +24,25 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
+require_once "includes/checkauth.php";
+if (permission_exists('script_editor_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
 require_once "admin/edit/config.php";
 require_once "admin/edit/header.php";
+
+//show the content
     echo "<div align='left'>";
     echo "<table width='175'  border='0' cellpadding='0' cellspacing='2'>\n";
 
     echo "<tr class='border'>\n";
     echo "	<td align=\"left\">\n";
     echo "      <br>";
-
 
     $sql = "";
     $sql .= "select * from tblcliplibrary ";
@@ -80,15 +90,12 @@ require_once "admin/edit/header.php";
 
             echo "<tr><td colspan='1'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
             if ($c==0) { $c=1; } else { $c=0; }
-        } //end foreach        unset($sql, $result, $rowcount);
+        } //end foreach
+		unset($sql, $result, $rowcount);
         
-        
-
         echo "</table>\n";
         echo "</div>\n";
 
-
-        //echo "  <br><br>";
         echo "  </td>\n";
         echo "</tr>\n";
 
@@ -104,11 +111,5 @@ require_once "admin/edit/header.php";
 
     echo "<br><br>";
     require_once "admin/edit/footer.php";
-
-    unset ($resultcount);
-    unset ($result);
-    unset ($key);
-    unset ($val);
-    unset ($c);
 
 ?>

@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_save')) {
 	//access granted
 }
 else {
@@ -40,7 +40,6 @@ $folder = $_GET["folder"];
 $newfilename = $_GET["newfilename"];
 $filename = $_GET["filename"];
 //echo $folder.$file;
-
 
 if (strlen($folder) > 0 && strlen($newfilename) > 0) {
     //echo "new file: ".$newfilename."<br>";
@@ -98,6 +97,5 @@ else { //display form
     require_once "footer.php";
 
 }
-
 
 ?>

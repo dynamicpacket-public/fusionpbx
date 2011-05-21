@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin")) {
+if (permission_exists('script_editor_save')) {
 	//access granted
 }
 else {
@@ -36,8 +36,6 @@ else {
 
 $folder = $_GET["folder"];
 $folder = str_replace ("\\", "/", $folder);
-
-//echo $folder;
 
 if (strlen($folder) > 0) {
     //delete the folder
