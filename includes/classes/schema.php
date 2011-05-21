@@ -48,32 +48,34 @@ include "root.php";
 				$sql = '';
 				$sql_schema = '';
 				foreach ($this->apps as $app) {
-					foreach ($app['db'] as $row) {
-						//create the sql string
-							$table_name = $row['table'];
-							$sql = "CREATE TABLE " . $row['table'] . " (\n";
-							$field_count = 0;
-							foreach ($row['fields'] as $field) {
-								if ($field_count > 0 ) { $sql .= ",\n"; }
-								$sql .= $field['name'] . " ";
-								if (is_array($field['type'])) {
-									$sql .= $field['type'][$this->db_type];
+					if (count($app['db']) {
+						foreach ($app['db'] as $row) {
+							//create the sql string
+								$table_name = $row['table'];
+								$sql = "CREATE TABLE " . $row['table'] . " (\n";
+								$field_count = 0;
+								foreach ($row['fields'] as $field) {
+									if ($field_count > 0 ) { $sql .= ",\n"; }
+									$sql .= $field['name'] . " ";
+									if (is_array($field['type'])) {
+										$sql .= $field['type'][$this->db_type];
+									}
+									else {
+										$sql .= $field['type'];
+									}
+									$field_count++;
 								}
-								else {
-									$sql .= $field['type'];
+								$sql .= ");";
+							//execute the sql query
+								try {
+									echo $sql."<br /><br />";
+									//$this->db->query($sql);
 								}
-								$field_count++;
-							}
-							$sql .= ");";
-						//execute the sql query
-							try {
-								echo $sql."<br /><br />";
-								//$this->db->query($sql);
-							}
-							catch (PDOException $error) {
-								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-							}
-							unset($sql);
+								catch (PDOException $error) {
+									echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+								}
+								unset($sql);
+						}
 					}
 				}
 			}
