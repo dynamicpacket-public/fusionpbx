@@ -35,7 +35,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("tenant")) {
+if (permission_exists('traffic_graph_view')) {
 	//access granted
 }
 else {
