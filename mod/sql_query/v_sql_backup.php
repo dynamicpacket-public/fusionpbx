@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('sql_query_backup')) {
 	//access granted
 }
 else {

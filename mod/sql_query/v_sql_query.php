@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('sql_query_execute')) {
 	//access granted
 }
 else {
@@ -60,7 +59,6 @@ else {
 		echo "\n";
 		echo "    });\n";
 		echo "    </script>";
-
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -95,11 +93,9 @@ else {
 	echo "			<option value='csv'>csv</option>\n";
 	echo "			<option value='sql insert into'>sql insert into</option>\n";
 	echo "			</select>\n";
-
-	echo "		&nbsp;\n";
-	echo "		&nbsp;\n";
-
-	echo "		Table: \n";
+	echo "			&nbsp;\n";
+	echo "			&nbsp;\n";
+	echo "			Table: \n";
 	echo "			<select name='table_name'>\n";
 	echo "			<option value=''></option>\n";
 	if ($db_type == "sqlite") {
@@ -136,7 +132,6 @@ else {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
 
 	echo "<iframe id='frame' width='100%' height='400' FRAMEBORDER='0' name='frame' style='background-color : #FFFFFF;'></iframe>\n";
 

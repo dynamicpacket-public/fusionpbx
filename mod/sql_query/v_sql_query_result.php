@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("superadmin")) {
+if (permission_exists('sql_query_execute')) {
 	//access granted
 }
 else {
@@ -42,66 +41,65 @@ if (count($_POST)>0) {
 	if (strlen($sql_cmd) == 0) { $sql_cmd = "select * from ".$table_name; }
 }
 
-
 if (count($_POST)>0) {
-		$tmp_header = "<html>\n";
-		$tmp_header .= "<head>\n";
-		$tmp_header .= "<style type='text/css'>\n";
-		$tmp_header .= "\n";
-		$tmp_header .= "body {\n";
-		$tmp_header .= "	font-size: 13px;\n";
-		$tmp_header .= "	color: #444444;\n";
-		$tmp_header .= "}\n";
-		$tmp_header .= "\n";
-		$tmp_header .= "th {\n";
-		$tmp_header .= "	border-top: 1px solid #444444;\n";
-		$tmp_header .= "	border-bottom: 1px solid #444444;\n";
-		$tmp_header .= "	color: #FFFFFF;\n";
-		$tmp_header .= "	font-size: 12px;\n";
-		$tmp_header .= "	font-family: arial;\n";
-		$tmp_header .= "	font-weight: bold;\n";
-		$tmp_header .= "	background-color: #777777;\n";
-		$tmp_header .= "	background-image: url(".PROJECT_PATH."'/themes/horizontal/background_th.png');\n";
-		$tmp_header .= "	padding-top: 4px;\n";
-		$tmp_header .= "	padding-bottom: 4px;\n";
-		$tmp_header .= "	padding-right: 7px;\n";
-		$tmp_header .= "	padding-left: 7px;\n";
-		$tmp_header .= "}\n";
-		$tmp_header .= "\n";
-		$tmp_header .= ".rowstyle0 {\n";
-		$tmp_header .= "	background-color: #EEEEEE;\n";
-		$tmp_header .= "	background-image: url(".PROJECT_PATH."'/themes/horizontal/background_cell.gif');\n";
-		$tmp_header .= "	border-bottom: 1px solid #999999;\n";
-		$tmp_header .= "	color: #444444;\n";
-		$tmp_header .= "	text-align: left;\n";
-		$tmp_header .= "	padding-top: 4px;\n";
-		$tmp_header .= "	padding-bottom: 4px;\n";
-		$tmp_header .= "	padding-right: 7px;\n";
-		$tmp_header .= "	padding-left: 7px;\n";
-		$tmp_header .= "}\n";
-		$tmp_header .= "\n";
-		$tmp_header .= ".rowstyle0 a:link{ color:#444444; }\n";
-		$tmp_header .= ".rowstyle0 a:visited{ color:#444444; }\n";
-		$tmp_header .= ".rowstyle0 a:hover{ color:#444444; }\n";
-		$tmp_header .= ".rowstyle0 a:active{ color:#444444; }\n";
-		$tmp_header .= "\n";
-		$tmp_header .= ".rowstyle1 {\n";
-		$tmp_header .= "	border-bottom: 1px solid #999999;\n";
-		$tmp_header .= "	background-color: #FFFFFF;\n";
-		$tmp_header .= "	color: #444444;\n";
-		$tmp_header .= "	text-align: left;\n";
-		$tmp_header .= "	padding-top: 4px;\n";
-		$tmp_header .= "	padding-bottom: 4px;\n";
-		$tmp_header .= "	padding-right: 7px;\n";
-		$tmp_header .= "	padding-left: 7px;\n";
-		$tmp_header .= "}\n";
-		$tmp_header .= "\n";
-		$tmp_header .= "</style>";
-		$tmp_header .= "</head>\n";
-		$tmp_header .= "<body>\n";
+	$tmp_header = "<html>\n";
+	$tmp_header .= "<head>\n";
+	$tmp_header .= "<style type='text/css'>\n";
+	$tmp_header .= "\n";
+	$tmp_header .= "body {\n";
+	$tmp_header .= "	font-size: 13px;\n";
+	$tmp_header .= "	color: #444444;\n";
+	$tmp_header .= "}\n";
+	$tmp_header .= "\n";
+	$tmp_header .= "th {\n";
+	$tmp_header .= "	border-top: 1px solid #444444;\n";
+	$tmp_header .= "	border-bottom: 1px solid #444444;\n";
+	$tmp_header .= "	color: #FFFFFF;\n";
+	$tmp_header .= "	font-size: 12px;\n";
+	$tmp_header .= "	font-family: arial;\n";
+	$tmp_header .= "	font-weight: bold;\n";
+	$tmp_header .= "	background-color: #777777;\n";
+	$tmp_header .= "	background-image: url(".PROJECT_PATH."'/themes/horizontal/background_th.png');\n";
+	$tmp_header .= "	padding-top: 4px;\n";
+	$tmp_header .= "	padding-bottom: 4px;\n";
+	$tmp_header .= "	padding-right: 7px;\n";
+	$tmp_header .= "	padding-left: 7px;\n";
+	$tmp_header .= "}\n";
+	$tmp_header .= "\n";
+	$tmp_header .= ".rowstyle0 {\n";
+	$tmp_header .= "	background-color: #EEEEEE;\n";
+	$tmp_header .= "	background-image: url(".PROJECT_PATH."'/themes/horizontal/background_cell.gif');\n";
+	$tmp_header .= "	border-bottom: 1px solid #999999;\n";
+	$tmp_header .= "	color: #444444;\n";
+	$tmp_header .= "	text-align: left;\n";
+	$tmp_header .= "	padding-top: 4px;\n";
+	$tmp_header .= "	padding-bottom: 4px;\n";
+	$tmp_header .= "	padding-right: 7px;\n";
+	$tmp_header .= "	padding-left: 7px;\n";
+	$tmp_header .= "}\n";
+	$tmp_header .= "\n";
+	$tmp_header .= ".rowstyle0 a:link{ color:#444444; }\n";
+	$tmp_header .= ".rowstyle0 a:visited{ color:#444444; }\n";
+	$tmp_header .= ".rowstyle0 a:hover{ color:#444444; }\n";
+	$tmp_header .= ".rowstyle0 a:active{ color:#444444; }\n";
+	$tmp_header .= "\n";
+	$tmp_header .= ".rowstyle1 {\n";
+	$tmp_header .= "	border-bottom: 1px solid #999999;\n";
+	$tmp_header .= "	background-color: #FFFFFF;\n";
+	$tmp_header .= "	color: #444444;\n";
+	$tmp_header .= "	text-align: left;\n";
+	$tmp_header .= "	padding-top: 4px;\n";
+	$tmp_header .= "	padding-bottom: 4px;\n";
+	$tmp_header .= "	padding-right: 7px;\n";
+	$tmp_header .= "	padding-left: 7px;\n";
+	$tmp_header .= "}\n";
+	$tmp_header .= "\n";
+	$tmp_header .= "</style>";
+	$tmp_header .= "</head>\n";
+	$tmp_header .= "<body>\n";
 
-		$tmp_footer = "<body>\n";
-		$tmp_footer .= "<html>\n";
+	$tmp_footer = "<body>\n";
+	$tmp_footer .= "<html>\n";
 
 	if ($sql_type == "default") {
 
@@ -156,7 +154,6 @@ if (count($_POST)>0) {
 				echo "<br>\n";
 			}
 		} //foreach($sql_array as $sql)
-
 		echo $tmp_footer;
 	}
 
