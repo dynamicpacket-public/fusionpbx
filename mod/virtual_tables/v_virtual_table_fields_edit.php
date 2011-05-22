@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('virtual_tables_add') || permission_exists('virtual_tables_edit')) {
 	//access granted
 }
 else {
@@ -96,7 +96,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('virtual_tables_add')) {
 			$sql = "insert into v_virtual_table_fields ";
 			$sql .= "(";
 			$sql .= "v_id, ";
@@ -139,7 +139,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('virtual_tables_edit')) {
 			$sql = "update v_virtual_table_fields set ";
 			$sql .= "virtual_field_label = '$virtual_field_label', ";
 			$sql .= "virtual_field_name = '$virtual_field_name', ";

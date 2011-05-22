@@ -35,23 +35,23 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][4]['name'] = 'virtual_table_fields_view';
+		$apps[$x]['permissions'][4]['name'] = 'virtual_tables_data_view';
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][5]['name'] = 'virtual_table_fields_add';
+		$apps[$x]['permissions'][5]['name'] = 'virtual_tables_data_add';
 		$apps[$x]['permissions'][5]['groups'][] = 'admin';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][6]['name'] = 'virtual_table_fields_edit';
+		$apps[$x]['permissions'][6]['name'] = 'virtual_tables_data_edit';
 		$apps[$x]['permissions'][6]['groups'][] = 'admin';
 		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][7]['name'] = 'virtual_table_fields_delete';
+		$apps[$x]['permissions'][7]['name'] = 'virtual_tables_data_delete';
 		$apps[$x]['permissions'][7]['groups'][] = 'admin';
 		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_virtual_table_data 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_virtual_table_data';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'virtual_table_data_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -92,7 +92,6 @@
 		$apps[$x]['db'][0]['fields'][11]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][11]['description'] = '';
 
-	// CREATE TABLE v_virtual_table_data_types_name_value 
 		$apps[$x]['db'][1]['table'] = 'v_virtual_table_data_types_name_value';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'virtual_table_data_types_name_value_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
@@ -115,7 +114,6 @@
 		$apps[$x]['db'][1]['fields'][5]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][5]['description'] = '';
 
-	// CREATE TABLE v_virtual_table_fields 
 		$apps[$x]['db'][2]['table'] = 'v_virtual_table_fields';
 		$apps[$x]['db'][2]['fields'][0]['name'] = 'virtual_table_field_id';
 		$apps[$x]['db'][2]['fields'][0]['type']['pgsql'] = 'serial';
@@ -159,7 +157,6 @@
 		$apps[$x]['db'][2]['fields'][12]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][12]['description'] = '';
 
-	// CREATE TABLE v_virtual_tables 
 		$apps[$x]['db'][3]['table'] = 'v_virtual_tables';
 		$apps[$x]['db'][3]['fields'][0]['name'] = 'virtual_table_id';
 		$apps[$x]['db'][3]['fields'][0]['type']['pgsql'] = 'serial';

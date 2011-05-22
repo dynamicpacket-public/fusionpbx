@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('virtual_tables_view')) {
 	//access granted
 }
 else {
@@ -87,14 +87,12 @@ require_once "includes/paging.php";
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
 
-
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo thorderby('virtual_table_label', 'Label', $orderby, $order);
 	echo thorderby('virtual_table_name', 'Table Name', $orderby, $order);
@@ -102,7 +100,9 @@ require_once "includes/paging.php";
 	echo thorderby('virtual_table_desc', 'Description', $orderby, $order);
 	//echo "<th align='center'>View</th>\n";
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_virtual_tables_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('virtual_tables_add')) {
+		echo "	<a href='v_virtual_tables_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -112,18 +112,17 @@ require_once "includes/paging.php";
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_table_label]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_table_name]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_table_auth]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_table_desc]."&nbsp;</td>\n";
-			//echo "	<td valign='top' align='center' class='".$rowstyle[$c]."'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_virtual_table_data_view.php?id=".$row[virtual_table_id]."'\" value='view'>\n";
-			//echo "	</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_label']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_name']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_auth']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_desc']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_virtual_tables_edit.php?id=".$row[virtual_table_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_virtual_tables_delete.php?id=".$row[virtual_table_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_virtual_tables_edit.php?id=".$row[virtual_table_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_virtual_tables_delete.php?id=".$row[virtual_table_id]."' }\" value='x'>\n";
+			if (permission_exists('virtual_tables_edit')) {
+				echo "		<a href='v_virtual_tables_edit.php?id=".$row['virtual_table_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('virtual_tables_delete')) {
+				echo "		<a href='v_virtual_tables_delete.php?id=".$row['virtual_table_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -138,7 +137,9 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_virtual_tables_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('virtual_tables_add')) {
+		echo "			<a href='v_virtual_tables_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -159,10 +160,4 @@ require_once "includes/paging.php";
 //show the footer
 	require_once "includes/footer.php";
 
-//unset the variables
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 ?>

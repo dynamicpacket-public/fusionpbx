@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('virtual_tables_data_add') || permission_exists('virtual_tables_data_edit')) {
 	//access granted
 }
 else {
@@ -45,7 +45,7 @@ else {
 		if (strlen($search_all) > 0) {
 			$action = "update";
 		}
-		else { //add
+		else {
 			$action = "add";
 		}
 	}
@@ -183,8 +183,7 @@ else {
 				//}
 			} //end if file or image
 
-
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('virtual_tables_data_add')) {
 				//get a unique id for the virtual_data_row_id
 					if ($i==1) {
 						$virtual_data_row_id = guid();
@@ -199,7 +198,9 @@ else {
 						$sql .= "virtual_data_parent_row_id, ";
 					}
 					$sql .= "virtual_table_id, ";
-					$sql .= "virtual_table_parent_id, ";
+					if (strlen($virtual_table_parent_id) > 0) {
+						$sql .= "virtual_table_parent_id, ";
+					}
 					$sql .= "virtual_field_name, ";
 					$sql .= "virtual_data_field_value, ";
 					$sql .= "virtual_data_add_user, ";
@@ -213,7 +214,9 @@ else {
 						$sql .= "'$virtual_data_parent_row_id', ";
 					}
 					$sql .= "'$virtual_table_id', ";
-					$sql .= "'$virtual_table_parent_id', ";
+					if (strlen($virtual_table_parent_id) > 0) {
+						$sql .= "'$virtual_table_parent_id', ";
+					}
 					$sql .= "'$virtual_field_name', ";
 					switch ($name_array[$virtual_field_name]['virtual_field_type']) {
 						case "phone":
@@ -243,7 +246,7 @@ else {
 					unset($sql);
 			} //end action add
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
 					$virtual_data_row_id = $_POST["virtual_data_row_id"];
 
 					$sql_update  = "update v_virtual_table_data set ";
@@ -269,74 +272,72 @@ else {
 					}
 					$sql_update .= "where v_id = '$v_id' ";
 					$sql_update .= "and virtual_table_id = '$virtual_table_id' ";
-					$sql_update .= "and virtual_table_parent_id = '$virtual_table_parent_id' ";
+					if (strlen($virtual_table_parent_id) > 0) {
+						$sql_update .= "and virtual_table_parent_id = '$virtual_table_parent_id' ";
+					}
 					$sql_update .= "and virtual_data_row_id = '$virtual_data_row_id' ";
 					if(strlen($virtual_data_parent_row_id)>0) {
 						$sql_update .= "and virtual_data_parent_row_id = '$virtual_data_parent_row_id' ";
 					}
 					$sql_update .= "and virtual_field_name = '$virtual_field_name' ";
-					//echo $sql_update."<br />\n";
 					$count = $db->exec(check_sql($sql_update));
-					//echo "Affected Rows: ".$count."<br>";
 					unset ($sql_update);
 					if ($count > 0) {
 						//do nothing the update was successfull
 					}
 					else {
-						//if (strlen($virtual_data_field_value)>0) {
-							//no value to update so insert new value
-							$sql = "insert into v_virtual_table_data ";
-							$sql .= "(";
-							$sql .= "v_id, ";
-							$sql .= "virtual_data_row_id, ";
-							if(strlen($virtual_data_parent_row_id)>0) {
-								$sql .= "virtual_data_parent_row_id, ";
-							}
-							$sql .= "virtual_table_id, ";
-							$sql .= "virtual_table_parent_id, ";
-							$sql .= "virtual_field_name, ";
-							$sql .= "virtual_data_field_value, ";
-							$sql .= "virtual_data_add_user, ";
-							$sql .= "virtual_data_add_date ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$v_id', ";
-							$sql .= "'$virtual_data_row_id', ";
-							if(strlen($virtual_data_parent_row_id)>0) {
-								$sql .= "'$virtual_data_parent_row_id', ";
-							}
-							$sql .= "'$virtual_table_id', ";
-							$sql .= "'$virtual_table_parent_id', ";
-							$sql .= "'$virtual_field_name', ";
-							switch ($name_array[$virtual_field_name]['virtual_field_type']) {
-								case "phone":
-									$tmp_phone = preg_replace('{\D}', '', $virtual_data_field_value);
-									$sql .= "'$tmp_phone', ";
-									break;
-								case "add_user":
-									$sql .= "'".$_SESSION["username"]."', ";
-									break;
-								case "add_date":
-									$sql .= "now(), ";
-									break;
-								case "mod_user":
-									$sql .= "'".$_SESSION["username"]."', ";
-									break;
-								case "mod_date":
-									$sql .= "now(), ";
-									break;
-								default:
-									$sql .= "'$virtual_data_field_value', ";
-							}
-							$sql .= "'".$_SESSION["username"]."', ";
-							$sql .= "now() ";
-							$sql .= ")";
+						//no value to update so insert new value
+						$sql = "insert into v_virtual_table_data ";
+						$sql .= "(";
+						$sql .= "v_id, ";
+						$sql .= "virtual_data_row_id, ";
+						if(strlen($virtual_data_parent_row_id)>0) {
+							$sql .= "virtual_data_parent_row_id, ";
+						}
+						$sql .= "virtual_table_id, ";
+						$sql .= "virtual_table_parent_id, ";
+						$sql .= "virtual_field_name, ";
+						$sql .= "virtual_data_field_value, ";
+						$sql .= "virtual_data_add_user, ";
+						$sql .= "virtual_data_add_date ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$v_id', ";
+						$sql .= "'$virtual_data_row_id', ";
+						if(strlen($virtual_data_parent_row_id)>0) {
+							$sql .= "'$virtual_data_parent_row_id', ";
+						}
+						$sql .= "'$virtual_table_id', ";
+						$sql .= "'$virtual_table_parent_id', ";
+						$sql .= "'$virtual_field_name', ";
+						switch ($name_array[$virtual_field_name]['virtual_field_type']) {
+							case "phone":
+								$tmp_phone = preg_replace('{\D}', '', $virtual_data_field_value);
+								$sql .= "'$tmp_phone', ";
+								break;
+							case "add_user":
+								$sql .= "'".$_SESSION["username"]."', ";
+								break;
+							case "add_date":
+								$sql .= "now(), ";
+								break;
+							case "mod_user":
+								$sql .= "'".$_SESSION["username"]."', ";
+								break;
+							case "mod_date":
+								$sql .= "now(), ";
+								break;
+							default:
+								$sql .= "'$virtual_data_field_value', ";
+						}
+						$sql .= "'".$_SESSION["username"]."', ";
+						$sql .= "now() ";
+						$sql .= ")";
 
-							$db->exec(check_sql($sql));
-							$lastinsertid = $db->lastInsertId($id);
-							unset($sql);
-						//}
+						$db->exec(check_sql($sql));
+						$lastinsertid = $db->lastInsertId($id);
+						unset($sql);
 					}
 			}
 			$i++;
@@ -486,7 +487,7 @@ else {
 	}
 	echo "	</b>\n";
 	echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
-	if ($action == "update") {
+	if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
 		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_id=$virtual_table_id'\" value='Add'>\n";
 		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='v_virtual_table_data_delete.php?id=".$virtual_table_id."&?virtual_data_row_id=".$virtual_data_row_id."&virtual_data_parent_row_id=$virtual_data_parent_row_id';}\" value='Delete'>\n";
 	}
@@ -497,10 +498,9 @@ else {
 	echo "		</td>\n";
 
 	if (strlen($virtual_data_parent_row_id) == 0) {
-
 		echo "<td align='center' valign='top' nowrap='nowrap'>\n";
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
 			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_id=$virtual_table_id&virtual_data_row_id=".$first_virtual_data_row_id."'\" value='First'>\n";
 			if (strlen($previous_virtual_data_row_id) == 0) {
 				echo "		<input type='button' class='btn' name='' alt='prev' disabled='disabled' value='Prev'>\n";
@@ -737,16 +737,12 @@ else {
 							$result2 = $prepstatement2->fetchAll();
 							$resultcount2 = count($result2);
 
-							//echo "<select class='formfld' style='width:90%'  name='".$x."field_value'>\n";
-							//echo "<option value=''></option>\n";
 							echo "<table>";
 							if ($resultcount > 0) {
 								foreach($result2 as $row2) {
 										echo "<tr><td>".$row2["virtual_data_types_name"]."</td><td><input tabindex='".$row[virtual_field_order_tab]."' type='radio' name='".$x."field_value' value='".$row2["virtual_data_types_select_value"]."'";
 										if ($row2["virtual_data_types_value"] == $data_row[$row[virtual_field_name]]) { echo " checked>"; } else { echo ">"; }
 										echo "</td></tr>";
-										//echo "<option value='" . $row2["virtual_data_types_value"] . "'";
-										//echo ">".$row2["virtual_data_types_name"]."</option>\n";
 								} //end foreach
 							} //end if results
 							unset($sqlselect, $result2, $resultcount2);
@@ -762,7 +758,6 @@ else {
 							$sqlselect .= "FROM v_virtual_table_data_types_name_value ";
 							$sqlselect .= "where v_id = '".$v_id."' ";
 							$sqlselect .= "and virtual_table_field_id = '".$row[virtual_table_field_id]."' ";
-							//echo $sqlselect;
 							$prepstatement2 = $db->prepare($sqlselect);
 							$prepstatement2->execute();
 							$result2 = $prepstatement2->fetchAll();
@@ -929,12 +924,12 @@ else {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='999' align='right'>\n";
-		if ($action == "add") {
-			echo "		    <input type='submit' class='btn' name='submit' value='save'>\n";
+		if ($action == "add" && permission_exists('virtual_tables_data_add')) {
+			echo "			<input type='submit' class='btn' name='submit' value='save'>\n";
 		}
-		if ($action == "update") {
-			echo "          <input type='hidden' name='virtual_data_row_id' value='$virtual_data_row_id'>\n";
-			echo "		    <input type='submit' tabindex='9999999' class='btn' name='submit' value='Save'>\n";
+		if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
+			echo "			<input type='hidden' name='virtual_data_row_id' value='$virtual_data_row_id'>\n";
+			echo "			<input type='submit' tabindex='9999999' class='btn' name='submit' value='Save'>\n";
 		}
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -944,7 +939,7 @@ else {
 	echo "	</tr>\n";
 	echo "</form>\n";
 
-	if ($action == "update") {
+	if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
 		//get the child virtual_table_id and use it to show the list of data
 			$sql = "";
 			$sql .= "select * from v_virtual_tables ";

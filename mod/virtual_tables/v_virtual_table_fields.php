@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('virtual_tables_view')) {
 	//access granted
 }
 else {
@@ -91,7 +91,9 @@ $order = $_GET["order"];
 	echo thorderby('virtual_field_order_tab', 'Tab Order', $orderby, $order);
 	echo thorderby('virtual_field_desc', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$virtual_table_id."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('virtual_tables_view')) {
+		echo "	<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$virtual_table_id."' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -101,19 +103,21 @@ $order = $_GET["order"];
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_label]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_name]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_type]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_column]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_required]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_order]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_order_tab]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_field_desc]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_label']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_name']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_type']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_column']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_required']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_order']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_order_tab']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_desc']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$row[virtual_table_id]."&id=".$row[virtual_table_field_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_virtual_table_fields_delete.php?virtual_table_id=".$row[virtual_table_id]."&id=".$row[virtual_table_field_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_virtual_table_fields_edit.php?id=".$row[virtual_table_field_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_virtual_table_fields_delete.php?id=".$row[virtual_table_field_id]."' }\" value='x'>\n";
+			if (permission_exists('virtual_tables_edit')) {
+				echo "		<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$row['virtual_table_id']."&id=".$row['virtual_table_field_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('virtual_tables_delete')) {
+				echo "		<a href='v_virtual_table_fields_delete.php?virtual_table_id=".$row['virtual_table_id']."&id=".$row['virtual_table_field_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -128,7 +132,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$virtual_table_id."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('virtual_tables_add')) {
+		echo "			<a href='v_virtual_table_fields_edit.php?virtual_table_id=".$virtual_table_id."' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -146,11 +152,7 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-//show the footer
+//include the footer
 	require_once "includes/footer.php";
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
+
 ?>
