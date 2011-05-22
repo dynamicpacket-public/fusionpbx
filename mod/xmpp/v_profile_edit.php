@@ -30,12 +30,12 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
-if (ifgroup("admin") || ifgroup("superadmin")) {
-        //access granted
+if (permission_exists('xmpp_add') || permission_exists('xmpp_edit')) {
+	//access granted
 }
 else {
-        echo "access denied";
-        exit;
+	echo "access denied";
+	exit;
 }
 
 require_once "includes/header.php";
@@ -58,7 +58,6 @@ if ($action == "update") {
 	$sql .= "select * from v_xmpp ";
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and xmpp_profile_id = '$profile_id' ";
-
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 
@@ -109,7 +108,7 @@ if (strlen($error) > 0) {
 }
 
 // Save New Entry
-if ($action == "add") {
+if ($action == "add" || permission_exists('xmpp_add')) {
 	$sql = "";
 	$sql .= "insert into v_xmpp (";
  	$sql .= "v_id, ";
@@ -163,7 +162,7 @@ if ($action == "add") {
 
 	goto writeout;
 
-} elseif ($action == "update") {
+} elseif ($action == "update" && permission_exists('xmpp_edit')) {
 	// Update the new Records
 	$sql = "";
 	$sql .= "UPDATE v_xmpp SET ";
@@ -219,9 +218,7 @@ if ($fp) {
 	fclose($fp);
 }
 
-
 include "update_complete.php";
-
 
 end:
 //show the footer

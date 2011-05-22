@@ -28,8 +28,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('xmpp_delete')) {
         //access granted
 }
 else {

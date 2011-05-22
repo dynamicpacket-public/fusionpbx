@@ -21,14 +21,20 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'xmpp_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		//$apps[$x]['permissions'][1]['name'] = 'click_to_call_call';
-		//$apps[$x]['permissions'][1]['groups'][] = 'user';
-		//$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['name'] = 'xmpp_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][2]['name'] = 'xmpp_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][3]['name'] = 'xmpp_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//database details
 		$apps[$x]['db'][0]['table'] = 'v_xmpp';
@@ -38,7 +44,7 @@
 		$apps[$x]['db'][0]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][0]['fields'][0]['description'] = 'primary key';
 		$apps[$x]['db'][0]['fields'][1]['name'] = 'v_id';
-		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric'; // Adjust this for generic
+		$apps[$x]['db'][0]['fields'][1]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][1]['description'] = 'primary key';
 		$apps[$x]['db'][0]['fields'][2]['name'] = 'profile_name';
 		$apps[$x]['db'][0]['fields'][2]['type'] = 'text'; 
@@ -94,6 +100,5 @@
 		$apps[$x]['db'][0]['fields'][19]['name'] = 'enabled';
 		$apps[$x]['db'][0]['fields'][19]['type'] = 'text'; 
 		$apps[$x]['db'][0]['fields'][19]['description'] = '';
-
 
 ?>

@@ -28,6 +28,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
+if (permission_exists('xmpp_view')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -41,7 +48,7 @@ if ($_SESSION['db_tables']['v_xmpp'] != 'valid') {
 	}
 
 	$row = $db->query($sql)->fetch();
-	
+
 	if ($row['count'] < 1) {
 		include "db_create.php";
 		$db->exec(sql_tables($db_type));
@@ -54,32 +61,20 @@ if ($_SESSION['db_tables']['v_xmpp'] != 'valid') {
 $sql = "";
 $sql .= "select * from v_xmpp ";
 $sql .= "where v_id = '$v_id' ";
-
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
-
 $x = 0;
 $result = $prepstatement->fetchAll();
 foreach ($result as &$row) {
 	$profiles_array[$x] = $row;
 	$x++;
 }
-
 unset ($prepstatement);
 
-/*
-if ($x > 0) {
-	$key = guid();
-	$client_ip = $_SERVER['REMOTE_ADDR'];
-	$sql = sprintf("INSERT INTO v_flashphone_auth (auth_key, hostaddr, createtime, username) values ('%s', '%s', now(), '%s')",
-			$key, $client_ip, $_SESSION["username"]);
-	$db->exec(check_sql($sql));
-}
-*/
-
+//include the view
 include "profile_list.php";
 
-//show the footer
+//include the footer
 require_once "includes/footer.php";
 
 ?>
