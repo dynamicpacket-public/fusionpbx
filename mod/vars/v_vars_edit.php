@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('variables_add') || permission_exists('variables_edit')) {
 	//access granted
 }
 else {
@@ -34,27 +34,27 @@ else {
 	exit;
 }
 
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$var_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-}
-
-//POST to PHP variables
-if (count($_POST)>0) {
-	$var_name = check_str($_POST["var_name"]);
-	$var_value = check_str($_POST["var_value"]);
-	$var_cat = check_str($_POST["var_cat"]);
-	if (strlen($_POST["var_cat_other"]) > 0) {
-		$var_cat = check_str($_POST["var_cat_other"]);
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$var_id = check_str($_REQUEST["id"]);
 	}
-	$var_enabled = check_str($_POST["var_enabled"]);
-	$var_order = check_str($_POST["var_order"]);
-	$var_desc = check_str($_POST["var_desc"]);
-}
+	else {
+		$action = "add";
+	}
+
+//set http values as php variables
+	if (count($_POST)>0) {
+		$var_name = check_str($_POST["var_name"]);
+		$var_value = check_str($_POST["var_value"]);
+		$var_cat = check_str($_POST["var_cat"]);
+		if (strlen($_POST["var_cat_other"]) > 0) {
+			$var_cat = check_str($_POST["var_cat_other"]);
+		}
+		$var_enabled = check_str($_POST["var_enabled"]);
+		$var_order = check_str($_POST["var_order"]);
+		$var_desc = check_str($_POST["var_desc"]);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -85,7 +85,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('variables_add')) {
 				$sql = "insert into v_vars ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -115,16 +115,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the configuration
 					sync_package_v_vars();
 
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//redirect the user
+					require_once "includes/header.php";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
+					echo "<div align='center'>\n";
+					echo "Add Complete\n";
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('variables_edit')) {
 				$sql = "update v_vars set ";
 				$sql .= "var_name = '$var_name', ";
 				$sql .= "var_value = '$var_value', ";
@@ -143,13 +144,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the configuration
 					sync_package_v_vars();
 
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//redirect the user
+					require_once "includes/header.php";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
+					echo "<div align='center'>\n";
+					echo "Update Complete\n";
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
 			} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -176,20 +178,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prepstatement);
 	}
 
-
+//include header
 	require_once "includes/header.php";
 
-
+//show contents
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "	  <br>";
 
-
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
@@ -319,7 +318,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br />\n";
 		echo "<b>Codec Information:</b><br />\n";
 		echo "Module must be compiled and loaded. &nbsp; &nbsp; codecname[@8000h|16000h|32000h[@XXi]]<br />\n";
-		//echo "<br />\n";
 		echo "<br />\n";
 		echo "XX is the frame size must be multples allowed for the codec<br />\n";
 		echo "10-120ms is supported on some codecs.<br />\n";
@@ -376,14 +374,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	
-
 	echo "</div>";
 
-
-require_once "includes/footer.php";
+//include header
+	require_once "includes/footer.php";
 ?>

@@ -26,9 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-require_once "includes/header.php";
-require_once "includes/paging.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('variables_view')) {
 	//access granted
 }
 else {
@@ -36,8 +34,12 @@ else {
 	exit;
 }
 
-$orderby = $_GET["orderby"];
-$order = $_GET["order"];
+//include the header
+	require_once "includes/header.php";
+
+//set http values as php variables
+	$orderby = $_GET["orderby"];
+	$order = $_GET["order"];
 
 //show the content
 	echo "<div align='center'>";
@@ -55,23 +57,6 @@ $order = $_GET["order"];
 	echo "  </tr>\n";
 	echo "</table>\n";
 
-	//$sql = "";
-	//$sql .= "select * from v_vars ";
-	//$sql .= "where v_id = '1' ";
-	//if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-	//$prepstatement = $db->prepare(check_sql($sql));
-	//$prepstatement->execute();
-	//$result = $prepstatement->fetchAll();
-	//$numrows = count($result);
-	//unset ($prepstatement, $result, $sql);
-
-	//$rowsperpage = 100;
-	//$param = "";
-	//$page = $_GET['page'];
-	//if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	//list($pagingcontrols, $rowsperpage, $var3) = paging($numrows, $param, $rowsperpage); 
-	//$offset = $rowsperpage * $page; 
-
 	$sql = "";
 	$sql .= "select * from v_vars ";
 	$sql .= "where v_id = '1' ";
@@ -81,13 +66,11 @@ $order = $_GET["order"];
 	else {
 		$sql .= "order by var_cat, var_order asc ";
 	}
-	//$sql .= " limit $rowsperpage offset $offset ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
-
 
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
@@ -105,19 +88,20 @@ $order = $_GET["order"];
 	$tmp_var_header .= thorderby('var_enabled', 'Enabled', $orderby, $order);
 	$tmp_var_header .= "<th>Description</th>\n";
 	$tmp_var_header .= "<td align='right' width='42'>\n";
-	$tmp_var_header .= "	<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//$tmp_var_header .= "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_vars_edit.php'\" value='+'>\n";
+	if (permission_exists('variables_add')) {
+		$tmp_var_header .= "	<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	$tmp_var_header .= "</td>\n";
 	$tmp_var_header .= "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
-	else { //received results
+	else { 
 		$prev_var_cat = '';
 		foreach($result as $row) {
 			$var_value = $row[var_value];
 			$var_value = substr($var_value, 0, 50);
-
 			if ($prev_var_cat != $row[var_cat]) {
 				$c=0;
 				if (strlen($prev_var_cat) > 0) {
@@ -128,14 +112,15 @@ $order = $_GET["order"];
 					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
-					echo "			<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+					if (permission_exists('variables_add')) {
+						echo "			<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
 					echo "	</table>\n";
 					echo "</td>\n";
 					echo "</tr>\n";
 				}
-
 				echo "<tr><td colspan='4' align='left'>\n";
 				echo "	<br />\n";
 				echo "	<br />\n";
@@ -143,7 +128,6 @@ $order = $_GET["order"];
 				echo $tmp_var_header;
 			}
 
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row[var_name]."</td>\n";
 			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$var_value."</td>\n";
@@ -155,10 +139,12 @@ $order = $_GET["order"];
 			$var_desc = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_desc);
 			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$var_desc."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_vars_edit.php?id=".$row[var_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_vars_delete.php?id=".$row[var_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_vars_edit.php?id=".$row[var_id]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_vars_delete.php?id=".$row[var_id]."' }\" value='x'>\n";
+			if (permission_exists('variables_edit')) {
+				echo "		<a href='v_vars_edit.php?id=".$row[var_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('variables_delete')) {
+				echo "		<a href='v_vars_delete.php?id=".$row[var_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -168,7 +154,6 @@ $order = $_GET["order"];
 		unset($sql, $result, $rowcount);
 	} //end if results
 
-
 	echo "<tr>\n";
 	echo "<td colspan='6' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
@@ -176,20 +161,19 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "			<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_vars_edit.php'\" value='+'>\n";
+	if (permission_exists('variables_add')) {
+		echo "			<a href='v_vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "</table>";
 	echo "</div>";
 	echo "<br><br>";
 	echo "<br><br>";
-
 
 	echo "</td>";
 	echo "</tr>";
@@ -197,11 +181,7 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
+//include the footer
+	require_once "includes/footer.php";
 
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>

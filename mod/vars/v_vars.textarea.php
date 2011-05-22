@@ -26,70 +26,64 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('variables_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
 
-if ($_GET['a'] == "default") {
-	//conf_mount_rw();
-	//exec("cp ".$v_conf_dir.".orig/vars.xml ".$v_conf_dir."/vars.xml");
-	
+//include the header
+	require_once "includes/header.php";
+
+//restore the default vars.xml
+if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 	//read default config file
 	$fd = fopen($v_conf_dir.".orig/vars.xml", "r");
 	$v_content = fread($fd, filesize($v_conf_dir.".orig/vars.xml"));
-	//echo $v_content;
 	fclose($fd);
 	
 	//write the default config fget
 	$fd = fopen($v_conf_dir."/vars.xml", "w");
 	fwrite($fd, $v_content);
 	fclose($fd);
-	
 	$savemsg = "Default Restored";
-	//conf_mount_ro();
 }
 
-if ($_POST['a'] == "save") {
-	//conf_mount_rw();
-	$v_content = str_replace("\r","",$_POST['code']);
-	$fd = fopen($v_conf_dir."/vars.xml", "w");
-	fwrite($fd, $v_content);
+//save the vars.xml
+	if ($_POST['a'] == "save" && permission_exists('variables_edit')) {
+		$v_content = str_replace("\r","",$_POST['code']);
+		$fd = fopen($v_conf_dir."/vars.xml", "w");
+		fwrite($fd, $v_content);
+		fclose($fd);
+		$savemsg = "Saved";
+	}
+
+//get the contens of vars.xml
+	$fd = fopen($v_conf_dir."/vars.xml", "r");
+	$v_content = fread($fd, filesize($v_conf_dir."/vars.xml"));
 	fclose($fd);
-	$savemsg = "Saved";
-	//conf_mount_ro();
-}
 
+//edit area
+	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"/edit_area/edit_area_full.js\"></script>\n";
+	echo "	<script language=\"Javascript\" type=\"text/javascript\">\n";
+	echo "		// initialisation //load,\n";
+	echo "		editAreaLoader.init({\n";
+	echo "			id: \"code\"	// id of the textarea to transform //, |, help\n";
+	echo "			,start_highlight: true\n";
+	echo "			,font_size: \"8\"\n";
+	echo "			,allow_toggle: false\n";
+	echo "			,language: \"en\"\n";
+	echo "			,syntax: \"html\"\n";
+	echo "			,toolbar: \"search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help\" //new_document,\n";
+	echo "			,plugins: \"charmap\"\n";
+	echo "			,charmap_default: \"arrows\"\n";
+	echo "		});\n";
+	echo "	</script>";
+	echo "\n";
+	echo "\n";
 
-$fd = fopen($v_conf_dir."/vars.xml", "r");
-$v_content = fread($fd, filesize($v_conf_dir."/vars.xml"));
-fclose($fd);
-
-	//--- Begin: Edit Area -----------------------------------------------------
-
-		echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"/edit_area/edit_area_full.js\"></script>\n";
-		echo "	<script language=\"Javascript\" type=\"text/javascript\">\n";
-		echo "		// initialisation //load,\n";
-		echo "		editAreaLoader.init({\n";
-		echo "			id: \"code\"	// id of the textarea to transform //, |, help\n";
-		echo "			,start_highlight: true\n";
-		echo "			,font_size: \"8\"\n";
-		echo "			,allow_toggle: false\n";
-		echo "			,language: \"en\"\n";
-		echo "			,syntax: \"html\"\n";
-		echo "			,toolbar: \"search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help\" //new_document,\n";
-		echo "			,plugins: \"charmap\"\n";
-		echo "			,charmap_default: \"arrows\"\n";
-		echo "		});\n";
-		echo "	</script>";
-		echo "\n";
-		echo "\n";
-
-	//--- End: Edit Area -----------------------------------------------------
 ?>
 
 <div align='center'>
@@ -97,9 +91,7 @@ fclose($fd);
 <table width="90%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
-
 			<form action="v_vars.php" method="post" name="iform" id="iform">
-
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width='100%'><span class="vexpl"><span class="red"><strong>Variables<br>
@@ -108,7 +100,11 @@ fclose($fd);
 					<br />
 					<br />
 				</td>
-				<td width='10%' align='right' valign='top'><input type="submit" class='btn' value="save" /></td>
+				<td width='10%' align='right' valign='top'>
+					<?php if (permission_exists('variables_edit')) { ?>
+					<input type="submit" class='btn' value="save" />
+					<?php } ?>
+				</td>
 			</tr>
 
 			<tr>
@@ -131,7 +127,9 @@ fclose($fd);
 					<input type="hidden" name="f" value="<?php echo $_GET['f']; ?>" />
 					<input type="hidden" name="a" value="save" />
 					<?php
-					echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='v_vars.php?a=default&f=vars.xml';\" />";
+					if (permission_exists('variables_edit')) {
+						echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='v_vars.php?a=default&f=vars.xml';\" />";
+					}
 					?>
 				</td>
 			</tr>
@@ -157,11 +155,7 @@ fclose($fd);
 		</td>
 	</tr>
 </table>
-
 </div>
-
-
-
 
 <?php
 	require_once "includes/footer.php";

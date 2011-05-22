@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('variables_delete')) {
 	//access granted
 }
 else {
@@ -38,26 +38,26 @@ if (count($_GET)>0) {
 	$id = $_GET["id"];
 }
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_vars ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and var_id = '$id' ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	unset($sql);
+//delete the data
+	if (strlen($id)>0) {
+		$sql = "";
+		$sql .= "delete from v_vars ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and var_id = '$id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		unset($sql);
 
-	sync_package_v_vars();
-}
+		sync_package_v_vars();
+	}
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
-
-require_once "includes/footer.php";
-return;
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
-

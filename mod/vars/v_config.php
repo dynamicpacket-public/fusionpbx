@@ -30,7 +30,7 @@
 		$apps[$x]['permissions'][3]['name'] = 'variables_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_vars 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_vars';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'v_id';
 		$apps[$x]['db'][0]['fields'][0]['type'] = 'numeric';
