@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (permission_exists('zzz')) {
+if (permission_exists('script_editor_view')) {
 	//access granted
 }
 else {

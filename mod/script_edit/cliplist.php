@@ -169,36 +169,36 @@ function space($count) {
 echo "<head>";
 echo "<body onfocus='null;'>";
 
-echo "<div align='center' valign='1'>";
-echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+    echo "<div align='center' valign='1'>";
+    echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\" valign='top' nowrap>\n";
-//echo "      <br>";
+    echo "<tr class='border'>\n";
+    echo "	<td align=\"left\" valign='top' nowrap>\n";
+    //echo "      <br>";
 
-/*
-//echo "   <TR><TD>\n";
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"/images/plus.gif\"> <IMG SRC=\"/images/folder.gif\"> Menu </A><DIV style='display:none'>\n";
-echo "\n";
-//echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"/images/file.png\"> <a href='/index.php'>Home</a> <DIV style='display:none'>\n";
-//echo "            </DIV></TD></TR></TABLE>\n";
-echo "\n";
-echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"/images/file.png\"> <a href='/list.php'>Clip Edit</a> <DIV style='display:none'>\n";
-echo "            </DIV></TD></TR></TABLE>\n";
-echo "\n";
-echo "      </DIV></TD></TR></TABLE>\n";
-*/
+    /*
+    //echo "   <TR><TD>\n";
+    echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"/images/plus.gif\"> <IMG SRC=\"/images/folder.gif\"> Menu </A><DIV style='display:none'>\n";
+    echo "\n";
+    //echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"/images/file.png\"> <a href='/index.php'>Home</a> <DIV style='display:none'>\n";
+    //echo "            </DIV></TD></TR></TABLE>\n";
+    echo "\n";
+    echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"/images/file.png\"> <a href='/list.php'>Clip Edit</a> <DIV style='display:none'>\n";
+    echo "            </DIV></TD></TR></TABLE>\n";
+    echo "\n";
+    echo "      </DIV></TD></TR></TABLE>\n";
+    */
 
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Clip Library</a><DIV style=''>\n"; //display:none
-//echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Clip Library</A><DIV style=''>\n"; //display:none
+    echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"window.open('clipoptions.php?id=".$row[id]."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Clip Library</a><DIV style=''>\n"; //display:none
+    //echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Clip Library</A><DIV style=''>\n"; //display:none
 
 
 
-//echo "\n";
-//echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"images/file.png\"> <a href='/edit/list.php'> Edit</a> <DIV style='display:none'>\n";
-//echo "            </DIV></TD></TR></TABLE>\n";
-//echo "\n";
-//echo "         <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"/images/plus.gif\"> <IMG SRC=\"/images/folder.gif\"> PHP</A><DIV style='display:none'>\n";
+    //echo "\n";
+    //echo "            <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD align='bottom'><IMG SRC=\"images/file.png\"> <a href='/xml_edit/list.php'> Edit</a> <DIV style='display:none'>\n";
+    //echo "            </DIV></TD></TR></TABLE>\n";
+    //echo "\n";
+    //echo "         <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"/images/plus.gif\"> <IMG SRC=\"/images/folder.gif\"> PHP</A><DIV style='display:none'>\n";
 
 
 	$sql = "";

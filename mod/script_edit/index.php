@@ -157,8 +157,7 @@ echo "	<title></title>";
 
 		// callback functions
 		function my_save(id, content){
-		        //alert(content);
-            	makeRequest('filesave.php','file='+document.getElementById('file').value+'&content='+urlencode(content));
+            		makeRequest('filesave.php','file='+document.getElementById('file').value+'&content='+urlencode(content));
 		        parent.document.title=''+unescape(document.getElementById('file').value)+' :: Saved';
 		        //setTimeout("parent.document.title='<?=$applicationname?> - '+unescape(document.getElementById('file').value);", 5);
 		        //setTimeout("alert('test')", 5);

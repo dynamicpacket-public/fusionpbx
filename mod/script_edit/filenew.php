@@ -49,7 +49,6 @@ if (strlen($folder) > 0 && strlen($file) > 0) {
     header("Location: fileoptions.php");
 }
 else {
-	//display form
     require_once "header.php";
     echo "<br>";
     echo "<div align='left'>";

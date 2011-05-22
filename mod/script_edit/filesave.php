@@ -41,6 +41,10 @@ $content = $_POST["content"];
 $handle = fopen($filename, 'wb') or die("Error!!");
 fwrite($handle, $content);
 fclose($handle);
+
+//set the reload_xml value to true
+	$_SESSION["reload_xml"] = true;
+
 echo $content;
 
 ?>

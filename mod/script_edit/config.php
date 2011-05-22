@@ -140,7 +140,7 @@ try {
 
 }
 catch (PDOException $error) {
-   print "error1: " . $error->getMessage() . "<br/>";
+   print "error: " . $error->getMessage() . "<br/>";
    die();
 }
 
