@@ -26,16 +26,13 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('xml_cdr_delete')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
-//disable delete
-return;
 
 //get the id
 	if (count($_GET)>0) {
@@ -63,4 +60,3 @@ return;
 	return;
 
 ?>
-

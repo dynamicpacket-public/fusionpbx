@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('xml_cdr_view')) {
 	//access granted
 }
 else {
@@ -471,13 +471,11 @@ else {
 	echo "</tr>\n";
 	echo "</table>";
 
-
 //testing
 	//echo "<pre>\n";
 	//echo htmlentities($xml_string);
 	//print_r($xml);
 	//echo "</pre>\n";
-
 
 //get the footer
 	require_once "includes/footer.php";

@@ -35,7 +35,9 @@
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_xml_cdr 
+		$apps[$x]['permissions'][1]['name'] = 'xml_cdr_delete';
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_xml_cdr';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'xml_cdr_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

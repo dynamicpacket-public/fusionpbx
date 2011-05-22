@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('xml_cdr_view')) {
 	//access granted
 }
 else {
@@ -164,14 +164,4 @@ while(true) {
 	//$row++;
 }
 
-unset ($resultcount);
-unset ($resulttype);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($msg);
-unset ($errormsg);
-unset ($sql);
-unset ($x);
-unset ($z);
 ?>
