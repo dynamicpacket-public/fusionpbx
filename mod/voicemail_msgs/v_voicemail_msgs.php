@@ -26,7 +26,7 @@
 include "root.php";
 require "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('voicemail_view')) {
 	//access granted
 }
 else {

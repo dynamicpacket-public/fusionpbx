@@ -27,7 +27,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('voicemail_view')) {
 	//access granted
 }
 else {
@@ -39,7 +39,6 @@ else {
 	$uuid = $_GET['uuid'];
 	$type = $_GET['type']; //vm
 	$desc = $_GET['desc'];
-
 
 ?>
 <html>
