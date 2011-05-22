@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('time_conditions_delete')) {
 	//access granted
 }
 else {
@@ -55,13 +55,14 @@ if (strlen($id)>0) {
 
 }
 
-require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_dialplan_includes_edit.php?id=".$dialplan_include_id."\">\n";
-echo "<div align='center'>\n";
-echo "Delete Complete\n";
-echo "</div>\n";
+//redirect the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_dialplan_includes_edit.php?id=".$dialplan_include_id."\">\n";
+	echo "<div align='center'>\n";
+	echo "Delete Complete\n";
+	echo "</div>\n";
 
-require_once "includes/footer.php";
-return;
+	require_once "includes/footer.php";
+	return;
 
 ?>

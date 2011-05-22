@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('time_conditions_add') || permission_exists('time_conditions_edit')) {
 	//access granted
 }
 else {
@@ -34,44 +34,34 @@ else {
 	exit;
 }
 
-
-//Action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-if (isset($_REQUEST["id2"])) {
-	$dialplan_include_id = check_str($_REQUEST["id2"]);
-}
-
-
-//POST to PHP variables
-if (count($_POST)>0) {
-	//$v_id = check_str($_POST["v_id"]);
-	if (isset($_REQUEST["dialplan_include_id"])) {
-		$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$dialplan_includes_detail_id = check_str($_REQUEST["id"]);
 	}
-	$tag = check_str($_POST["tag"]);
-	$fieldorder = check_str($_POST["fieldorder"]);
-	$fieldtype = check_str($_POST["fieldtype"]);
-	$fielddata = check_str($_POST["fielddata"]);
-}
+	else {
+		$action = "add";
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+
+//set http values as variables
+	if (isset($_REQUEST["id2"])) {
+		$dialplan_include_id = check_str($_REQUEST["id2"]);
+	}
+	if (count($_POST)>0) {
+		//$v_id = check_str($_POST["v_id"]);
+		if (isset($_REQUEST["dialplan_include_id"])) {
+			$dialplan_include_id = check_str($_POST["dialplan_include_id"]);
+		}
+		$tag = check_str($_POST["tag"]);
+		$fieldorder = check_str($_POST["fieldorder"]);
+		$fieldtype = check_str($_POST["fieldtype"]);
+		$fielddata = check_str($_POST["fielddata"]);
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$dialplan_includes_detail_id = check_str($_POST["dialplan_includes_detail_id"]);
 	}
@@ -95,17 +85,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	$tmp = "\n";
-	//$tmp .= "v_id: $v_id\n";
-	$tmp .= "Tag: $tag\n";
-	$tmp .= "Order: $fieldorder\n";
-	$tmp .= "Type: $fieldtype\n";
-	$tmp .= "Data: $fielddata\n";
-
-
-	//Add or update the database
+	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('time_conditions_add')) {
 				$sql = "insert into v_dialplan_includes_details ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -139,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('time_conditions_edit')) {
 				$sql = "update v_dialplan_includes_details set ";
 				$sql .= "v_id = '$v_id', ";
 				$sql .= "dialplan_include_id = '$dialplan_include_id', ";
@@ -151,10 +133,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "and dialplan_includes_detail_id = '$dialplan_includes_detail_id'";
 				$db->exec(check_sql($sql));
 				unset($sql);
-				
+
 				//synchronize the xml config
 				sync_package_v_dialplan_includes();
-				
+
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_dialplan_includes_edit.php?id=".$dialplan_include_id."\">\n";
 				echo "<div align='center'>\n";
@@ -163,8 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/footer.php";
 				return;
 		   } //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") { 
-
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -189,19 +170,17 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	unset ($prepstatement);
 }
 
-
+//include the header
 	require_once "includes/header.php";
 
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "      <br>";
 
-
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
@@ -405,7 +384,6 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	<br />
 	<br />
 	Variables may be used in either the field or the expression, as follows
-
 	<br />
 	<br />
 	<br />
@@ -449,8 +427,6 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	  <li><b>transfer</b> transfer the call to another extension or number</li>
 	  <li><b>voicemail</b> send the call to voicemail</li>
 	  </ul>
-
-
 	  <br />
 	  <br />
 
@@ -487,12 +463,12 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	</tr>
 	</table>
 
-	<?php
+<?php
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
-
-require_once "includes/footer.php";
+	
+//include the footer
+	require_once "includes/footer.php";
 ?>

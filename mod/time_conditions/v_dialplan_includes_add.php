@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('time_conditions_add')) {
 	//access granted
 }
 else {
@@ -685,7 +685,6 @@ echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
 echo "<tr class='border'>\n";
 echo "	<td align=\"left\">\n";
-//echo "		<br>";
 
 echo "<form method='post' name='frm' action=''>\n";
 echo "<div align='center'>\n";
@@ -849,8 +848,7 @@ echo "	<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
-
-	//--- begin: showadvanced -----------------------
+//begin: showadvanced
 	echo "<tr>\n";
 	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
 
@@ -938,7 +936,7 @@ echo "</tr>\n";
 
 	echo "</td>\n";
 	echo "</tr>\n";
-//--- end: showadvanced -----------------------
+//end: showadvanced
 
 
 echo "<tr>\n";
@@ -1114,7 +1112,6 @@ echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 echo "    Description:\n";
 echo "</td>\n";
 echo "<td colspan='4' class='vtable' align='left'>\n";
-//echo "    <textarea class='formfld' name='descr' rows='4'>$descr</textarea>\n";
 echo "    <input class='formfld' style='width: 60%;' type='text' name='description' maxlength='255' value=\"$description\">\n";
 echo "<br />\n";
 echo "\n";
@@ -1141,11 +1138,7 @@ echo "</div>";
 
 echo "<br><br>";
 
+//include the footer
+	require_once "includes/footer.php";
 
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
 ?>

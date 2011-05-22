@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('time_conditions_view')) {
 	//access granted
 }
 else {
@@ -100,14 +100,8 @@ $order = $_GET["order"];
 				$x++;
 				break;
 			}
-
 		}
 		unset ($prepstatement);
-		//print_r($time_array);
-		//exit;
-		//foreach ($time_array as &$row) {
-		//	echo "--".$row['dialplan_include_id']."--<br />\n";
-		//}
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -121,12 +115,7 @@ $order = $_GET["order"];
 	echo "		</strong></span></span>\n";
 	echo "	</td>\n";
 	echo "	<td align='right'>\n";
-	//if (ifgroup("superadmin")) {
-	//	echo "		<input type='button' class='btn' value='advanced' onclick=\"document.location.href='v_dialplan.php';\">\n";
-	//}
-	//else {
-		echo "&nbsp;\n";
-	//}
+	echo "		&nbsp;\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -207,30 +196,28 @@ $order = $_GET["order"];
 	$resultcount = count($result);
 	unset ($prepstatement, $sql);
 
-
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
-
 	echo "<tr>\n";
 	echo thorderby('extensionname', 'Extension Name', $orderby, $order);
 	echo thorderby('dialplanorder', 'Order', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('descr', 'Description', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('time_conditions_add')) {
+		echo "	<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
-	//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
-
 		foreach($result as $row) {
 			//print_r( $row );
 			echo "<tr >\n";
@@ -239,16 +226,18 @@ $order = $_GET["order"];
 			echo "   <td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row[enabled]."</td>\n";
 			echo "   <td valign='top' class='rowstylebg' width='30%'>".$row[descr]."&nbsp;</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			echo "		<a href='v_dialplan_includes_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_dialplan_includes_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('time_conditions_edit')) {
+				echo "		<a href='v_dialplan_includes_edit.php?id=".$row[dialplan_include_id]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('time_conditions_delete')) {
+				echo "		<a href='v_dialplan_includes_delete.php?id=".$row[dialplan_include_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
 			echo "</tr>\n";
-			//echo "<tr><td colspan='4'><img src='/images/spacer.gif' width='100%'' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $rowcount);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='5'>\n";
@@ -257,7 +246,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('time_conditions_add')) {
+		echo "			<a href='v_dialplan_includes_add.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -267,7 +258,6 @@ $order = $_GET["order"];
 	echo "<tr>\n";
 	echo "<td colspan='5' align='left'>\n";
 	echo "<br />\n";
-	//echo "<br />\n";
 	if ($v_path_show) {
 		echo $v_dialplan_default_dir;
 	}
@@ -279,18 +269,12 @@ $order = $_GET["order"];
 	echo "<br><br>";
 	echo "<br><br>";
 
-
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
 	echo "<br><br>";
 
-
-require_once "includes/footer.php";
-unset ($resultcount);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//include the footer
+	require_once "includes/footer.php";
 ?>
