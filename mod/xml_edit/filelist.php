@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
@@ -48,7 +48,6 @@ function space($count) {
 	}
 	return $r;
 }
-
 
 function recur_dir($dir) {
 	clearstatcache();
@@ -76,56 +75,49 @@ function recur_dir($dir) {
 
 	asort($dir_array);
 	foreach ($dir_array as $newpath){
+		$level = explode('/',$newpath);
 
-			//$newpath = $dir.'/'.$file;
-			$level = explode('/',$newpath);
-
-			if (is_dir($newpath)) { 
-				/*$mod_array[] = array(
-						'level'=>count($level)-1,
-						'path'=>$newpath,
-						'name'=>end($level),
-						'type'=>'dir',
-						'mod_time'=>filemtime($newpath),
-						'size'=>'');
-						$mod_array[] = recur_dir($newpath);
-				*/
-				$dirname = end($level);
-				$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> ".$dirname." </a><DIV style='display:none'>\n";
-				//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
-				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-				$htmldirlist .= recur_dir($newpath);
-				$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
-
-			}
-			else {
-					/*$mod_array[] = array(
-						'level'=>count($level)-1,
-						'path'=>$newpath,
-						'name'=>end($level),
-						'type'=>'file',
-						'mod_time'=>filemtime($newpath),
-						'size'=>filesize($newpath));
-					*/
-				$filename = end($level);
-				$filesize = round(filesize($newpath)/1024, 2);
-				$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
-				$htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
-			}
-
-	} //end for each
-
+		if (is_dir($newpath)) {
+			/*$mod_array[] = array(
+				'level'=>count($level)-1,
+				'path'=>$newpath,
+				'name'=>end($level),
+				'type'=>'dir',
+				'mod_time'=>filemtime($newpath),
+				'size'=>'');
+				$mod_array[] = recur_dir($newpath);
+			*/
+			$dirname = end($level);
+			$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
+			//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
+			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+			//$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
+			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+			$htmldirlist .= recur_dir($newpath);
+			$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
+		}
+		else {
+			/*$mod_array[] = array(
+					'level'=>count($level)-1,
+					'path'=>$newpath,
+					'name'=>end($level),
+					'type'=>'file',
+					'mod_time'=>filemtime($newpath),
+					'size'=>filesize($newpath));
+			*/
+			$filename = end($level);
+			$filesize = round(filesize($newpath)/1024, 2);
+			$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
+			$htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
+		}
+	}
 	closedir($dirlist);
 	return $htmldirlist ."\n". $htmlfilelist;
 }
-
-
 
 //begin the content
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
@@ -196,7 +188,6 @@ function recur_dir($dir) {
 	echo "    }\n";
 	echo "</script>";
 
-
 	echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
 	//echo "// ---------------------------------------------\n";
 	//echo "// --- http://www.codeproject.com/jscript/dhtml_treeview.asp\n";
@@ -230,15 +221,11 @@ function recur_dir($dir) {
 	echo "}\n";
 	echo "</SCRIPT>";
 
-
 	echo "<div align='center' valign='1'>";
 	echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\" valign='top' nowrap>\n";
-	//echo "      <br>";
-
-
 	echo "\n";
 	echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"if (typeof(clipwin)!='undefined') { clipwin.close(); } clipwin = window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Files </a><DIV style=''>\n"; //display:none
 	//echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
@@ -251,7 +238,6 @@ function recur_dir($dir) {
 	//echo "</DIV></TD></TR></TABLE>\n";
 
 	echo recur_dir($v_conf_dir);
-
 
 	echo "</DIV></TD></TR></TABLE>\n";
 
@@ -281,20 +267,13 @@ function recur_dir($dir) {
 	echo "      </DIV></TD></TR></TABLE>\n";
 	*/
 
-
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</div>";
 
 	echo "<br><br>";
-	require_once "mod/xml_edit/footer.php";
-
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
+	require_once "footer.php";
 
 	echo "</body>";
 	echo "</html>";

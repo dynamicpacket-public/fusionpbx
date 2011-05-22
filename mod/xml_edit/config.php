@@ -24,11 +24,12 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+include "root.php";
+
 error_reporting (E_ALL ^ E_NOTICE);
 
 $applicationname = 'Edit';
 $bodyoptions = "";
-
 
 $dbfilename = "clip.db";
 $dbfilepath = PROJECT_PATH."/xml_edit/";
@@ -69,7 +70,6 @@ function get_string_between($string, $start, $end){
 
 //$fullstring = "this is my [tag]dog[/tag]";
 //$parsed = get_string_between($fullstring, "[tag]", "[/tag]");
-
 
 //database connection
 try {
@@ -162,7 +162,6 @@ if(!function_exists('escapejs')){
   	return $strtemp;
   }
 }
-
 
 if(!function_exists('check_str')){
   function check_str($strtemp) {

@@ -24,9 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
@@ -34,13 +33,14 @@ else {
 	exit;
 }
 require_once "header.php";
+
+//show the content
     echo "<div align='left'>";
     echo "<table width='175'  border='0' cellpadding='0' cellspacing='2'>\n";
 
     echo "<tr class='border'>\n";
     echo "	<td align=\"left\">\n";
     echo "      <br>";
-
 
     $sql = "";
     $sql .= "select * from tblcliplibrary ";
@@ -91,13 +91,9 @@ require_once "header.php";
         } //end foreach
 		unset($sql, $result, $rowcount);
         
-        
-
         echo "</table>\n";
         echo "</div>\n";
 
-
-        //echo "  <br><br>";
         echo "  </td>\n";
         echo "</tr>\n";
 
@@ -113,11 +109,5 @@ require_once "header.php";
 
     echo "<br><br>";
     require_once "footer.php";
-
-    unset ($resultcount);
-    unset ($result);
-    unset ($key);
-    unset ($val);
-    unset ($c);
 
 ?>

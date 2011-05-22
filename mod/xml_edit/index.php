@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
@@ -39,7 +39,6 @@ echo "<html>\n";
 echo "<head>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
 echo "	<title></title>";
-
 
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 	echo "// Replaces all instances of the given substring.\n";
@@ -75,7 +74,6 @@ echo "	<title></title>";
 
 	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 	echo "    function makeRequest(url, strpost) {\n";
-	//echo "        alert(url); \n";
 	echo "        var http_request = false;\n";
 	echo "\n";
 	echo "        if (window.XMLHttpRequest) { // Mozilla, Safari, ...\n";
@@ -141,12 +139,12 @@ echo "	<title></title>";
 	echo "    }\n";
 	echo "</script>";
 	?>
-	<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH ?>/includes/edit_area/edit_area_full.js"></script>
+	<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/includes/edit_area/edit_area_full.js"></script>
 	<script language="Javascript" type="text/javascript">
 
 	// initialisation
 		editAreaLoader.init({
-			id: "edit1"	// id of the textarea to transform
+			id: "edit1" // id of the textarea to transform
 			,start_highlight: true
 			,allow_toggle: false
 			,word_wrap: false
@@ -161,8 +159,7 @@ echo "	<title></title>";
 
 		// callback functions
 		function my_save(id, content){
-		        //alert(content);
-            		makeRequest('filesave.php','file='+document.getElementById('file').value+'&content='+urlencode(content));
+            	makeRequest('filesave.php','file='+document.getElementById('file').value+'&content='+urlencode(content));
 		        parent.document.title=''+unescape(document.getElementById('file').value)+' :: Saved';
 		        //setTimeout("parent.document.title='<?=$applicationname?> - '+unescape(document.getElementById('file').value);", 5);
 		        //setTimeout("alert('test')", 5);

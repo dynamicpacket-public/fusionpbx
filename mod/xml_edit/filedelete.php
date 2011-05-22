@@ -26,13 +26,14 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_save')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+require_once "config.php";
 
 $folder = $_GET["folder"];
 $folder = str_replace ("\\", "/", $folder);
@@ -45,45 +46,42 @@ if (strlen($folder) > 0 && strlen($file) > 0) {
     unlink($folder.$file);
     header("Location: fileoptions.php");
 }
-else {//display form
+else {
+	//display form
+	require_once "header.php";
+	echo "<br>";
+	echo "<div align='left'>";
+	echo "<form method='get' action=''>";
+	echo "<table>";
+	echo "	<tr>";
+	echo "		<td>Path:</td>";
+	echo "	</tr>";   
+	echo "	<tr>";
+	echo "		<td>".$folder.$file."</td>";
+	echo "	</tr>";
+	echo "</table>";
 
-    require_once "header.php";
-    echo "<br>";
-    echo "<div align='left'>";
-    echo "<form method='get' action=''>";
-    echo "<table>";
-    echo "	<tr>";
-    echo "		<td>Path:</td>";
-    echo "	</tr>";   
-    echo "	<tr>";
-    echo "		<td>".$folder.$file."</td>";
-    echo "	</tr>";
-    echo "</table>";
-    
-    echo "<br />";
-    
-    echo "<table>";
-    echo "	<tr>";
-    echo "	  <td>File Name:</td>";
-    echo "	</tr>";
-    
-    echo "	<tr>";
-    echo "		<td><input type='text' name='file' value=''></td>";
-    echo "	</tr>";
-    
-    echo "	<tr>";
-    echo "		<td colspan='1' align='right'>";
-    echo "      <input type='hidden' name='folder' value='$folder'>";
-    echo "		  <input type='submit' value='New File'>";
-    echo "    </td>";
-    echo "	</tr>";
-    echo "</table>";
-    echo "</form>";
-    echo "</div>";
-    
-    require_once "footer.php";
+	echo "<br />";
 
+	echo "<table>";
+	echo "	<tr>";
+	echo "	  <td>File Name:</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td><input type='text' name='file' value=''></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td colspan='1' align='right'>";
+	echo "      <input type='hidden' name='folder' value='$folder'>";
+	echo "		  <input type='submit' value='New File'>";
+	echo "    </td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</form>";
+	echo "</div>";
+
+	require_once "footer.php";
 }
-
-
 ?>

@@ -26,28 +26,27 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-
+require_once "config.php";
 require_once "header.php";
 
-
 function isfile($filename) {
-    if (@filesize($filename) > 0) { return true; } else { return false; }
+	if (@filesize($filename) > 0) { return true; } else { return false; }
 }
 
 function space($count) {
-    $r=''; $i=0;
-    while($i < $count) {
-        $r .= '     ';
-        $i++;
-    }
-    return $r;
+	$r=''; $i=0;
+	while($i < $count) {
+		$r .= '     ';
+		$i++;
+	}
+	return $r;
 }
 
 function recur_dir($dir) {
@@ -108,9 +107,7 @@ function recur_dir($dir) {
    return $htmldirlist ."\n". $htmlfilelist;
 }
 
-
-
-
+//show the content
     echo "<script type=\"text/javascript\" language=\"javascript\">\n";
     echo "    function makeRequest(url, strpost) {\n";
     //echo "        alert(url); \n";
@@ -177,9 +174,6 @@ function recur_dir($dir) {
     echo "    }\n";
     echo "</script>\n";
 
-
-
-
     echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
     //echo "// ---------------------------------------------\n";
     //echo "// --- http://www.codeproject.com/jscript/dhtml_treeview.asp\n";
@@ -216,16 +210,11 @@ function recur_dir($dir) {
     echo "}\n";
     echo "</SCRIPT>\n";
 
-
-
     echo "<div align='center' valign='1'>";
     echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
     echo "<tr class='border'>\n";
     echo "	<td align=\"left\" valign='top' nowrap>\n";
     //echo "      <br>";
-
-
 
     echo "\n";    
     echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"images/folder.gif\" border='0'> Files <DIV style=''>\n"; //display:none
@@ -267,7 +256,6 @@ function recur_dir($dir) {
     echo "      </DIV></TD></TR></TABLE>\n";
     */
 
-
     echo "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
@@ -275,12 +263,6 @@ function recur_dir($dir) {
 
     echo "<br><br>";
     require_once "footer.php";
-
-    unset ($resultcount);
-    unset ($result);
-    unset ($key);
-    unset ($val);
-    unset ($c);
 
     echo "</body>";
     echo "</html>";

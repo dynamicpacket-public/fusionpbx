@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_save')) {
 	//access granted
 }
 else {
@@ -35,17 +35,14 @@ else {
 }
 require_once "config.php";
 
-
 $folder = $_GET["folder"];
 $folder = str_replace ("\\", "/", $folder);
 $foldername = $_GET["foldername"];
 
-//echo $folder.$file;
-
 if (strlen($folder) > 0 && strlen($foldername) > 0) {
-    //create new folder
-    mkdir($folder.'/'.$foldername); //, 0700
-    header("Location: fileoptions.php");
+	//create new folder
+	mkdir($folder.'/'.$foldername); //, 0700
+	header("Location: fileoptions.php");
 }
 else { //display form
 
@@ -84,8 +81,6 @@ else { //display form
     echo "</div>";
     
     require_once "footer.php";
-
 }
-
 
 ?>

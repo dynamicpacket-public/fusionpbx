@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
@@ -34,25 +34,17 @@ else {
 	exit;
 }
 require_once "config.php";
-//require_once "header.php";
 
 echo "<html>";
 echo "<head>";
-
-
 echo "<style>\n";
 echo "TD {\n";
-//echo "	font-family: tahoma;\n";
 echo "	font-size: 11.5px;\n";
 echo "}\n";
 echo "A {\n";
 echo "	text-decoration:none\n";
 echo "}\n";
 echo "</style>";
-
-
-//$exampledatareturned = example("apples", 1);
-//echo $exampledatareturned;
 
 function isfile($filename) {
     if (@filesize($filename) > 0) { return true; } else { return false; }
@@ -67,8 +59,7 @@ function space($count) {
     return $r;
 }
 
-
-
+//show the content
     echo "<script type=\"text/javascript\" language=\"javascript\">\n";
     echo "    function makeRequest(url, strpost) {\n";
     //echo "        alert(url); \n";
@@ -136,9 +127,6 @@ function space($count) {
     echo "\n";
     echo "    }\n";
     echo "</script>";
-
-
-
 
     echo "<SCRIPT LANGUAGE=\"JavaScript\">\n";
     //echo "// ---------------------------------------------\n";
@@ -213,107 +201,85 @@ echo "<body onfocus='null;'>";
     //echo "         <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"/images/plus.gif\"> <IMG SRC=\"/images/folder.gif\"> PHP</A><DIV style='display:none'>\n";
 
 
-    $sql = "";
-    $sql .= "select * from tblcliplibrary ";
-    $sql .= "order by clipfolder ";
-    //$sql .= "and clipname asc ";
+	$sql = "";
+	$sql .= "select * from tblcliplibrary ";
+	$sql .= "order by clipfolder ";
+	//$sql .= "and clipname asc ";
 
-    $prepstatement = $db->prepare(check_sql($sql));
-    $prepstatement->execute();
-    $result = $prepstatement->fetchAll();
-    $resultcount = count($result);
+	$prepstatement = $db->prepare(check_sql($sql));
+	$prepstatement->execute();
+	$result = $prepstatement->fetchAll();
+	$resultcount = count($result);
 
+	if ($resultcount == 0) {
+		//no results
+	}
+	else { //received results
+		$lastfolder = '';
+		$tagopen = '';
+		$x = 0;
+		$currentdepth = 0;
+		$previousdepth = 0;
+		foreach($result as $row) {
+			$currentdepth = count(explode ("/", $row[clipfolder]));
+			//echo "$currentdepth < $previousdepth<br>zzz<br>";
+			if ($currentdepth < $previousdepth) {
+				$count = ($previousdepth - $currentdepth);
+				$i=0;
+				while($i < $count){
+					echo "</DIV></TD></TR></TABLE>\n";
+					$i++;
+				}
+				//echo  "count $count";
+				//echo "true previousdepth ".$previousdepth." - currentdepth ".$currentdepth."=". ($previousdepth - $currentdepth);
+				echo "</DIV></TD></TR></TABLE>\n";
 
+			}
 
-    if ($resultcount == 0) { //no results
+			if ($lastfolder != $row[clipfolder]) {
 
-    }
-    else { //received results
-        $lastfolder = '';
-        $tagopen = '';
-        $x = 0;
-        $currentdepth = 0;
-        $previousdepth = 0;
-        foreach($result as $row) {
-        //print_r( $row );
+				$clipfoldername = str_replace ($previousfoldername, "", $row[clipfolder]);
+				$clipfoldername = str_replace ("/", "", $clipfoldername);
+				//this.style.color = '#FFFFFF';this.style.background = '#4682BF';
+				echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A href='javascript:void(0);' onClick=\"Toggle(this);\"><IMG SRC=\"images/plus.gif\" border='none'> <IMG SRC=\"images/folder.gif\" border='none'> &nbsp;".$clipfoldername." &nbsp; </A><DIV style='display:none'>\n\n";
+				$tagopen = 1;
+			}
 
-            $currentdepth = count(explode ("/", $row[clipfolder]));
-            //echo "$currentdepth < $previousdepth<br>zzz<br>";
-            if ($currentdepth < $previousdepth) {
-                $count = ($previousdepth - $currentdepth);
-                $i=0;
-                while($i < $count){
-                    echo "</DIV></TD></TR></TABLE>\n";
-                    $i++;
-                }
-                //echo  "count $count";
-                //echo "true previousdepth ".$previousdepth." - currentdepth ".$currentdepth."=". ($previousdepth - $currentdepth);
-                echo "</DIV></TD></TR></TABLE>\n";
-            }
+			$previousdepth = $currentdepth;
+			$previousfoldername = $row[clipfolder];
 
+			echo "<textarea style='display:none' id='cliplibstart".$row[id]."'>".$row[cliptextstart]."</textarea>\n";
+			echo "<textarea style='display:none' id='cliplibend".$row[id]."'>".$row[cliptextend]."</textarea>\n";
+			echo "\n";
+			echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=12></TD><TD align='bottom'><IMG SRC=\"images/file.png\" border='0'> \n";
+			//echo "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clipname').value='".$row[clipname]."';parent.document.getElementById('clipid').value=".$row[id].";\">".$row[clipname]."</a>\n";
 
-            if ($lastfolder != $row[clipfolder]) {
-                $clipfoldername = str_replace ($previousfoldername, "", $row[clipfolder]);
-                $clipfoldername = str_replace ("/", "", $clipfoldername);
-                //this.style.color = '#FFFFFF';this.style.background = '#4682BF';
-                echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=10></TD><TD><A href='javascript:void(0);' onClick=\"Toggle(this);\"><IMG SRC=\"images/plus.gif\" border='none'> <IMG SRC=\"images/folder.gif\" border='none'> &nbsp;".$clipfoldername." &nbsp; </A><DIV style='display:none'>\n\n";
-                $tagopen = 1;
-            }
+			//parent.document.getElementById('edit1').focus();
+			echo "<a href='javascript:void(0);' onclick=\"parent.editAreaLoader.insertTags('edit1', document.getElementById('cliplibstart".$row[id]."').value, document.getElementById('cliplibend".$row[id]."').value);\">".$row[clipname]."</a>\n";
+			//echo "<a href='javascript:void(0);' onclick=\"parent.editAreaLoader.insertTags('edit1', 'start', 'end');\">".$row[clipname]."</a>\n";
 
-            $previousdepth = $currentdepth;
-            $previousfoldername = $row[clipfolder];
+			//echo "<DIV style='display:none'></DIV>\n";
+			echo "</TD></TR></TABLE>\n";
+			echo "\n\n";
 
-            echo "<textarea style='display:none' id='cliplibstart".$row[id]."'>".$row[cliptextstart]."</textarea>\n";
-            echo "<textarea style='display:none' id='cliplibend".$row[id]."'>".$row[cliptextend]."</textarea>\n";
-            echo "\n";
-            echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD WIDTH=12></TD><TD align='bottom'><IMG SRC=\"images/file.png\" border='0'> \n";
-            //echo "<a href='javascript:void(0);' onclick=\"parent.document.getElementById('clipname').value='".$row[clipname]."';parent.document.getElementById('clipid').value=".$row[id].";\">".$row[clipname]."</a>\n";
+			$lastfolder = $row[clipfolder];
 
-            //parent.document.getElementById('edit1').focus();
-            echo "<a href='javascript:void(0);' onclick=\"parent.editAreaLoader.insertTags('edit1', document.getElementById('cliplibstart".$row[id]."').value, document.getElementById('cliplibend".$row[id]."').value);\">".$row[clipname]."</a>\n";
-            //echo "<a href='javascript:void(0);' onclick=\"parent.editAreaLoader.insertTags('edit1', 'start', 'end');\">".$row[clipname]."</a>\n";
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $rowcount);
 
-            //echo "<DIV style='display:none'></DIV>\n";
-            echo "</TD></TR></TABLE>\n";
-            echo "\n\n";
+	} //end if results
 
+	echo "\n";
+	echo "      </DIV></TD></TR></TABLE>\n";
 
-            //if ($lastfolder == $row[clipfolder]) {
-            //    echo "</DIV></TD></TR></TABLE>\n";
-            //    $tagopen = 0;
-            //}
-            $lastfolder = $row[clipfolder];
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>";
+	echo "<br><br>";
 
-            if ($c==0) { $c=1; } else { $c=0; }
-        } //end foreach
-        unset($sql, $result, $rowcount);
-
-    } //end if results
-
-    //if ($currentdepth < $previousdepth) {
-    //    echo "count: ".$previousdepth - $currentdepth;
-    //    echo "</DIV></TD></TR></TABLE>\n";
-    //}
-
-    echo "\n";
-    echo "      </DIV></TD></TR></TABLE>\n";
-
-
-    echo "</td>\n";
-    echo "</tr>\n";
-    echo "</table>\n";
-    echo "</div>";
-
-    echo "<br><br>";
-    //require_once "includes/footer.php";
-
-    unset ($resultcount);
-    unset ($result);
-    unset ($key);
-    unset ($val);
-    unset ($c);
-
-    echo "</body>";
-    echo "</html>";
+	echo "</body>";
+	echo "</html>";
 
 ?>

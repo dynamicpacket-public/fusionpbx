@@ -25,8 +25,7 @@
 */
 include "root.php";
 require_once "includes/config.php";
-require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
@@ -34,30 +33,16 @@ else {
 	exit;
 }
 
-//echo "you can dance\n\n";
-
-//echo "post\n";
-//print_r ($_POST);
-//echo "\n\n\n";
-
 $filename = $_POST["file"];
 $filename = str_replace ("\\", "/", $filename);
 
-/*
-//echo file_get_contents ('fileandpath');
-
-$handle = @fopen($filename, "r");
-$contents = @fread($handle, filesize($filename));
-fclose($handle);
-*/
-
 $handle = fopen($filename, "r");
 if ($handle) {
-   while (!feof($handle)) {
-       $buffer = fgets($handle, 4096);
-       echo $buffer;
-   }
-   fclose($handle);
+	while (!feof($handle)) {
+		$buffer = fgets($handle, 4096);
+		echo $buffer;
+	}
+	fclose($handle);
 }
 
 ?>

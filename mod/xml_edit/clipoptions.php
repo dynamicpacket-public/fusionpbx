@@ -24,17 +24,17 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "config.php";
+require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+require_once "config.php";
 require_once "header.php";
-
 
 echo "<div align='left'>";
 echo "<table border='0' style=\"height: 100%; width: 100%;\">\n";
@@ -61,10 +61,7 @@ echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.locati
 //echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='  Search  '></td></tr>\n";
 echo "  <tr><td><input type='button' class='btn' name='' onclick=\"if (confirm('Are you sure you want to delete the selected clip?')){ window.location='clipdelete.php?id='+document.getElementById('clipid').value; }\" value='  Delete   '></td></tr>\n";
 echo "  <tr><td><br><br><br><br><br><br><br><br><br><br><br></td></tr>\n";
-
 echo "  <tr><td><input type='button' class='btn' name='' onclick='javascript:self.close();' value='   Close    '></td></tr>\n";
-
-
 echo "  </table>";
 
 echo "</td>\n";

@@ -31,14 +31,6 @@ echo "<title></title>";
 echo "<style type='text/css'>";
 echo "<!--\n";
 
-//echo "body {\n";
-//echo "	margin-top: 40px;\n";
-//echo "	margin-bottom: 40px;\n";
-//echo "	margin-right: 40px;\n";
-//echo "	margin-left: 40px;\n";
-//echo "    background-color: #EEEEEE;\n";
-//echo "}\n";
-
 echo "th {\n";
 echo "	color: #5f5f5f;\n";
 echo "	font-size: 12px;\n";
@@ -48,50 +40,27 @@ echo "	background-color: #EFEFEF;\n";
 echo "}\n";
 
 echo "BODY {\n";
-//echo "	color: #5f5f5f;\n";
 echo "	font-size: 11px;\n";
 echo "	font-family: arial;\n";
-//echo "	background-color: #FFFFFF;\n";
 echo "}\n";
 
 echo "TD {\n";
-//echo "	color: #5f5f5f;\n";
 echo "	font-size: 11px;\n";
 echo "	font-family: arial;\n";
-//echo "	background-color: #FFFFFF;\n";
 echo "}\n";
 
-
 echo "INPUT, SELECT, TEXTAREA {\n";
-//echo "    color: #666666;\n";
-//echo "	font-family: verdana;\n";
 echo "	font-size: 11px;\n";
 echo "    }\n";
-
-//echo ".border {\n";
-//echo "    border: solid 1px #CCCCCC;\n";
-//echo "}\n";
 
 echo ".btn {\n";
 echo "    width: 100%;\n";
 echo "}\n";
 
-
 echo ".txt {\n";
 echo "    width: 100%;\n";
 echo "}\n";
 
-//echo ".frm {\n";
-//echo "    color: #666666;\n";
-//echo "    background-color: #EFEFEF;\n";
-//echo "    width: 100%;\n";
-//echo "}\n";
-
-//echo ".smalltext {\n";
-//echo "	color: #666666;\n";
-//echo "	font-size: 11px;\n";
-//echo "	font-family: arial;\n";
-//echo "}";
 echo "//-->\n";
 echo "</style>";
 
@@ -110,6 +79,5 @@ echo "</SCRIPT>";
 echo "</head>";
 echo "<body>";
 echo "<div align='center'>";
-
 
 ?>

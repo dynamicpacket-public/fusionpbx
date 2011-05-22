@@ -24,9 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "config.php";
+require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_save')) {
 	//access granted
 }
 else {
@@ -39,10 +39,7 @@ $folder = str_replace ("\\", "/", $folder);
 if (substr($folder, -1) != "/") { $folder = $folder.'/'; }
 $file = $_GET["file"];
 
-//echo $folder.$file;
-
 if (strlen($folder) > 0 && strlen($file) > 0) {
-
     //create new file
     $handle = fopen($folder.$file, 'wb') or die("Error!!");
     $content = "<?php\n\n?>";
@@ -51,8 +48,7 @@ if (strlen($folder) > 0 && strlen($file) > 0) {
    
     header("Location: fileoptions.php");
 }
-else {//display form
-
+else {
     require_once "header.php";
     echo "<br>";
     echo "<div align='left'>";
@@ -90,6 +86,5 @@ else {//display form
     require_once "footer.php";
 
 }
-
 
 ?>

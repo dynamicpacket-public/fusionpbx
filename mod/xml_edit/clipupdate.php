@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_save')) {
 	//access granted
 }
 else {
@@ -65,81 +65,78 @@ if (count($_POST)>0) {
     return;
 }
 else {
-  //get data from the db
-      $id = $_GET["id"];
+	//get data from the db
+		$id = $_GET["id"];
 
-      $sql = "";
-      $sql .= "select * from tblcliplibrary ";
-      $sql .= "where id = '$id' ";
-      $prepstatement = $db->prepare(check_sql($sql));
-      $prepstatement->execute();
+		$sql = "";
+		$sql .= "select * from tblcliplibrary ";
+		$sql .= "where id = '$id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
 
-	$result = $prepstatement->fetchAll();
-	foreach ($result as &$row) {
-          $clipname = $row["clipname"];
-          $clipfolder = $row["clipfolder"];
-          $cliptextstart = $row["cliptextstart"];
-          $cliptextend = $row["cliptextend"];
-          $clipdesc = $row["clipdesc"];
-          $cliporder = $row["cliporder"];
-          break; //limit to 1 row
-      }
-      echo "</table>";
-      echo "<div>";}
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$clipname = $row["clipname"];
+			$clipfolder = $row["clipfolder"];
+			$cliptextstart = $row["cliptextstart"];
+			$cliptextend = $row["cliptextend"];
+			$clipdesc = $row["clipdesc"];
+			$cliporder = $row["cliporder"];
+			break; //limit to 1 row
+		}
+		echo "</table>";
+		echo "<div>";}
 
-    require_once "header.php";
-    echo "<div align='left'>";
-    echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+	require_once "header.php";
+	echo "<div align='left'>";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
-    echo "<tr class='border'>\n";
-    echo "	<td align=\"left\">\n";
+	echo "<tr class='border'>\n";
+	echo "	<td align=\"left\">\n";
 
-    echo "<form method='post' action=''>";
-    echo "<table border='0' width='100%'>";
-      echo "	<tr>";
-      echo "		<td>Name:</td>";
-      echo "		<td><input type='text' class='txt' name='clipname' value='$clipname'></td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td>Folder:</td>";
-      echo "		<td><input type='text' class='txt'  name='clipfolder' value='$clipfolder'></td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td colspan='2'>Before Selection:<br>";
-      echo "		  <textarea  class='txt' name='cliptextstart'>$cliptextstart</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
-      
-      echo "	<tr>";
-      echo "		<td colspan='2'>After Selection:<br>";
-      echo "		  <textarea  class='txt' name='cliptextend'>$cliptextend</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
+	echo "<form method='post' action=''>";
+	echo "<table border='0' width='100%'>";
+	echo "	<tr>";
+	echo "		<td>Name:</td>";
+	echo "		<td><input type='text' class='txt' name='clipname' value='$clipname'></td>";
+	echo "	</tr>";
 
-      echo "	<tr>";
-      echo "		<td colspan='2'>Notes:<br>";
-      echo "		  <textarea  class='txt' name='clipdesc'>$clipdesc</textarea>";
-      echo "		</td>";
-      echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>Folder:</td>";
+	echo "		<td><input type='text' class='txt'  name='clipfolder' value='$clipfolder'></td>";
+	echo "	</tr>";
 
+	echo "	<tr>";
+	echo "		<td colspan='2'>Before Selection:<br>";
+	echo "		  <textarea  class='txt' name='cliptextstart'>$cliptextstart</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
-    echo "	<tr>";
-    echo "		<td colspan='2' align='right'>";
-    echo "     <input type='hidden' name='id' value='$id'>";
-    echo "     <input type='submit' name='submit' value='Update'>";
-    echo "		</td>";
-    echo "	</tr>";
-    echo "</table>";
-    echo "</form>";
+	echo "	<tr>";
+	echo "		<td colspan='2'>After Selection:<br>";
+	echo "		  <textarea  class='txt' name='cliptextend'>$cliptextend</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
+	echo "	<tr>";
+	echo "		<td colspan='2'>Notes:<br>";
+	echo "		  <textarea  class='txt' name='clipdesc'>$clipdesc</textarea>";
+	echo "		</td>";
+	echo "	</tr>";
 
-    echo "	</td>";
-    echo "	</tr>";
-    echo "</table>";
-    echo "</div>";
+	echo "	<tr>";
+	echo "		<td colspan='2' align='right'>";
+	echo "     <input type='hidden' name='id' value='$id'>";
+	echo "     <input type='submit' name='submit' value='Update'>";
+	echo "		</td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</form>";
 
+	echo "	</td>";
+	echo "	</tr>";
+	echo "</table>";
+	echo "</div>";
 
-  require_once "footer.php";
+	require_once "footer.php";
 ?>

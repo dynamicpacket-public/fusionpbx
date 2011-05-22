@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('xml_editor_save')) {
 	//access granted
 }
 else {
@@ -46,6 +46,5 @@ fclose($handle);
 	$_SESSION["reload_xml"] = true;
 
 echo $content;
-
 
 ?>
