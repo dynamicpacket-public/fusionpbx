@@ -27,15 +27,4 @@
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'voicemail_status_settings_view';
-		$apps[$x]['permissions'][2]['groups'][] = 'admin';
-		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][3]['name'] = 'voicemail_status_settings_edit';
-		$apps[$x]['permissions'][3]['groups'][] = 'admin';
-		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
-		
-		$apps[$x]['permissions'][4]['name'] = 'voicemail_status_settings_delete';
-		$apps[$x]['permissions'][4]['groups'][] = 'admin';
-		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 ?>

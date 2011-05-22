@@ -26,7 +26,7 @@
 include "root.php";
 require "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('voicemail_status_view')) {
 	//access granted
 }
 else {
@@ -50,12 +50,11 @@ $order = $_GET["order"];
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align='left'><b>Voicemail</b><br>\n";
-	//echo "		Use this to configure your SIP extensions.\n";
+	echo "		Show details about the voicemail settings including the voicemail count, and voicemail to email address.\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br />";
-
 
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
@@ -70,16 +69,11 @@ $order = $_GET["order"];
 	echo "<th>Messages</th>\n";
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('description', 'Description', $orderby, $order);
-	//echo "<td align='right' width='42'>\n";
-	//echo "	<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "</td>\n";
 	echo "<tr>\n";
-
 
 	$sql = "";
 	$sql .= "select * from v_extensions ";
 	$sql .= "where v_id = '$v_id' ";
-	//superadmin can see all messages
 	if(!ifgroup("superadmin")) {
 	$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	}	
@@ -106,7 +100,7 @@ $order = $_GET["order"];
 	$sql .= "select * from v_extensions ";
 	$sql .= "where v_id = '$v_id' ";
 	if(!ifgroup("superadmin")) {
-	$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
+		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	}
 	if (strlen($orderby)> 0) {
 		$sql .= "order by $orderby $order ";
@@ -124,11 +118,11 @@ $order = $_GET["order"];
 	//pdo voicemail database connection
 		include "includes/lib_pdo_vm.php";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
-	else { //received results
+	else {
 		foreach($result as $row) {
-
 			$sql = "";
 			$sql .= "select count(*) as count from voicemail_msgs ";
 			$sql .= "where domain = '$v_domain' ";
@@ -149,9 +143,9 @@ $order = $_GET["order"];
 			echo "  <td valign='top' class='".$rowstyle[$c]."'>".($row[vm_enabled]?"true":"false")."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row[description]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			//echo "		<a href='v_extensions_edit.php?id=".$row[extension_id]."' alt='edit'>$v_link_label_edit</a>\n";
-			//echo "		<a href='v_extensions_delete.php?id=".$row[extension_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			echo "		<a href='v_voicemail_prefs_delete.php?id=".$row[extension_id]."' alt='restore default preferences' title='restore default preferences' onclick=\"return confirm('Are you sure you want remove the voicemail name and greeting?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('voicemail_status_delete')) {
+				echo "		<a href='v_voicemail_prefs_delete.php?id=".$row[extension_id]."' alt='restore default preferences' title='restore default preferences' onclick=\"return confirm('Are you sure you want remove the voicemail name and greeting?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -161,37 +155,10 @@ $order = $_GET["order"];
 		unset($sql, $result, $rowcount);
 	} //end if results
 
-
-	//echo "<tr>\n";
-	//echo "<td colspan='5' align='left'>\n";
-	//echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-	//echo "	<tr>\n";
-	//echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	//echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
-	//echo "		<td width='33.3%' align='right'>\n";
-	//echo "			<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
-	//echo "		</td>\n";
-	//echo "	</tr>\n";
-	//echo "	</table>\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
-
-	//echo "<tr>\n";
-	//echo "<td colspan='5' align='left'>\n";
-	//echo "<br />\n";
-	//echo "<br />\n";
-	//if ($v_path_show) {
-	//	echo $v_conf_dir."/directory/default/\n";
-	//}
-	//echo "</td>\n";
-	//echo "</tr>\n";
-
-
 echo "</table>";
 echo "</div>";
 echo "<br><br>";
 echo "<br><br>";
-
 
 echo "</td>";
 echo "</tr>";
@@ -202,9 +169,4 @@ echo "<br><br>";
 //show the footer
 	require "includes/config.php";
 	require_once "includes/footer.php";
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-unset ($c);
 ?>

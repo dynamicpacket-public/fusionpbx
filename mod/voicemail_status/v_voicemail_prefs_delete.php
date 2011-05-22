@@ -26,7 +26,7 @@
 include "root.php";
 require "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user") || ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('voicemail_status_delete')) {
 	//access granted
 }
 else {
@@ -41,7 +41,7 @@ if (count($_GET)>0) {
 //pdo voicemail database connection
 	include "includes/lib_pdo_vm.php";
 
-//delet the data
+//delete the data
 	if (strlen($id)>0) {
 		$sql = "";
 		$sql .= "delete from voicemail_prefs ";
@@ -58,7 +58,6 @@ if (count($_GET)>0) {
 	echo "<div align='center'>\n";
 	echo "Voicemail Preferences set to default\n";
 	echo "</div>\n";
-
 	require "includes/config.php";
 	require_once "includes/footer.php";
 	return;
