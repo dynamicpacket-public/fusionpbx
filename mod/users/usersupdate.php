@@ -26,7 +26,13 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
+if (ifgroup("user_account_settings_view")) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
 
 //get data from the db
 	if (strlen($_GET["id"])> 0) {
@@ -34,12 +40,9 @@ require_once "includes/checkauth.php";
 	}
 	else {
 		if (strlen($_SESSION["username"]) > 0) {
-			//if (!ifgroup("user")) {
-			  $username = $_SESSION["username"];
-			//}
+			$username = $_SESSION["username"];
 		}
 	}
-
 
 //get the username from v_users
 	$sql = "";
@@ -64,12 +67,8 @@ require_once "includes/checkauth.php";
 		}
 	}
 
-
 if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$id = $_POST["id"];
-	//if (ifgroup("admin") && strlen($_POST["username"])> 0) {
-		$username = $_POST["username"];
-	//}
 	$password = check_str($_POST["password"]);
 	$confirmpassword = check_str($_POST["confirmpassword"]);
 	$userfirstname = check_str($_POST["userfirstname"]);
@@ -206,6 +205,9 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 			$sql .= "where v_id = '$v_id' ";
 			$sql .= "and username = '$username' ";
 		}
+		if (ifgroup("user_account_settings_edit")) {
+			$count = $db->exec(check_sql($sql));
+		}
 
 	//update the user status
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -215,45 +217,6 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	//update the user state
 		$cmd = "api callcenter_config agent set state ".$_SESSION['username']."@".$v_domain." Waiting";
 		$response = event_socket_request($fp, $cmd);
-
-	$count = $db->exec(check_sql($sql));
-	if (strlen($groupmember) > 0) {
-		//groupmemberlist function defined in config.php
-		$groupmemberlist = groupmemberlist($db, $username);
-
-		if (ifgroupmember($groupmemberlist, "customer".$groupmember)) {
-			//if the group provided from the html form is in the groupmemberlist
-			//then the user is already in the group
-		}
-		else {
-			//group is not in the database it needs to be added
-			//remove the old group and add the new group
-
-			/*
-			if (ifgroup("admin")) {
-				$sql = "delete from v_group_members ";
-				$sql .= "where username = '$username' and groupid = 'customerbronze' ";
-				$sql .= "or username = '$username' and groupid = 'customersilver' ";
-				$sql .= "or username = '$username' and groupid = 'customergold' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				$sql = "insert into v_group_members ";
-				$sql .= "(";
-				$sql .= "groupid, ";
-				$sql .= "username ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$groupid', ";
-				$sql .= "'$username' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-			*/
-		}
-	} //if (strlen($groupmember) > 0) {
 
 	//redirect the browser
 		require_once "includes/header.php";
@@ -323,15 +286,15 @@ else {
 
 }
 
-
+//include the header
 	require_once "includes/header.php";
+
+//show the content
 	echo "<div align='center'>";
 	echo "<table width='90%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr>\n";
 	echo "	<td align=\"left\">\n";
 	echo "      <br>";
-
 
 	$tablewidth ='width="100%"';
 	echo "<form method='post' action=''>";
@@ -619,7 +582,6 @@ else {
 
 	echo "    </table>";
 	echo "    </div>";
-
 	echo "<br>";
 
 	echo "<div class='' style='padding:10px;'>\n";
@@ -634,12 +596,11 @@ else {
 	echo "</table>";
 	echo "</form>";
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
 
-
-  require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>
