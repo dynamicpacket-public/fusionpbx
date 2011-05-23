@@ -106,8 +106,10 @@ else {
 							}
 					} //end foreach
 
-					if ($number == $extension) {
+					//truncate $destinaton 
+						$dest = substr($dest, -74);
 
+					if ($number == $extension) {
 						if ($application == "conference") { 
 							$alt_color = "background-image: url('".PROJECT_PATH."/images/background_cell_active.gif";
 						}
