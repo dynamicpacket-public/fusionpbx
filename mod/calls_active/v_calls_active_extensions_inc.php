@@ -148,6 +148,7 @@ else {
 				foreach ($row->extension as $row2) {
 					$extension = (string) $row2;
 					$uuid = (string) $row2->attributes()->uuid;
+					$uuid = trim($uuid);
 					$valet_array[$uuid]['name'] = $valet_name;
 					$valet_array[$uuid]['extension'] = $extension;
 				}

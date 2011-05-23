@@ -106,9 +106,6 @@ else {
 							}
 					} //end foreach
 
-					//truncate $destinaton 
-						$dest = substr($dest, -74);
-
 					if ($number == $extension) {
 						if ($application == "conference") { 
 							$alt_color = "background-image: url('".PROJECT_PATH."/images/background_cell_active.gif";
@@ -145,7 +142,7 @@ else {
 						}
 						
 						//get the active uuid list
-							if (strlen($uuid) > 0 ) {
+							if (strlen($uuid) > 1) {
 								if ($x == 1) {
 									$uuid_1 = $uuid;
 									$direction_1 = $direction;
@@ -162,7 +159,12 @@ else {
 								}
 							}
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-						echo "".$dest."<br />\n";
+						if ($application == "valet_park") {
+							echo $valet_array[trim($uuid)]['extension']."\n";
+						}
+						else {
+							echo $dest."\n";
+						}
 						echo "</td>\n";
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
 						if ($application == "fifo") {
