@@ -145,7 +145,6 @@ else {
 			$valet_xml = new SimpleXMLElement($valet_xml_str);
 			foreach ($valet_xml as $row) {
 				$valet_name = (string) $row->attributes()->name;
-				//echo "valet_name: ".$valet_name."<br />\n";
 				foreach ($row->extension as $row2) {
 					$extension = (string) $row2;
 					$uuid = (string) $row2->attributes()->uuid;
@@ -167,16 +166,18 @@ else {
 			$channels_array = csv_to_named_array($channels_array[0], ",");
 
 		//remove other domains
-			$x = 1;
-			foreach ($channels_array as $row) {
-				//set the original array id
-					$channels_array[$x]['x'] = $x;
-				//unset domains that are not related to this tenant
-					$temp_array = explode("@", $row['presence_id']);
-					if ($temp_array[1] != $v_domain) {
-						unset($channels_array[$x]);
-					}
-				$x++;
+			if (count($_SESSION["domains"]) > 1) {
+				$x = 1;
+				foreach ($channels_array as $row) {
+					//set the original array id
+						$channels_array[$x]['x'] = $x;
+					//unset domains that are not related to this tenant
+						$temp_array = explode("@", $row['presence_id']);
+						if ($temp_array[1] != $v_domain) {
+							unset($channels_array[$x]);
+						}
+					$x++;
+				}
 			}
 
 		//active channels array
@@ -208,10 +209,12 @@ else {
 					$channels_array[$x]['call_length'] = $call_length;
 
 				//valet park
-					$valet_array[$uuid]['context'] = $context;
-					$valet_array[$uuid]['cid_name'] = $cid_name;
-					$valet_array[$uuid]['cid_num'] = $cid_num;
-					$valet_array[$uuid]['call_length'] = $call_length;
+					if (is_array($valet_array[$uuid])) {
+						$valet_array[$uuid]['context'] = $context;
+						$valet_array[$uuid]['cid_name'] = $cid_name;
+						$valet_array[$uuid]['cid_num'] = $cid_num;
+						$valet_array[$uuid]['call_length'] = $call_length;
+					}
 			}
 
 		//active extensions
