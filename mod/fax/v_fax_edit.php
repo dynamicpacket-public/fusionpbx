@@ -55,7 +55,6 @@ else {
 
 //download a fax
 	if ($_GET['a'] == "download") {
-
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
@@ -71,7 +70,6 @@ else {
 		//let's see if we found it.
 		if (strlen($tmp_faxdownload_file) > 0) {
 			$fd = fopen($tmp_faxdownload_file, "rb");
-
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
@@ -300,7 +298,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-
 			if ($action == "update" && permission_exists('fax_extension_edit')) {
 				$sql = "update v_fax set ";
 				$sql .= "v_id = '$v_id', ";
@@ -358,15 +355,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			exit;
 		}
 		foreach ($result as &$row) {
-			$v_id = $row["v_id"];
-			$faxextension = $row["faxextension"];
-			$faxname = $row["faxname"];
-			$faxemail = $row["faxemail"];
-			$fax_pin_number = $row["fax_pin_number"];
-			$fax_caller_id_name = $row["fax_caller_id_name"];
-			$fax_caller_id_number = $row["fax_caller_id_number"];
-			$fax_user_list = $row["fax_user_list"];
-			$faxdescription = $row["faxdescription"];
+			//set database fields as variables
+				$v_id = $row["v_id"];
+				$faxextension = $row["faxextension"];
+				$faxname = $row["faxname"];
+				$faxemail = $row["faxemail"];
+				$fax_pin_number = $row["fax_pin_number"];
+				$fax_caller_id_name = $row["fax_caller_id_name"];
+				$fax_caller_id_number = $row["fax_caller_id_number"];
+				$fax_user_list = $row["fax_user_list"];
+				$faxdescription = $row["faxdescription"];
 
 			//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
 				$dir_fax_inbox = $v_fax_dir.'/'.$faxextension.'/inbox';
@@ -430,11 +428,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$file_ext = substr($_GET['filename'], -3);
 					if ($file_ext == "tif") {
 					  header("Content-Type: image/tiff");
-					}else if ($file_ext == "png") {
+					} else if ($file_ext == "png") {
 					  header("Content-Type: image/png");
-					}else if ($file_ext == "jpg") {
+					} else if ($file_ext == "jpg") {
 					  header('Content-Type: image/jpeg');
-					}else if ($file_ext == "pdf") {
+					} else if ($file_ext == "pdf") {
 					  header("Content-Type: application/pdf");
 					}
 				}
@@ -700,12 +698,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Inbox</strong></span>\n";
 		echo "		</td>\n";
 		echo "		<td align='right'>";
-
 		if ($v_path_show) {
 			echo "<b>location:</b>&nbsp;";
 			echo $dir_fax_inbox."&nbsp; &nbsp; &nbsp;";
 		}
-
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "    </table>\n";
@@ -727,16 +723,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($handle = opendir($dir_fax_inbox)) {
 			while (false !== ($file = readdir($handle))) {
 				if ($file != "." && $file != ".." && is_file($dir_fax_inbox.'/'.$file)) {
-
 					$tmp_filesize = filesize($dir_fax_inbox.'/'.$file);
 					$tmp_filesize = byte_convert($tmp_filesize);
-
 					$tmp_file_array = explode(".",$file);
-					//print_r($tmp_file_array);
 					$file_name = $tmp_file_array[0];
 					$file_ext = $tmp_file_array[count($tmp_file_array)-1];
 					if (strtolower($file_ext) == "tif") {
-
 						if (!file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
 							//convert the tif to pdf
 								chdir($dir_fax_inbox);
@@ -830,12 +822,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Sent</strong></span>\n";
 		echo "		</td>\n";
 		echo "		<td align='right'>\n";
-
 		if ($v_path_show) {
 			echo "<b>location:</b>\n";
 			echo $dir_fax_sent."&nbsp; &nbsp; &nbsp;\n";
 		}
-
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "    </table>\n";
@@ -857,7 +847,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$file_name = $tmp_file_array[0];
 					$file_ext = $tmp_file_array[count($tmp_file_array)-1];
 					if (strtolower($file_ext) == "tif") {
-
 						if (!file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
 							//convert the tif to pdf
 								chdir($dir_fax_sent);
@@ -903,9 +892,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						//else {
 						//	echo "&nbsp;\n";
 						//}
-						//echo "  &nbsp;</td>\n";
+						//echo "  </td>\n";
 						echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-						echo 		date ("F d Y H:i:s", filemtime($dir_fax_sent.$file));
+						echo 		date ("F d Y H:i:s", filemtime($dir_fax_sent.'/'.$file));
 						echo "  </td>\n";
 
 						echo "  <td class=\"".$rowstyle[$c]."\" ondblclick=\"list\">\n";
