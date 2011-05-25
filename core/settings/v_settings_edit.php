@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('settings_view') || ifgroup("superadmin")) {
 	//access granted
 }
 else {
@@ -110,7 +110,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('settings_edit')) {
 				$sql = "insert into v_settings ";
 				$sql .= "(";
 				$sql .= "v_id, ";
@@ -166,7 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					sync_package_v_settings();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings_edit.php?id=1\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -174,7 +174,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('settings_edit')) {
 				$sql = "update v_settings set ";
 				$sql .= "v_id = '1', ";
 				$sql .= "numbering_plan = '$numbering_plan', ";
@@ -205,7 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					sync_package_v_settings();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings_edit.php?id=1\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -528,14 +528,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "Enter Mod Shout Volume.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-	echo "				<input type='hidden' name='setting_id' value='$setting_id'>\n";
+	if (permission_exists('settings_edit')) {
+		echo "	<tr>\n";
+		echo "		<td colspan='2' align='right'>\n";
+		if ($action == "update") {
+			echo "				<input type='hidden' name='setting_id' value='$setting_id'>\n";
+		}
+		echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+		echo "		</td>\n";
+		echo "	</tr>";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
 

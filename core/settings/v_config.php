@@ -24,7 +24,7 @@
 		$apps[$x]['permissions'][1]['name'] = 'settings_edit';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_settings 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_settings';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'setting_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
