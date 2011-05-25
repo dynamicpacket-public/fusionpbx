@@ -20,7 +20,9 @@
 		$apps[$x]['permissions'][0]['name'] = 'upgrade_schema';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_src 
+		$apps[$x]['permissions'][1]['name'] = 'upgrade_svn';
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_src';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'src_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

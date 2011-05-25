@@ -26,34 +26,53 @@
 include "root.php";
 require_once "includes/config.php";
 
+//check the permission
+	if (strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
+		require_once "includes/checkauth.php";
+		if (permission_exists('upgrade_schema') || permission_exists('upgrade_svn') || ifgroup("superadmin")) {
+			//echo "access granted";
+		}
+		else {
+			echo "access denied";
+			exit;
+		}
+	}
+
 //upgrade the code with SVN
-$display_results = false;
-require_once "core/upgrade/upgrade_svn.php";
+	if (permission_exists('zzz')) {
+		$display_results = false;
+		require_once "core/upgrade/upgrade_svn.php";
+	}
 
 //upgrade the database schema
-$display_results = false;
-require_once "core/upgrade/upgrade_schema.php";
+	if (permission_exists('zzz')) {
+		$display_results = false;
+		require_once "core/upgrade/upgrade_schema.php";
+	}
 
-require_once "includes/header.php";
+//include the header
+	require_once "includes/header.php";
 
-echo "<div align='center'>\n";
-echo "<table width='40%'>\n";
-echo "<tr>\n";
-echo "<th align='left'>Message</th>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td class='rowstyle1'><strong>Upgrade Completed</strong></td>\n";
-echo "</tr>\n";
-echo "</table>\n";
-echo "</div>\n";
+//show the content
+	echo "<div align='center'>\n";
+	echo "<table width='40%'>\n";
+	echo "<tr>\n";
+	echo "<th align='left'>Message</th>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='rowstyle1'><strong>Upgrade Completed</strong></td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>\n";
 
-echo "<br />\n";
-echo "<br />\n";
-echo "<br />\n";
-echo "<br />\n";
-echo "<br />\n";
-echo "<br />\n";
-echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
+	echo "<br />\n";
 
-require_once "includes/footer.php";
+//include the footer
+	require_once "includes/footer.php";
 ?>

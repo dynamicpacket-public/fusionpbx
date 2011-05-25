@@ -30,9 +30,8 @@ if (!isset($display_results)) {
 }
 if (strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
 	require_once "includes/checkauth.php";
-	if (ifgroup("superadmin")) {
+	if (permission_exists('upgrade_schema') || ifgroup("superadmin")) {
 		//echo "access granted";
-		//exit;
 	}
 	else {
 		echo "access denied";

@@ -27,7 +27,7 @@
    $mtime = microtime();
    $mtime = explode(" ",$mtime);
    $mtime = $mtime[1] + $mtime[0];
-   $starttime = $mtime;
+   $start_time = $mtime;
 */
 
 include "root.php";
@@ -40,7 +40,10 @@ if (!isset($display_results)) {
 
 if (strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
 	require_once "includes/checkauth.php";
-	if (!ifgroup("superadmin")) {
+	if (permission_exists('upgrade_svn') || ifgroup("superadmin")) {
+		//echo "access granted";
+	}
+	else {
 		echo "access denied";
 		exit;
 	}
@@ -75,11 +78,9 @@ $svn_path = '/trunk/fusionpbx/';
 	}
 	unset ($prepstatement);
 
-
 $svn  = new phpsvnclient($svn_url);
-//$svn_version = $svn->getVersion();	
+//$svn_version = $svn->getVersion();
 $svn_directory_tree = $svn->getDirectoryTree($svn_path);
-
 
 if ($display_results) {
 	echo "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
@@ -95,7 +96,6 @@ if ($display_results) {
 }
 
 //$db->beginTransaction();
-/* we add & to not copy the whole array again */
 foreach ($svn_directory_tree as &$row) {
 	$md5_match = false;
 	$xml_type = $row[type];
@@ -136,7 +136,7 @@ foreach ($svn_directory_tree as &$row) {
 				echo "<td class='rowstyle1'>$xml_last_mod</td>\n";
 				echo "<td class='rowstyle1'>$xml_relative_path</td>\n";
 				echo "<td class='rowstyle1'>$exists</td>\n";
-//				echo "<td class='rowstyle1'>$xml_size</td>\n";
+				//echo "<td class='rowstyle1'>$xml_size</td>\n";
 				echo "<td class='rowstyle1'>$md5_file</td>\n";
 				echo "<td class='rowstyle1'>$md5_xml</td>\n";
 				echo "<td class='rowstyle1'>$md5_match </td>\n";
@@ -174,7 +174,6 @@ foreach ($svn_directory_tree as &$row) {
 				$sql .= "last_mod = '$xml_last_mod' ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and path = '$xml_relative_path' ";
-				//echo "$sql<br />\n";
 			}
 		}
 		//if the path exists and is a file
@@ -234,8 +233,6 @@ foreach ($svn_directory_tree as &$row) {
 					mkdir (dirname($new_path), 0755, true);
 			}
 			if ($xml_type == 'file') {
-
-
 				//make sure the directory exists
 					if (!is_dir(dirname($new_path))){
 						mkdir (dirname($new_path), 0755, true);
@@ -292,8 +289,8 @@ if ($display_results) {
    $mtime = microtime();
    $mtime = explode(" ",$mtime);
    $mtime = $mtime[1] + $mtime[0];
-   $endtime = $mtime;
-   $totaltime = ($endtime - $starttime);
-   echo "This page was created in ".$totaltime." seconds";
+   $end_time = $mtime;
+   $total_time = ($end_time - $start_time);
+   echo "This page was created in ".$total_time." seconds";
 */
 ?>
