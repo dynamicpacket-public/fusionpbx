@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('system_settings_delete')) {
 	//access granted
 }
 else {
@@ -62,4 +62,3 @@ else {
 	return;
 
 ?>
-

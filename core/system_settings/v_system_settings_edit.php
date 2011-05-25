@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('system_settings_add') || permission_exists('system_settings_edit')) {
 	//access granted
 }
 else {
@@ -43,58 +43,57 @@ else {
 		$action = "add";
 	}
 
-//set the http post values to php variables
+//set the http values to variables
 	if (count($_POST)>0) {
-		//get post variables
-			$v_id = check_str($_POST["v_id"]);
-			$v_domain = check_str($_POST["v_domain"]);
-			$v_account_code = check_str($_POST["v_account_code"]);
-			$v_server_protocol = check_str($_POST["v_server_protocol"]);
-			$v_server_port = check_str($_POST["v_server_port"]);
-			$php_dir = check_str($_POST["php_dir"]);
-			$tmp_dir = check_str($_POST["tmp_dir"]);
-			$bin_dir = check_str($_POST["bin_dir"]);
-			$v_startup_script_dir = check_str($_POST["v_startup_script_dir"]);
-			$v_package_version = check_str($_POST["v_package_version"]);
-			$v_build_version = check_str($_POST["v_build_version"]);
-			$v_build_revision = check_str($_POST["v_build_revision"]);
-			$v_label = check_str($_POST["v_label"]);
-			$v_name = check_str($_POST["v_name"]);
-			$v_dir = check_str($_POST["v_dir"]);
-			$v_parent_dir = check_str($_POST["v_parent_dir"]);
-			$v_backup_dir = check_str($_POST["v_backup_dir"]);
-			$v_web_dir = check_str($_POST["v_web_dir"]);
-			$v_web_root = check_str($_POST["v_web_root"]);
-			$v_relative_url = check_str($_POST["v_relative_url"]);
-			$v_conf_dir = check_str($_POST["v_conf_dir"]);
-			$v_db_dir = check_str($_POST["v_db_dir"]);
-			$v_htdocs_dir = check_str($_POST["v_htdocs_dir"]);
-			$v_log_dir = check_str($_POST["v_log_dir"]);
-			$v_extensions_dir = check_str($_POST["v_extensions_dir"]);
-			$v_gateways_dir = check_str($_POST["v_gateways_dir"]);
-			$v_dialplan_public_dir = check_str($_POST["v_dialplan_public_dir"]);
-			$v_dialplan_default_dir = check_str($_POST["v_dialplan_default_dir"]);
-			$v_mod_dir = check_str($_POST["v_mod_dir"]);
-			$v_scripts_dir = check_str($_POST["v_scripts_dir"]);
-			$v_grammar_dir = check_str($_POST["v_grammar_dir"]);
-			$v_storage_dir = check_str($_POST["v_storage_dir"]);
-			$v_voicemail_dir = check_str($_POST["v_voicemail_dir"]);
-			$v_recordings_dir = check_str($_POST["v_recordings_dir"]);
-			$v_sounds_dir = check_str($_POST["v_sounds_dir"]);
-			$v_download_path = check_str($_POST["v_download_path"]);
-			$v_provisioning_tftp_dir = check_str($_POST["v_provisioning_tftp_dir"]);
-			$v_provisioning_ftp_dir = check_str($_POST["v_provisioning_ftp_dir"]);
-			$v_provisioning_https_dir = check_str($_POST["v_provisioning_https_dir"]);
-			$v_provisioning_http_dir = check_str($_POST["v_provisioning_http_dir"]);
-			$v_template_name = check_str($_POST["v_template_name"]);
-			$v_time_zone = check_str($_POST["v_time_zone"]);
-			$v_description = check_str($_POST["v_description"]);
-			
-			if (strlen($v_template_name) > 0) {
-				$_SESSION["v_template_name"] = $v_template_name;
-				$_SESSION["template_name"] = $v_template_name;
-				$_SESSION["template_content"] = '';
-			}
+		$v_id = check_str($_POST["v_id"]);
+		$v_domain = check_str($_POST["v_domain"]);
+		$v_account_code = check_str($_POST["v_account_code"]);
+		$v_server_protocol = check_str($_POST["v_server_protocol"]);
+		$v_server_port = check_str($_POST["v_server_port"]);
+		$php_dir = check_str($_POST["php_dir"]);
+		$tmp_dir = check_str($_POST["tmp_dir"]);
+		$bin_dir = check_str($_POST["bin_dir"]);
+		$v_startup_script_dir = check_str($_POST["v_startup_script_dir"]);
+		$v_package_version = check_str($_POST["v_package_version"]);
+		$v_build_version = check_str($_POST["v_build_version"]);
+		$v_build_revision = check_str($_POST["v_build_revision"]);
+		$v_label = check_str($_POST["v_label"]);
+		$v_name = check_str($_POST["v_name"]);
+		$v_dir = check_str($_POST["v_dir"]);
+		$v_parent_dir = check_str($_POST["v_parent_dir"]);
+		$v_backup_dir = check_str($_POST["v_backup_dir"]);
+		$v_web_dir = check_str($_POST["v_web_dir"]);
+		$v_web_root = check_str($_POST["v_web_root"]);
+		$v_relative_url = check_str($_POST["v_relative_url"]);
+		$v_conf_dir = check_str($_POST["v_conf_dir"]);
+		$v_db_dir = check_str($_POST["v_db_dir"]);
+		$v_htdocs_dir = check_str($_POST["v_htdocs_dir"]);
+		$v_log_dir = check_str($_POST["v_log_dir"]);
+		$v_extensions_dir = check_str($_POST["v_extensions_dir"]);
+		$v_gateways_dir = check_str($_POST["v_gateways_dir"]);
+		$v_dialplan_public_dir = check_str($_POST["v_dialplan_public_dir"]);
+		$v_dialplan_default_dir = check_str($_POST["v_dialplan_default_dir"]);
+		$v_mod_dir = check_str($_POST["v_mod_dir"]);
+		$v_scripts_dir = check_str($_POST["v_scripts_dir"]);
+		$v_grammar_dir = check_str($_POST["v_grammar_dir"]);
+		$v_storage_dir = check_str($_POST["v_storage_dir"]);
+		$v_voicemail_dir = check_str($_POST["v_voicemail_dir"]);
+		$v_recordings_dir = check_str($_POST["v_recordings_dir"]);
+		$v_sounds_dir = check_str($_POST["v_sounds_dir"]);
+		$v_download_path = check_str($_POST["v_download_path"]);
+		$v_provisioning_tftp_dir = check_str($_POST["v_provisioning_tftp_dir"]);
+		$v_provisioning_ftp_dir = check_str($_POST["v_provisioning_ftp_dir"]);
+		$v_provisioning_https_dir = check_str($_POST["v_provisioning_https_dir"]);
+		$v_provisioning_http_dir = check_str($_POST["v_provisioning_http_dir"]);
+		$v_template_name = check_str($_POST["v_template_name"]);
+		$v_time_zone = check_str($_POST["v_time_zone"]);
+		$v_description = check_str($_POST["v_description"]);
+
+		if (strlen($v_template_name) > 0) {
+			$_SESSION["v_template_name"] = $v_template_name;
+			$_SESSION["template_name"] = $v_template_name;
+			$_SESSION["template_content"] = '';
+		}
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -164,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" || permission_exists('system_settings_add')) {
 				//insert a row into system settings
 					$sql = "insert into v_system_settings ";
 					$sql .= "(";
@@ -273,7 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" || permission_exists('system_settings_edit')) {
 				//update the system settings
 					$sql = "update v_system_settings set ";
 					$sql .= "v_domain = '$v_domain', ";
@@ -547,11 +546,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prepstatement);
 	}
 
-	//clear values
-		if ($action == "add") {
-			$v_domain = '';
-			$v_account_code = '';
-		}
+//clear values
+	if ($action == "add") {
+		$v_domain = '';
+		$v_account_code = '';
+	}
 
 //set defaults if value is emtpy
 	if (strlen($v_server_port) == 0) { $v_server_port = $_SERVER["SERVER_PORT"]; }
@@ -564,7 +563,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($v_dialplan_public_dir) == 0) { $v_dialplan_public_dir = $v_conf_dir.'/dialplan/public'; }
 	if (strlen($v_extensions_dir) == 0) { $v_extensions_dir = $v_conf_dir.'/directory/default'; }
 	if (strlen($v_dialplan_default_dir) == 0) { $v_dialplan_default_dir = $v_conf_dir.'/dialplan/default'; }
-	
 
 //show the header
 	require_once "includes/header.php";

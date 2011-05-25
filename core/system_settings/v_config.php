@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en'] = 'Set the domain and paths.';
-	
+
 	//menu details
 		$apps[$x]['menu'][0]['title']['en'] = 'System Settings';
 		$apps[$x]['menu'][0]['guid'] = '03055A51-F8A2-6BDE-2A40-9743B2A2891F';
@@ -15,7 +15,7 @@
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/core/system_settings/v_system_settings.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-	
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'system_settings_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
@@ -29,7 +29,10 @@
 		$apps[$x]['permissions'][3]['name'] = 'system_settings_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_system_settings 
+		$apps[$x]['permissions'][4]['name'] = 'system_settings_default';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_system_settings';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'v_id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

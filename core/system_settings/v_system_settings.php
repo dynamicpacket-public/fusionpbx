@@ -25,19 +25,22 @@
 */
 include "root.php";
 require_once "includes/config.php";
+require_once "includes/paging.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('system_settings_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
 
-$orderby = $_GET["orderby"];
-$order = $_GET["order"];
+//include the header
+	require_once "includes/header.php";
+
+//get http values and set them as variables
+	$orderby = $_GET["orderby"];
+	$order = $_GET["order"];
 
 //show the content
 	echo "<div align='center'>";
@@ -47,14 +50,12 @@ $order = $_GET["order"];
 	echo "	<td align=\"center\">\n";
 	echo "      <br>";
 
-
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='50%' nowrap><b>System Settings</b></td>\n";
 	echo "<td align='left' width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
-
 
 	$sql = "";
 	$sql .= " select * from v_system_settings ";
@@ -96,7 +97,9 @@ $order = $_GET["order"];
 	//echo thorderby('v_dir', 'Directory', $orderby, $order);
 	echo "<th width='40%'>Description</th>\n";
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('system_settings_add')) {
+		echo "	<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -104,7 +107,6 @@ $order = $_GET["order"];
 		//no results found
 	}
 	else {
-		//received results
 		foreach($result as $row) {
 			if (strlen($row['v_server_port']) == 0) { $row['v_server_port'] = '80'; }
 			switch ($row['v_server_port']) {
@@ -126,8 +128,12 @@ $order = $_GET["order"];
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_dir']."</td>\n";
 			echo "	<td valign='top' class='rowstylebg'>".$row['v_description']."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_system_settings_edit.php?id=".$row['v_id']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_system_settings_delete.php?id=".$row['v_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('system_settings_edit')) {
+				echo "		<a href='v_system_settings_edit.php?id=".$row['v_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('system_settings_delete')) {
+				echo "		<a href='v_system_settings_delete.php?id=".$row['v_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -142,7 +148,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('system_settings_add')) {
+		echo "			<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -160,6 +168,6 @@ $order = $_GET["order"];
 	echo "</div>";
 	echo "<br><br>";
 
-//show the footer
+//include the footer
 	require_once "includes/footer.php";
 ?>

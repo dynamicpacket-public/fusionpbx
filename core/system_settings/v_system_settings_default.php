@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('system_settings_default')) {
 	//access granted
 }
 else {
@@ -51,7 +51,6 @@ else {
 	if ($action == "add") {
 		$sql = "insert into v_system_settings ";
 		$sql .= "(";
-		//$sql .= "v_id, ";
 		$sql .= "v_domain, ";
 		$sql .= "php_dir, ";
 		$sql .= "tmp_dir, ";
@@ -91,7 +90,6 @@ else {
 		$sql .= ")";
 		$sql .= "values ";
 		$sql .= "(";
-		//$sql .= "'$v_id', ";
 		$sql .= "'$v_domain', ";
 		$sql .= "'$php_dir', ";
 		$sql .= "'$tmp_dir', ";
@@ -134,46 +132,47 @@ else {
 	}
 
 //restore the defaults in the database
-	$sql = "update v_system_settings set ";
-	$sql .= "php_dir = '$install_php_dir', ";
-	$sql .= "tmp_dir = '$install_tmp_dir', ";
-	$sql .= "bin_dir = '$v_bin_dir', ";
-	$sql .= "v_startup_script_dir = '$v_startup_script_dir', ";
-	$sql .= "v_package_version = '$v_package_version', ";
-	$sql .= "v_build_version = '$v_build_version', ";
-	$sql .= "v_build_revision = '$v_build_revision', ";
-	$sql .= "v_label = '$v_label', ";
-	$sql .= "v_name = '$v_name', ";
-	$sql .= "v_dir = '$install_v_dir', ";
-	$sql .= "v_parent_dir = '$v_parent_dir', ";
-	$sql .= "v_backup_dir = '$install_v_backup_dir', ";
-	$sql .= "v_web_dir = '$v_web_dir', ";
-	$sql .= "v_web_root = '$v_web_root', ";
-	$sql .= "v_relative_url = '$v_relative_url', ";
-	$sql .= "v_conf_dir = '$v_conf_dir', ";
-	$sql .= "v_db_dir = '$v_db_dir', ";
-	$sql .= "v_htdocs_dir = '$v_htdocs_dir', ";
-	$sql .= "v_log_dir = '$v_log_dir', ";
-	$sql .= "v_mod_dir = '$v_mod_dir', ";
-	$sql .= "v_extensions_dir = '$v_extensions_dir', ";
-	$sql .= "v_gateways_dir = '$v_gateways_dir', ";
-	$sql .= "v_dialplan_public_dir = '$v_dialplan_public_dir', ";
-	$sql .= "v_dialplan_default_dir = '$v_dialplan_default_dir', ";
-	$sql .= "v_scripts_dir = '$v_scripts_dir', ";
-	$sql .= "v_grammar_dir = '$v_grammar_dir', ";
-	$sql .= "v_storage_dir = '$v_storage_dir', ";
-	$sql .= "v_voicemail_dir = '$v_voicemail_dir', ";
-	$sql .= "v_recordings_dir = '$v_recordings_dir', ";
-	$sql .= "v_sounds_dir = '$v_sounds_dir', ";
-	$sql .= "v_download_path = '$v_download_path' ";
-	//$sql .= "v_provisioning_tftp_dir = '$v_provisioning_tftp_dir', ";
-	//$sql .= "v_provisioning_ftp_dir = '$v_provisioning_ftp_dir', ";
-	//$sql .= "v_provisioning_https_dir = '$v_provisioning_https_dir', ";
-	//$sql .= "v_provisioning_http_dir = '$v_provisioning_http_dir' ";
-	$sql .= "where v_id = '$v_id'";
-
-	$db->exec($sql);
-	unset($sql);
+	if ($action == "update") {
+		$sql = "update v_system_settings set ";
+		$sql .= "php_dir = '$install_php_dir', ";
+		$sql .= "tmp_dir = '$install_tmp_dir', ";
+		$sql .= "bin_dir = '$v_bin_dir', ";
+		$sql .= "v_startup_script_dir = '$v_startup_script_dir', ";
+		$sql .= "v_package_version = '$v_package_version', ";
+		$sql .= "v_build_version = '$v_build_version', ";
+		$sql .= "v_build_revision = '$v_build_revision', ";
+		$sql .= "v_label = '$v_label', ";
+		$sql .= "v_name = '$v_name', ";
+		$sql .= "v_dir = '$install_v_dir', ";
+		$sql .= "v_parent_dir = '$v_parent_dir', ";
+		$sql .= "v_backup_dir = '$install_v_backup_dir', ";
+		$sql .= "v_web_dir = '$v_web_dir', ";
+		$sql .= "v_web_root = '$v_web_root', ";
+		$sql .= "v_relative_url = '$v_relative_url', ";
+		$sql .= "v_conf_dir = '$v_conf_dir', ";
+		$sql .= "v_db_dir = '$v_db_dir', ";
+		$sql .= "v_htdocs_dir = '$v_htdocs_dir', ";
+		$sql .= "v_log_dir = '$v_log_dir', ";
+		$sql .= "v_mod_dir = '$v_mod_dir', ";
+		$sql .= "v_extensions_dir = '$v_extensions_dir', ";
+		$sql .= "v_gateways_dir = '$v_gateways_dir', ";
+		$sql .= "v_dialplan_public_dir = '$v_dialplan_public_dir', ";
+		$sql .= "v_dialplan_default_dir = '$v_dialplan_default_dir', ";
+		$sql .= "v_scripts_dir = '$v_scripts_dir', ";
+		$sql .= "v_grammar_dir = '$v_grammar_dir', ";
+		$sql .= "v_storage_dir = '$v_storage_dir', ";
+		$sql .= "v_voicemail_dir = '$v_voicemail_dir', ";
+		$sql .= "v_recordings_dir = '$v_recordings_dir', ";
+		$sql .= "v_sounds_dir = '$v_sounds_dir', ";
+		$sql .= "v_download_path = '$v_download_path' ";
+		//$sql .= "v_provisioning_tftp_dir = '$v_provisioning_tftp_dir', ";
+		//$sql .= "v_provisioning_ftp_dir = '$v_provisioning_ftp_dir', ";
+		//$sql .= "v_provisioning_https_dir = '$v_provisioning_https_dir', ";
+		//$sql .= "v_provisioning_http_dir = '$v_provisioning_http_dir' ";
+		$sql .= "where v_id = '$v_id'";
+		$db->exec($sql);
+		unset($sql);
+	}
 
 //redirect to the system settings page
 	require_once "includes/header.php";
