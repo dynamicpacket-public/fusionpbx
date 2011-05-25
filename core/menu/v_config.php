@@ -84,7 +84,7 @@
 		$apps[$x]['permissions'][4]['name'] = 'menu_restore';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_menu 
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_menu';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'menuid';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';

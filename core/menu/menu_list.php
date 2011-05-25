@@ -26,7 +26,10 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (!ifgroup("superadmin")) {
+if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+	//access granted
+}
+else {
 	echo "access denied";
 	return;
 }
@@ -52,7 +55,7 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 		$rowstyle["1"] = "rowstyle1";
 
 		if (count($result2) > 0) {
-			if ($c==0) { $c2=1; } else { $c2=0; }
+			if ($c == 0) { $c2 = 1; } else { $c2 = 0; }
 			foreach($result2 as $row2) {
 				$menuid = $row2['menuid'];
 				$menucategory = $row2['menucategory'];
@@ -65,7 +68,7 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 				$menuorder = $field['menuorder'];
 				$menulanguage = $field['menulanguage'];
 
-				if (strlen($menugroup)==0) {
+				if (strlen($menugroup) == 0) {
 					$menugroup = 'public';
 				}
 				$menutitle = $row2[menutitle];
@@ -84,46 +87,51 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 				}
 
 				echo "<tr'>\n";
-					echo "<td valign='top' class='".$rowstyle[$c]."'>";
-					echo "  <table cellpadding='0' cellspacing='0' border='0'>";
-					echo "  <tr>";
-					echo "      <td nowrap>";
-					$i=0;
-					while($i < $menulevel){
-						echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
-						$i++;
-					}
-					echo "       ".$menutitle."&nbsp;";
+				echo "<td valign='top' class='".$rowstyle[$c]."'>";
+				echo "  <table cellpadding='0' cellspacing='0' border='0'>";
+				echo "  <tr>";
+				echo "      <td nowrap>";
+				$i=0;
+				while($i < $menulevel){
+					echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+					$i++;
+				}
+				echo "       ".$menutitle."&nbsp;";
 
-					echo "      </td>";
-					echo "  </tr>";
-					echo "  </table>";
-					echo "</td>";
-					//echo "<td valign='top'>&nbsp;".$menustr."&nbsp;</td>";
-					echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menucategory."&nbsp;</td>";
-					echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menugroup."&nbsp;</td>";
-					//echo "<td valign='top'>".$row[menudesc]."</td>";
-					//echo "<td valign='top'>&nbsp;".$row[menuorder]."&nbsp;</td>";
-					if ($menu_protected == "true") {
-						echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; <strong>yes</strong> &nbsp;</td>";
-					}
-					else {
-						echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; no &nbsp;</td>";
-					}
-					echo "<td valign='top' align='center' nowrap class='".$rowstyle[$c]."'>";
-					echo "  ".$row2[menuorder]."&nbsp;";
-					echo "</td>";
+				echo "      </td>";
+				echo "  </tr>";
+				echo "  </table>";
+				echo "</td>";
+				//echo "<td valign='top'>&nbsp;".$menustr."&nbsp;</td>";
+				echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menucategory."&nbsp;</td>";
+				echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menugroup."&nbsp;</td>";
+				//echo "<td valign='top'>".$row[menudesc]."</td>";
+				//echo "<td valign='top'>&nbsp;".$row[menuorder]."&nbsp;</td>";
+				if ($menu_protected == "true") {
+					echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; <strong>yes</strong> &nbsp;</td>";
+				}
+				else {
+					echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; no &nbsp;</td>";
+				}
+				echo "<td valign='top' align='center' nowrap class='".$rowstyle[$c]."'>";
+				echo "  ".$row2[menuorder]."&nbsp;";
+				echo "</td>";
 
-					echo "<td valign='top' align='center' class='".$rowstyle[$c]."'>";
+				echo "<td valign='top' align='center' class='".$rowstyle[$c]."'>";
+				if (permission_exists('menu_edit')) {
 					echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_up.php?menu_parent_guid=".$row2['menu_parent_guid']."&menuid=".$row2[menuid]."&menuorder=".$row2[menuorder]."'\" value='<' title='".$row2[menuorder].". Move Up'>";
 					echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_down.php?menu_parent_guid=".$row2['menu_parent_guid']."&menuid=".$row2[menuid]."&menuorder=".$row2[menuorder]."'\" value='>' title='".$row2[menuorder].". Move Down'>";
-					echo "</td>";
+				}
+				echo "</td>";
 
-					echo "   <td valign='top' align='right' nowrap>\n";
+				echo "   <td valign='top' align='right' nowrap>\n";
+				if (permission_exists('menu_edit')) {
 					echo "		<a href='menu_edit.php?menuid=".$row2[menuid]."&menu_parent_guid=".$row2['menu_parent_guid']."' alt='edit'>$v_link_label_edit</a>\n";
+				}
+				if (permission_exists('menu_delete')) {
 					echo "		<a href='menu_delete.php?menuid=".$row2[menuid]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
-					echo "   </td>\n";
-
+				}
+				echo "   </td>\n";
 				echo "</tr>";
 
 				if ($row2[menuorder] != $tmp_menuorder) {
@@ -161,7 +169,9 @@ $order = $_GET["order"];
 	echo "<table width='100%' border='0'><tr>";
 	echo "<td width='50%'><b>Menu Manager</b></td>";
 	echo "<td width='50%' align='right'>\n";
-	echo "	<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='menu_restore_default.php';\" />";
+	if (permission_exists('menu_restore')) {
+		echo "	<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='menu_restore_default.php';\" />";
+	}
 	echo "</td>\n";
 	echo "<td width='35' nowrap></td>\n";
 	echo "</tr></table>";
@@ -190,11 +200,11 @@ $order = $_GET["order"];
 	echo "<div align='left'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 		echo "<tr><td>&nbsp;</td></tr>";
 	}
-	else { //received results
-
+	else {
 		echo "<tr>";
 		echo "<th align='left' nowrap>&nbsp; Title &nbsp; </th>";
 		echo "<th align='left'nowrap>&nbsp; Category &nbsp; </th>";
@@ -203,7 +213,9 @@ $order = $_GET["order"];
 		echo "<th align='left'  width='55' nowrap>&nbsp; Order &nbsp;</th>";
 		echo "<th nowrap width='70'>&nbsp; </th>";
 		echo "<td align='right' width='42'>\n";
-		echo "	<a href='menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+		if (permission_exists('menu_add')) {
+			echo "	<a href='menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+		}
 		echo "</td>\n";
 		echo "</tr>";
 
@@ -231,7 +243,6 @@ $order = $_GET["order"];
 			}
 
 			echo "<tr style='".$rowstyle[$c]."'>\n";
-
 			echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; ".$menutitle."&nbsp;</td>";
 			//echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menustr."&nbsp;</td>";
 			echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menucategory."&nbsp;</td>";
@@ -252,15 +263,20 @@ $order = $_GET["order"];
 			echo "</td>";
 
 			echo "<td valign='top' align='center' nowrap class='".$rowstyle[$c]."'>";
-			echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_up.php?menu_parent_guid=".$row['menu_parent_guid']."&menuid=".$row['menuid']."&menuorder=".$row['menuorder']."'\" value='<' title='".$row['menuorder'].". Move Up'>";
-			echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_down.php?menu_parent_guid=".$row['menu_parent_guid']."&menuid=".$row['menuid']."&menuorder=".$row['menuorder']."'\" value='>' title='".$row['menuorder'].". Move Down'>";
+			if (permission_exists('menu_edit')) {
+				echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_up.php?menu_parent_guid=".$row['menu_parent_guid']."&menuid=".$row['menuid']."&menuorder=".$row['menuorder']."'\" value='<' title='".$row['menuorder'].". Move Up'>";
+				echo "  <input type='button' class='btn' name='' onclick=\"window.location='menu_move_down.php?menu_parent_guid=".$row['menu_parent_guid']."&menuid=".$row['menuid']."&menuorder=".$row['menuorder']."'\" value='>' title='".$row['menuorder'].". Move Down'>";
+			}
 			echo "</td>";
 
 			echo "   <td valign='top' align='right' nowrap>\n";
-			echo "		<a href='menu_edit.php?menuid=".$row[menuid]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='menu_delete.php?menuid=".$row[menuid]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+			if (permission_exists('menu_edit')) {
+				echo "		<a href='menu_edit.php?menuid=".$row[menuid]."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('menu_delete')) {
+				echo "		<a href='menu_delete.php?menuid=".$row[menuid]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+			}
 			echo "   </td>\n";
-
 			echo "</tr>";
 
 			if ($row[menuorder] != $tmp_menuorder) {
@@ -290,7 +306,9 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('menu_add')) {
+		echo "			<a href='menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -308,11 +326,5 @@ $order = $_GET["order"];
 
 	echo "<br><br>";
 	require_once "includes/footer.php";
-
-	unset ($resultcount);
-	unset ($result);
-	unset ($key);
-	unset ($val);
-	unset ($c);
 
 ?>

@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('menu_add') || permission_exists('menu_edit')) {
 	//access granted
 }
 else {
@@ -88,7 +88,7 @@ else {
 
 		//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('menu_add')) {
 				$sql = "SELECT menuorder FROM v_menu ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and menu_parent_guid  = '$menu_parent_guid' ";
@@ -144,7 +144,7 @@ else {
 				return;
 			}
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('menu_edit')) {
 				$sql  = "update v_menu set ";
 				$sql .= "menutitle = '$menutitle', ";
 				$sql .= "menustr = '$menustr', ";
@@ -345,22 +345,25 @@ else {
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menudesc' value='$menudesc'></td>";
 	echo "	</tr>";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<table width='100%'>";
-	echo "			<tr>";
-	echo "			<td align='left'>";
-	echo "			</td>\n";
-	echo "			<td align='right'>";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='menuid' value='$menuid'>";
+	if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+		echo "	<tr>\n";
+		echo "		<td colspan='2' align='right'>\n";
+		echo "			<table width='100%'>";
+		echo "			<tr>";
+		echo "			<td align='left'>";
+		echo "			</td>\n";
+		echo "			<td align='right'>";
+		
+		if ($action == "update") {
+			echo "				<input type='hidden' name='menuid' value='$menuid'>";
+		}
+		echo "				<input type='submit' class='btn' name='submit' value='Save'>\n";
+		echo "			</td>";
+		echo "			</tr>";
+		echo "			</table>";
+		echo "		</td>";
+		echo "	</tr>";
 	}
-	echo "				<input type='submit' class='btn' name='submit' value='Save'>\n";
-	echo "			</td>";
-	echo "			</tr>";
-	echo "			</table>";
-	echo "		</td>";
-	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
 
@@ -369,5 +372,6 @@ else {
 	echo "</table>";
 	echo "</div>";
 
+//include the footer
   require_once "includes/footer.php";
 ?>

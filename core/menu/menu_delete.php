@@ -26,31 +26,36 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (!ifgroup("superadmin")) {
+if (permission_exists('menu_delete')) {
+	//access granted
+}
+else {
 	echo "access denied";
 	return;
 }
 
 if (count($_GET)>0) {
+	//clear the menu session so it will rebuild with the update
+		$_SESSION["menu"] = "";
 
-	$_SESSION["menu"] = ""; //clear the menu session so it will rebuild with the update
-	$menuid = check_str($_GET["menuid"]);
+	//get the id
+		$menuid = check_str($_GET["menuid"]);
 
-	$sql  = "delete from v_menu ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and menuid = '$menuid' ";
-	//echo $sql;
-	$db->exec(check_sql($sql));
-	unset($sql);
+	//delete the item in the menu
+		$sql  = "delete from v_menu ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and menuid = '$menuid' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
 
-	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_list.php?menuid=$menuid\">\n";
-	echo "<div align='center'>";
-	echo "Delete Completed";
-	echo "</div>";
-	require_once "includes/footer.php";
-	return;
+	//redirect the user
+		require_once "includes/header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_list.php?menuid=$menuid\">\n";
+		echo "<div align='center'>";
+		echo "Delete Completed";
+		echo "</div>";
+		require_once "includes/footer.php";
+		return;
 }
-
 
 ?>

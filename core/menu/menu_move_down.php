@@ -26,7 +26,10 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (!ifgroup("superadmin")) {
+if (permission_exists('menu_edit')) {
+	//access granted
+}
+else {
 	echo "access denied";
 	return;
 }
@@ -52,7 +55,6 @@ if (count($_GET)>0) {
 	unset($prepstatement);
 
 	if ($menuorder != $highestmenuorder) {
-
 		//clear the menu session so it will rebuild with the update
 			$_SESSION["menu"] = "";
 
@@ -72,14 +74,15 @@ if (count($_GET)>0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 	}
-	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"1;url=menu_list.php?menuid=$menuid\">\n";
-	echo "<div align='center'>";
-	echo "Item Moved Down";
-	echo "</div>";
-	require_once "includes/footer.php";
-	return;
-}
 
+	//redirect the user
+		require_once "includes/header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"1;url=menu_list.php?menuid=$menuid\">\n";
+		echo "<div align='center'>";
+		echo "Item Moved Down";
+		echo "</div>";
+		require_once "includes/footer.php";
+		return;
+}
 
 ?>
