@@ -30,9 +30,9 @@ ob_start();
 
 echo "\n---------------------------------\n";
 
-
 $php_version = substr(phpversion(), 0, 1);
 if ($php_version == '4') {
+	$domain = $_REQUEST["domain"];
 	$fax_email = $_REQUEST["email"];
 	$fax_extension = $_REQUEST["extension"];
 	$fax_name = $_REQUEST["name"];
@@ -57,6 +57,10 @@ else {
 	unset($tmp_array);
 
 	$tmp_array = explode("=", $_SERVER["argv"][5]);
+	$domain = $tmp_array[1];
+	unset($tmp_array);
+
+	$tmp_array = explode("=", $_SERVER["argv"][6]);
 	$fax_retry = $tmp_array[1];
 	unset($tmp_array);
 }
@@ -66,7 +70,12 @@ else {
 //echo "fax_name $fax_name\n";
 //echo "cd $dir_fax; /usr/bin/tiff2png ".$dir_fax.'/'.$fax_name.".png\n";
 
-$dir_fax = $v_storage_dir.'/fax/'.$fax_extension.'/inbox';
+if (strlen($domain) > 0) {
+	$dir_fax = $v_storage_dir.'/fax/'.$domain.'/'.$fax_extension.'/inbox';
+}
+else {
+	$dir_fax = $v_storage_dir.'/fax/'.$fax_extension.'/inbox';
+}
 
 $fax_file_warning = "";
 if (file_exists($dir_fax.'/'.$fax_name.".tif")) {
@@ -181,7 +190,6 @@ ob_end_clean(); //clean the buffer
 fwrite($fp, $content);
 fclose($fp);
 
-
 // the following files are created:
 //     /usr/local/freeswitch/storage/fax
 //        emailed_faxes.log - this is a log of all the faxes we have successfully emailed.  (note that we need to work out how to rotate this log)
@@ -223,4 +231,5 @@ else {
 		$tmp_response = exec("batch -f ".$tmp_dir."/failed_fax_emails.sh now + 3 minutes");
 	}
 }
+
 ?>
