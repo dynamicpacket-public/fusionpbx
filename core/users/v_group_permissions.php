@@ -227,7 +227,7 @@ require_once "includes/paging.php";
 
 			foreach ($app['permissions'] as $row) {
 				echo "<tr >\n";
-				echo "	<td valign='top' style='width:200px' nowrap='nowrap' class='".$row_style[$c]."'>\n";
+				echo "	<td valign='top' style='width:250px' nowrap='nowrap' class='".$row_style[$c]."'>\n";
 				if ($permissions_db_checklist[$row['name']] == "true") {
 					echo "		<input type='checkbox' name='permissions_form[]' checked='checked' value='".$row['name']."'>\n";
 				}
