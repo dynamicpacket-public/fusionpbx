@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (ifgroup("superadmin")) {
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
@@ -46,14 +46,11 @@ if (ifgroup("admin") || ifgroup("superadmin")) {
 	echo "	<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-
 	echo "</table>\n";
 	echo "\n";
 
 	echo "<span  class=\"\" ><strong></strong></span><br>\n";
 	echo "<br>";
-
-
 	echo "<br><br>";
 
 	/*
@@ -86,6 +83,5 @@ if (ifgroup("admin") || ifgroup("superadmin")) {
 	*/
 
  }
-
 
 ?>

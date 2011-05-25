@@ -27,14 +27,8 @@ include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (ifgroup("superadmin")) {
 
-	//$downloadfile="backup.bak";
-	//$dbandpath = "/secure/database.db";
-	//$fh = fopen($dbandpath, 'r+b');
-	//$contents = fread($fh, filesize($dbandpath));
-
-	//echo $dbfilepath.'/'.$dbfilename; //defined in /includes/config.php
 	$fh = fopen($dbfilepath.'/'.$dbfilename, 'r+b');
 	$contents = fread($fh, filesize($dbfilepath.'/'.$dbfilename));
 
