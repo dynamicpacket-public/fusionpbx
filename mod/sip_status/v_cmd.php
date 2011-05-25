@@ -68,6 +68,6 @@ if ($rdr == "false") {
 	echo $response;
 }
 else {
-	header("Location: v_status.php?savemsg=".urlencode($response));
+	header("Location: v_sip_status.php?savemsg=".urlencode($response));
 }
 ?>
