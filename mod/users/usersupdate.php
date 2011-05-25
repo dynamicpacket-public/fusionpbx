@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("user_account_settings_view")) {
+if (permission_exists("user_account_settings_view")) {
 	//access granted
 }
 else {
