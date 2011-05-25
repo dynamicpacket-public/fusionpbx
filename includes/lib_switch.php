@@ -3135,8 +3135,14 @@ function sync_package_v_fax() {
 					//<action application="system" data="$v_scripts_dir/emailfax.sh USER DOMAIN $v_storage_dir/fax/inbox/9872/${last_fax}.tif"/>
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
-					$fielddata = "api_hangup_hook=system ".$php_dir."/".$php_exe." ".$v_secure."/fax_to_email.php email=".$row['faxemail']." extension=".$row['faxextension']." name=\\\\\\\${last_fax} ";
+					$fielddata = "api_hangup_hook=system ".$php_dir."/".$php_exe." ".$v_secure."/fax_to_email.php ";
+					$fielddata .= "email=".$row['faxemail']." ";
+					$fielddata .= "extension=".$row['faxextension']." ";
+					$fielddata .= "name=\\\\\\\${last_fax} ";
 					$fielddata .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+					if (count($_SESSION["domains"]) > 1) {
+						$fielddata .= "domain=".$v_domain;
+					}
 					$fieldorder = '001';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, check_str($fielddata));
 
