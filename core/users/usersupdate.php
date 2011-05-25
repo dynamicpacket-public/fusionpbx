@@ -26,8 +26,10 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists("user_add") ||
+	permission_exists("user_edit") || 
+	permission_exists("user_delete") ||
+	ifgroup("superadmin")) {
 	//access allowed
 }
 else {
@@ -79,7 +81,7 @@ else {
 	}
 
 //delete the group from the user
-	if ($_GET["a"] == "delete") {
+	if ($_GET["a"] == "delete" && ifgroup("user_delete")) {
 		//set the variables
 			$groupid = $_GET["groupid"];
 		//delete the group from the users
@@ -182,28 +184,27 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
 	//assign the user to the group
 		if (strlen($_REQUEST["groupid"]) > 0) {
-			//add the user to the group
-				$sqlinsert = "insert into v_group_members ";
-				$sqlinsert .= "(";
-				$sqlinsert .= "v_id, ";
-				$sqlinsert .= "groupid, ";
-				$sqlinsert .= "username ";
-				$sqlinsert .= ")";
-				$sqlinsert .= "values ";
-				$sqlinsert .= "(";
-				$sqlinsert .= "'$v_id', ";
-				$sqlinsert .= "'".$_REQUEST["groupid"]."', ";
-				$sqlinsert .= "'$username' ";
-				$sqlinsert .= ")";
-				if ($_REQUEST["groupid"] == "superadmin") {
-					//only a user in the superadmin group can add other users to that group
-					if (ifgroup("superadmin")) {
-						$db->exec($sqlinsert);
-					}
-				}
-				else {
+			$sqlinsert = "insert into v_group_members ";
+			$sqlinsert .= "(";
+			$sqlinsert .= "v_id, ";
+			$sqlinsert .= "groupid, ";
+			$sqlinsert .= "username ";
+			$sqlinsert .= ")";
+			$sqlinsert .= "values ";
+			$sqlinsert .= "(";
+			$sqlinsert .= "'$v_id', ";
+			$sqlinsert .= "'".$_REQUEST["groupid"]."', ";
+			$sqlinsert .= "'$username' ";
+			$sqlinsert .= ")";
+			if ($_REQUEST["groupid"] == "superadmin") {
+				//only a user in the superadmin group can add other users to that group
+				if (ifgroup("superadmin")) {
 					$db->exec($sqlinsert);
 				}
+			}
+			else {
+				$db->exec($sqlinsert);
+			}
 		}
 
 	//if the template has not been assigned by the superadmin
@@ -316,7 +317,6 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		return;
 }
 else {
-
 	$sql = "";
 	$sql .= "select * from v_users ";
 	//allow admin access
@@ -396,9 +396,11 @@ else {
 	$groupmemberlist = groupmemberlist($db, $username);
 }
 
-	$tablewidth ='width="100%"';
-
+//include the header
 	require_once "includes/header.php";
+
+//show the content
+	$tablewidth ='width="100%"';
 	echo "<form method='post' action=''>";
 	echo "<br />\n";
 
@@ -424,7 +426,6 @@ else {
 	echo "<br />\n";
 
 	echo "<table $tablewidth cellpadding='6' cellspacing='0' border='0'>";
-
 	echo "<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>User Info</th>\n";
 	echo "</tr>\n";
@@ -437,7 +438,7 @@ else {
 	if (ifgroup("superadmin")) {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Domain: \n";
+		echo "		Domain:\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
 		echo "		<select id='v_id' name='v_id' class='formfld' style=''>\n";
@@ -495,12 +496,13 @@ else {
 	$result = $prepstatement->fetchAll();
 	$resultcount = count($result);
 	foreach($result as $field) {
-		//get the list of groups
 		if (strlen($field['groupid']) > 0) {
 			echo "<tr>\n";
 			echo "	<td class='vtable'>".$field['groupid']."</td>\n";
 			echo "	<td>\n";
-			echo "		<a href='usersupdate.php?id=".$id."&v_id=".$v_id."&groupid=".$field['groupid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('group_member_delete') || ifgroup("superadmin")) {
+				echo "		<a href='usersupdate.php?id=".$id."&v_id=".$v_id."&groupid=".$field['groupid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -515,13 +517,12 @@ else {
 	echo "<select name=\"groupid\" class='frm'>\n";
 	echo "<option value=\"\"></option>\n";
 	$result = $prepstatement->fetchAll();
-	//$catcount = count($result);
 	foreach($result as $field) {
 		if ($field['groupid'] == "superadmin") {
 			//only show the superadmin group to other users in the superadmin group
 			if (ifgroup("superadmin")) {
 				echo "<option value='".$field['groupid']."'>".$field['groupid']."</option>\n";
-			}		
+			}
 		}
 		else {
 			echo "<option value='".$field['groupid']."'>".$field['groupid']."</option>\n";
@@ -751,36 +752,36 @@ else {
 	}
 
 	//if the template has not been assigned by the superadmin
-	if (strlen($_SESSION["v_template_name"]) == 0) {
-		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Template: \n";
-		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
-		echo "		<select id='user_template_name' name='user_template_name' class='formfld' style=''>\n";
-		echo "		<option value=''></option>\n";
-		$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-		if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
-			while (false !== ($dir_name = readdir($handle))) {
-				if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && is_dir($theme_dir.'/'.$dir_name)) {
-					$dir_label = str_replace('_', ' ', $dir_name);
-					$dir_label = str_replace('-', ' ', $dir_label);
-					if ($dir_name == $user_template_name) {
-						echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
-					}
-					else {
-						echo "		<option value='$dir_name'>$dir_label</option>\n";
+		if (strlen($_SESSION["v_template_name"]) == 0) {
+			echo "	<tr>\n";
+			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "		Template: \n";
+			echo "	</td>\n";
+			echo "	<td class=\"vtable\">\n";
+			echo "		<select id='user_template_name' name='user_template_name' class='formfld' style=''>\n";
+			echo "		<option value=''></option>\n";
+			$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
+			if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
+				while (false !== ($dir_name = readdir($handle))) {
+					if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && is_dir($theme_dir.'/'.$dir_name)) {
+						$dir_label = str_replace('_', ' ', $dir_name);
+						$dir_label = str_replace('-', ' ', $dir_label);
+						if ($dir_name == $user_template_name) {
+							echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
+						}
+						else {
+							echo "		<option value='$dir_name'>$dir_label</option>\n";
+						}
 					}
 				}
+				closedir($handle);
 			}
-			closedir($handle);
+			echo "	</select>\n";
+			echo "	<br />\n";
+			echo "	Select a template to set as the default and then press save.<br />\n";
+			echo "	</td>\n";
+			echo "	</tr>\n";
 		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo "	Select a template to set as the default and then press save.<br />\n";
-		echo "	</td>\n";
-		echo "	</tr>\n";
-	}
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
@@ -817,8 +818,7 @@ else {
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	echo "    </table>";
-
+	echo "	</table>";
 	echo "<br>";
 
 	echo "<div class='' style='padding:10px;'>\n";
@@ -838,6 +838,7 @@ else {
 	echo "</div>";
 	echo "</form>";
 
+//include the footer
+	require_once "includes/footer.php";
 
-  require_once "includes/footer.php";
 ?>

@@ -39,7 +39,7 @@ require_once "includes/config.php";
 //show the header
 	require_once "includes/header.php";
 
-//if (ifpermission("add")) {
+//show the content
 	echo "<div class='' style='padding:0px;'>\n";
 	echo "<table width='100%'>";
 	echo "<td>";
@@ -47,7 +47,9 @@ require_once "includes/config.php";
 	echo "<table width='100%' border='0'><tr>";
 	echo "<td width='50%'><b>Group List</b></td>";
 	echo "<td width='50%' align='right'>";
-	echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='User Manager'>";
+	if (permission_exists('user_view')) {
+		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='User Manager'>";
+	}
 	echo "</td>\n";
 	echo "</tr></table>";
 
@@ -61,14 +63,15 @@ require_once "includes/config.php";
 	$rowstyle["1"] = "rowstyle1";
 
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	$strlist .= "<tr class='border'>\n";
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; Group ID &nbsp; </th>\n";
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; Group Description &nbsp; </th>\n";
 	$strlist .= "	<th align=\"center\" nowrap>&nbsp;</th>\n";
 
 	$strlist .= "	<td width='22px' align=\"right\" nowrap>\n";
-	$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('group_add')) {
+		$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	$strlist .= "	</td>\n";
 	$strlist .= "</tr>\n";
 
@@ -90,12 +93,14 @@ require_once "includes/config.php";
 			$strlist .= "<td class='".$rowstyle[$c]."' align=\"left\" class='' nowrap> &nbsp; $groupid &nbsp; </td>\n";
 			$strlist .= "<td class='".$rowstyle[$c]."' align=\"left\" class='' nowrap> &nbsp;  $groupdesc &nbsp; </td>\n";
 
-			//if (ifpermission("add")) {
-				$strlist .= "<td class='".$rowstyle[$c]."' align=\"center\" nowrap>\n";
-				$strlist .= "&nbsp;<a class='' href='v_group_permissions.php?group_id=$groupid' title='Group Members'>Permissions</a>&nbsp;&nbsp;";
+			$strlist .= "<td class='".$rowstyle[$c]."' align=\"center\" nowrap>\n";
+			if (permission_exists('group_add') || ifgroup("superadmin")) {
+				$strlist .= "&nbsp;<a class='' href='v_group_permissions.php?group_id=$groupid' title='Group Permissions'>Permissions</a>&nbsp;&nbsp;";
+			}
+			if (permission_exists('group_member_view') || ifgroup("superadmin")) {
 				$strlist .= "&nbsp;<a class='' href='groupmembers.php?groupid=$groupid' title='Group Members'>Members</a>&nbsp;";
-				$strlist .= "</td>\n";
-			//}
+			}
+			$strlist .= "</td>\n";
 
 			$strlist .= "<td align=\"right\" nowrap>\n";
 			$strlist .= "<a href='groupdelete.php?id=$id' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
@@ -109,7 +114,9 @@ require_once "includes/config.php";
 
 	$strlist .= "<tr>\n";
 	$strlist .= "<td colspan='4' align='right' height='20'>\n";
-	$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('group_add')) {
+		$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	$strlist .= "</td>\n";
 	$strlist .= "</tr>\n";
 
@@ -123,7 +130,6 @@ require_once "includes/config.php";
 	echo "</table>";
 	echo "<br>";
 	echo "</div>";
-//} //end if add permission
 
 //show the footer
 	require_once "includes/footer.php";

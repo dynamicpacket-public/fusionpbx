@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('group_member_add') || ifgroup("superadmin")) {
 	//access allowed
 }
 else {
@@ -41,12 +40,11 @@ else {
 		return;
 	}
 
-//HTTP GET set to a variable
+//get the http values and set them as variables
 	$groupid = check_str($_POST["groupid"]);
 	$username = check_str($_POST["username"]);
 
 if (strlen($username) > 0  && strlen($groupid) > 0)   {
-
 	$sqlinsert = "insert into v_group_members ";
 	$sqlinsert .= "(";
 	$sqlinsert .= "v_id, ";
@@ -59,12 +57,10 @@ if (strlen($username) > 0  && strlen($groupid) > 0)   {
 	$sqlinsert .= "'$groupid', ";
 	$sqlinsert .= "'$username' ";
 	$sqlinsert .= ")";
-	//echo $sqlinsert;
-	//exit;
 	if (!$db->exec($sqlinsert)) {
 		//echo $db->errorCode() . "<br>";
 		$info = $db->errorInfo();
-	  print_r($info);
+		print_r($info);
 		// $info[0] == $db->errorCode() unified error code
 		// $info[1] is the driver specific error code
 		// $info[2] is the driver specific error string
@@ -73,12 +69,10 @@ if (strlen($username) > 0  && strlen($groupid) > 0)   {
 		//log the success
 		//$logtype = 'group'; $logstatus='add'; $logadduser=$_SESSION["username"]; $logdesc= "username: ".$username." added to group: ".$groupid;
 		//logadd($db, $logtype, $logstatus, $logdesc, $logadduser, $_SERVER["REMOTE_ADDR"]);
-
 	}
-
 }
 
-header("Location: groupmembers.php?groupid=$groupid");
-
+//redirect the user
+	header("Location: groupmembers.php?groupid=$groupid");
 
 ?>

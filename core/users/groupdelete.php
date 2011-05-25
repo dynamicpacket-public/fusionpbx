@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('group_delete') || ifgroup("superadmin")) {
 	//access allowed
 }
 else {
@@ -49,8 +48,7 @@ if (!$db->exec($sqldelete)) {
 	// $info[2] is the driver specific error string
 }
 
-
-header("Location: index.php");
-exit;
+//redirect the user
+	header("Location: index.php");
 
 ?>

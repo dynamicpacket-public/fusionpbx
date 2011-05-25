@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("superadmin")) {
+if (permission_exists('group_permissions') || ifgroup("superadmin")) {
 	//access granted
 }
 else {
@@ -118,14 +118,10 @@ require_once "includes/paging.php";
 
 //process the http post
 	if (count($_POST)>0) {
-		//echo "<pre>";
-		//print_r($_POST);
-		//echo "</pre>";
-		
 		foreach($_POST['permissions_form'] as $permission) {
 			$permissions_form[$permission] = "true";
 		}
-		
+
 		//list all the permissions
 			foreach($apps as $app) {
 				foreach ($app['permissions'] as $row) {
@@ -249,7 +245,6 @@ require_once "includes/paging.php";
 			
 			echo "<tr>\n";
 			echo "	<td colspan='3' align='right'>\n";
-			//echo "		<br />\n";
 			echo "		<input type='submit' name='submit' class='btn' value='Save'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -258,17 +253,16 @@ require_once "includes/paging.php";
 		} //end foreach
 		unset($sql, $result, $row_count);
 
-
 	echo "</div>";
 	echo "<br><br>";
 	echo "<br><br>";
-	
+
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
 	echo "<form>\n";
-	
+
 	echo "<br><br>";
 
 //show the footer

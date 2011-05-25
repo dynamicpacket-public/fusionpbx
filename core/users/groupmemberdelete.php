@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('group_member_delete') || ifgroup("superadmin")) {
 	//access allowed
 }
 else {
@@ -41,18 +40,15 @@ else {
 		return;
 	}
 
-//HTTP GET set to a variable
+//get the http values and set them as variables
 	$groupid = check_str($_GET["groupid"]);
 	$username = check_str($_GET["username"]);
 
-//if (ifpermission("delete")) {
-
+//delete the group membership
 	$sqldelete = "delete from v_group_members ";
 	$sqldelete .= "where v_id = '$v_id' ";
 	$sqldelete .= "and username = '$username' ";
 	$sqldelete .= "and groupid = '$groupid' ";
-
-	//echo $sqldelete;
 	if (!$db->exec($sqldelete)) {
 		//echo $db->errorCode() . "<br>";
 		$info = $db->errorInfo();
@@ -62,13 +58,11 @@ else {
 		// $info[2] is the driver specific error string
 	}
 	else {
-		$logtype = 'group'; $logstatus='remove'; $logadduser=$_SESSION["username"]; $logdesc= "username: ".$username." removed from group: ".$groupid;
-		logadd($db, $logtype, $logstatus, $logdesc, $logadduser, $_SERVER["REMOTE_ADDR"]);
+		//$logtype = 'group'; $logstatus='remove'; $logadduser=$_SESSION["username"]; $logdesc= "username: ".$username." removed from group: ".$groupid;
+		//logadd($db, $logtype, $logstatus, $logdesc, $logadduser, $_SERVER["REMOTE_ADDR"]);
 	}
-//} //end ifpermission
 
-
-header("Location: groupmembers.php?groupid=$groupid");
-exit;
+//redirect the user
+	header("Location: groupmembers.php?groupid=$groupid");
 
 ?>

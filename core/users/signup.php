@@ -82,7 +82,6 @@ $useremailemergency = check_str($_POST["useremailemergency"]);
 
 if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
-
 	$msgerror = '';
 
 	//--- begin captcha verification ---------------------
@@ -129,7 +128,6 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	//if (strlen($userphonefax) == 0) { $msgerror .= "Please provide a fax number.<br>\n"; }
 	if (strlen($useremail) == 0) { $msgerror .= "Please provide an email.<br>\n"; }
 	//if (strlen($useremailemergency) == 0) { $msgerror .= "Please provide an emergency email.<br>\n"; }
-
 
 	if (strlen($msgerror) > 0) {
 		require_once "includes/header.php";

@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('user_delete')) {
 	//access allowed
 }
 else {
@@ -35,7 +34,8 @@ else {
 	return;
 }
 
-$id = check_str($_GET["id"]);
+//get the id
+	$id = check_str($_GET["id"]);
 
 //get the username from v_users
 	$sql = "";
@@ -84,7 +84,7 @@ $id = check_str($_GET["id"]);
 		}
 	}
 
-//if (ifpermission("delete")) {
+//delete the user
 	$sqldelete = "delete from v_users ";
 	if (ifgroup("superadmin")) {
 		$sqldelete .= "where id = '$id' ";
@@ -101,10 +101,8 @@ $id = check_str($_GET["id"]);
 		// $info[1] is the driver specific error code
 		// $info[2] is the driver specific error string
 	}
-//} //end ifpermission
 
-
-header("Location: index.php");
-exit;
+//redirect the user
+	header("Location: index.php");
 
 ?>

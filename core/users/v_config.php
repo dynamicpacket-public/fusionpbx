@@ -23,8 +23,8 @@
 		$apps[$x]['menu'][1]['category'] = 'internal';
 		$apps[$x]['menu'][1]['path'] = '/logout.php';
 		$apps[$x]['menu'][1]['groups'][] = 'user';
-		//$apps[$x]['menu'][1]['groups'][] = 'admin';
-		//$apps[$x]['menu'][1]['groups'][] = 'superadmin';
+		$apps[$x]['menu'][1]['groups'][] = 'admin';
+		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][2]['title']['en'] = 'User Manager';
 		$apps[$x]['menu'][2]['guid'] = '0D57CC1E-1874-47B9-7DDD-FE1F57CEC99B';
@@ -74,7 +74,23 @@
 		$apps[$x]['permissions'][7]['groups'][] = 'admin';
 		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
 
-	// CREATE TABLE v_group_members 
+		$apps[$x]['permissions'][8]['name'] = 'group_member_view';
+		$apps[$x]['permissions'][8]['groups'][] = 'admin';
+		$apps[$x]['permissions'][8]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][9]['name'] = 'group_member_add';
+		$apps[$x]['permissions'][9]['groups'][] = 'admin';
+		$apps[$x]['permissions'][9]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][10]['name'] = 'group_member_delete';
+		$apps[$x]['permissions'][10]['groups'][] = 'admin';
+		$apps[$x]['permissions'][10]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][11]['name'] = 'group_permissions';
+		$apps[$x]['permissions'][11]['groups'][] = 'superadmin';
+
+
+	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_group_members';
 		$apps[$x]['db'][0]['fields'][0]['name'] = 'id';
 		$apps[$x]['db'][0]['fields'][0]['type']['pgsql'] = 'serial';
@@ -91,7 +107,6 @@
 		$apps[$x]['db'][0]['fields'][3]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][3]['description'] = '';
 
-	// CREATE TABLE v_group_permissions 
 		$apps[$x]['db'][1]['table'] = 'v_group_permissions';
 		$apps[$x]['db'][1]['fields'][0]['name'] = 'group_permission_id';
 		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
@@ -108,7 +123,6 @@
 		$apps[$x]['db'][1]['fields'][3]['type'] = 'text';
 		$apps[$x]['db'][1]['fields'][3]['description'] = '';
 
-	// CREATE TABLE v_groups 
 		$apps[$x]['db'][2]['table'] = 'v_groups';
 		$apps[$x]['db'][2]['fields'][0]['name'] = 'id';
 		$apps[$x]['db'][2]['fields'][0]['type']['pgsql'] = 'serial';
@@ -125,7 +139,6 @@
 		$apps[$x]['db'][2]['fields'][3]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][3]['description'] = '';
 
-	// CREATE TABLE v_users 
 		$apps[$x]['db'][3]['table'] = 'v_users';
 		$apps[$x]['db'][3]['fields'][0]['name'] = 'id';
 		$apps[$x]['db'][3]['fields'][0]['type']['pgsql'] = 'serial';

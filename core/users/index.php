@@ -26,8 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists('user_view') || ifgroup("superadmin")) {
 	//access allowed
 }
 else {
@@ -35,29 +34,24 @@ else {
 	return;
 }
 
-require_once "includes/header.php";
+//include the header
+	require_once "includes/header.php";
 
-echo "<div align='center'>";
-echo "<table width='100%' border='0'>";
-echo "<tr>";
-echo "<td align='left' width='100%'>";
+//show the user list
+	echo "<div align='center'>";
+	echo "	<table width='100%' border='0'>";
+	echo "		<tr>";
+	echo "		<td align='left' width='100%'>";
+	require_once "userlist.php";
+	echo "				<br />";
+	echo "				<br />";
+	echo "				<br />";
+	echo "			</td>";
+	echo "		</tr>";
+	echo "	</table>";
+	echo "</div>";
 
-
-//require_once "grouplist.php";
-//echo "<br>";
-require_once "userlist.php";
-
-
-echo "<br />";
-echo "<br />";
-echo "<br />";
-
-
-echo "</td>";
-echo "</tr>";
-echo "</table>";
-echo "</div>";
-
-include "includes/footer.php";
+//include the footer
+	include "includes/footer.php";
 
 ?>

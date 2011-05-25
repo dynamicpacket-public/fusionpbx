@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (ifgroup("admin") || ifgroup("superadmin")) {
+if (permission_exists("user_view") || ifgroup("superadmin")) {
 	//access granted
 }
 else {
@@ -34,7 +34,7 @@ else {
 	exit;
 }
 //require_once "includes/header.php";
-require_once "includes/paging.php";
+	require_once "includes/paging.php";
 
 $orderby = $_GET["orderby"];
 $order = $_GET["order"];
@@ -47,7 +47,6 @@ echo "<tr class='border'>\n";
 echo "	<td align=\"center\">\n";
 
 //page title and description
-
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<form method='post' action=''>";
 	echo "<tr>\n";
@@ -121,7 +120,6 @@ echo "	<td align=\"center\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 //get the user list from the database
 	$sql = "";
 	$sql .= " select * from v_users ";
@@ -193,15 +191,17 @@ echo "	<td align=\"center\">\n";
 	echo thorderby('useremail', 'Email', $orderby, $order);
 	//echo thorderby('user_template_name', 'Template', $orderby, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('user_add')) {
+		echo "	<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count == 0) { //no results
+	if ($result_count == 0) {
+		//no results
 	}
-	else { //received results
+	else {
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			if (ifgroup("superadmin")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['v_id']]['domain'] ."&nbsp;</td>\n";
@@ -214,8 +214,12 @@ echo "	<td align=\"center\">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['useremail']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_template_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='usersupdate.php?id=".$row['id']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='userdelete.php?id=".$row['id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('user_edit')) {
+				echo "		<a href='usersupdate.php?id=".$row['id']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('user_delete')) {
+				echo "		<a href='userdelete.php?id=".$row['id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -230,7 +234,9 @@ echo "	<td align=\"center\">\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('user_add')) {
+		echo "			<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
@@ -242,14 +248,10 @@ echo "	<td align=\"center\">\n";
 	echo "<br><br>";
 	echo "<br><br>";
 
-
 echo "</td>";
 echo "</tr>";
 echo "</table>";
 echo "</div>";
 echo "<br><br>";
-
-
-//require_once "includes/footer.php";
 
 ?>
