@@ -680,8 +680,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($vm_enabled == "true") { 
-		echo "    <option value='true' selected >true</option>\n";
+	if ($vm_enabled == "true" || $vm_enabled == "") { 
+		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
