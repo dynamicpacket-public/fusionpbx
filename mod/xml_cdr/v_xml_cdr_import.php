@@ -25,16 +25,9 @@
 */
 include "root.php";
 require_once "includes/config.php";
-if (permission_exists('xml_cdr_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
 
 //set debug
-	$debug = true; //true //false
+	$debug = false; //true //false
 
 //increase limits
 	set_time_limit(3600);
