@@ -331,6 +331,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (count($result) == 0) {
 						require_once "includes/classes/menu_restore.php";
 						$menu_restore = new menu_restore;
+						$menu_restore->db = $db;
 						$menu_restore->v_id = $v_id;
 						$menu_restore->restore();
 					}
