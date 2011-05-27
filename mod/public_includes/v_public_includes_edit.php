@@ -449,7 +449,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "		<a href='v_public_includes_details_edit.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='edit'>$v_link_label_edit</a>\n";
 					}
 					if (permission_exists('public_includes_delete')) {
-						echo "		<a href='v_public_icludes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "		<a href='v_public_includes_details_delete.php?id=".$row[public_includes_detail_id]."&id2=".$public_include_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 					}
 					echo "   </td>\n";
 					echo "</tr>\n";
