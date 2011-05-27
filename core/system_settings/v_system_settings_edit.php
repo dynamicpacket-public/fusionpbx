@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" || permission_exists('system_settings_add')) {
+			if ($action == "add" && permission_exists('system_settings_add')) {
 				//insert a row into system settings
 					$sql = "insert into v_system_settings ";
 					$sql .= "(";
@@ -272,7 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 			} //if ($action == "add")
 
-			if ($action == "update" || permission_exists('system_settings_edit')) {
+			if ($action == "update" && permission_exists('system_settings_edit')) {
 				//update the system settings
 					$sql = "update v_system_settings set ";
 					$sql .= "v_domain = '$v_domain', ";
