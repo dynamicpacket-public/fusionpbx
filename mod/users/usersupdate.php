@@ -205,7 +205,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 			$sql .= "where v_id = '$v_id' ";
 			$sql .= "and username = '$username' ";
 		}
-		if (ifgroup("user_account_settings_edit")) {
+		if (permission_exists("user_account_settings_edit")) {
 			$count = $db->exec(check_sql($sql));
 		}
 
