@@ -140,4 +140,20 @@
 		$apps[$x]['db'][0]['fields'][16]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][16]['description'] = '';
 
+		$apps[$x]['db'][1]['table'] = 'v_menu_groups';
+		$apps[$x]['db'][1]['fields'][0]['name'] = 'menu_group_id';
+		$apps[$x]['db'][1]['fields'][0]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][1]['fields'][0]['type']['sqlite'] = 'integer PRIMARY KEY';
+		$apps[$x]['db'][1]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+		$apps[$x]['db'][1]['fields'][0]['description'] = '';
+		$apps[$x]['db'][1]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][1]['fields'][1]['type'] = 'numeric';
+		$apps[$x]['db'][1]['fields'][1]['description'] = '';
+		$apps[$x]['db'][1]['fields'][2]['name'] = 'menu_guid';
+		$apps[$x]['db'][1]['fields'][2]['type'] = 'text';
+		$apps[$x]['db'][1]['fields'][2]['description'] = '';
+		$apps[$x]['db'][1]['fields'][3]['name'] = 'group_id';
+		$apps[$x]['db'][1]['fields'][3]['type'] = 'text';
+		$apps[$x]['db'][1]['fields'][3]['description'] = '';
+
 ?>

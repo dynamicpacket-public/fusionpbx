@@ -533,7 +533,7 @@ else {
 	unset($sql, $result);
 	echo "		</td>";
 	echo "	</tr>";
-	echo "    </table>";
+	echo "</table>";
 
 	echo "<br>";
 	echo "<br>";

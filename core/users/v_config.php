@@ -15,6 +15,7 @@
 		$apps[$x]['menu'][0]['parent_guid'] = '';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/login.php';
+		$apps[$x]['menu'][0]['groups'][] = 'public';
 		$apps[$x]['menu'][0]['order'] = '99';
 
 		$apps[$x]['menu'][1]['title']['en'] = 'Logout';

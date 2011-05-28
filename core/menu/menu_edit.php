@@ -26,13 +26,46 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (permission_exists('menu_add') || permission_exists('menu_edit')) {
+if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	return;
 }
+
+//include the header
+	require_once "includes/header.php";
+
+//delete the group from the user
+	if ($_REQUEST["a"] == "delete" && permission_exists("menu_delete")) {
+		//delete the group from the users
+			$sql = "delete from v_menu_groups  ";
+			$sql .= "where v_id = '$v_id' ";
+			$sql .= "and group_id = '".$_REQUEST['group_id']."' ";
+			$sql .= "and menu_group_id = '".$_REQUEST['id']."' ";
+			$db->exec(check_sql($sql));
+	}
+
+//add a group to the menu
+	if (strlen($_REQUEST["group_id"]) > 0 && permission_exists('menu_add')) {
+		//add the group to the menu
+			if (strlen($_REQUEST["menu_guid"]) > 0 && strlen($_REQUEST["group_id"]) > 0) {
+				$sqlinsert = "insert into v_menu_groups ";
+				$sqlinsert .= "(";
+				$sqlinsert .= "v_id, ";
+				$sqlinsert .= "menu_guid, ";
+				$sqlinsert .= "group_id ";
+				$sqlinsert .= ")";
+				$sqlinsert .= "values ";
+				$sqlinsert .= "(";
+				$sqlinsert .= "'$v_id', ";
+				$sqlinsert .= "'".$_REQUEST['menu_guid']."', ";
+				$sqlinsert .= "'".$_REQUEST['group_id']."' ";
+				$sqlinsert .= ")";
+				$db->exec($sqlinsert);
+			}
+	}
 
 //action add or update
 	if (isset($_REQUEST["menuid"])) {
@@ -161,7 +194,7 @@ else {
 				$count = $db->exec(check_sql($sql));
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_list.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$id&menuid=".$_REQUEST['menuid']."&menu_parent_guid=".$_REQUEST['menu_parent_guid']."\">\n";
 				echo "<div align='center'>\n";
 				echo "Edit Complete\n";
 				echo "</div>\n";
@@ -183,6 +216,7 @@ else {
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll();
 		foreach ($result as &$row) {
+			$menu_guid = $row["menu_guid"];
 			$menutitle = $row["menutitle"];
 			$menustr = $row["menustr"];
 			$menucategory = $row["menucategory"];
@@ -250,10 +284,10 @@ else {
 	$result = $prepstatement->fetchAll();
 	foreach($result as $field) {
 			if ($menu_parent_guid == $field['menu_guid']) {
-				echo "<option value='".$field['menu_guid']."' selected>".$field[menutitle]."</option>\n";
+				echo "<option value='".$field['menu_guid']."' selected>".$field['menutitle']."</option>\n";
 			}
 			else {
-				echo "<option value='".$field['menu_guid']."'>".$field[menutitle]."</option>\n";
+				echo "<option value='".$field['menu_guid']."'>".$field['menutitle']."</option>\n";
 			}
 	}
 	echo "</select>";
@@ -262,26 +296,56 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Group:</td>";
+	echo "		<td class='vncell' valign='top'>Groups:</td>";
 	echo "		<td class='vtable'>";
+
+	echo "<table width='52%'>\n";
+	$sql = "SELECT * FROM v_menu_groups ";
+	$sql .= "where v_id=:v_id ";
+	$sql .= "and menu_guid=:menu_guid ";
+	$prepstatement = $db->prepare(check_sql($sql));
+	$prepstatement->bindParam(':v_id', $v_id);
+	$prepstatement->bindParam(':menu_guid', $menu_guid);
+	$prepstatement->execute();
+	$result = $prepstatement->fetchAll();
+	$resultcount = count($result);
+	foreach($result as $field) {
+		if (strlen($field['group_id']) > 0) {
+			echo "<tr>\n";
+			echo "	<td class='vtable'>".$field['group_id']."</td>\n";
+			echo "	<td>\n";
+			if (permission_exists('group_member_delete') || ifgroup("superadmin")) {
+				echo "		<a href='menu_edit.php?id=".$field['menu_group_id']."&group_id=".$field['group_id']."&menuid=".$menuid."&menu_parent_guid=".$menu_parent_guid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+		}
+	}
+	echo "</table>\n";
+
+	echo "<br />\n";
 	$sql = "SELECT * FROM v_groups ";
-	$sql .= "where v_id = '$v_id' ";
+	$sql .= "where v_id = '".$v_id."' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	echo "<select name=\"menugroup\" class='formfld'>\n";
-	echo "<option value=\"\">public</option>\n";
+	echo "<select name=\"group_id\" class='frm'>\n";
+	echo "<option value=\"\"></option>\n";
 	$result = $prepstatement->fetchAll();
 	foreach($result as $field) {
-			if ($menugroup == $field[groupid]) {
-				echo "<option value='".$field[groupid]."' selected>".$field[groupid]."</option>\n";
+		if ($field['groupid'] == "superadmin") {
+			//only show the superadmin group to other users in the superadmin group
+			if (ifgroup("superadmin")) {
+				echo "<option value='".$field['groupid']."'>".$field['groupid']."</option>\n";
 			}
-			else {
-				echo "<option value='".$field[groupid]."'>".$field[groupid]."</option>\n";
-			}
+		}
+		else {
+			echo "<option value='".$field['groupid']."'>".$field['groupid']."</option>\n";
+		}
 	}
 	echo "</select>";
+	echo "<input type=\"submit\" class='btn' value=\"Add\">\n";
 	unset($sql, $result);
-	echo "        </td>";
+	echo "		</td>";
 	echo "	</tr>";
 
 	echo "<tr>\n";
@@ -304,7 +368,7 @@ else {
 		echo "    <option value='false'>false</option>\n";
 	}
 	echo "    </select><br />\n";
-	echo "Protect this item in the menu so that is is not removed by 'Restore Defaults.'<br />\n";
+	echo "Protect this item in the menu so that is is not removed by 'Restore Default.'<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -353,10 +417,10 @@ else {
 		echo "			<td align='left'>";
 		echo "			</td>\n";
 		echo "			<td align='right'>";
-		
 		if ($action == "update") {
 			echo "				<input type='hidden' name='menuid' value='$menuid'>";
 		}
+		echo "				<input type='hidden' name='menu_guid' value='$menu_guid'>";
 		echo "				<input type='submit' class='btn' name='submit' value='Save'>\n";
 		echo "			</td>";
 		echo "			</tr>";

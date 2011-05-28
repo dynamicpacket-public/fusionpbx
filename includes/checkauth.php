@@ -42,10 +42,9 @@ session_start();
 				$_SESSION["template_content"] = '';
 			}
 
-		//if username from form is not provided then send to login.php
+		//if the username from the form is not provided then send to login.php
 			if (strlen(check_str($_POST["username"])) == 0) {
 				$strphpself = $_SERVER["PHP_SELF"];
-				//$strphpself = str_replace ("/", "", $strphpself);
 				$msg = "Please provide a username.";
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($strphpself)."&msg=".urlencode($msg));
 				exit;
@@ -65,9 +64,8 @@ session_start();
 			$resultcount = count($result);
 			if (count($result) == 0) {
 				$strphpself = $_SERVER["PHP_SELF"];
-				//$strphpself = str_replace ("/", "", $strphpself);
 
-				//Log the failed auth attempt to the system, to be available for fail2ban.
+				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$_POST["username"]);
 				closelog();
@@ -93,46 +91,6 @@ session_start();
 				//echo "username: ".$_SESSION["username"]." and password are correct";
 			}
 
-		//if there are no permissions listed in v_group_permissions then set the default permissions
-			$sql = "";
-			$sql .= "select count(*) as count from v_group_permissions ";
-			$sql .= "where v_id = $v_id ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch();
-			unset ($prep_statement);
-			if ($result['count'] == 0) {
-				//get the list of installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
-					$x=0;
-					foreach ($config_list as &$config_path) {
-						include($config_path);
-						$x++;
-					}
-				//no permissions found add the defaults
-					foreach($apps as $app) {
-						foreach ($app['permissions'] as $row) {
-							foreach ($row['groups'] as $group) {
-								//add the record
-								$sql = "insert into v_group_permissions ";
-								$sql .= "(";
-								$sql .= "v_id, ";
-								$sql .= "permission_id, ";
-								$sql .= "group_id ";
-								$sql .= ")";
-								$sql .= "values ";
-								$sql .= "(";
-								$sql .= "'$v_id', ";
-								$sql .= "'".$row['name']."', ";
-								$sql .= "'".$group."' ";
-								$sql .= ")";
-								$db->exec(check_sql($sql));
-								unset($sql);
-							}
-						}
-					}
-			}
-
 		//get the groups assigned to the user
 			$sql = "SELECT * FROM v_group_members ";
 			$sql .= "where v_id=:v_id ";
@@ -144,8 +102,6 @@ session_start();
 			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
 			$_SESSION["groups"] = $result;
 			unset($sql, $rowcount, $prepstatement);
-
-		//get and set the permissions to a session
 			$x = 0;
 			$sql = "select distinct(permission_id) from v_group_permissions ";
 			foreach($result as $field) {
