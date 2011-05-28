@@ -60,6 +60,8 @@ function db_table_exists ($db, $db_type, $db_name, $table_name) {
 }
 
 function db_column_exists ($db, $db_type, $db_name, $tmp_table_name, $tmp_column_name) {
+	global $display_type;
+
 	//check if the column exists
 		$sql = "";
 		if ($db_type == "sqlite") {
@@ -91,7 +93,7 @@ function db_column_exists ($db, $db_type, $db_name, $tmp_table_name, $tmp_column
 
 
 function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
-
+	global $display_type;
 	$db->beginTransaction();
 
 	//PHP PDO check if table or column exists
@@ -129,7 +131,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		}
 
 	//show the database type
-		if ($display_results) {
+		if ($display_results && $display_type == "html") {
 			echo "<strong>Database Type: ".$db_type. "</strong><br /><br />";
 		}
 
@@ -137,7 +139,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		$sql_update = '';
 
 	//list all tables
-		if ($display_results) {
+		if ($display_results && $display_type == "html") {
 			echo "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<th>Table</th>\n";
@@ -153,13 +155,13 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 			foreach ($app['db'] as $row) {
 				$table_name = $row['table'];
 
-				if ($display_results) {
+				if ($display_results && $display_type == "html") {
 					echo "<tr>\n";
 				}
 
 				//check if the table exists
 					if (db_table_exists($db, $db_type, $db_name, $table_name)) {
-						if ($display_results) {
+						if ($display_results && $display_type == "html") {
 							echo "<td valign='top' class='rowstyle1'><strong>table</strong><br />$table_name</td>\n";
 							echo "<td valign='top' class='vncell' style=''>true</td>\n";
 						}
@@ -177,11 +179,11 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 						}
 
 						if (count($row['fields']) > 0) {
-							if ($display_results) {
+							if ($display_results && $display_type == "html") {
 								echo "<td class='rowstyle1'>\n";
 							}
 							//show the list of columns
-								if ($display_results) {
+								if ($display_results && $display_type == "html") {
 									echo "<table border='0' cellpadding='10' cellspacing='0'>\n";
 									echo "<tr>\n";
 									echo "<th>name</th>\n";
@@ -197,33 +199,31 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 										$field_type = $field['type'];
 									}
 					
-									if ($display_results) {
+									if ($display_results && $display_type == "html") {
 										echo "<tr>\n";
 										echo "<td class='rowstyle1' width='200'>".$field['name']."</td>\n";
 										echo "<td class='rowstyle1'>".$field_type."</td>\n";
 									}
 									if (db_column_exists ($db, $db_type, $db_name, $table_name, $field['name'])) {
-										if ($display_results) {
+										if ($display_results && $display_type == "html") {
 											echo "<td class='rowstyle0' style=''>true</td>\n";
 											echo "<td>&nbsp;</td>\n";
 										}
 									}
 									else {
 										$sql_update .= "alter table ".$table_name." add ".$field['name']." ".$field_type."; \n";
-										if ($display_results) {
+										if ($display_results && $display_type == "html") {
 											echo "<td class='rowstyle1' style='background-color:#444444;color:#CCCCCC;'>false</td>\n";
 											echo "<td>&nbsp;</td>\n";
 										}
 									}
-									if ($display_results) {
+									if ($display_results && $display_type == "html") {
 										echo "</tr>\n";
 									}
 								}
 								unset($column_array);
-								if ($display_results) {
-									echo "</table>\n";
-								}
-							if ($display_results) {
+							if ($display_results && $display_type == "html") {
+								echo "	</table>\n";
 								echo "</td>\n";
 							}
 						}
@@ -244,14 +244,14 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 						}
 						$sql .= ");\n\n";
 						$sql_update .= $sql;
-						if ($display_results) {
+						if ($display_results && $display_type == "html") {
 							echo "<td valign='top' class='rowstyle1'><strong>table</strong><br />$table_name</td>\n";
 							echo "<td valign='top' class='rowstyle1' style='background-color:#444444;color:#CCCCCC;'><strong>exists</strong><br />false</td>\n";
 							echo "<td valign='top' class='rowstyle1'>&nbsp;</td>\n";
 						}
 					}
 
-				if ($display_results) {
+				if ($display_results && $display_type == "html") {
 					echo "</tr>\n";
 				}
 			}
@@ -259,35 +259,53 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		unset ($prepstatement);
 		if ($display_results) {
 			if (strlen($sql_update) > 0) {
-				echo "<tr>\n";
-				echo "<td class='rowstyle1' colspan='3'>\n";
-				echo "<br />\n";
-				echo "<strong>SQL Changes:</strong><br />\n";
-				echo "<pre>\n";
-				echo $sql_update;
-				echo "</pre>\n";
-				echo "<br />\n";
-				echo "</td>\n";
-				echo "</tr>\n";
+				if ($display_type == "html") {
+					echo "<tr>\n";
+					echo "<td class='rowstyle1' colspan='3'>\n";
+					echo "<br />\n";
+					echo "<strong>SQL Changes:</strong><br />\n";
+					echo "<pre>\n";
+					echo $sql_update;
+					echo "</pre>\n";
+					echo "<br />\n";
+					echo "</td>\n";
+					echo "</tr>\n";
+				}
 			}
-			echo "</table>\n";
+			if ($display_type == "html") {
+				echo "</table>\n";
+			}
 		}
 
 		//loop line by line through all the lines of sql code
-			$udpate_array = explode(";", $sql_update);
 			$x = 0;
-			foreach($udpate_array as $sql) {
-				try {
-					$db->query(trim($sql));
-				}
-				catch (PDOException $error) {
-					if ($display_results) {
-						echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-					}
-				}
-				$x++;
+			if (strlen($sql_update) == 0 && $display_type == "text") {
+				echo "Database Schema: 	no change\n";
 			}
-			unset ($file_contents, $sql_update, $sql);
+			else {
+				if ($display_type == "text") {
+					echo "Database Schema:\n";
+				}
+				$update_array = explode(";", $sql_update);
+				foreach($update_array as $sql) {
+					try {
+						$db->query(trim($sql));
+					}
+					catch (PDOException $error) {
+						if ($display_results) {
+							if ($display_type == "html") {
+								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+							}
+							else {
+								echo $error->getMessage()."\n";
+							}
+						}
+					}
+					$x++;
+				}
+				echo "\n";
+				unset ($file_contents, $sql_update, $sql);
+			}
 
 	$db->commit();
 } //end function
