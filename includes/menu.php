@@ -30,8 +30,8 @@ session_start();
 //define the variable
 	$v_menu = '';
 
-$_SESSION["menu"] = ''; //force the menu to generate on every page load
-if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
+//$_SESSION["menu"] = ''; //force the menu to generate on every page load
+if (strlen($_SESSION["menu"]) == 0) { //build menu it session menu has no length
 
 	$menuwidth = '110';
 
@@ -61,16 +61,35 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 	$v_menu .= "<div id=\"menu\" style=\"position: relative; z-index:199; width:100%;\" align='left'>\n";
 	$v_menu .= "\n";
 
-	function builddbmenu($db, $sql, $menulevel) {
+	function build_db_menu($db, $sql, $menulevel) {
 
 		global $v_id;
-		$dbmenufull = '';
+		$db_menu_full = '';
 
-		if (strlen($sql)==0) { //default sql for base of the menu
+		if (strlen($_SESSION['groups']) == 0) {
+			$_SESSION['groups'][0]['groupid'] = 'public';
+		}
+
+		if (strlen($sql) == 0) { //default sql for base of the menu
 			$sql = "select * from v_menu ";
 			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and menu_parent_guid = '' ";
-			$sql .= "or menu_parent_guid is null ";
+			$sql .= "and (menu_parent_guid = '' or menu_parent_guid is null) ";
+			$sql .= "and menu_guid in ";
+			$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
+			$sql .= "and ( ";
+			$x = 0;
+			foreach($_SESSION['groups'] as $row) {
+				if ($x == 0) {
+					$sql .= "group_id = '".$row['groupid']."' ";
+				}
+				else {
+					$sql .= "or group_id = '".$row['groupid']."' ";
+				}
+				$x++;
+			}
+			$sql .= ") ";
+			$sql .= "and menu_guid <> '' ";
+			$sql .= ") ";
 			$sql .= "order by menuorder asc ";
 		}
 		$prepstatement = $db->prepare(check_sql($sql));
@@ -104,38 +123,38 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 			}
 
 			if ($menulevel == "main") {
-				$dbmenu  = "<ul class='menu_main'>\n";
-				$dbmenu .= "<li>\n";
+				$db_menu  = "<ul class='menu_main'>\n";
+				$db_menu .= "<li>\n";
 				if (strlen($_SESSION["username"]) == 0) {
-					$dbmenu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>$menu_title</h2></a>\n";
+					$db_menu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>$menu_title</h2></a>\n";
 				}
 				else {
 					if ($menu_str == "/login.php" || $menu_str == "/users/signup.php") {
 						//hide login and sign-up when the user is logged in
 					}
 					else {
-						$dbmenu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>$menu_title</h2></a>\n";
+						$db_menu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>$menu_title</h2></a>\n";
 					}
 				}
 			}
 
 			$menulevel = 0;
 			if (strlen($menu_guid) > 0) {
-				$dbmenu .= builddbchildmenu($db, $menulevel, $menu_guid);
+				$db_menu .= builddbchildmenu($db, $menulevel, $menu_guid);
 			}
 
 			if ($menulevel == "main") {
-				$dbmenu .= "</li>\n";
-				$dbmenu .= "</ul>\n\n";
+				$db_menu .= "</li>\n";
+				$db_menu .= "</ul>\n\n";
 			}
 
 			if (strlen($menu_group)==0) { //public
-				$dbmenufull .= $dbmenu;
+				$db_menu_full .= $db_menu;
 			}
 			else {
 				//show only to designated group
 				if (ifgroup($menu_group)) { 
-					$dbmenufull .= $dbmenu;
+					$db_menu_full .= $db_menu;
 				}
 				else {
 					//not authorized do not add to menu
@@ -151,7 +170,7 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 		unset($menu_parent_guid);
 		unset($prepstatement, $sql, $result);
 
-		return $dbmenufull;
+		return $db_menu_full;
 	}
 
 
@@ -160,16 +179,35 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 		global $v_id;
 		$menulevel = $menulevel+1;
 
+		if (strlen($_SESSION['groups']) == 0) {
+			$_SESSION['groups'][0]['groupid'] = 'public';
+		}
+
 		$sql = "select * from v_menu ";
 		$sql .= "where v_id = '$v_id' ";
 		$sql .= "and menu_parent_guid = '$menu_guid' ";
+		$sql .= "and menu_guid in ";
+		$sql .= "(select menu_guid from v_menu_groups where v_id = '$v_id' ";
+		$sql .= "and ( ";
+		$x = 0;
+		foreach($_SESSION['groups'] as $row) {
+			if ($x == 0) {
+				$sql .= "group_id = '".$row['groupid']."' ";
+			}
+			else {
+				$sql .= "or group_id = '".$row['groupid']."' ";
+			}
+			$x++;
+		}
+		$sql .= ") ";
+		$sql .= ") ";
 		$sql .= "order by menuorder, menutitle asc ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
 		$result2 = $prepstatement2->fetchAll();
 		if (count($result2) > 0) {
 			//child menu found
-			$dbmenusub .= "<ul class='menu_sub'>\n";
+			$db_menu_sub .= "<ul class='menu_sub'>\n";
 
 			foreach($result2 as $row) {
 				$menu_id = $row['menuid'];
@@ -195,56 +233,50 @@ if (strlen($_SESSION["menu"])==0) { //build menu it session menu has no length
 				}
 
 				if (strlen($menu_group)==0) { //public
-						$dbmenusub .= "<li>";
+						$db_menu_sub .= "<li>";
 
 						//get sub menu for children
 							if (strlen($menu_guid) > 0) {
-								$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+								$str_child_menu = builddbchildmenu($db, $menulevel, $menu_guid);
 							}
 
-						if (strlen($strchildmenu) > 1) {
-							$dbmenusub .= "<a $menu_tags>$menu_title</a>";
-							$dbmenusub .= $strchildmenu;
-							unset($strchildmenu);
+						if (strlen($str_child_menu) > 1) {
+							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
+							$db_menu_sub .= $str_child_menu;
+							unset($str_child_menu);
 						}
 						else {
-							$dbmenusub .= "<a $menu_tags>$menu_title</a>";
+							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
 						}
-						$dbmenusub .= "</li>\n";
+						$db_menu_sub .= "</li>\n";
 				}
 				else {
-					//show only to designated group
-					if (ifgroup($menu_group)) { 
-						$dbmenusub .= "<li>";
+						$db_menu_sub .= "<li>";
 
 						//get sub menu for children
 							if (strlen($menu_guid) > 0) {
-								$strchildmenu = builddbchildmenu($db, $menulevel, $menu_guid);
+								$str_child_menu = builddbchildmenu($db, $menulevel, $menu_guid);
 							}
 
-						if (strlen($strchildmenu) > 1) {
-							$dbmenusub .= "<a $menu_tags>$menu_title</a>";
-							$dbmenusub .= $strchildmenu;
-							unset($strchildmenu);
+						if (strlen($str_child_menu) > 1) {
+							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
+							$db_menu_sub .= $str_child_menu;
+							unset($str_child_menu);
 						}
 						else {
-							$dbmenusub .= "<a $menu_tags>$menu_title</a>";
+							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
 						}
-						$dbmenusub .= "</li>\n";
-					}
-					else {
-						//not authorized do not add to menu
-					}
+						$db_menu_sub .= "</li>\n";
 				}
 			}
 			unset($sql, $result2);
-			$dbmenusub .="</ul>\n";
-			return $dbmenusub;
+			$db_menu_sub .="</ul>\n";
+			return $db_menu_sub;
 		}
 		unset($prepstatement2, $sql);
 	}
 
-	$v_menu .= builddbmenu($db, "", "main"); //display the menu
+	$v_menu .= build_db_menu($db, "", "main"); //display the menu
 	$v_menu .= "</div>\n";
 	$_SESSION["menu"] = $v_menu;
 }
@@ -252,4 +284,5 @@ else {
 	//echo "from session";
 }
 
+//echo $_SESSION["menu"];
 ?>
