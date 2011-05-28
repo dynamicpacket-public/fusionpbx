@@ -23,11 +23,20 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "includes/config.php";
 
 //check the permission
-	if (strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
+	if(defined('STDIN')) {
+		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
+		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
+		$document_root = $matches[1];
+		set_include_path($document_root);
+		require_once "includes/config.php";
+		$_SERVER["DOCUMENT_ROOT"] = $document_root;
+		$display_type = 'text'; //html, text
+	}
+	else {
+		include "root.php";
+		require_once "includes/config.php";
 		require_once "includes/checkauth.php";
 		if (permission_exists('upgrade_schema') || permission_exists('upgrade_svn') || ifgroup("superadmin")) {
 			//echo "access granted";
@@ -38,41 +47,53 @@ require_once "includes/config.php";
 		}
 	}
 
-//upgrade the code with SVN
-	if (permission_exists('zzz')) {
+//set the default
+	if (!isset($display_results)) {
 		$display_results = false;
-		require_once "core/upgrade/upgrade_svn.php";
-	}
-
-//upgrade the database schema
-	if (permission_exists('zzz')) {
-		$display_results = false;
-		require_once "core/upgrade/upgrade_schema.php";
 	}
 
 //include the header
-	require_once "includes/header.php";
+	if ($display_results) {
+		require_once "includes/header.php";
+	}
+
+if ($display_type == 'text') {
+	echo "\n";
+	echo "Upgrade\n";
+	echo "---------------------------------\n";
+}
+
+//upgrade the database schema
+	require_once "core/upgrade/upgrade_schema.php";
 
 //show the content
-	echo "<div align='center'>\n";
-	echo "<table width='40%'>\n";
-	echo "<tr>\n";
-	echo "<th align='left'>Message</th>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td class='rowstyle1'><strong>Upgrade Completed</strong></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</div>\n";
+	if ($display_type == 'html') {
+		echo "<div align='center'>\n";
+		echo "<table width='40%'>\n";
+		echo "<tr>\n";
+		echo "<th align='left'>Message</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='rowstyle1'><strong>Upgrade Completed</strong></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
 
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+		echo "<br />\n";
+	}
+
+if ($display_type == 'text') {
+	echo "\n";
+}
 
 //include the footer
-	require_once "includes/footer.php";
+	if ($display_results) {
+		require_once "includes/footer.php";
+	}
 ?>

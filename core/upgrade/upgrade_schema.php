@@ -23,35 +23,126 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "includes/config.php";
-if (!isset($display_results)) {
-	$display_results = true;
-}
-if (strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
-	require_once "includes/checkauth.php";
-	if (permission_exists('upgrade_schema') || ifgroup("superadmin")) {
-		//echo "access granted";
+
+//check the permission
+	if(defined('STDIN')) {
+		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
+		preg_match("/^(.*)\/core\/.*$/", $document_root, $matches);
+		$document_root = $matches[1];
+		set_include_path($document_root);
+		require_once "includes/config.php";
+		$_SERVER["DOCUMENT_ROOT"] = $document_root;
+		$display_type = 'text'; //html, text
 	}
 	else {
-		echo "access denied";
-		exit;
+		include "root.php";
+		require_once "includes/config.php";
+		require_once "includes/checkauth.php";
+		if (permission_exists('upgrade_schema') || ifgroup("superadmin")) {
+			//echo "access granted";
+		}
+		else {
+			echo "access denied";
+			exit;
+		}
+		require_once "includes/header.php";
+		$display_type = 'html'; //html, text
 	}
-}
-else {
-	$display_results = false; //true false
-	//$display_type = 'csv'; //html, csv
-}
-ini_set(max_execution_time,1200);
-if ($display_results) {
-	require_once "includes/header.php";
-}
+
+//set the timeout
+	ini_set(max_execution_time,1200);
 
 //load the default database into memory and compare it with the active database
 	require_once "includes/lib_schema.php";
 	db_upgrade_schema ($db, $db_type, $db_name, $display_results);
 
-if ($display_results) {
+//if there are no permissions listed in v_group_permissions then set the default permissions
+	$sql = "";
+	$sql .= "select count(*) as count from v_group_permissions ";
+	$sql .= "where v_id = $v_id ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$result = $prep_statement->fetch();
+	unset ($prep_statement);
+	if ($result['count'] > 0 && $display_type == "text") {
+		echo "Group Permissions: 	no change\n";
+	}
+	else {
+		//get the list of installed apps from the core and mod directories
+			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+			$x=0;
+			foreach ($config_list as &$config_path) {
+				include($config_path);
+				$x++;
+			}
+		//no permissions found add the defaults
+			foreach($apps as $app) {
+				foreach ($app['permissions'] as $row) {
+					foreach ($row['groups'] as $group) {
+						//add the record
+						$sql = "insert into v_group_permissions ";
+						$sql .= "(";
+						$sql .= "v_id, ";
+						$sql .= "permission_id, ";
+						$sql .= "group_id ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$v_id', ";
+						$sql .= "'".$row['name']."', ";
+						$sql .= "'".$group."' ";
+						$sql .= ")";
+						$db->exec($sql);
+						unset($sql);
+					}
+				}
+			}
+	}
+
+//if there are no groups listed in v_menu_groups then add the default groups
+	$sql = "";
+	$sql .= "select count(*) as count from v_menu_groups ";
+	$sql .= "where v_id = $v_id ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$result = $prep_statement->fetch();
+	unset ($prep_statement);
+	if ($result['count'] > 0 && $display_type == "text") {
+		echo "Menu Groups: 		no change\n";
+	}
+	else {
+		//get the list of installed apps from the core and mod directories
+			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+			$x=0;
+			foreach ($config_list as &$config_path) {
+				include($config_path);
+				$x++;
+			}
+		//no menu groups found add the defaults
+			foreach($apps as $app) {
+				foreach ($app['menu'] as $row) {
+					foreach ($row['groups'] as $group) {
+						//add the record
+						$sql = "insert into v_menu_groups ";
+						$sql .= "(";
+						$sql .= "v_id, ";
+						$sql .= "menu_guid, ";
+						$sql .= "group_id ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$v_id', ";
+						$sql .= "'".$row['guid']."', ";
+						$sql .= "'".$group."' ";
+						$sql .= ")";
+						$db->exec($sql);
+						unset($sql);
+					}
+				}
+			}
+	}
+
+if ($display_results && $display_type == "html") {
 	echo "<br />\n";
 	echo "<br />\n";
 	require_once "includes/footer.php";
