@@ -49,12 +49,23 @@
 		$display_type = 'html'; //html, text
 	}
 
-//set the timeout
-	ini_set(max_execution_time,1200);
+//set the default
+	if (!isset($display_results)) {
+		$display_results = true;
+	}
 
 //load the default database into memory and compare it with the active database
 	require_once "includes/lib_schema.php";
 	db_upgrade_schema ($db, $db_type, $db_name, $display_results);
+	unset($apps);
+
+//get the list of installed apps from the core and mod directories
+	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+	$x=0;
+	foreach ($config_list as &$config_path) {
+		include($config_path);
+		$x++;
+	}
 
 //if there are no permissions listed in v_group_permissions then set the default permissions
 	$sql = "";
@@ -64,17 +75,15 @@
 	$prep_statement->execute();
 	$result = $prep_statement->fetch();
 	unset ($prep_statement);
-	if ($result['count'] > 0 && $display_type == "text") {
-		echo "Group Permissions: 	no change\n";
+	if ($result['count'] > 0) {
+		if ($display_type == "text") {
+			echo "Goup Permissions: 	no change\n";
+		}
 	}
 	else {
-		//get the list of installed apps from the core and mod directories
-			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
-			$x=0;
-			foreach ($config_list as &$config_path) {
-				include($config_path);
-				$x++;
-			}
+		if ($display_type == "text") {
+			echo "Goup Permissions: 	added\n";
+		}
 		//no permissions found add the defaults
 			foreach($apps as $app) {
 				foreach ($app['permissions'] as $row) {
@@ -107,17 +116,15 @@
 	$prep_statement->execute();
 	$result = $prep_statement->fetch();
 	unset ($prep_statement);
-	if ($result['count'] > 0 && $display_type == "text") {
-		echo "Menu Groups: 		no change\n";
+	if ($result['count'] > 0) {
+		if ($display_type == "text") {
+			echo "Menu Groups: 		no change\n";
+		}
 	}
 	else {
-		//get the list of installed apps from the core and mod directories
-			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
-			$x=0;
-			foreach ($config_list as &$config_path) {
-				include($config_path);
-				$x++;
-			}
+		if ($display_type == "text") {
+			echo "Menu Groups: 		added\n";
+		}
 		//no menu groups found add the defaults
 			foreach($apps as $app) {
 				foreach ($app['menu'] as $row) {
