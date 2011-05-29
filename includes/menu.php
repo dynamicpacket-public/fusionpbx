@@ -30,8 +30,11 @@ session_start();
 //define the variable
 	$v_menu = '';
 
-//$_SESSION["menu"] = ''; //force the menu to generate on every page load
-if (strlen($_SESSION["menu"]) == 0) { //build menu it session menu has no length
+//force the menu to generate on every page load
+	//$_SESSION["menu"] = '';
+
+//build the menu if the session menu has no length
+if (strlen($_SESSION["menu"]) == 0) {
 
 	$menuwidth = '110';
 
@@ -148,18 +151,8 @@ if (strlen($_SESSION["menu"]) == 0) { //build menu it session menu has no length
 				$db_menu .= "</ul>\n\n";
 			}
 
-			if (strlen($menu_group)==0) { //public
-				$db_menu_full .= $db_menu;
-			}
-			else {
-				//show only to designated group
-				if (ifgroup($menu_group)) { 
-					$db_menu_full .= $db_menu;
-				}
-				else {
-					//not authorized do not add to menu
-				}
-			}
+			$db_menu_full .= $db_menu;
+
 		} //end for each
 
 		unset($menu_title);
