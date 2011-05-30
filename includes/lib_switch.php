@@ -730,6 +730,47 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		unset ($prepstatement);
 
+	//list call groups
+		$sql = "";
+		$sql .= "select distinct(callgroup) from v_extensions ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "order by callgroup asc ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$x = 0;
+		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
+		if ($select_type == "dialplan" || $select_type == "ivr") {
+			echo "<optgroup label='Call Group'>\n";
+		}
+		$previous_call_group_name = "";
+		foreach ($result as &$row) {
+			if ($previous_call_group_name != $row["callgroup"]) {
+				if ("menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain == $select_value || "bridge:group/".$row["callgroup"]."@".$v_domain == $select_value) {
+					if ($select_type == "ivr") {
+						echo "		<option value='menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain."' selected='selected'>".$row["callgroup"]."</option>\n";
+					}
+					if ($select_type == "dialplan") {
+						echo "		<option value='bridge:group/".$row["callgroup"]."@".$v_domain."' selected='selected'>".$row["callgroup"]."</option>\n";
+					}
+					$selection_found = true;
+				}
+				else {
+					if ($select_type == "ivr") {
+						echo "		<option value='menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain."'>".$row["callgroup"]."</option>\n";
+					}
+					if ($select_type == "dialplan") {
+						echo "		<option value='bridge:group/".$row["callgroup"]."@".$v_domain."'>".$row["callgroup"]."</option>\n";
+					}
+				}
+				$previous_call_group_name = $row["callgroup"];
+			}
+			$x++;
+		}
+		if ($select_type == "dialplan" || $select_type == "ivr") {
+			echo "</optgroup>\n";
+		}
+		unset ($prepstatement);
+
 	//list conferences
 		$sql = "";
 		$sql .= "select * from v_dialplan_includes_details ";
@@ -5045,7 +5086,6 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 							break; //limit to 1 row
 						}
 						unset ($sql, $prepstatement2);
-						//echo "sql: ".$sql."<br />";
 
 						if ($action == 'add') {
 							//create IVR Menu extension in the dialplan
@@ -5062,19 +5102,25 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 								$tag = 'condition'; //condition, action, antiaction
 								$fieldtype = 'destination_number';
 								$fielddata = '^'.$row['ivr_menu_extension'].'$';
-								$fieldorder = '000';
+								$fieldorder = '005';
 								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 								$tag = 'action'; //condition, action, antiaction
 								$fieldtype = 'answer';
 								$fielddata = '';
-								$fieldorder = '001';
+								$fieldorder = '010';
 								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 								$tag = 'action'; //condition, action, antiaction
 								$fieldtype = 'sleep';
-								$fielddata = '2000';
-								$fieldorder = '002';
+								$fielddata = '1000';
+								$fieldorder = '015';
+								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+								$tag = 'action'; //condition, action, antiaction
+								$fieldtype = 'set';
+								$fielddata = 'hangup_after_bridge=true';
+								$fieldorder = '020';
 								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 								$tag = 'action'; //condition, action, antiaction
@@ -5085,7 +5131,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 								else {
 									$fielddata = $ivr_menu_name;
 								}
-								$fieldorder = '003';
+								$fieldorder = '025';
 								v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 						}
 						if ($action == 'update') {
