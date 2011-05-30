@@ -254,29 +254,57 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "mod/provision/v_provision_write.php";
 				}
 
-			require_once "includes/header.php";
-			if ($autogen_users != "true") echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
-			echo "<div align='center'>\n";
-			echo "Add Complete\n";
-			if ($autogen_users == "true") {
-				//HERE
-				// $generated_users
-				echo "<table>\n";
-				echo "<tr><td>User Name</td><td>Password</td></tr>\n";
-				foreach($generated_users as $tmp_user){
-					echo "<tr><td>".$tmp_user['username']."</td><td>".$tmp_user['password']."</td></tr>\n";
+			//prepare for alternating the row style
+				$c = 0;
+				$rowstyle["0"] = "rowstyle0";
+				$rowstyle["1"] = "rowstyle1";
+
+			//show the action and redirect the user
+				require_once "includes/header.php";
+				echo "<br />\n";
+				echo "<div align='center'>\n";
+				if ($autogen_users != "true") {
+					//action add
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+					echo "	<table width='40%'>\n";
+					echo "		<tr>\n";
+					echo "			<th align='left'>Message</th>\n";
+					echo "		</tr>\n";
+					echo "		<tr>\n";
+					echo "			<td class='rowstyle1'><strong>Add Complete</strong></td>\n";
+					echo "		</tr>\n";
+					echo "	</table>\n";
+					echo "	<br />\n";
 				}
-				echo "</table>";
-			}
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
+				else {
+					// auto-generate user with extension as login name
+					if ($autogen_users == "true") {
+						echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
+						echo "		<tr>\n";
+						echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
+						echo "		</tr>\n";
+						echo "		<tr>\n";
+						echo "			<th>Username</th>\n";
+						echo "			<th>Password</th>\n";
+						echo "		</tr>\n";
+						foreach($generated_users as $tmp_user){
+							echo "		<tr>\n";
+							echo "			<td valign='top' class='".$rowstyle[$c]."'>".$tmp_user['username']."</td>\n";
+							echo "			<td valign='top' class='".$rowstyle[$c]."'>".$tmp_user['password']."</td>\n";
+							echo "		</tr>\n";
+						}
+						if ($c==0) { $c=1; } else { $c=0; }
+						echo "	</table>";
+					}
+				}
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($action == "add")
 
 		if ($action == "update" && permission_exists('extension_edit')) {
 			$userfirstname='extension';$userlastname=$extension;$useremail='';
 			$user_list_array = explode("|", $user_list);
-			//print_r($user_list_array);
 			foreach($user_list_array as $tmp_user){
 				$user_password = generate_password();
 				user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
@@ -325,13 +353,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "mod/provision/v_provision_write.php";
 				}
 
-			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
-			echo "<div align='center'>\n";
-			echo "Update Complete\n";
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
+			//show the action and redirect the user
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+				echo "<br />\n";
+				echo "<div align='center'>\n";
+
+				//action update
+					echo "	<table width='40%'>\n";
+					echo "		<tr>\n";
+					echo "			<th align='left'>Message</th>\n";
+					echo "		</tr>\n";
+					echo "		<tr>\n";
+					echo "			<td class='rowstyle1'><strong>Update Complete</strong></td>\n";
+					echo "		</tr>\n";
+					echo "	</table>\n";
+					echo "<br />\n";
+
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

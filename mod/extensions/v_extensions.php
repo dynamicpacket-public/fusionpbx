@@ -118,16 +118,16 @@ require_once "includes/paging.php";
 		foreach($result as $row) {
 			//print_r( $row );
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[extension]."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[vm_mailto]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[enabled]."</td>\n";
-			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row[description]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['extension']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['vm_mailto']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['enabled']."</td>\n";
+			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('extension_edit')) {
-				echo "		<a href='v_extensions_edit.php?id=".$row[extension_id]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='v_extensions_edit.php?id=".$row['extension_id']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('extension_delete')) {
-				echo "		<a href='v_extensions_delete.php?id=".$row[extension_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='v_extensions_delete.php?id=".$row['extension_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
