@@ -434,6 +434,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<optgroup label='misc'>\n";
 			echo "		<option value='phrase:'>phrase:</option>\n";
 			echo "		<option value='say:'>say:</option>\n";
+			echo "		<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
 		}
 	//recordings
@@ -483,10 +484,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "<optgroup label='selected'>\n";
 				if (file_exists($v_recordings_dir."/".$ivr_menu_greet_long)) {
 					echo "		<option value='".$v_recordings_dir."/".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
-				}
-				else {
+				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
 					$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
 					echo "		<option value='".$tmp_dir."/".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
+				} else {
+					echo "		<option value='".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
 				}
 
 				echo "</optgroup>\n";
@@ -514,6 +516,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<optgroup label='misc'>\n";
 			echo "		<option value='phrase:'>phrase:</option>\n";
 			echo "		<option value='say:'>say:</option>\n";
+			echo "		<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
 		}
 	//recordings
@@ -561,7 +564,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (ifgroup("superadmin")) {
 			if (!$tmp_selected) {
 				echo "<optgroup label='selected'>\n";
-				echo "		<option value='".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+				if (file_exists($v_recordings_dir."/".$ivr_menu_greet_short)) {
+					echo "		<option value='".$v_recordings_dir."/".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+				} elseif (substr($ivr_menu_greet_short, -3) == "wav" || substr($ivr_menu_greet_short, -3) == "mp3") {
+					$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
+					echo "		<option value='".$tmp_dir."/".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+				} else {
+					echo "		<option value='".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+				}
 				echo "</optgroup>\n";
 			}
 			unset($tmp_selected);
