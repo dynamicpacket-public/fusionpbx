@@ -55,8 +55,17 @@ if (count($_GET)>0) {
 //redirect the user
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+	echo "<br />\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo "	<table width='40%'>\n";
+	echo "		<tr>\n";
+	echo "			<th align='left'>Message</th>\n";
+	echo "		</tr>\n";
+	echo "		<tr>\n";
+	echo "			<td class='rowstyle1'><strong>Delete Complete</strong></td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "	<br />\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
