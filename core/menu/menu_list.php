@@ -59,7 +59,6 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 			foreach($result2 as $row2) {
 				$menuid = $row2['menuid'];
 				$menucategory = $row2['menucategory'];
-				$menugroup = $row2['menugroup'];
 				$menu_protected = $row2['menu_protected'];
 				$menu_protected = $row2['menu_protected'];
 				$menu_protected = $row2['menu_protected'];
@@ -67,10 +66,6 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 				$menu_parent_guid = $field['menu_parent_guid'];
 				$menuorder = $field['menuorder'];
 				$menulanguage = $field['menulanguage'];
-
-				if (strlen($menugroup) == 0) {
-					$menugroup = 'public';
-				}
 				$menutitle = $row2[menutitle];
 				$menustr = $row2[menustr];
 				switch ($menucategory) {
@@ -104,7 +99,6 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 				echo "</td>";
 				//echo "<td valign='top'>&nbsp;".$menustr."&nbsp;</td>";
 				echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menucategory."&nbsp;</td>";
-				echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menugroup."&nbsp;</td>";
 				//echo "<td valign='top'>".$row[menudesc]."</td>";
 				//echo "<td valign='top'>&nbsp;".$row[menuorder]."&nbsp;</td>";
 				if ($menu_protected == "true") {
@@ -208,7 +202,6 @@ $order = $_GET["order"];
 		echo "<tr>";
 		echo "<th align='left' nowrap>&nbsp; Title &nbsp; </th>";
 		echo "<th align='left'nowrap>&nbsp; Category &nbsp; </th>";
-		echo "<th align='left' nowrap>&nbsp; Group &nbsp; </th>";
 		echo "<th nowrap>&nbsp; Protected &nbsp; </th>";
 		echo "<th align='left'  width='55' nowrap>&nbsp; Order &nbsp;</th>";
 		echo "<th nowrap width='70'>&nbsp; </th>";
@@ -221,10 +214,6 @@ $order = $_GET["order"];
 
 		foreach($result as $row) {
 			$menucategory = $row['menucategory'];
-			$menugroup = $row['menugroup'];
-			if (strlen($menugroup)==0) {
-				$menugroup = 'public';
-			}
 			$menutitle = $row['menutitle'];
 			$menustr = $row['menustr'];
 			$menu_protected = $row['menu_protected'];
@@ -246,7 +235,6 @@ $order = $_GET["order"];
 			echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp; ".$menutitle."&nbsp;</td>";
 			//echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menustr."&nbsp;</td>";
 			echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menucategory."&nbsp;</td>";
-			echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$menugroup."&nbsp;</td>";
 			//echo "<td valign='top' class='".$rowstyle[$c]."'>".$row[menudesc]."</td>";
 			//echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$row[menu_parent_guid]."&nbsp;</td>";
 			//echo "<td valign='top' class='".$rowstyle[$c]."'>&nbsp;".$row[menuorder]."&nbsp;</td>";
