@@ -91,7 +91,7 @@ session_start();
 				//echo "username: ".$_SESSION["username"]." and password are correct";
 			}
 
-		//get the groups assigned to the user
+		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 			$sql = "SELECT * FROM v_group_members ";
 			$sql .= "where v_id=:v_id ";
 			$sql .= "and username=:username ";
@@ -102,10 +102,12 @@ session_start();
 			$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
 			$_SESSION["groups"] = $result;
 			unset($sql, $rowcount, $prepstatement);
+
+		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
 			$x = 0;
 			$sql = "select distinct(permission_id) from v_group_permissions ";
-			foreach($result as $field) {
-				if (strlen($field[groupid]) > 0) {
+			foreach($_SESSION["groups"] as $field) {
+				if (strlen($field['groupid']) > 0) {
 					if ($x == 0) {
 						$sql .= "where (v_id = '".$v_id."' and group_id = '".$field['groupid']."') ";
 					}
