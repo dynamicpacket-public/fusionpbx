@@ -69,7 +69,7 @@ if (strlen($_SESSION["menu"]) == 0) {
 		global $v_id;
 		$db_menu_full = '';
 
-		if (strlen($_SESSION['groups']) == 0) {
+		if (count($_SESSION['groups']) == 0) {
 			$_SESSION['groups'][0]['groupid'] = 'public';
 		}
 
@@ -172,7 +172,7 @@ if (strlen($_SESSION["menu"]) == 0) {
 		global $v_id;
 		$menulevel = $menulevel+1;
 
-		if (strlen($_SESSION['groups']) == 0) {
+		if (count($_SESSION['groups']) == 0) {
 			$_SESSION['groups'][0]['groupid'] = 'public';
 		}
 
