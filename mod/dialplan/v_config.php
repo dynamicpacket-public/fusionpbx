@@ -15,16 +15,14 @@
 		$apps[$x]['menu'][0]['parent_guid'] = '';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/mod/dialplan/v_dialplan_includes.php';
-		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-	
+
 		$apps[$x]['menu'][1]['title']['en'] = 'Dialplan Manager';
 		$apps[$x]['menu'][1]['guid'] = '52929FEE-81D3-4D94-50B7-64842D9393C2';
 		$apps[$x]['menu'][1]['parent_guid'] = 'B94E8BD9-9EB5-E427-9C26-FF7A6C21552A';
 		$apps[$x]['menu'][1]['category'] = 'internal';
 		$apps[$x]['menu'][1]['path'] = '/mod/dialplan/v_dialplan_includes.php';
-		$apps[$x]['menu'][1]['groups'][] = 'user';
 		$apps[$x]['menu'][1]['groups'][] = 'admin';
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
 
