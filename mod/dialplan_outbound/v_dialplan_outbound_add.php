@@ -50,6 +50,7 @@ else {
 		$gateway = check_str($_POST["gateway"]);
 		//set the default type
 			$gateway_type = 'gateway';
+			$gateway_2_type = 'gateway';
 
 		//set the gateway type to freetdm
 			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
@@ -268,16 +269,16 @@ else {
 					if ($gateway_type == "gateway") {
 						$extension_name = $gateway_name.".".$abbrv;
 						$action_data = "sofia/gateway/".$tmp_gateway_name."/".$prefix_number."\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/".$prefix_number."\$1";
-						}
+					}
+					if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
+						$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/".$prefix_number."\$1";
 					}
 					if ($gateway_type == "freetdm") {
 						$extension_name = "freetdm.".$abbrv;
 						$action_data = $gateway."/".$prefix_number."\$1";
-						if (strlen($gateway_2_type) > 0) {
-							$bridge_2_data .= $gateway_2."/".$prefix_number."\$1";
-						}
+					}
+					if (strlen($gateway_2_name) > 0 && $gateway_2_type == "freetdm") {
+						$bridge_2_data .= $gateway_2."/".$prefix_number."\$1";
 					}
 					if (strlen($dialplanorder) == 0) {
 						$dialplanorder ='999';
@@ -386,14 +387,14 @@ else {
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'bridge';
 					$fielddata = $action_data;
-					$fieldorder = '035';
+					$fieldorder = '040';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					if (strlen($bridge_2_data) > 0) {
 						$tag = 'action'; //condition, action, antiaction
 						$fieldtype = 'bridge';
 						$fielddata = $bridge_2_data;
-						$fieldorder = '040';
+						$fieldorder = '045';
 						v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 					}
 
