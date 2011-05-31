@@ -47,16 +47,44 @@ else {
 		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
 		$condition_field_2 = check_str($_POST["condition_field_2"]);
 		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
-
 		$gateway = check_str($_POST["gateway"]);
-		$gateway_array = explode(":",$gateway);
-		$gateway_id = $gateway_array[0];
-		$gateway_name = $gateway_array[1];
-		
-		$gateway_2 = check_str($_POST["gateway_2"]);
-		$gateway_2_array = explode(":",$gateway_2);
-		$gateway_2_id = $gateway_2_array[0];
-		$gateway_2_name = $gateway_2_array[1];
+		//set the default type
+			$gateway_type = 'gateway';
+
+		//set the gateway type to freetdm
+			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
+				$gateway_type = 'freetdm';
+			}
+
+		//set the gateway_id and gateway_name
+			if ($gateway_type == "gateway") {
+				$gateway_array = explode(":",$gateway);
+				$gateway_id = $gateway_array[0];
+				$gateway_name = $gateway_array[1];
+			}
+			else {
+				$gateway_name = '';
+				$gateway_id = '';
+			}
+
+		//set the gateway_2 variable
+			$gateway_2 = check_str($_POST["gateway_2"]);
+
+		//set the gateway type to freetdm
+			if (strtolower(substr($gateway_2, 0, 7)) == "freetdm") {
+				$gateway_2_type = 'freetdm';
+			}
+
+		//set the gateway_2_id and gateway_2_name
+			if ($gateway_2_type == "gateway" && strlen($_POST["gateway_2"]) > 0) {
+				$gateway_2_array = explode(":",$gateway_2);
+				$gateway_2_id = $gateway_2_array[0];
+				$gateway_2_name = $gateway_2_array[1];
+			}
+			else {
+				$gateway_2_id = '';
+				$gateway_2_name = '';
+			}
 
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
@@ -67,7 +95,7 @@ else {
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//check for all required data
 			if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
-			if (strlen($gateway_name) == 0) { $msg .= "Please provide: Gateway Name<br>\n"; }
+			if (strlen($gateway) == 0) { $msg .= "Please provide: Gateway Name<br>\n"; }
 			//if (strlen($gateway_2_name) == 0) { $msg .= "Please provide: Gateway 2 Name<br>\n"; }
 			if (strlen($dialplan_expression) == 0) { $msg .= "Please provide: Dialplan Expression<br>\n"; }
 			//if (strlen($extension_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
@@ -123,190 +151,134 @@ else {
 					}
 					switch ($dialplan_expression) {
 					case "^(\d{7})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/1".$default_area_code."\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/1".$default_area_code."\$1";
-						}
+						$prefix_number = $default_area_code;
 						$label = "7 digits";
 						$abbrv = "7d";
 						break;
 					case "^(\d{8})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "8 digits";
 						$abbrv = "8d";
 						break;
 					case "^(\d{9})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "9 digits";
 						$abbrv = "9d";
 						break;
 					case "^(\d{10})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/1\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '1';
 						$label = "10 digits";
 						$abbrv = "10d";
 						break;
 					case "^\+?(\d{11})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "11 digits";
 						$abbrv = "11d";
 						break;
 					case "^(\d{12})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "12 digits";
 						$abbrv = "12d";
 						break;
 					case "^(\d{13})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "13 digits";
 						$abbrv = "13d";
 						break;
 					case "^(\d{14})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "14 digits";
 						$abbrv = "14d";
 						break;
-					case "^(0\d{12,14})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+					case "^(\d{12,15})$":
+						$prefix_number = '';
 						$label = "International";
 						$abbrv = "Intl";
 						break;
-					case "^311$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/311";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/311";
-						}
+					case "^(311)$":
+						$prefix_number = '';
 						$label = "311";
 						$abbrv = "311";
 						break;
-					case "^411$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/411";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/411";
-						}
+					case "^(411)$":
+						$prefix_number = '';
 						$label = "411";
 						$abbrv = "411";
 						break;
-					case "^911$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/911";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/911";
-						}
+					case "^(911)$":
+						$prefix_number = '';
 						$label = "911";
 						$abbrv = "911";
 						break;
 					case "^9(\d{3})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "dial 9, 3 digits";
 						$abbrv = "9.3d";
 						break;
 					case "^9(\d{4})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "dial 9, 4 digits";
 						$abbrv = "9.4d";
 						break;	
 					case "^9(\d{7})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/1".$default_area_code."\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/1".$default_area_code."\$1";
-						}
+						$prefix_number = $default_area_code;
 						$label = "dial 9, 7 digits";
 						$abbrv = "9.7d";
 						break;
 					case "^9(\d{10})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/1\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '1';
 						$label = "dial 9, 10 digits";
 						$abbrv = "9.10d";
 						break;
 					case "^9(\d{11})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = "dial 9, 11 digits";
 						$abbrv = "9.11d";
 						break;
 					case "^9(\d{12})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
-						$label = "dial 9, International";
-						$abbrv = "9.12d";
+						$prefix_number = '';
+						$label = "dial 9, 12 digits";
+						$abbrv = "9.Intl";
 						break;
 					case "^9(\d{13})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
-						$label = "dial 9, International";
+						$prefix_number = '';
+						$label = "dial 9, 13 digits";
 						$abbrv = "9.13d";
 						break;
 					case "^9(\d{14})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
-						$label = "dial 9, International";
+						$prefix_number = '';
+						$label = "dial 9, 14 digits";
 						break;
-					case "^9(\d{15})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+					case "^9(\d{12,15})$":
+						$prefix_number = '';
 						$label = "dial 9, International";
-						$abbrv = "9.15d";
+						$abbrv = "9.Intl";
 						break;
 					case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '1';
 						$label = "toll free";
 						$abbrv = "tollfree";
 						break;
 					default:
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/\$1";
-						if (strlen($gateway_2_name) > 0) {
-							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/\$1";
-						}
+						$prefix_number = '';
 						$label = $dialplan_expression;
 						$abbrv = filename_safe($dialplan_expression);
 					}
 
-					$extension_name = $gateway_name.".".$abbrv;
+					if ($gateway_type == "gateway") {
+						$extension_name = $gateway_name.".".$abbrv;
+						$action_data = "sofia/gateway/".$tmp_gateway_name."/".$prefix_number."\$1";
+						if (strlen($gateway_2_name) > 0) {
+							$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/".$prefix_number."\$1";
+						}
+					}
+					if ($gateway_type == "freetdm") {
+						$extension_name = "freetdm.".$abbrv;
+						$action_data = $gateway."/".$prefix_number."\$1";
+						if (strlen($gateway_2_type) > 0) {
+							$bridge_2_data .= $gateway_2."/".$prefix_number."\$1";
+						}
+					}
 					if (strlen($dialplanorder) == 0) {
 						$dialplanorder ='999';
 					}
@@ -397,11 +369,17 @@ else {
 					$fieldorder = '025';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
+					$tag = 'action'; //condition, action, antiaction
+					$fieldtype = 'set';
+					$fielddata = 'inherit_codec=true';
+					$fieldorder = '030';
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
 					if (strlen($bridge_2_data) > 0) {
 						$tag = 'action'; //condition, action, antiaction
 						$fieldtype = 'set';
 						$fielddata = 'continue_on_fail=true';
-						$fieldorder = '030';
+						$fieldorder = '035';
 						v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 					}
 
@@ -522,6 +500,40 @@ function type_onchange(field_type) {
 	echo "    Gateway:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	
+	if (ifgroup("superadmin")) {
+		echo "<script>\n";
+		echo "var Objs;\n";
+		echo "\n";
+		echo "function changeToInput(obj){\n";
+		echo "	tb=document.createElement('INPUT');\n";
+		echo "	tb.type='text';\n";
+		echo "	tb.name=obj.name;\n";
+		echo "	tb.setAttribute('class', 'formfld');\n";
+		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "	tbb=document.createElement('INPUT');\n";
+		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.type='button';\n";
+		echo "	tbb.value='<';\n";
+		echo "	tbb.objs=[obj,tb,tbb];\n";
+		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+		echo "	obj.parentNode.insertBefore(tb,obj);\n";
+		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "}\n";
+		echo "\n";
+		echo "function Replace(obj){\n";
+		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "</script>\n";
+		echo "\n";
+	}
+
+	//set the onchange
+	if (ifgroup("superadmin")) { $onchange = "onchange='changeToInput(this);'"; } else { $onchange = ''; }
+
 	$sql = "";
 	$sql .= " select * from v_gateways ";
 	$sql .= " where v_id = '$v_id' ";
@@ -529,17 +541,18 @@ function type_onchange(field_type) {
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	unset ($prepstatement, $sql);
-	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" style='width: 60%;'>\n";
+	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
 	echo "<option value=''></option>\n";
 	foreach($result as $row) {
 		if ($row['gateway'] == $gateway_name) {
-			echo "<option value=\"".$row['gateway_id'].":".$row['gateway']."\" selected>".$row['gateway']."</option>\n";
+			echo "<option value=\"".$row['gateway_id'].":".$row['gateway']."\" $onchange selected=\"selected\">".$row['gateway']."</option>\n";
 		}
 		else {
 			echo "<option value=\"".$row['gateway_id'].":".$row['gateway']."\">".$row['gateway']."</option>\n";
 		}
 	}
 	unset($sql, $result, $rowcount);
+	echo "<option value=\"freetdm\">freetdm</option>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo "Select the gateway to use with this outbound route.\n";
@@ -559,7 +572,7 @@ function type_onchange(field_type) {
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
 	unset ($prepstatement, $sql);
-	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" style='width: 60%;'>\n";
+	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
 	echo "<option value=''></option>\n";
 	foreach($result as $row) {
 		if ($row['gateway'] == $gateway_2_name) {
@@ -570,6 +583,7 @@ function type_onchange(field_type) {
 		}
 	}
 	unset($sql, $result, $rowcount);
+	echo "<option value=\"freetdm\">freetdm</option>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo "Select another gateway as an alternative to use if the first one fails.\n";
