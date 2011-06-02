@@ -110,8 +110,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$v_id', ";
 			$sql .= "'$broadcast_name', ";
 			$sql .= "'$broadcast_desc', ";
-			$sql .= "'$broadcast_timeout', ";
-			$sql .= "'$broadcast_concurrent_limit', ";
+			if (strlen($broadcast_timeout) == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'$broadcast_timeout', ";
+			}
+			if (strlen($broadcast_concurrent_limit) == 0) {
+				$sql .= "null, ";
+			}
+			else {
+				$sql .= "'$broadcast_concurrent_limit', ";
+			}
 			$sql .= "'$recordingid', ";
 			$sql .= "'$broadcast_caller_id_name', ";
 			$sql .= "'$broadcast_caller_id_number', ";
@@ -135,8 +145,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "update v_call_broadcast set ";
 			$sql .= "broadcast_name = '$broadcast_name', ";
 			$sql .= "broadcast_desc = '$broadcast_desc', ";
-			$sql .= "broadcast_timeout = '$broadcast_timeout', ";
-			$sql .= "broadcast_concurrent_limit = '$broadcast_concurrent_limit', ";
+			if (strlen($broadcast_timeout) == 0) {
+				$sql .= "broadcast_timeout = null, ";
+			}
+			else {
+				$sql .= "broadcast_timeout = '$broadcast_timeout', ";
+			}
+			if (strlen($broadcast_concurrent_limit) == 0) {
+				$sql .= "broadcast_concurrent_limit = null, ";
+			}
+			else {
+				$sql .= "broadcast_concurrent_limit = '$broadcast_concurrent_limit', ";
+			}
 			$sql .= "recordingid = '$recordingid', ";
 			$sql .= "broadcast_caller_id_name = '$broadcast_caller_id_name', ";
 			$sql .= "broadcast_caller_id_number = '$broadcast_caller_id_number', ";
