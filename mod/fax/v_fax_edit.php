@@ -790,7 +790,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_inbox_delete')) {
-							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_inbox&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
+							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_inbox&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";
@@ -905,7 +905,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_sent_delete')) {
-							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_sent&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\"><img src=\"$v_icon_delete\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
+							echo "        <td><a href=\"v_fax_edit.php?id=".$fax_id."&type=fax_sent&a=del&faxextension=".urlencode($faxextension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";
