@@ -42,19 +42,23 @@ else {
 	$orderby = $_GET["orderby"];
 	$order = $_GET["order"];
 
+//change the tenant
+	if (strlen($_GET["id"]) > 0 && strlen($_GET["domain"]) > 0) {
+		$v_id = $_GET["id"];
+		$_SESSION['v_id'] = $_SESSION['domains'][$v_id]['v_id'];
+		$_SESSION["v_domain"] = $_SESSION['domains'][$v_id]['domain'];
+		$_SESSION["v_template_name"] = $_SESSION['domains'][$v_id]['template_name'];
+	}
+
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
 	echo "      <br>";
 
 	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left' width='50%' nowrap><b>System Settings</b></td>\n";
-	echo "<td align='left' width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
+
 	echo "</tr></table>\n";
 
 	$sql = "";
@@ -90,6 +94,12 @@ else {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "<td align='left' nowrap><strong>System Settings</strong></td>\n";
+	echo "<td>&nbsp;</td>\n";
+	echo "<td align='right' align='right'><strong>Domain:</strong> ".$_SESSION['v_domain']."</td>\n";
+	echo "<td align='right' width='42'>&nbsp;</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo thorderby('v_domain', 'Domain', $orderby, $order);
 	//echo thorderby('v_package_version', 'Package Version', $orderby, $order);
 	echo thorderby('v_label', 'Label', $orderby, $order);
@@ -107,7 +117,98 @@ else {
 		//no results found
 	}
 	else {
+		//get the list of installed apps from the core and mod directories
+			if (!is_array($apps)) {
+				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+				$x=0;
+				foreach ($config_list as &$config_path) {
+					include($config_path);
+					$x++;
+				}
+			}
 		foreach($result as $row) {
+			//if there are no permissions listed in v_group_permissions then set the default permissions
+				$sql = "";
+				$sql .= "select count(*) as count from v_group_permissions ";
+				$sql .= "where v_id = ".$row['v_id']." ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetch();
+				unset ($prep_statement);
+				if ($result['count'] > 0) {
+					if ($display_type == "text") {
+						echo "Goup Permissions: 	no change\n";
+					}
+				}
+				else {
+					if ($display_type == "text") {
+						echo "Goup Permissions: 	added\n";
+					}
+					//no permissions found add the defaults
+						foreach($apps as $app) {
+							foreach ($app['permissions'] as $sub_row) {
+								foreach ($sub_row['groups'] as $group) {
+									//add the record
+									$sql = "insert into v_group_permissions ";
+									$sql .= "(";
+									$sql .= "v_id, ";
+									$sql .= "permission_id, ";
+									$sql .= "group_id ";
+									$sql .= ")";
+									$sql .= "values ";
+									$sql .= "(";
+									$sql .= "'".$row['v_id']."', ";
+									$sql .= "'".$sub_row['name']."', ";
+									$sql .= "'".$group."' ";
+									$sql .= ")";
+									$db->exec($sql);
+									unset($sql);
+								}
+							}
+						}
+				}
+
+			//if there are no groups listed in v_menu_groups then add the default groups
+				$sql = "";
+				$sql .= "select count(*) as count from v_menu_groups ";
+				$sql .= "where v_id = ".$row['v_id']." ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetch();
+				unset ($prep_statement);
+				if ($result['count'] > 0) {
+					if ($display_type == "text") {
+						echo "Menu Groups: 		no change\n";
+					}
+				}
+				else {
+					if ($display_type == "text") {
+						echo "Menu Groups: 		added\n";
+					}
+					//no menu groups found add the defaults
+						foreach($apps as $app) {
+							foreach ($app['menu'] as $sub_row) {
+								foreach ($sub_row['groups'] as $group) {
+									//add the record
+									$sql = "insert into v_menu_groups ";
+									$sql .= "(";
+									$sql .= "v_id, ";
+									$sql .= "menu_guid, ";
+									$sql .= "group_id ";
+									$sql .= ")";
+									$sql .= "values ";
+									$sql .= "(";
+									$sql .= "'".$row['v_id']."', ";
+									$sql .= "'".$sub_row['guid']."', ";
+									$sql .= "'".$group."' ";
+									$sql .= ")";
+									$db->exec($sql);
+									unset($sql);
+								}
+							}
+						}
+				}
+
 			if (strlen($row['v_server_port']) == 0) { $row['v_server_port'] = '80'; }
 			switch ($row['v_server_port']) {
 				case "80":
@@ -121,7 +222,8 @@ else {
 					break;
 			}
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='".$url."'>".$row['v_domain']."</a></td>\n";
+			//echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='".$url."'>".$row['v_domain']."</a></td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_system_settings.php?id=".$row['v_id']."&domain=".$row['v_domain']."'>".$row['v_domain']."</a></td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_package_version']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_label']."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_name']."</td>\n";
