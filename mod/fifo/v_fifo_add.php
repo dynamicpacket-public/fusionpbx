@@ -253,13 +253,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//synchronize the xml config
 		sync_package_v_dialplan_includes();
 
-	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fifo.php\">\n";
-	echo "<div align='center'>\n";
-	echo "Update Complete\n";
-	echo "</div>\n";
-	require_once "includes/footer.php";
-	return;
+	//redirect the user
+		require_once "includes/header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fifo.php\">\n";
+		echo "<div align='center'>\n";
+		echo "Update Complete\n";
+		echo "</div>\n";
+		require_once "includes/footer.php";
+		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -312,20 +313,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' style='width: 60%;' type='text' name='queue_extension_number' maxlength='255' value=\"$queue_extension_number\">\n";
 	echo "		<br />\n";
-	echo "		The number that will be assinged to the queue.\n";
+	echo "		The number that will be assigned to the queue.\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
-
-	//echo "<tr>\n";
-	//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	//echo "    Flags:\n";
-	//echo "</td>\n";
-	//echo "<td class='vtable' align='left'>\n";
-	//echo "    <input class='formfld' style='width: 60%;' type='text' name='flags' maxlength='255' value=\"$flags\">\n";
-	//echo "<br />\n";
-	//echo "Optional queue flags. examples: mute|deaf|waste|moderator\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -333,7 +323,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplanorder' class='formfld' style='width: 60%;'>\n";
-	//echo "              <option></option>\n";
 	if (strlen(htmlspecialchars($dialplanorder))> 0) {
 		echo "              <option selected='yes' value='".htmlspecialchars($dialplanorder)."'>".htmlspecialchars($dialplanorder)."</option>\n";
 	}
