@@ -744,25 +744,29 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		$previous_call_group_name = "";
 		foreach ($result as &$row) {
-			if ($previous_call_group_name != $row["callgroup"]) {
-				if ("menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain == $select_value || "bridge:group/".$row["callgroup"]."@".$v_domain == $select_value) {
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain."' selected='selected'>".$row["callgroup"]."</option>\n";
+			$call_groups = $row["callgroup"];
+			$call_group_array = explode(",", $call_groups);
+			foreach ($call_group_array as $call_group) {
+				if ($previous_call_group_name != $call_group) {
+					if ("menu-exec-app:bridge group/".$call_group."@".$v_domain == $select_value || "bridge:group/".$call_group."@".$v_domain == $select_value) {
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:bridge group/".$call_group."@".$v_domain."' selected='selected'>".$call_group."</option>\n";
+						}
+						if ($select_type == "dialplan") {
+							echo "		<option value='bridge:group/".$call_group."@".$v_domain."' selected='selected'>".$call_group."</option>\n";
+						}
+						$selection_found = true;
 					}
-					if ($select_type == "dialplan") {
-						echo "		<option value='bridge:group/".$row["callgroup"]."@".$v_domain."' selected='selected'>".$row["callgroup"]."</option>\n";
+					else {
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:bridge group/".$call_group."@".$v_domain."'>".$call_group."</option>\n";
+						}
+						if ($select_type == "dialplan") {
+							echo "		<option value='bridge:group/".$call_group."@".$v_domain."'>".$call_group."</option>\n";
+						}
 					}
-					$selection_found = true;
+					$previous_call_group_name = $call_group;
 				}
-				else {
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:bridge group/".$row["callgroup"]."@".$v_domain."'>".$row["callgroup"]."</option>\n";
-					}
-					if ($select_type == "dialplan") {
-						echo "		<option value='bridge:group/".$row["callgroup"]."@".$v_domain."'>".$row["callgroup"]."</option>\n";
-					}
-				}
-				$previous_call_group_name = $row["callgroup"];
 			}
 			$x++;
 		}
@@ -2309,7 +2313,7 @@ function sync_package_v_vars() {
 		$prev_var_cat = $row[var_cat];
 	}
 	$tmpxml .= "\n"; 
-	
+
 	fwrite($fout, $tmpxml);
 	unset($tmpxml);
 	fclose($fout);
@@ -2683,7 +2687,7 @@ function sync_package_v_hunt_group() {
 						}
 						if ($action == 'update') {
 							//update the huntgroup fifo
-								$extensionname = check_str($row['huntgroupname']).'.park';
+								$extensionname = $row['huntgroupname'].'.park';
 								$dialplanorder = '999';
 								$context = $row['huntgroupcontext'];
 								if ($row['hunt_group_enabled'] == "false") {
