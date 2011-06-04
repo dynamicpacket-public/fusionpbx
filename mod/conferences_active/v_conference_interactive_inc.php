@@ -115,7 +115,7 @@ else {
 	$conference_name = $conference_name.'-'.$_SESSION['domains'][$v_id]['domain'];
 
 //create the conference list command
-	$switch_cmd = 'conference '.$conference_name.' xml_list';
+	$switch_cmd = "conference '".$conference_name."' xml_list";
 
 //connect to event socket, send the command and process the results
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
