@@ -238,6 +238,7 @@ else {
 
 						$tmp_filesize = filesize($row[file_path]);
 						$tmp_filesize = byte_convert($tmp_filesize);
+						$file_ext = substr($row[file_path], -3);
 
 						$tmp_message_len = $row[message_len];
 						if ($tmp_message_len < 60 ) {

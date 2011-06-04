@@ -37,6 +37,7 @@ else {
 
 //get the http get values
 	$uuid = $_GET['uuid'];
+	$file_ext = $_GET['ext'];
 	$type = $_GET['type']; //vm
 	$desc = $_GET['desc'];
 
@@ -55,7 +56,6 @@ else {
 	<tr>
 	<td align='center'>
 	<?php
-	$file_ext = substr($_GET['filename'], -3);
 	if ($file_ext == "wav") {
 		echo "<embed src=\"v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid."\" autostart=true width=200 height=40 name=\"sound".$uuid."\" enablejavascript=\"true\">\n";
 	 }
