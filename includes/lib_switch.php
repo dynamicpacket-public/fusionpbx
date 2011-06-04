@@ -2532,7 +2532,7 @@ function sync_package_v_hunt_group() {
 
 						if ($action == 'add') {
 							//create huntgroup extension in the dialplan
-								$extensionname = $row['huntgroupname'];
+								$extensionname = check_str($row['huntgroupname']);
 								$dialplanorder ='999';
 								$context = $row['huntgroupcontext'];
 								if ($row['hunt_group_enabled'] == "false") {
@@ -2561,7 +2561,7 @@ function sync_package_v_hunt_group() {
 						if ($action == 'update') {
 							//update the huntgroup
 
-								$extensionname = $row['huntgroupname'];
+								$extensionname = check_str($row['huntgroupname']);
 								$dialplanorder = '999';
 								$context = $row['huntgroupcontext'];
 								if ($row['hunt_group_enabled'] == "false") {
@@ -2639,7 +2639,7 @@ function sync_package_v_hunt_group() {
 						if ($action == 'add') {
 
 							//create a fifo queue for each huntgroup
-							$extensionname = $row['huntgroupname'].'.park';
+							$extensionname = check_str($row['huntgroupname']).'.park';
 							$dialplanorder ='999';
 							$context = $row['huntgroupcontext'];
 							if ($row['hunt_group_enabled'] == "false") {
@@ -2683,7 +2683,7 @@ function sync_package_v_hunt_group() {
 						}
 						if ($action == 'update') {
 							//update the huntgroup fifo
-								$extensionname = $row['huntgroupname'].'.park';
+								$extensionname = check_str($row['huntgroupname']).'.park';
 								$dialplanorder = '999';
 								$context = $row['huntgroupcontext'];
 								if ($row['hunt_group_enabled'] == "false") {
@@ -2833,7 +2833,7 @@ function sync_package_v_hunt_group() {
 							$tmp .= "	session:setVariable(\"effective_caller_id_name\", \"".$row['huntgroupcidnameprefix']."\"..effective_caller_id_name);\n";
 							$tmp .= "elseif caller_id_name then\n";
 							$tmp .= "	--effective_caller_id_name missing, set to caller_id_name\n";
-							$tmp .= "	session:setVariable(\"effective_caller_id_name\", \"".$row['huntgroupcidnameprefix']."\"..caller_id_name);\n";							
+							$tmp .= "	session:setVariable(\"effective_caller_id_name\", \"".$row['huntgroupcidnameprefix']."\"..caller_id_name);\n";
 							$tmp .= "end\n";
 							$tmp .= "if outbound_caller_id_name then\n";
 							$tmp .= "	session:setVariable(\"outbound_caller_id_name\", \"".$row['huntgroupcidnameprefix']."\"..outbound_caller_id_name);\n";
@@ -3133,11 +3133,11 @@ function sync_package_v_fax() {
 				$action = 'update';
 
 				$dialplan_include_id = $row2['dialplan_include_id'];
-				$extensionname = $row2['extensionname'];
+				$extensionname = check_str($row2['extensionname']);
 				$order = $row2['order'];
 				$context = $row2['context'];
 				$enabled = $row2['enabled'];
-				$descr = $row2['descr'];
+				$descr = check_str($row2['descr']);
 				$opt1name = $row2['opt1name'];
 				$opt1value = $row2['opt1value'];
 				$id = $i;
@@ -5044,7 +5044,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 		else { //received results
 			foreach($result as $row) {
 				$ivr_menu_id = $row["ivr_menu_id"];
-				$ivr_menu_name = $row["ivr_menu_name"];
+				$ivr_menu_name = check_str($row["ivr_menu_name"]);
 				$ivr_menu_extension = $row["ivr_menu_extension"];
 				$ivr_menu_greet_long = $row["ivr_menu_greet_long"];
 				$ivr_menu_greet_short = $row["ivr_menu_greet_short"];
@@ -5062,7 +5062,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 				$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 				$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
 				$ivr_menu_enabled = $row["ivr_menu_enabled"];
-				$ivr_menu_desc = $row["ivr_menu_desc"];
+				$ivr_menu_desc = check_str($row["ivr_menu_desc"]);
 
 				//replace space with an underscore
 					$ivr_menu_name = str_replace(" ", "_", $ivr_menu_name);
@@ -5310,7 +5310,7 @@ if (!function_exists('sync_package_v_call_center')) {
 		if ($result_count > 0) { //found results
 			foreach($result as $row) {
 				$call_center_queue_id = $row["call_center_queue_id"];
-				$queue_name = $row["queue_name"];
+				$queue_name = check_str($row["queue_name"]);
 				$queue_extension = $row["queue_extension"];
 				$queue_strategy = $row["queue_strategy"];
 				$queue_moh_sound = $row["queue_moh_sound"];
@@ -5326,7 +5326,7 @@ if (!function_exists('sync_package_v_call_center')) {
 				$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
 				$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
 				$queue_cid_prefix = $row["queue_cid_prefix"];
-				$queue_description = $row["queue_description"];
+				$queue_description = check_str($row["queue_description"]);
 
 				//replace space with an underscore
 					$queue_name = str_replace(" ", "_", $queue_name);
