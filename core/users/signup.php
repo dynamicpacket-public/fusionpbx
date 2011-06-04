@@ -35,7 +35,7 @@ else {
 	return;
 }
 
-if (ifgroup("superadmin")) {
+if (ifgroup("superadmin") && strlen($_POST["v_id"]) > 0) {
 	$v_id = check_str($_POST["v_id"]);
 }
 $username = check_str($_POST["username"]);
