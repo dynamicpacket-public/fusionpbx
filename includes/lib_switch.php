@@ -5842,6 +5842,13 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/xml_cdr.conf.xml");
 
 		//replace the values in the template
+			if ($_SERVER["HTTPS"] == "on") {
+				$file_contents = str_replace("{v_http_protocol}", "https", $file_contents);
+			}
+			else {
+				$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
+			}
+
 			$file_contents = str_replace("{v_domain}", $v_domain, $file_contents);
 			unset ($v_domain);
 
