@@ -35,6 +35,20 @@ else {
 	exit;
 }
 
+//domain list
+	unset ($_SESSION["domains"]);
+	$sql = "select * from v_system_settings ";
+	$prepstatement = $db->prepare($sql);
+	$prepstatement->execute();
+	$result = $prepstatement->fetchAll();
+	foreach($result as $row) {
+		$_SESSION['domains'][$row['v_id']]['v_id'] = $row['v_id'];
+		$_SESSION['domains'][$row['v_id']]['domain'] = $row['v_domain'];
+		$_SESSION['domains'][$row['v_id']]['template_name'] = $row['v_template_name'];
+	}
+	$num_rows = count($result);
+	unset($result, $prepstatement);
+
 //include the header
 	require_once "includes/header.php";
 
@@ -55,22 +69,16 @@ else {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
-	echo "	<br>";
+	echo "      <br>";
 
-	$sql = "";
-	$sql .= " select * from v_system_settings ";
-	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$numrows = count($result);
-	unset ($prepstatement, $result, $sql);
+	echo "<table width='100%' border='0'>\n";
+	echo "</tr></table>\n";
 
 	$rowsperpage = 150;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $tmp) = paging($numrows, $param, $rowsperpage); 
+	list($paging_controls, $rows_per_page, $tmp) = paging($num_rows, $param, $rowsperpage); 
 	$offset = $rows_per_page * $page; 
 
 	$sql = "";
