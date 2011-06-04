@@ -34,21 +34,23 @@ else {
 	return;
 }
 
-$id = check_str($_GET["id"]);
+//get the http value and set as a variable
+	$id = check_str($_GET["id"]);
 
-$sqldelete = "delete from v_groups ";
-$sqldelete .= "where v_id = '$v_id' ";
-$sqldelete .= "and id = '$id' ";
-if (!$db->exec($sqldelete)) {
-	//echo $db->errorCode() . "<br>";
-	$info = $db->errorInfo();
-	print_r($info);
-	// $info[0] == $db->errorCode() unified error code
-	// $info[1] is the driver specific error code
-	// $info[2] is the driver specific error string
-}
+//delete the group
+	$sqldelete = "delete from v_groups ";
+	$sqldelete .= "where v_id = '$v_id' ";
+	$sqldelete .= "and id = '$id' ";
+	if (!$db->exec($sqldelete)) {
+		//echo $db->errorCode() . "<br>";
+		$info = $db->errorInfo();
+		print_r($info);
+		// $info[0] == $db->errorCode() unified error code
+		// $info[1] is the driver specific error code
+		// $info[2] is the driver specific error string
+	}
 
 //redirect the user
-	header("Location: index.php");
+	header("Location: grouplist.php");
 
 ?>

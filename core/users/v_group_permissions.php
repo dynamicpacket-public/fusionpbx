@@ -194,7 +194,7 @@ require_once "includes/paging.php";
 	echo "<tr>\n";
 	echo "<td width='50%' nowrap><b>Group Permission List for $group_id</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
-	//echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='grouplist.php'\" value='Back'> ";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

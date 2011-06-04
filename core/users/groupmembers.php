@@ -66,7 +66,20 @@ else {
 
 	echo "<div align='center'>\n";
 	echo "<table width='90%' border='0'><tr><td align='left'>\n";
-	echo "<span  class=\"\" height='50'>Member list for <b>$groupid</b></span><br /><br />\n";
+	echo "\n";
+
+	echo "<table width='100%' cellpadding='6' cellspacing='1'>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left'>\n";
+	echo "			<span  class=\"\" height='50'>Member list for <b>$groupid</b></span>";
+	echo "		</td>\n";
+	echo "		<td align='right' nowrap='nowrap'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='grouplist.php'\" value='Back'>";
+	echo "			&nbsp;&nbsp;&nbsp;\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
 
 	$sql = "SELECT * FROM v_group_members ";
 	$sql .= "where v_id = '$v_id' ";
