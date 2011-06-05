@@ -693,7 +693,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					$sql .= "'".$sub_row['name']."', ";
 					$sql .= "'".$group."' ";
 					$sql .= ")";
-					$db->exec($sql);
+					$db_tmp->exec($sql);
 					unset($sql);
 				}
 			}
@@ -716,7 +716,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 					$sql .= "'".$sub_row['guid']."', ";
 					$sql .= "'".$group."' ";
 					$sql .= ")";
-					$db->exec($sql);
+					$db_tmp->exec($sql);
 					unset($sql);
 				}
 			}
