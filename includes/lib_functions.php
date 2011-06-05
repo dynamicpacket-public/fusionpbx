@@ -602,8 +602,10 @@
 		} //end function definition
 	} //end function_exists
 
-function switch_module_exists($mod) {
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+function switch_module_is_running($fp, $mod) {
+	if (!$fp) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	}
 	if ($fp) {
 		$switchcmd = "module_exists $mod";
 		$switch_result = event_socket_request($fp, 'api '.$switchcmd);
@@ -619,7 +621,7 @@ function switch_module_exists($mod) {
 		return false;
 	}
 }
-//switch_module_exists('mod_spidermonkey');
+//switch_module_is_running('mod_spidermonkey');
 
 //format a number (n) replace with a number (r) remove the number
 function format_string ($format, $data) {

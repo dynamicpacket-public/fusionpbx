@@ -427,31 +427,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='huntgroupringback'>\n";
 	echo "    <option value=''></option>\n";
 	if ($huntgroupringback == "ring") { 
-		echo "    <option value='us-ring' SELECTED >us-ring</option>\n";
+		echo "    <option value='us-ring' selected='selected'>us-ring</option>\n";
 	}
 	else {
 		echo "    <option value='us-ring'>us-ring</option>\n";
 	}
 	if ($huntgroupringback == "us-ring") { 
-		echo "    <option value='us-ring' SELECTED >us-ring</option>\n";
+		echo "    <option value='us-ring' selected='selected'>us-ring</option>\n";
 	}
 	else {
 		echo "    <option value='us-ring'>us-ring</option>\n";
 	}
 	if ($huntgroupringback == "fr-ring") { 
-		echo "    <option value='fr-ring' SELECTED >fr-ring</option>\n";
+		echo "    <option value='fr-ring' selected='selected'>fr-ring</option>\n";
 	}
 	else {
 		echo "    <option value='fr-ring'>fr-ring</option>\n";
 	}
 	if ($huntgroupringback == "uk-ring") { 
-		echo "    <option value='uk-ring' SELECTED >uk-ring</option>\n";
+		echo "    <option value='uk-ring' selected='selected'>uk-ring</option>\n";
 	}
 	else {
 		echo "    <option value='uk-ring'>uk-ring</option>\n";
 	}
+	if ($huntgroupringback == "rs-ring") { 
+		echo "    <option value='rs-ring' selected='selected'>rs-ring</option>\n";
+	}
+	else {
+		echo "    <option value='rs-ring'>rs-ring</option>\n";
+	}
 	if ($huntgroupringback == "music") { 
-		echo "    <option value='music' SELECTED >music</option>\n";
+		echo "    <option value='music' selected='selected'>music</option>\n";
 	}
 	else {
 		echo "    <option value='music'>music</option>\n";
@@ -484,7 +490,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (switch_module_exists('mod_spidermonkey')) {
+	if (switch_module_is_running('mod_spidermonkey')) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 		echo "    Caller Announce:\n";
