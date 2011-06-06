@@ -215,7 +215,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$sql .= "'$provisioning_list', ";
 				$sql .= "'#".generate_password(4, 1)."', ";
-				$sql .= "'$extension', ";
+				$sql .= "'$accountcode', ";
 				$sql .= "'$effective_caller_id_name', ";
 				$sql .= "'$effective_caller_id_number', ";
 				$sql .= "'$outbound_caller_id_name', ";
@@ -569,18 +569,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	if ($action == "update") {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "    Account Code:\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
-		echo "<br />\n";
-		echo "Enter the account code here.\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Account Code:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+	echo "<br />\n";
+	echo "Enter the account code here.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";

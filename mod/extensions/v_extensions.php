@@ -116,7 +116,6 @@ require_once "includes/paging.php";
 	}
 	else { //received results
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['vm_mailto']."&nbsp;</td>\n";
