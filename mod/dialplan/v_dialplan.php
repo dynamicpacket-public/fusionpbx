@@ -37,24 +37,25 @@ require_once "includes/header.php";
 
 if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
 	//get the contents of the dialplan/default.xml
-		$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/dialplan/default.xml");
-	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+		$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/templates/conf/dialplan/default.xml';
+		$file_default_contents = file_get_contents($file_default_path);
+	//prepare the file contents and the path
 		if (count($_SESSION['domains']) < 2) {
-			$file_contents = str_replace("{v_domain}", 'default', $file_contents);
+			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+				$file_default_contents = str_replace("{v_domain}", 'default', $file_default_contents);
+			//set the file path
+				$file_path = $v_conf_dir.'/dialplan/default.xml';
 		}
 		else {
-			$file_contents = str_replace("{v_domain}", $v_domain, $file_contents);
+			//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
+				$file_default_contents = str_replace("{v_domain}", $v_domain, $file_default_contents);
+			//set the file path
+				$file_path = $v_conf_dir.'/dialplan/'.$v_domain.'.xml';
 		}
-	//write the dialplan/default.xml file to the directory
-		if (count($_SESSION['domains']) < 2) {
-			$tmp_file_name = $v_conf_dir.'/dialplan/default.xml';
-		}
-		else {
-			$tmp_file_name = $v_conf_dir.'/dialplan/'.$v_domain.'.xml';
-		}
-		if (!file_exists($tmp_file_name)) {
-			$fh = fopen($tmp_file_name,'w') or die('Unable to write to '.$tmp_file_name.'. Make sure the path exists and permissons are set correctly.');
-			fwrite($fh, $file_contents);
+	//write the default dialplan
+		if (file_exists($file_path)) {
+			$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
+			fwrite($fh, $file_default_contents);
 			fclose($fh);
 		}
 	//set the message
