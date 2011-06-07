@@ -358,113 +358,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//if the extensions directory doesn't exist then create it
 				if (!is_dir($v_extensions_dir)) { mkdir($v_extensions_dir,0777,true); }
 
-			//if the dialplan default directory doesn't exist then create it
-				if (!is_dir($v_dialplan_default_dir)) { mkdir($v_dialplan_default_dir,0777,true); }
-
-			//if the recordings directory doesn't exist then create it
-				if (!is_dir($v_recordings_dir)) { mkdir($v_recordings_dir,0777,true); }
-
-			//if the recordings dialplan entry does not exist then add it
-				$sql = "select dialplan_include_id from v_dialplan_includes_details ";
-				$sql .= "where fielddata like 'recordings.lua' ";
-				$sql .= "and v_id = '$v_id' ";
-				$result = $db->query($sql)->fetch();
-				$prepstatement = $db->prepare(check_sql($sql));
-				if ($prepstatement) {
-					$prepstatement->execute();
-					$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						//add the recordings dialplan entry
-							$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'Recordings','',900,'default','true','*732 default system recordings tool','recordings',732);";
-							if ($db_type == "sqlite" || $db_type == "mysql" ) {
-								$db->exec(check_sql($sql));
-								$dialplan_include_id = $db->lastInsertId($id);
-							}
-							if ($db_type == "pgsql") {
-								$sql .= " RETURNING dialplan_include_id ";
-								$prepstatement = $db->prepare(check_sql($sql));
-								$prepstatement->execute();
-								$result = $prepstatement->fetchAll();
-								foreach ($result as &$row) {
-									$dialplan_include_id = $row["dialplan_include_id"];
-								}
-								unset($prepstatement, $result);
-							}
-						//add the recordings dialplan inclue entry
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES (".$v_id.",".$dialplan_include_id.",NULL,'condition',0,'destination_number','^\\*732$|^\\*732673$','');"; $db->exec(check_sql($sql));
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES (".$v_id.",".$dialplan_include_id.",NULL,'action',1,'set','recordings_dir=$v_recordings_dir','');"; $db->exec(check_sql($sql));
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES (".$v_id.",".$dialplan_include_id.",NULL,'action',2,'set','pin_number=".generate_password(4, 1)."','');"; $db->exec(check_sql($sql));
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES (".$v_id.",".$dialplan_include_id.",NULL,'action',3,'lua','recordings.lua','');"; $db->exec(check_sql($sql));
-					}
-					else {
-						//update the recordings dialplan entry
-							foreach ($result as &$row) {
-								$dialplan_include_id = $row['dialplan_include_id'];
-								$sql = "update v_dialplan_includes_details set";
-								$sql .= "fielddata = 'recordings_dir=".$v_recordings_dir."' ";
-								$sql .= "and v_id = '$v_id' ";
-								$db->exec(check_sql($sql));
-							}
-					}
+			//get the list of installed apps from the core and mod directories
+				$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_defaults.php");
+				foreach ($default_list as &$default_path) {
+					include($default_path);
 				}
-				unset($prepstatement, $result);
-
-			//if the disa dialplan entry does not exist then add it
-				$sql = "select dialplan_include_id from v_dialplan_includes_details ";
-				$sql .= "where fielddata like 'disa.lua' ";
-				$sql .= "and v_id = '$v_id' ";
-				$result = $db->query($sql)->fetch();
-				$prepstatement = $db->prepare(check_sql($sql));
-				if ($prepstatement) {
-					$prepstatement->execute();
-					$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						//add the disa dialplan entry
-							$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'DISA','',900,'default','true','*3472 Direct Inward System Access ','disa',3472);";
-							if ($db_type == "sqlite" || $db_type == "mysql" ) {
-								$db->exec(check_sql($sql));
-								$dialplan_include_id = $db->lastInsertId($id);
-							}
-							if ($db_type == "pgsql") {
-								$sql .= " RETURNING dialplan_include_id ";
-								$prepstatement = $db->prepare(check_sql($sql));
-								$prepstatement->execute();
-								$result = $prepstatement->fetchAll();
-								foreach ($result as &$row) {
-									$dialplan_include_id = $row["dialplan_include_id"];
-								}
-								unset($prepstatement, $result);
-							}
-						//add the recordings dialplan inclue entry
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'condition',0,'destination_number','^\\*3472$','');"; $db->exec(check_sql($sql));
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'action',1,'set','pin_number=".generate_password(6, 1)."','');"; $db->exec(check_sql($sql));
-							$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'action',2,'lua','disa.lua','');"; $db->exec(check_sql($sql));
-					}
-				}
-				unset($prepstatement, $result);
-
-			//write the dialplan
-				//get the contents of the dialplan/default.xml
-					$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/dialplan/default.xml");
-				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-					if (count($_SESSION['domains']) < 2) {
-						$file_contents = str_replace("{v_domain}", 'default', $file_contents);
-					}
-					else {
-						$file_contents = str_replace("{v_domain}", $v_domain, $file_contents);
-					}
-				//write the dialplan/default.xml file to the directory
-					if (count($_SESSION['domains']) < 2) {
-						$tmp_file_name = $v_conf_dir.'/dialplan/default.xml';
-					}
-					else {
-						$tmp_file_name = $v_conf_dir.'/dialplan/'.$v_domain.'.xml';
-					}
-					if (!file_exists($tmp_file_name)) {
-						$fh = fopen($tmp_file_name,'w') or die('Unable to write to '.$tmp_file_name.'. Make sure the path exists and permissons are set correctly.');
-						fwrite($fh, $file_contents);
-						fclose($fh);
-					}
 
 			//clear the domains session array so that it is updated
 				unset($_SESSION["domains"]);

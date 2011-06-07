@@ -149,6 +149,12 @@
 			}
 	}
 
+//get the list of installed apps from the core and mod directories
+	$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_defaults.php");
+	foreach ($default_list as &$default_path) {
+		include($default_path);
+	}
+
 if ($display_results && $display_type == "html") {
 	echo "<br />\n";
 	echo "<br />\n";

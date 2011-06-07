@@ -864,7 +864,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$menu_restore->restore();
 
 	//rename the default config files that are not needed
-		for ($i=0; $i<20; $i++) {
+		for ($i=1000; $i<1020; $i++) {
 			$file = $v_extensions_dir.'/'.$i; if (file_exists($file.'.xml')) { rename($file.'.xml', $file.'.noload'); }
 		}
 		$file = $v_extensions_dir.'/brian'; if (file_exists($file.'.xml')) { rename($file.'.xml', $file.'.noload'); }
@@ -884,7 +884,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (!is_dir($v_storage_dir.'/fax/')) { mkdir($v_storage_dir.'/fax',0777,true); }
 		if (!is_dir($v_log_dir.'')) { mkdir($v_log_dir.'',0777,true); }
 		if (!is_dir($v_sounds_dir.'')) { mkdir($v_sounds_dir.'',0777,true); }
-		if (!is_dir($v_recordings_dir.'')) { mkdir($v_recordings_dir.'',0777,true); }
 
 	//copy the files and directories from includes/install
 		include "includes/lib_install_copy.php";
@@ -894,6 +893,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 	//write the switch.conf.xml file
 		switch_conf_xml();
+
+	//get the list of installed apps from the core and mod directories
+		$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_defaults.php");
+		foreach ($default_list as &$default_path) {
+			include($default_path);
+		}
 
 	//synchronize the config with the saved settings
 		sync_package_freeswitch();
