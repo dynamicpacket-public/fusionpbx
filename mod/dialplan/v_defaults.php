@@ -38,7 +38,7 @@
 		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) == 0) {
 			//add the disa dialplan entry
-				$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'DISA','',900,'default','true','*3472 Direct Inward System Access ','disa',3472);";
+				$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'DISA','',900,'default','true','*3472 Direct Inward System Access ','disa',3472) ";
 				if ($db_type == "sqlite" || $db_type == "mysql" ) {
 					$db->exec(check_sql($sql));
 					$dialplan_include_id = $db->lastInsertId($id);

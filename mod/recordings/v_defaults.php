@@ -38,7 +38,7 @@
 		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) == 0) {
 			//add the recordings dialplan entry
-				$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'Recordings','',900,'default','true','*732 default system recordings tool','recordings',732);";
+				$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'Recordings','',900,'default','true','*732 default system recordings tool','recordings',732) ";
 				if ($db_type == "sqlite" || $db_type == "mysql" ) {
 					$db->exec(check_sql($sql));
 					$dialplan_include_id = $db->lastInsertId($id);
