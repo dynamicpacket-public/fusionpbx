@@ -604,9 +604,15 @@
 
 function switch_module_is_running($fp, $mod) {
 	if (!$fp) {
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		//if the handle does not exist create it
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		//if the handle still does not exist show an error message
+			if (!$fp) {
+				$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+			}
 	}
 	if ($fp) {
+		//send the api command to check if the module exists
 		$switchcmd = "module_exists $mod";
 		$switch_result = event_socket_request($fp, 'api '.$switchcmd);
 		unset($switchcmd);

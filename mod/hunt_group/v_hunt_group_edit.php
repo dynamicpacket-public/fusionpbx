@@ -490,7 +490,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (switch_module_is_running('mod_spidermonkey')) {
+	if (!$fp) {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	}
+	if (switch_module_is_running($fp, 'mod_spidermonkey')) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 		echo "    Caller Announce:\n";
@@ -499,13 +502,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <select class='formfld' name='huntgroupcallerannounce'>\n";
 		echo "    <option value=''></option>\n";
 		if ($huntgroupcallerannounce == "true") { 
-			echo "    <option value='true' SELECTED >true</option>\n";
+			echo "    <option value='true' selected='selected'>true</option>\n";
 		}
 		else {
 			echo "    <option value='true'>true</option>\n";
 		}
 		if ($huntgroupcallerannounce == "false") { 
-			echo "    <option value='false' SELECTED >false</option>\n";
+			echo "    <option value='false' selected='selected'>false</option>\n";
 		}
 		else {
 			echo "    <option value='false'>false</option>\n";
