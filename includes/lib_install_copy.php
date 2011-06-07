@@ -65,6 +65,7 @@ include "root.php";
 	$tmp_file = 'please_say_your_name_and_reason_for_calling.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'please_enter_your_pin_number.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'your_pin_number_is_incorect_goodbye.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
+	$tmp_file = 'please_enter_the_recording_number.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 
 	$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sounds/custom/16000';
 	$dst_dir = $v_sounds_dir.'/en/us/callie/custom/16000';
@@ -79,6 +80,7 @@ include "root.php";
 	$tmp_file = 'please_say_your_name_and_reason_for_calling.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'please_enter_your_pin_number.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'your_pin_number_is_incorect_goodbye.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
+	$tmp_file = 'please_enter_the_recording_number.wav'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 
 //copy recordings files
 	//recursive_copy($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/recordings', $v_recordings_dir.'');
