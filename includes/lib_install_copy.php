@@ -37,7 +37,7 @@ include "root.php";
 	//recursive_copy($v_conf_dir, $v_conf_dir.".orig");
 	$src_dir = $v_conf_dir;
 	$dst_dir = $v_conf_dir.'.orig';
-	exec ('cp -R '.$src_dir.' '.$dst_dir);
+	exec ('cp -RLp '.$src_dir.' '.$dst_dir);
 
 //copy the dialplan default.xml file
 	$srcfile = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/dialplan/default.xml';
