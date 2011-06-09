@@ -102,6 +102,15 @@ else {
 		// $info[2] is the driver specific error string
 	}
 
+//delete the groups the user is assigned to
+	$sqldelete = "delete from v_group_members ";
+	$sqldelete .= "where v_id = '$v_id' ";
+	$sqldelete .= "and username = '$username' ";
+	if (!$db->exec($sqldelete)) {
+		$info = $db->errorInfo();
+		print_r($info);
+	}
+
 //redirect the user
 	header("Location: index.php");
 
