@@ -47,11 +47,6 @@ else {
 		}
 	}
 
-//get the v_id
-	if (ifgroup("superadmin")) {
-		$v_id = check_str($_REQUEST["v_id"]);
-	}
-
 //get the username from v_users
 	$sql = "";
 	$sql .= "select * from v_users ";
@@ -99,6 +94,9 @@ else {
 	}
 
 if (count($_POST)>0 && $_POST["persistform"] != "1") {
+	if (ifgroup("superadmin")) {
+		$v_id = check_str($_REQUEST["v_id"]);
+	}
 	$v_id_orig = $_REQUEST["v_id_orig"];
 	$id = $_REQUEST["id"];
 	$password = check_str($_POST["password"]);
