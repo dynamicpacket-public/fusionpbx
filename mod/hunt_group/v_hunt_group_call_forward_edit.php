@@ -28,7 +28,7 @@ require_once "includes/config.php";
 require_once "includes/checkauth.php";
 
 //check permissions
-	if (permission_exists('hunt_group_add') || permission_exists('hunt_group_edit')) {
+	if (permission_exists('hunt_group_add') || permission_exists('hunt_group_edit') || permission_exists('hunt_group_call_forward')) {
 		//access granted
 	}
 	else {
