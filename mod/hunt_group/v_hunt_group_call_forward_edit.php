@@ -265,7 +265,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset($sql);
 	} //if ($call_forward_action == "add")
 
-	if ($call_forward_action == "update" && permission_exists('hunt_group_edit')) {
+	if ($call_forward_action == "update" && permission_exists('hunt_group_call_forward')) {
 		$sql = "update v_hunt_group set ";
 		$sql .= "huntgroupextension = '$hunt_group_extension', ";
 		$sql .= "huntgroupname = '$huntgroup_name', ";
