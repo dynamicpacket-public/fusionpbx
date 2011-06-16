@@ -36,7 +36,7 @@ $v_id = '1';
 	error_reporting (E_ALL ^ E_NOTICE); // Report everything
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
-//todolist: install.php save 
+//todolist: install.php save
 	//restore backup if the backup exists (reserved for next version)
 	//update button
 		//ini_set('default_socket_timeout', 120);
@@ -513,7 +513,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 				//create the table, user and set the permissions only if the db_create_username was provided
 					if (strlen($db_create_username) > 0) {
-
 						//select the mysql database
 							try {
 								$db_tmp->query("USE mysql;");
@@ -537,10 +536,23 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 						//set account to unlimitted use
 							try {
-								$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'localhost' ";
-								$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
-								$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-								$db_tmp->query($tmp_sql);
+								if ($db_host == "localhost" || $db_host == "127.0.0.1") {
+									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'localhost' ";
+									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+									$db_tmp->query($tmp_sql);
+
+									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'127.0.0.1' ";
+									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+									$db_tmp->query($tmp_sql);
+								}
+								else {
+									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'".$db_host."' ";
+									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+									$db_tmp->query($tmp_sql);
+								}
 							}
 							catch (PDOException $error) {
 								if ($v_debug) {
@@ -884,6 +896,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (!is_dir($v_storage_dir.'/fax/')) { mkdir($v_storage_dir.'/fax',0777,true); }
 		if (!is_dir($v_log_dir.'')) { mkdir($v_log_dir.'',0777,true); }
 		if (!is_dir($v_sounds_dir.'')) { mkdir($v_sounds_dir.'',0777,true); }
+		if (!is_dir($v_recordings_dir.'')) { mkdir($v_recordings_dir.'',0777,true); }
 
 	//copy the files and directories from includes/install
 		include "includes/lib_install_copy.php";
