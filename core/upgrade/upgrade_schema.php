@@ -85,6 +85,7 @@
 			echo "Goup Permissions: 	added\n";
 		}
 		//no permissions found add the defaults
+			$db->beginTransaction();
 			foreach($apps as $app) {
 				foreach ($app['permissions'] as $row) {
 					foreach ($row['groups'] as $group) {
@@ -106,6 +107,7 @@
 					}
 				}
 			}
+			$db->commit();
 	}
 
 //if there are no groups listed in v_menu_groups then add the default groups
@@ -126,6 +128,7 @@
 			echo "Menu Groups: 		added\n";
 		}
 		//no menu groups found add the defaults
+			$db->beginTransaction();
 			foreach($apps as $app) {
 				foreach ($app['menu'] as $row) {
 					foreach ($row['groups'] as $group) {
@@ -147,6 +150,7 @@
 					}
 				}
 			}
+			$db->commit();
 	}
 
 //get the list of installed apps from the core and mod directories
