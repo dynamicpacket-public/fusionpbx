@@ -49,20 +49,23 @@ else {
 	$num_rows = count($result);
 	unset($result, $prepstatement);
 
-//include the header
-	require_once "includes/header.php";
-
 //get http values and set them as variables
 	$orderby = $_GET["orderby"];
 	$order = $_GET["order"];
 
 //change the tenant
 	if (strlen($_GET["id"]) > 0 && strlen($_GET["domain"]) > 0) {
-		$v_id = $_GET["id"];
-		$_SESSION['v_id'] = $_SESSION['domains'][$v_id]['v_id'];
-		$_SESSION["v_domain"] = $_SESSION['domains'][$v_id]['domain'];
-		$_SESSION["v_template_name"] = $_SESSION['domains'][$v_id]['template_name'];
+		//update the v_id and session variables
+			$v_id = $_GET["id"];
+			$_SESSION['v_id'] = $_SESSION['domains'][$v_id]['v_id'];
+			$_SESSION["v_domain"] = $_SESSION['domains'][$v_id]['domain'];
+			$_SESSION["v_template_name"] = $_SESSION['domains'][$v_id]['template_name'];
+		//clear the menu session so that it is regenerated for the current tenant
+			$_SESSION["menu"] = '';
 	}
+
+//include the header
+	require_once "includes/header.php";
 
 //show the content
 	echo "<div align='center'>";
