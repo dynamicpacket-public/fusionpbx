@@ -114,14 +114,6 @@
       </condition>
     </extension>
 
-    <extension name="intercept-ext">
-      <condition field="destination_number" expression="^\*\*(\d+)$">
-	<action application="answer"/>
-	<action application="intercept" data="${hash(select/${domain_name}-last_dial_ext/$1)}"/>
-	<action application="sleep" data="2000"/>
-      </condition>
-    </extension>
-
     <extension name="redial">
       <condition field="destination_number" expression="^(redial|\*870)$">
 	<action application="transfer" data="${hash(select/${domain_name}-last_dial/${caller_id_number})}"/>
@@ -241,6 +233,14 @@
     <extension name="call-group-order">
       <condition field="destination_number" expression="^\*83(\d{2})$">
 	<action application="bridge" data="{leg_timeout=15,ignore_early_media=true}${group(call:$1@${domain_name}:order)}"/>
+      </condition>
+    </extension>
+
+    <extension name="intercept-ext">
+      <condition field="destination_number" expression="^\*\*(\d+)$">
+	<action application="answer"/>
+	<action application="intercept" data="${hash(select/${domain_name}-last_dial_ext/$1)}"/>
+	<action application="sleep" data="2000"/>
       </condition>
     </extension>
 
