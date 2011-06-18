@@ -80,15 +80,20 @@ if (strlen($_SESSION["menu"]) == 0) {
 			$sql .= "and menu_guid in ";
 			$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
 			$sql .= "and ( ";
-			$x = 0;
-			foreach($_SESSION['groups'] as $row) {
-				if ($x == 0) {
-					$sql .= "group_id = '".$row['groupid']."' ";
+			if (count($_SESSION['groups']) == 0) {
+				$sql .= "group_id = 'public' ";
+			}
+			else {
+				$x = 0;
+				foreach($_SESSION['groups'] as $row) {
+					if ($x == 0) {
+						$sql .= "group_id = '".$row['groupid']."' ";
+					}
+					else {
+						$sql .= "or group_id = '".$row['groupid']."' ";
+					}
+					$x++;
 				}
-				else {
-					$sql .= "or group_id = '".$row['groupid']."' ";
-				}
-				$x++;
 			}
 			$sql .= ") ";
 			$sql .= "and menu_guid <> '' ";
@@ -180,15 +185,20 @@ if (strlen($_SESSION["menu"]) == 0) {
 		$sql .= "and menu_guid in ";
 		$sql .= "(select menu_guid from v_menu_groups where v_id = '$v_id' ";
 		$sql .= "and ( ";
-		$x = 0;
-		foreach($_SESSION['groups'] as $row) {
-			if ($x == 0) {
-				$sql .= "group_id = '".$row['groupid']."' ";
+		if (count($_SESSION['groups']) == 0) {
+			$sql .= "group_id = 'public' ";
+		}
+		else {
+			$x = 0;
+			foreach($_SESSION['groups'] as $row) {
+				if ($x == 0) {
+					$sql .= "group_id = '".$row['groupid']."' ";
+				}
+				else {
+					$sql .= "or group_id = '".$row['groupid']."' ";
+				}
+				$x++;
 			}
-			else {
-				$sql .= "or group_id = '".$row['groupid']."' ";
-			}
-			$x++;
 		}
 		$sql .= ") ";
 		$sql .= ") ";
