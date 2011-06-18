@@ -76,9 +76,9 @@ else {
 	}
 
 //delete the group from the user
-	if ($_GET["a"] == "delete" && ifgroup("user_delete")) {
+	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
 		//set the variables
-			$groupid = $_GET["groupid"];
+			$groupid = check_str($_GET["groupid"]);
 		//delete the group from the users
 			$sql = "delete from v_group_members ";
 			$sql .= "where v_id = '$v_id' ";
