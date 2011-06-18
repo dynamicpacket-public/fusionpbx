@@ -48,7 +48,6 @@ else {
 			break; //limit to 1 row
 		}
 		unset ($sql, $prepstatement2);
-		//echo "action: ".$action."<br />";
 
 		if ($v_recording_action == 'add') {
 			//create recordings extension in the dialplan
@@ -56,20 +55,20 @@ else {
 				$dialplanorder ='9001';
 				$context = 'default';
 				$enabled = 'true';
-				$descr = '*732673 default system recordings tool';
+				$descr = '*732 default system recordings tool';
 				$opt1name = 'recordings';
-				$opt1value = '732673';
+				$opt1value = '732';
 				$dialplan_include_id = v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context, $enabled, $descr, $opt1name, $opt1value);
 
 				$tag = 'condition'; //condition, action, antiaction
 				$fieldtype = 'destination_number';
-				$fielddata = '^\*(732673)$';
+				$fielddata = '^\*(732)$|^\*(732673)$';
 				$fieldorder = '000';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 				$tag = 'action'; //condition, action, antiaction
-				$fieldtype = 'javascript';
-				$fielddata = 'recordings.js';
+				$fieldtype = 'lua';
+				$fielddata = 'recordings.lua';
 				$fieldorder = '001';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 		}
@@ -109,8 +108,8 @@ else {
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 				$tag = 'action'; //condition, action, antiaction
-				$fieldtype = 'javascript';
-				$fielddata = 'disa.js';
+				$fieldtype = 'lua';
+				$fielddata = 'disa.lua';
 				$fieldorder = '001';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 		}
