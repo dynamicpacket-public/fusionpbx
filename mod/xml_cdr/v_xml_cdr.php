@@ -41,6 +41,9 @@ else {
 	require_once "includes/header.php";
 	require_once "includes/paging.php";
 
+//set 24hr or 12hr clock
+	define('TIME_24HR', 1);
+
 //get post or get variables from http
 	if (count($_REQUEST)>0) {
 		$orderby = $_REQUEST["orderby"];
@@ -424,7 +427,8 @@ else {
 	echo thorderby('hangup_cause', 'Status', $orderby, $order);
 	echo "</tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
@@ -432,7 +436,11 @@ else {
 			$tmp_month = date("M", strtotime($row['start_stamp']));
 			$tmp_day = date("d", strtotime($row['start_stamp']));
 
-			$tmp_start_epoch = date("j M Y G:i:s", $row['start_epoch']);
+			if (defined('TIME_24HR') && TIME_24HR == 1) {
+				$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
+			} else {
+				$tmp_start_epoch = date("j M Y h:i:sa", $row['start_epoch']);
+			}
 
 			$hangup_cause = $row['hangup_cause'];
 			$hangup_cause = str_replace("_", " ", $hangup_cause);
