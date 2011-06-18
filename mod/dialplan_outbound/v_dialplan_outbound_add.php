@@ -284,7 +284,6 @@ else {
 						$dialplanorder ='999';
 					}
 					$context = 'default';
-					$enabled = 'true';
 					$opt1name = 'gateway_id';
 					$opt1value = $gateway_id;
 					$extension_continue = 'false';
