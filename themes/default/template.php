@@ -691,80 +691,83 @@ function confirmdelete(url) {
 
 if (!function_exists('builddbchildmenu2')) {
 	function builddbchildmenu2($db, $menulevel, $menu_guid) {
-			global $v_id;
-			$menulevel = $menulevel+1;
+		global $v_id;
+		$menulevel = $menulevel+1;
 
-				//--- Begin check for children -----------------------------------------
-					$sql = "select * from v_menu ";
-					$sql .= "where v_id = '$v_id' ";
-					$sql .= "and menu_parent_guid = '$menu_guid' ";
-					$sql .= "and menu_guid in ";
-					$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
-					$sql .= "and ( ";
-					$x = 0;
-					foreach($_SESSION['groups'] as $row) {
-						if ($x == 0) {
-							$sql .= "group_id = '".$row['groupid']."' ";
-						}
-						else {
-							$sql .= "or group_id = '".$row['groupid']."' ";
-						}
-						$x++;
+		$sql = "select * from v_menu ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and menu_parent_guid = '$menu_guid' ";
+		$sql .= "and menu_guid in ";
+		$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
+		$sql .= "and ( ";
+		if (count($_SESSION['groups']) == 0) {
+			$sql .= "group_id = 'public' ";
+		}
+		else {
+			$x = 0;
+			foreach($_SESSION['groups'] as $row) {
+				if ($x == 0) {
+					$sql .= "group_id = '".$row['groupid']."' ";
+				}
+				else {
+					$sql .= "or group_id = '".$row['groupid']."' ";
+				}
+				$x++;
+			}
+		}
+		$sql .= ") ";
+		$sql .= "and menu_guid <> '' ";
+		$sql .= ") ";
+		$sql .= "order by menuorder asc ";
+		$prepstatement2 = $db->prepare($sql);
+		$prepstatement2->execute();
+		$result2 = $prepstatement2->fetchAll();
+
+		if (count($result2) > 0) {
+				$dbmenusub .= "<ul>\n";
+
+				foreach($result2 as $row) {
+					$menuid = $row['menuid'];
+					$menutitle = $row['menutitle'];
+					$menustr = $row['menustr'];
+					$menucategory = $row['menucategory'];
+					$menu_guid = $row['menu_guid'];
+					$menu_parent_guid = $row['menu_parent_guid'];
+
+					$menuatags = '';
+					switch ($menucategory) {
+						case "internal":
+							$menutags = "href='".PROJECT_PATH.$menustr."'";
+							break;
+						case "external":
+							$menustr = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menustr);
+							$menutags = "href='".$menustr."' target='_blank'";
+							break;
+						case "email":
+							$menutags = "href='mailto:$menustr'";
+							break;
 					}
-					$sql .= ") ";
-					$sql .= "and menu_guid <> '' ";
-					$sql .= ") ";
-					$sql .= "order by menuorder asc ";
 
-					$prepstatement2 = $db->prepare($sql);
-					$prepstatement2->execute();
-					$result2 = $prepstatement2->fetchAll();
-
-					if (count($result2) > 0) {
-							$dbmenusub .= "<ul>\n";
-
-							foreach($result2 as $row) {
-								$menuid = $row['menuid'];
-								$menutitle = $row['menutitle'];
-								$menustr = $row['menustr'];
-								$menucategory = $row['menucategory'];
-								$menu_guid = $row['menu_guid'];
-								$menu_parent_guid = $row['menu_parent_guid'];
-
-								$menuatags = '';
-								switch ($menucategory) {
-									case "internal":
-										$menutags = "href='".PROJECT_PATH.$menustr."'";
-										break;
-									case "external":
-										$menustr = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menustr);
-										$menutags = "href='".$menustr."' target='_blank'";
-										break;
-									case "email":
-										$menutags = "href='mailto:$menustr'";
-										break;
-								}
-
-								$dbmenusub .= "<li class='menu_sub_vertical'>";
-								$strchildmenu = builddbchildmenu2($db, $menulevel, $menu_guid);   //get sub menu for children
-								if (strlen($strchildmenu) > 1) {
-									$dbmenusub .= "<a $menutags>$menutitle</a>";
-									$dbmenusub .= $strchildmenu;
-									unset($strchildmenu);
-								}
-								else {
-									$dbmenusub .= "<a $menutags>$menutitle</a>";
-								}
-								$dbmenusub .= "</li>\n";
-							}
-							unset($sql, $result2);
-							$dbmenusub .="</ul>\n";
-							return $dbmenusub;
+					$dbmenusub .= "<li class='menu_sub_vertical'>";
+					$strchildmenu = builddbchildmenu2($db, $menulevel, $menu_guid);   //get sub menu for children
+					if (strlen($strchildmenu) > 1) {
+						$dbmenusub .= "<a $menutags>$menutitle</a>";
+						$dbmenusub .= $strchildmenu;
+						unset($strchildmenu);
 					}
-					unset($prepstatement2, $sql);
-				//--- End check for children -----------------------------------------
+					else {
+						$dbmenusub .= "<a $menutags>$menutitle</a>";
+					}
+					$dbmenusub .= "</li>\n";
+				}
+				unset($sql, $result2);
+				$dbmenusub .="</ul>\n";
+				return $dbmenusub;
+		}
+		unset($prepstatement2, $sql);
 	}
 }
+
 $menulevel = '0'; //menu_parent_id
 if ($db) {
 	if (strlen($php_self_parent_guid) > 0) {
