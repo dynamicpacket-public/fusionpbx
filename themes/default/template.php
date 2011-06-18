@@ -698,7 +698,24 @@ if (!function_exists('builddbchildmenu2')) {
 					$sql = "select * from v_menu ";
 					$sql .= "where v_id = '$v_id' ";
 					$sql .= "and menu_parent_guid = '$menu_guid' ";
+					$sql .= "and menu_guid in ";
+					$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
+					$sql .= "and ( ";
+					$x = 0;
+					foreach($_SESSION['groups'] as $row) {
+						if ($x == 0) {
+							$sql .= "group_id = '".$row['groupid']."' ";
+						}
+						else {
+							$sql .= "or group_id = '".$row['groupid']."' ";
+						}
+						$x++;
+					}
+					$sql .= ") ";
+					$sql .= "and menu_guid <> '' ";
+					$sql .= ") ";
 					$sql .= "order by menuorder asc ";
+
 					$prepstatement2 = $db->prepare($sql);
 					$prepstatement2->execute();
 					$result2 = $prepstatement2->fetchAll();
@@ -711,7 +728,6 @@ if (!function_exists('builddbchildmenu2')) {
 								$menutitle = $row['menutitle'];
 								$menustr = $row['menustr'];
 								$menucategory = $row['menucategory'];
-								$menugroup = $row['menugroup'];
 								$menu_guid = $row['menu_guid'];
 								$menu_parent_guid = $row['menu_parent_guid'];
 
@@ -729,43 +745,17 @@ if (!function_exists('builddbchildmenu2')) {
 										break;
 								}
 
-								if (strlen($menugroup)==0) { //public
-									if ($menutitle == "Logout" && strlen($_SESSION["username"]) > 0) {                                  
-										$dbmenusub .= "<li class='menu_sub_vertical'>";
-										$strchildmenu = builddbchildmenu2($db, $menulevel, $menu_guid);   //get sub menu for children
-										if (strlen($strchildmenu) > 1) {
-											$dbmenusub .= "<a $menutags>$menutitle</a>";
-											$dbmenusub .= $strchildmenu;
-											unset($strchildmenu);
-										}
-										else {
-											$dbmenusub .= "<a $menutags>$menutitle</a>";
-										}
-										$dbmenusub .= "</li>\n";
-										
-									}        
+								$dbmenusub .= "<li class='menu_sub_vertical'>";
+								$strchildmenu = builddbchildmenu2($db, $menulevel, $menu_guid);   //get sub menu for children
+								if (strlen($strchildmenu) > 1) {
+									$dbmenusub .= "<a $menutags>$menutitle</a>";
+									$dbmenusub .= $strchildmenu;
+									unset($strchildmenu);
 								}
 								else {
-									if (ifgroup($menugroup)) { //viewable only to designated group
-										
-										$dbmenusub .= "<li class='menu_sub_vertical'>";
-										$strchildmenu = builddbchildmenu2($db, $menulevel, $menu_guid);   //get sub menu for children
-										if (strlen($strchildmenu) > 1) {
-											$dbmenusub .= "<a $menutags>$menutitle</a>";
-											$dbmenusub .= $strchildmenu;
-											unset($strchildmenu);
-										}
-										else {
-											$dbmenusub .= "<a $menutags>$menutitle</a>";
-										}
-										$dbmenusub .= "</li>\n";
-									}
-									else {
-										//echo "not a member of: ".$menugroup." required by: $menutitle<br>\n";
-										//not authorized do not add to menu
-									}
-									
+									$dbmenusub .= "<a $menutags>$menutitle</a>";
 								}
+								$dbmenusub .= "</li>\n";
 							}
 							unset($sql, $result2);
 							$dbmenusub .="</ul>\n";
