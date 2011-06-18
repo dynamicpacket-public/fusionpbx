@@ -163,7 +163,7 @@ else {
 							echo $valet_array[trim($uuid)]['extension']."\n";
 						}
 						else {
-							echo $dest."\n";
+							echo $dest."&nbsp;\n";
 						}
 						echo "</td>\n";
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
@@ -171,14 +171,14 @@ else {
 							echo "queue &nbsp;\n";
 						}
 						else {
-							echo $application." &nbsp;\n";
+							echo $application."&nbsp;\n";
 						}
 						echo "</td>\n";
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-						echo "".$secure."<br />\n";
+						echo "".$secure."&nbsp;\n";
 						echo "</td>\n";
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
-						echo "".$effective_caller_id_name."<br />\n";
+						echo "".$effective_caller_id_name."&nbsp;\n";
 						echo "</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
 							//transfer
@@ -215,13 +215,16 @@ else {
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>&nbsp;</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
-						echo "<br />\n";
+						echo "	&nbsp;";
 						echo "</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
+						echo "	&nbsp;";
 						echo "</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
+						echo "	&nbsp;";
 						echo "</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
+						echo "	&nbsp;";
 						echo "</td>\n";
 						echo "<td valign='top' class='".$rowstyle[$c]."' $style_alternate>\n";
 						echo "	&nbsp;";
