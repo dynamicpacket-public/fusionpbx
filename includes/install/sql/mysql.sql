@@ -5,7 +5,7 @@ INSERT INTO v_group_members VALUES(4,1,'user','superadmin');
 INSERT INTO v_group_members VALUES(5,1,'agent','superadmin');
 INSERT INTO v_group_members VALUES(6,1,'admin','superadmin');
 INSERT INTO v_group_members VALUES(7,1,'superadmin','superadmin');
-INSERT INTO v_groups VALUES(1,1,'hidden','Hidden Group hides items in the menu');
+INSERT INTO v_groups VALUES(1,1,'public','Public Group');
 INSERT INTO v_groups VALUES(2,1,'user','User Group');
 INSERT INTO v_groups VALUES(3,1,'agent','Call Center Agent Group');
 INSERT INTO v_groups VALUES(4,1,'admin','Administrator Group');
