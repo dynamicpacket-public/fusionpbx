@@ -70,24 +70,6 @@ include "root.php";
 								$menu_path = $menu['path'];
 								$menu_order = $menu['order'];
 								$menu_desc = $menu['desc'];
-								$menu_group = '';
-								foreach ($menu['groups'] as &$group) {
-									if ($menu_group == "") {
-										$menu_group = $group;
-									}
-								}
-								if (in_array("user", $menu['groups'])) {
-									$menu_group = "user";
-								}
-								if (in_array("user", $menu['groups']) && in_array("admin", $menu['groups'])) {
-									$menu_group = "user";
-								}
-								if (in_array("admin", $menu['admin']) && in_array("superadmin", $menu['groups'])) {
-									$menu_group = "admin";
-								}
-								if (in_array("user", $menu['groups']) && in_array("admin", $menu['groups']) && in_array("superadmin", $menu['groups'])) {
-									$menu_group = "user";
-								}
 								if (strlen($menu_order) == 0) {
 									$menu_order = 1;
 								}
@@ -109,7 +91,6 @@ include "root.php";
 											$sql .= "menutitle, ";
 											$sql .= "menustr, ";
 											$sql .= "menucategory, ";
-											$sql .= "menugroup, ";
 											$sql .= "menudesc, ";
 											$sql .= "menuorder, ";
 											$sql .= "menu_guid, ";
@@ -122,7 +103,6 @@ include "root.php";
 											$sql .= "'$menu_title', ";
 											$sql .= "'$menu_path', ";
 											$sql .= "'$menu_category', ";
-											$sql .= "'$menu_group', ";
 											$sql .= "'$menu_desc', ";
 											$sql .= "'$menu_order', ";
 											$sql .= "'$menu_guid', ";

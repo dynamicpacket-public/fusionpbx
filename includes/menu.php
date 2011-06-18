@@ -104,7 +104,6 @@ if (strlen($_SESSION["menu"]) == 0) {
 			$menu_title = $field['menutitle'];
 			$menu_str = $field['menustr'];
 			$menu_category = $field['menucategory'];
-			$menu_group = $field['menugroup'];
 			$menu_desc = $field['menudesc'];
 			$menu_guid = $field['menu_guid'];
 			$menu_parent_guid = $field['menu_parent_guid'];
@@ -158,7 +157,6 @@ if (strlen($_SESSION["menu"]) == 0) {
 		unset($menu_title);
 		unset($menu_strv);
 		unset($menu_category);
-		unset($menu_group);
 		unset($menu_guid);
 		unset($menu_parent_guid);
 		unset($prepstatement, $sql, $result);
@@ -207,7 +205,6 @@ if (strlen($_SESSION["menu"]) == 0) {
 				$menu_title = $row['menutitle'];
 				$menu_str = $row['menustr'];
 				$menu_category = $row['menucategory'];
-				$menu_group = $row['menugroup'];
 				$menu_guid = $row['menu_guid'];
 				$menu_parent_guid = $row['menu_parent_guid'];
 
@@ -225,42 +222,22 @@ if (strlen($_SESSION["menu"]) == 0) {
 						break;
 				}
 
-				if (strlen($menu_group)==0) { //public
-						$db_menu_sub .= "<li>";
+				$db_menu_sub .= "<li>";
 
-						//get sub menu for children
-							if (strlen($menu_guid) > 0) {
-								$str_child_menu = builddbchildmenu($db, $menulevel, $menu_guid);
-							}
+				//get sub menu for children
+					if (strlen($menu_guid) > 0) {
+						$str_child_menu = builddbchildmenu($db, $menulevel, $menu_guid);
+					}
 
-						if (strlen($str_child_menu) > 1) {
-							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
-							$db_menu_sub .= $str_child_menu;
-							unset($str_child_menu);
-						}
-						else {
-							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
-						}
-						$db_menu_sub .= "</li>\n";
+				if (strlen($str_child_menu) > 1) {
+					$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
+					$db_menu_sub .= $str_child_menu;
+					unset($str_child_menu);
 				}
 				else {
-						$db_menu_sub .= "<li>";
-
-						//get sub menu for children
-							if (strlen($menu_guid) > 0) {
-								$str_child_menu = builddbchildmenu($db, $menulevel, $menu_guid);
-							}
-
-						if (strlen($str_child_menu) > 1) {
-							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
-							$db_menu_sub .= $str_child_menu;
-							unset($str_child_menu);
-						}
-						else {
-							$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
-						}
-						$db_menu_sub .= "</li>\n";
+					$db_menu_sub .= "<a $menu_tags>$menu_title</a>";
 				}
+				$db_menu_sub .= "</li>\n";
 			}
 			unset($sql, $result2);
 			$db_menu_sub .="</ul>\n";

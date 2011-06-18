@@ -85,7 +85,6 @@ else {
 		$menutitle = check_str($_POST["menutitle"]);
 		$menustr = check_str($_POST["menustr"]);
 		$menucategory = check_str($_POST["menucategory"]);
-		$menugroup = check_str($_POST["menugroup"]);
 		$menudesc = check_str($_POST["menudesc"]);
 		$menu_protected = check_str($_POST["menu_protected"]);
 		//$menu_guid = check_str($_POST["menu_guid"]);
@@ -105,7 +104,6 @@ else {
 			if (strlen($menutitle) == 0) { $msg .= "Please provide: title<br>\n"; }
 			if (strlen($menucategory) == 0) { $msg .= "Please provide: category<br>\n"; }
 			//if (strlen($menustr) == 0) { $msg .= "Please provide: menustr<br>\n"; }
-			//if (strlen($menugroup) == 0) { $msg .= "Please provide: menugroup<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				require_once "includes/persistformvar.php";
@@ -141,7 +139,6 @@ else {
 				$sql .= "menutitle, ";
 				$sql .= "menustr, ";
 				$sql .= "menucategory, ";
-				$sql .= "menugroup, ";
 				$sql .= "menudesc, ";
 				$sql .= "menu_protected, ";
 				$sql .= "menu_guid, ";
@@ -156,7 +153,6 @@ else {
 				$sql .= "'$menutitle', ";
 				$sql .= "'$menustr', ";
 				$sql .= "'$menucategory', ";
-				$sql .= "'$menugroup', ";
 				$sql .= "'$menudesc', ";
 				$sql .= "'$menu_protected', ";
 				$sql .= "'".guid()."', ";
@@ -182,7 +178,6 @@ else {
 				$sql .= "menutitle = '$menutitle', ";
 				$sql .= "menustr = '$menustr', ";
 				$sql .= "menucategory = '$menucategory', ";
-				$sql .= "menugroup = '$menugroup', ";
 				$sql .= "menudesc = '$menudesc', ";
 				$sql .= "menu_protected = '$menu_protected', ";
 				$sql .= "menu_parent_guid = '$menu_parent_guid', ";
@@ -224,7 +219,6 @@ else {
 			$menu_protected = $row["menu_protected"];
 			$menu_parent_guid = $row["menu_parent_guid"];
 			$menuorder = $row["menuorder"];
-			$menugroup = $row["menugroup"];
 			$menuadduser = $row["menuadduser"];
 			$menuadddate = $row["menuadddate"];
 			//$menudeluser = $row["menudeluser"];
