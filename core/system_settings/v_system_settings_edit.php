@@ -355,6 +355,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				unset($prepstatement, $result);
 
+			//check if the recordings and disa dialplan entries exist
+				require_once "includes/v_dialplan_entry_exists.php";
+
 			//if the extensions directory doesn't exist then create it
 				if (!is_dir($v_extensions_dir)) { mkdir($v_extensions_dir,0777,true); }
 
