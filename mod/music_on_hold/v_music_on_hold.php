@@ -35,7 +35,6 @@ else {
 }
 
 require_once "includes/paging.php";
-require_once "includes/v_dialplan_entry_exists.php";
 
 $dir_music_on_hold_8000 = $v_sounds_dir.'/music/8000';
 ini_set(max_execution_time,7200);
