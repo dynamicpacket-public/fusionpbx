@@ -1948,10 +1948,6 @@ function sync_package_v_extensions() {
 			if (strlen($row['nibble_account']) > 0) {
 				$tmpxml .= "      <variable name=\"nibble_account\" value=\"" . $row['nibble_account'] . "\"/>\n";
 			}
-			foreach ($callgroups_array as $key => $value) {
-				$tmpxml .= "      <variable name=\"callgroup\" value=\"$key\"/>\n";
-				break;
-			}
 			$tmpxml .= "    </variables>\n";
 			$tmpxml .= "  </user>\n";
 
@@ -5801,11 +5797,11 @@ if (!function_exists('switch_conf_xml')) {
 			if (file_exists($php_dir.'/php.exe')) { $php_bin = 'php.exe'; }
 			if (stristr(PHP_OS, 'WIN')) {
 				$v_mailer_app = $php_dir."/".$php_bin."";
-				$v_mailer_app_args = "".$v_secure."/v_mailto.php";
+				$v_mailer_app_args = "".$v_secure."/v_mailto.php -t";
 			}
 			else {
 				$v_mailer_app = $php_dir."/".$php_bin." ".$v_secure."/v_mailto.php";
-				$v_mailer_app_args = "";
+				$v_mailer_app_args = "-t";
 			}
 
 		//replace the values in the template
