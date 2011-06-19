@@ -75,6 +75,7 @@ require_once "includes/paging.php";
 			if (strlen($condition_expression_1) < 8) { $msg .= "The destination number must be 7 or more digits.<br>\n"; }
 			if (is_numeric($condition_expression_1)) { 
 				//the number is numeric 
+				$condition_expression_1 = '^'.$condition_expression_1.'$';
 			}
 			else {
 				$msg .= "The destination number must be numeric.<br>\n";
