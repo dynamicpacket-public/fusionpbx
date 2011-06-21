@@ -51,7 +51,7 @@ require_once "includes/paging.php";
 		$huntgroupextension = check_str($_POST["huntgroupextension"]);
 		$huntgroupname = check_str($_POST["huntgroupname"]);
 		$huntgrouptype = check_str($_POST["huntgrouptype"]);
-		$huntgroupcontext = check_str($_POST["huntgroupcontext"]);
+		//$huntgroupcontext = check_str($_POST["huntgroupcontext"]);
 		$huntgrouptimeout = check_str($_POST["huntgrouptimeout"]);
 		$huntgrouptimeoutdestination = check_str($_POST["huntgrouptimeoutdestination"]);
 		$huntgrouptimeouttype = check_str($_POST["huntgrouptimeouttype"]);
@@ -90,7 +90,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($huntgroupextension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		if (strlen($huntgroupname) == 0) { $msg .= "Please provide: Hunt Group Name<br>\n"; }
 		if (strlen($huntgrouptype) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		if (strlen($huntgroupcontext) == 0) { $msg .= "Please provide: Context<br>\n"; }
+		//if (strlen($huntgroupcontext) == 0) { $msg .= "Please provide: Context<br>\n"; }
 		if (strlen($huntgrouptimeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		if (strlen($huntgrouptimeoutdestination) == 0) { $msg .= "Please provide: Timeout Destination<br>\n"; }
 		if (strlen($huntgrouptimeouttype) == 0) { $msg .= "Please provide: Timeout Type<br>\n"; }
@@ -141,7 +141,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$huntgroupextension', ";
 				$sql .= "'$huntgroupname', ";
 				$sql .= "'$huntgrouptype', ";
-				$sql .= "'$huntgroupcontext', ";
+				$sql .= "'default', ";
 				$sql .= "'$huntgrouptimeout', ";
 				$sql .= "'$huntgrouptimeoutdestination', ";
 				$sql .= "'$huntgrouptimeouttype', ";
@@ -173,7 +173,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "huntgroupextension = '$huntgroupextension', ";
 				$sql .= "huntgroupname = '$huntgroupname', ";
 				$sql .= "huntgrouptype = '$huntgrouptype', ";
-				$sql .= "huntgroupcontext = '$huntgroupcontext', ";
+				$sql .= "huntgroupcontext = 'default', ";
 				$sql .= "huntgrouptimeout = '$huntgrouptimeout', ";
 				$sql .= "huntgrouptimeoutdestination = '$huntgrouptimeoutdestination', ";
 				$sql .= "huntgrouptimeouttype = '$huntgrouptimeouttype', ";
@@ -219,11 +219,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll();
 		foreach ($result as &$row) {
-			//$v_id = $row["v_id"];
 			$huntgroupextension = $row["huntgroupextension"];
 			$huntgroupname = $row["huntgroupname"];
 			$huntgrouptype = $row["huntgrouptype"];
-			$huntgroupcontext = $row["huntgroupcontext"];
+			//$huntgroupcontext = $row["huntgroupcontext"];
 			$huntgrouptimeout = $row["huntgrouptimeout"];
 			$huntgrouptimeoutdestination = $row["huntgrouptimeoutdestination"];
 			$huntgrouptimeouttype = $row["huntgrouptimeouttype"];
@@ -352,17 +351,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Context:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='huntgroupcontext' maxlength='255' value=\"$huntgroupcontext\">\n";
-	echo "<br />\n";
-	echo "example: default\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
