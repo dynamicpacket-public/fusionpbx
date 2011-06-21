@@ -37,57 +37,51 @@ else {
 //get the http get values
 	if (count($_GET)>0) {
 		$uuid = $_GET["uuid"];
+		$id = $_GET["id"];
 	}
 
-//pdo voicemail database connection
-	include "includes/lib_pdo_vm.php";
+//get the domain from the domains array
+	$domain = $_SESSION['domains'][$v_id]['domain'];
 
-//delet the voicemail message
-	if (strlen($uuid)>0) {
-		$uuid = $_GET["uuid"];
-		$sql = "";
-		$sql .= "select * from voicemail_msgs ";
-		$sql .= "where domain = '$v_domain' ";
-		$sql .= "and uuid = '$uuid' ";
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
-		foreach ($result as &$row) {
-			$created_epoch = $row["created_epoch"];
-			$read_epoch = $row["read_epoch"];
-			$username = $row["username"];
-			$domain = $row["domain"];
-			$uuid = $row["uuid"];
-			$cid_name = $row["cid_name"];
-			$cid_number = $row["cid_number"];
-			$in_folder = $row["in_folder"];
-			$file_path = $row["file_path"];
-			$message_len = $row["message_len"];
-			$flags = $row["flags"];
-			$read_flags = $row["read_flags"];
-			break; //limit to 1 row
-		}
-		unset ($prepstatement);
+//create the event socket connection
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (!$fp) {
+		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
+	}
 
-		if  (file_exists($file_path)) {
-			unlink($file_path);
-		}
+//show the error message or show the content
+	if (strlen($msg) > 0) {
+		require_once "includes/header.php";
+		echo "<div align='center'>\n";
+		echo "	<table width='40%'>\n";
+		echo "		<tr>\n";
+		echo "			<th align='left'>Message</th>\n";
+		echo "		</tr>\n";
+		echo "		<tr>\n";
+		echo "			<td class='rowstyle1'><strong>$msg</strong></td>\n";
+		echo "		</tr>\n";
+		echo "	</table>\n";
+		echo "</div>\n";
+		require_once "includes/footer.php";
+		return;
+	}
 
-		$sql = "";
-		$sql .= "delete from voicemail_msgs ";
-		$sql .= "where domain = '$v_domain' ";
-		$sql .= "and uuid = '$uuid' ";
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		unset($sql);
+// delete the voicemail
+	$cmd = "api vm_delete " .$id."@".$domain." ".$uuid;
+	$response = trim(event_socket_request($fp, $cmd));
+	echo $xml_response;
+	if (strcmp($response,"+OK")==0) {
+		$msg = "Complete";
+	}
+	else {
+		$msg = "Failed";
 	}
 
 //redirect the user
-	require "includes/config.php";
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_msgs.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo "Delete $msg\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

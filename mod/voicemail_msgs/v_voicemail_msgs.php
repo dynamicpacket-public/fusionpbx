@@ -260,24 +260,24 @@ else {
 						echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[cid_number]."</td>\n";
 						echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[in_folder]."</td>\n";
 						echo "	<td valign='top' class='".$rowstyle[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_msgs_play.php?a=download&type=vm&uuid=".$row[uuid]."&ext=".$file_ext."&desc=".urlencode($row[cid_name]." ".$row[cid_number])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['uuid']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 						echo "		$tmp_message_len";
 						echo "		</a>";
 						echo "	</td>\n";
 						//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[flags]."&nbsp;</td>\n";
 						//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[read_flags]."</td>\n";
 						echo "	<td valign='top' class='".$rowstyle[$c]."' nowrap>";
-						echo "		<a href=\"v_voicemail_msgs.php?a=download&type=vm&t=bin&uuid=".$row[uuid]."\">\n";
+						echo "		<a href=\"v_voicemail_msgs.php?a=download&type=vm&t=bin&uuid=".$row['uuid']."\">\n";
 						echo $tmp_filesize;
 						echo "		</a>";
 						echo 	"</td>\n";
 						echo "   <td valign='top' align='center' nowrap>\n";
 						//echo "		<a href='v_voicemail_msgs_edit.php?id=".$row[voicemail_msg_id]."' alt='edit'>$v_link_label_edit</a>\n";
-						echo "		&nbsp;&nbsp;<a href='v_voicemail_msgs_delete.php?uuid=".$row[uuid]."' alt='delete message' title='delete message' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "			&nbsp;&nbsp;<a href='v_voicemail_msgs_delete.php?uuid=".$row['uuid']."&id=".$row['username']."' alt='delete message' title='delete message' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 						echo "   </td>\n";
 						echo "</tr>\n";
 
-						$prevextension = $row[username];
+						$prevextension = $row['username'];
 						unset($tmp_message_len, $tmp_filesize);
 						if ($c==0) { $c=1; } else { $c=0; }
 					} //end foreach
