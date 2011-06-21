@@ -5846,7 +5846,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			}
 
 			$file_contents = str_replace("{v_domain}", $v_domain, $file_contents);
-			unset ($v_domain);
+			$file_contents = str_replace("{v_project_path}", PROJECT_PATH, $file_contents);
 
 			$v_user = generate_password();
 			$file_contents = str_replace("{v_user}", $v_user, $file_contents);

@@ -14,7 +14,7 @@ Also, this does not set the few setting that are required for proper nat travers
 
 
 <flat-profile>
-<Profile_Rule>http://{v_domain}/mod/provision/?mac=$MA&password={v_password}</Profile_Rule>
+<Profile_Rule>http://{v_domain}{v_project_path}/mod/provision/?mac=$MA&password={v_password}</Profile_Rule>
 <Resync_Periodic>3600</Resync_Periodic>
 
 <!--<GPP_B>{v_agent}</GPP_B>-->
