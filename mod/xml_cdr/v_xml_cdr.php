@@ -379,9 +379,9 @@ else {
 	$prepstatement = $db->prepare(check_sql($sql));
 	if ($prepstatement) {
 		$prepstatement->execute();
-		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-		if (count($result) > 0) {
-			$num_rows = $row[num_rows];
+		$row = $prepstatement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
 		else {
 			$num_rows = '0';
@@ -390,7 +390,7 @@ else {
 	unset($prepstatement, $result);
 
 //prepare to page the results
-	$rows_per_page = 100;
+	$rows_per_page = 150;
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
 	list($pagingcontrols, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
