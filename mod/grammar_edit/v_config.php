@@ -14,7 +14,7 @@
 		$apps[$x]['menu'][0]['guid'] = 'C3DB739E-89F9-0FA2-44CE-0F4C2FF43B1A';
 		$apps[$x]['menu'][0]['parent_guid'] = '594D99C5-6128-9C88-CA35-4B33392CEC0F';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '<!--{project_path}-->/mod/grammar_edit/index.php';
+		$apps[$x]['menu'][0]['path'] = '/mod/grammar_edit/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
