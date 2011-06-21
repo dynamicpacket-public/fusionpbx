@@ -115,7 +115,7 @@ else {
 	$sql .= "where v_id = '$v_id' ";
 	//superadmin can see all messages
 	if(!ifgroup("superadmin")) {
-	$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
+		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	}
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();

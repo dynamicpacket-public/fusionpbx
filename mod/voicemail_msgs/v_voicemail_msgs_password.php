@@ -44,8 +44,11 @@ else {
 	$sql = "";
 	$sql .= " select * from v_extensions ";
 	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	$sql .= "and extension_id = '$extension_id'";
+	//superadmin can see all messages
+	if(!ifgroup("superadmin")) {
+		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
+	}
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$v_mailboxes = '';
