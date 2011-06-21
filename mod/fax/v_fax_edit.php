@@ -164,6 +164,7 @@ else {
 
 		$fax_number = $_POST['fax_number'];
 		$fax_name = $_FILES['fax_file']['name'];
+		$fax_name = str_replace(" ", "_", $fax_name);
 		$fax_name = str_replace(".tif", "", $fax_name);
 		$fax_name = str_replace(".tiff", "", $fax_name);
 		$fax_name = str_replace(".pdf", "", $fax_name);
@@ -172,10 +173,12 @@ else {
 		$sip_uri = $_POST['sip_uri'];
 		$fax_id = $_POST["id"];
 
-		//upload the file
-			move_uploaded_file($_FILES['fax_file']['tmp_name'], $dir_fax_temp.'/'.$_FILES['fax_file']['name']);
-
+		//get the fax file extension
 			$fax_file_extension = substr($dir_fax_temp.'/'.$_FILES['fax_file']['name'], -4);
+
+		//upload the file
+			move_uploaded_file($_FILES['fax_file']['tmp_name'], $dir_fax_temp.'/'.$fax_name.$fax_file_extension);
+
 			if ($fax_file_extension == ".pdf") {
 				chdir($dir_fax_temp);
 				exec("gs -q -sDEVICE=tiffg3 -r204x98 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
@@ -214,7 +217,7 @@ else {
 
 		//delete the .tif from the temp directory
 			//exec("rm ".$dir_fax_temp.'/'.$fax_name.".tif");
-		
+
 		//convert the tif to pdf and png
 			chdir($dir_fax_sent);
 			//which tiff2pdf
@@ -427,13 +430,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				else {
 					$file_ext = substr($_GET['filename'], -3);
 					if ($file_ext == "tif") {
-					  header("Content-Type: image/tiff");
+						header("Content-Type: image/tiff");
 					} else if ($file_ext == "png") {
-					  header("Content-Type: image/png");
+						header("Content-Type: image/png");
 					} else if ($file_ext == "jpg") {
-					  header('Content-Type: image/jpeg');
+						header('Content-Type: image/jpeg');
 					} else if ($file_ext == "pdf") {
-					  header("Content-Type: application/pdf");
+						header("Content-Type: application/pdf");
 					}
 				}
 				header('Accept-Ranges: bytes');
@@ -461,10 +464,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	if ($action == "add") {
 		echo "<td align='left' width='30%' nowrap><b>Fax Add</b></td>\n";
