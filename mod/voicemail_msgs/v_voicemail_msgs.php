@@ -208,8 +208,13 @@ else {
 
 				$sql = "";
 				$sql .= "select * from voicemail_msgs ";
-				$sql .= "where domain = '$v_domain' ";
-				$sql .= "and username = '".$value['extension']."' ";
+				if (count($_SESSION['domains']) > 1) {
+					$sql .= "where domain = '$v_domain' ";
+					$sql .= "and username = '".$value['extension']."' ";
+				}
+				else {
+					$sql .= "where username = '".$value['extension']."' ";
+				}
 				if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
