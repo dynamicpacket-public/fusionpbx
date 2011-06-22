@@ -124,6 +124,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//remove the invalid characters from the gateway name
+		$gateway = str_replace(" ", "_", $gateway);
+		$gateway = str_replace("/", "", $gateway);
+
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('gateways_add')) {

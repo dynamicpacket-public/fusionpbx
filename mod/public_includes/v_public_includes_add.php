@@ -108,6 +108,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//remove the invalid characters from the extension name
+		$extension_name = str_replace(" ", "_", $extension_name);
+		$extension_name = str_replace("/", "", $extension_name);
+
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
 

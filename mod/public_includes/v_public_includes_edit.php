@@ -83,6 +83,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//remove the invalid characters from the extension name
+		$extensionname = str_replace(" ", "_", $extensionname);
+		$extensionname = str_replace("/", "", $extensionname);
+
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add" && permission_exists('public_includes_add')) {

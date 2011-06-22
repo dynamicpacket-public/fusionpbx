@@ -117,6 +117,10 @@ else {
 				return;
 			}
 
+		//remove the invalid characters from the extension name
+			$gateway = str_replace(" ", "_", $gateway);
+			$gateway = str_replace("/", "", $gateway);
+
 		//start the atomic transaction
 			$count = $db->exec("BEGIN;"); //returns affected rows
 
