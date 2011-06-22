@@ -57,6 +57,11 @@ else {
 				$gateway_type = 'freetdm';
 			}
 
+		//set the gateway type to dingaling
+			if (strtolower(substr($gateway, 0, 4)) == "xmpp") {
+				$gateway_type = 'xmpp';
+			}
+
 		//set the gateway_id and gateway_name
 			if ($gateway_type == "gateway") {
 				$gateway_array = explode(":",$gateway);
@@ -74,6 +79,11 @@ else {
 		//set the gateway type to freetdm
 			if (strtolower(substr($gateway_2, 0, 7)) == "freetdm") {
 				$gateway_2_type = 'freetdm';
+			}
+
+		//set the gateway type to dingaling
+			if (strtolower(substr($gateway_2, 0, 4)) == "xmpp") {
+				$gateway_2_type = 'xmpp';
 			}
 
 		//set the gateway_2_id and gateway_2_name
@@ -116,10 +126,6 @@ else {
 				require_once "includes/footer.php";
 				return;
 			}
-
-		//remove the invalid characters from the extension name
-			$gateway = str_replace(" ", "_", $gateway);
-			$gateway = str_replace("/", "", $gateway);
 
 		//start the atomic transaction
 			$count = $db->exec("BEGIN;"); //returns affected rows
@@ -279,10 +285,17 @@ else {
 					}
 					if ($gateway_type == "freetdm") {
 						$extension_name = "freetdm.".$abbrv;
-						$action_data = $gateway."/".$prefix_number."\$1";
+						$action_data = $gateway."/1/a/".$prefix_number."\$1";
 					}
-					if (strlen($gateway_2_name) > 0 && $gateway_2_type == "freetdm") {
-						$bridge_2_data .= $gateway_2."/".$prefix_number."\$1";
+					if ($gateway_2_type == "freetdm") {
+						$bridge_2_data .= $gateway_2."/1/a/".$prefix_number."\$1";
+					}
+					if ($gateway_type == "xmpp") {
+						$extension_name = "xmpp.".$abbrv;
+						$action_data = "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
+					}
+					if ($gateway_2_type == "xmpp") {
+						$bridge_2_data .= "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
 					}
 					if (strlen($dialplanorder) == 0) {
 						$dialplanorder ='999';
@@ -557,6 +570,7 @@ function type_onchange(field_type) {
 	}
 	unset($sql, $result, $rowcount);
 	echo "<option value=\"freetdm\">freetdm</option>\n";
+	echo "<option value=\"xmpp\">xmpp</option>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo "Select the gateway to use with this outbound route.\n";
@@ -588,6 +602,7 @@ function type_onchange(field_type) {
 	}
 	unset($sql, $result, $rowcount);
 	echo "<option value=\"freetdm\">freetdm</option>\n";
+	echo "<option value=\"xmpp\">xmpp</option>\n";
 	echo "</select>\n";
 	echo "<br />\n";
 	echo "Select another gateway as an alternative to use if the first one fails.\n";

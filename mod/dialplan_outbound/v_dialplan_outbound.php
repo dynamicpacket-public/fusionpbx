@@ -44,24 +44,31 @@ $order = $_GET["order"];
 	//define the conference array
 		$dialplan_array = array ();
 
-	$sql = "";
-	$sql .= "select * from v_dialplan_includes_details ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and (fielddata like '%sofia/gateway/%' or fielddata like '%freetdm%' or fielddata like '%openzap%') ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$x = 0;
-	$result = $prepstatement->fetchAll();
-	foreach ($result as &$row) {
-		$dialplan_include_id = $row["dialplan_include_id"];
-		//$tag = $row["tag"];
-		//$fieldorder = $row["fieldorder"];
-		//$fieldtype = $row["fieldtype"];
-		//$fielddata = $row["fielddata"];
-		$dialplan_array[$x]['dialplan_include_id'] = $dialplan_include_id;
-		$x++;
-	}
-	unset ($prepstatement);
+	//get the outbound routes and set as the dialplan array
+		$sql = "";
+		$sql .= "select * from v_dialplan_includes_details ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and (";
+		$sql .= "fielddata like '%sofia/gateway/%' ";
+		$sql .= "or fielddata like '%freetdm%' ";
+		$sql .= "or fielddata like '%openzap%' ";
+		$sql .= "or fielddata like '%dingaling%' ";
+		$sql .= "or fielddata like '%enum_auto_route%' ";
+		$sql .= ") ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$x = 0;
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$dialplan_include_id = $row["dialplan_include_id"];
+			//$tag = $row["tag"];
+			//$fieldorder = $row["fieldorder"];
+			//$fieldtype = $row["fieldtype"];
+			//$fielddata = $row["fielddata"];
+			$dialplan_array[$x]['dialplan_include_id'] = $dialplan_include_id;
+			$x++;
+		}
+		unset ($prepstatement);
 
 //show the content
 	echo "<div align='center'>";
