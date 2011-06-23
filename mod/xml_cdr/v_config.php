@@ -151,5 +151,13 @@
 		$apps[$x]['db'][0]['fields'][31]['name'] = 'hangup_cause_q850';
 		$apps[$x]['db'][0]['fields'][31]['type'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][31]['description'] = '';
+		$apps[$x]['db'][0]['fields'][31]['name'] = 'recording_file';
+		$apps[$x]['db'][0]['fields'][31]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][31]['description'] = 'Indicates if a recording was made. If a recording exists set this value to true.';
+		$apps[$x]['db'][0]['fields'][32]['name'] = 'leg';
+		$apps[$x]['db'][0]['fields'][32]['type']['pgsql'] = 'char(1)';
+		$apps[$x]['db'][0]['fields'][32]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][0]['fields'][32]['type']['mysql'] = 'char(1)';
+		$apps[$x]['db'][0]['fields'][32]['description'] = 'The leg of the call a or b.';
 
 ?>

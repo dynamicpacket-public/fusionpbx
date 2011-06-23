@@ -33,7 +33,7 @@ require_once "includes/config.php";
 	set_time_limit(3600);
 	ini_set('memory_limit', '256M');
 
-function process_xml_cdr($db, $v_log_dir, $xml_string) {
+function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 
 	//set global variable
 		global $debug;
@@ -84,6 +84,9 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 			$x++;
 		}
 		unset($x);
+
+	//check whether a recording exists
+		$recording = '';
 
 	//find the v_id by using the domain
 		if (strlen($domain_name) == 0) { $domain_name = $_SERVER["HTTP_HOST"]; }
@@ -166,7 +169,9 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		$sql .= "remote_media_ip, ";
 		$sql .= "network_addr, ";
 		$sql .= "hangup_cause, ";
-		$sql .= "hangup_cause_q850 ";
+		$sql .= "hangup_cause_q850, ";
+		$sql .= "recording_file, ";
+		$sql .= "leg ";
 		$sql .= ")";
 		$sql .= "values ";
 		$sql .= "(";
@@ -202,7 +207,9 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		$sql .= "'".$remote_media_ip."', ";
 		$sql .= "'".$network_addr."', ";
 		$sql .= "'".$hangup_cause."', ";
-		$sql .= "'".$hangup_cause_q850."' ";
+		$sql .= "'".$hangup_cause_q850."', ";
+		$sql .= "'".$recording."', ";
+		$sql .= "'".$leg."' ";
 		$sql .= ")";
 		try {
 			if (strlen($uuid) > 0) {
@@ -257,10 +264,18 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 				//}
 
 		//get the http post variable
-			$xml_string = trim($_POST["cdr"]);
+			$xml_string = trim($_REQUEST["cdr"]);
+
+		//get the leg of the call
+			if (substr($_REQUEST['uuid'], 0, 2) == "a_") {
+				$leg = "a";
+			}
+			else {
+				$leg = "b";
+			}
 
 		//parse the xml and insert the data into the db
-			process_xml_cdr($db, $v_log_dir, $xml_string);
+			process_xml_cdr($db, $v_log_dir, $leg, $xml_string);
 	}
 
 
@@ -271,14 +286,19 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 	while($file=readdir($dir_handle)) {
 		if ($file != '.' && $file != '..') {
 			if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
-				//echo $x.": ".$xml_cdr_dir.'/'.$file."<br />\n";
+				//get the leg of the call
+					if (substr($file, 0, 2) == "a_") {
+						$leg = "a";
+					}
+					else {
+						$leg = "b";
+					}
 
-				$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
-				//echo strlen($xml_string)." length<br />\n";
-				//echo $xml_string."<br />\n";
+				//get the xml cdr string
+					$xml_string = file_get_contents($xml_cdr_dir.'/'.$file);
 
 				//parse the xml and insert the data into the db
-					process_xml_cdr($db, $v_log_dir, $xml_string);
+					process_xml_cdr($db, $v_log_dir, $leg, $xml_string);
 
 				//delete the file after it has been imported
 					unlink($xml_cdr_dir.'/'.$file);
@@ -288,6 +308,7 @@ function process_xml_cdr($db, $v_log_dir, $xml_string) {
 		}
 	}
 	closedir($dir_handle);
+
 
 //testing
 	if ($debug) {
