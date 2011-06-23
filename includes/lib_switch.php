@@ -1866,8 +1866,13 @@ function sync_package_v_extensions() {
 
 		//echo "enabled: ".$row['enabled'];
 		if ($row['enabled'] != "false") {
+			//remove invalid characters from the file names
+			$extension = $row['extension'];
+			$extension = str_replace(" ", "_", $extension);
+			$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
+
 			if (!$extension_xml_condensed) {
-				$fout = fopen($v_extensions_dir."/v_".$row['extension'].".xml","w");
+				$fout = fopen($v_extensions_dir."/v_".$extension.".xml","w");
 				$tmpxml .= "<include>\n";
 			}
 			if (strlen($row['cidr']) == 0) {
@@ -2042,6 +2047,12 @@ function sync_package_v_extensions() {
 		$tmpxml .= "\n";
 		$tmpxml .= "	</domain>\n";
 		$tmpxml .= "</include>";
+
+	//remove invalid characters from the file names
+		$extension_dir_name = str_replace(" ", "_", $extension_dir_name);
+		$extension_dir_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension_dir_name);
+
+	//write the xml file
 		$fout = fopen($extension_parent_dir."/".$extension_dir_name.".xml","w");
 		fwrite($fout, $tmpxml);
 		unset($tmpxml);
@@ -2117,15 +2128,20 @@ function sync_package_v_gateways() {
 	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		if ($row['enabled'] != "false") {
+				//remove invalid characters from the file names
+					$gateway = $row['gateway'];
+					$gateway = str_replace(" ", "_", $gateway);
+					$gateway = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $gateway);
+
 				if (count($_SESSION["domains"]) > 1) {
-					$fout = fopen($v_gateways_dir."/v_".$v_domain .'-'.$row['gateway'].".xml","w");
+					$fout = fopen($v_gateways_dir."/v_".$v_domain .'-'.$gateway.".xml","w");
 					$tmpxml .= "<include>\n";
-					$tmpxml .= "    <gateway name=\"" . $v_domain .'-'. $row['gateway'] . "\">\n";
+					$tmpxml .= "    <gateway name=\"" . $v_domain .'-'. $gateway . "\">\n";
 				}
 				else {
-					$fout = fopen($v_gateways_dir."/v_".$row['gateway'].".xml","w");
+					$fout = fopen($v_gateways_dir."/v_".$gateway.".xml","w");
 					$tmpxml .= "<include>\n";
-					$tmpxml .= "    <gateway name=\"" . $row['gateway'] . "\">\n";
+					$tmpxml .= "    <gateway name=\"" . $gateway . "\">\n";
 				}
 				if (strlen($row['username']) > 0) {
 					$tmpxml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
@@ -2642,7 +2658,6 @@ function sync_package_v_hunt_group() {
 						unset($action);
 
 						//check whether the fifo queue exists already
-
 							$action = 'add'; //set default action to add
 							$i = 0;
 
@@ -2932,7 +2947,12 @@ function sync_package_v_hunt_group() {
 
 						$destination_timeout = $ent['destination_timeout'];
 						if (strlen($destination_timeout) == 0) {
-							$destination_timeout = '30';
+							if (strlen($row['huntgrouptimeout']) == 0) {
+								$destination_timeout = '30';
+							}
+							else {
+								$destination_timeout = $row['huntgrouptimeout'];
+							}
 						}
 
 						//set the default profile
@@ -3093,13 +3113,17 @@ function sync_package_v_hunt_group() {
 						$tmp .= "	new_extension = \"\";\n";
 						$tmp .= "	domain_name = \"\";\n";
 						$tmp .= "	domain = \"\";";
-
 						$tmp .= "\n";
+
+					//remove invalid characters from the file names
+						$huntgroup_extension = $row['huntgroupextension'];
+						$huntgroup_extension = str_replace(" ", "_", $huntgroup_extension);
+						$huntgroup_extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $huntgroup_extension);
 
 					//write the hungroup lua script
 						if (strlen($row['huntgroupextension']) > 0) {
 							if ($row['hunt_group_enabled'] != "false") {
-								$huntgroupfilename = "v_huntgroup_".$_SESSION['domains'][$v_id]['domain']."_".$row['huntgroupextension'].".lua";
+								$huntgroupfilename = "v_huntgroup_".$_SESSION['domains'][$v_id]['domain']."_".$huntgroup_extension.".lua";
 								//echo "location".$v_scripts_dir."/".$huntgroupfilename;
 								$fout = fopen($v_scripts_dir."/".$huntgroupfilename,"w");
 								fwrite($fout, $tmp);
@@ -4586,7 +4610,13 @@ function sync_package_v_dialplan_includes() {
 		if (strlen($dialplan_order) == 2) { $dialplan_order = "0".$dialplan_order; }
 		if (strlen($dialplan_order) == 4) { $dialplan_order = "999"; }
 		if (strlen($dialplan_order) == 5) { $dialplan_order = "999"; }
-		$dialplan_include_filename = $dialplan_order."_v_dialplan_".$row['extensionname'].".xml";
+
+		//remove invalid characters from the file names
+		$extension_name = $row['extensionname'];
+		$extension_name = str_replace(" ", "_", $extension_name);
+		$extension_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension_name);
+
+		$dialplan_include_filename = $dialplan_order."_v_dialplan_".$extension_name.".xml";
 		$fout = fopen($v_dialplan_default_dir."/".$dialplan_include_filename,"w");
 		fwrite($fout, $tmp);
 		fclose($fout);
@@ -4748,11 +4778,17 @@ function sync_package_v_public_includes() {
 			if (strlen($public_order) == 2) { $public_order = "0".$public_order; }
 			if (strlen($public_order) == 4) { $public_order = "999"; }
 			if (strlen($public_order) == 5) { $public_order = "999"; }
+
+			//remove invalid characters from the file names
+			$extension_name = $row['extensionname'];
+			$extension_name = str_replace(" ", "_", $extension_name);
+			$extension_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension_name);
+
 			if (count($_SESSION["domains"]) > 1) {
-				$public_include_filename = $public_order."_v_public_".$_SESSION['domains'][$row['v_id']]['domain'].'_'.$row['extensionname'].".xml";
+				$public_include_filename = $public_order."_v_public_".$_SESSION['domains'][$row['v_id']]['domain'].'_'.$extension_name.".xml";
 			}
 			else {
-				$public_include_filename = $public_order."_v_public_".$row['extensionname'].".xml";
+				$public_include_filename = $public_order."_v_public_".$extension_name.".xml";
 			}
 			$fout = fopen($v_dialplan_public_dir."/".$public_include_filename,"w");
 			fwrite($fout, $tmp);
@@ -5293,6 +5329,10 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 					}
 					$tmp .= "	</menu>\n";
 					$tmp .= "</include>\n";
+
+					//remove invalid characters from the file names
+						$ivr_menu_name = str_replace(" ", "_", $ivr_menu_name);
+						$ivr_menu_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $ivr_menu_name);
 
 					//write the file
 						if (count($_SESSION["domains"]) > 1) {
