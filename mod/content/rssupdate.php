@@ -266,14 +266,35 @@ else {
 	echo "        </td>";
 	echo "	</tr>";
 
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Order:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "              <select name='rssorder' class='formfld'>\n";
+	if (strlen(htmlspecialchars($rssorder))> 0) {
+		echo "              <option selected='yes' value='".htmlspecialchars($rssorder)."'>".htmlspecialchars($rssorder)."</option>\n";
+	}
+	$i=0;
+	while($i<=999) {
+		if (strlen($i) == 1) {
+			echo "              <option value='00$i'>00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "              <option value='0$i'>0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "              <option value='$i'>$i</option>\n";
+		}
+		$i++;
+	}
+	echo "              </select>\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Order:</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='rssorder' value='$rssorder'></td>";
-	echo "	</tr>";
-
-	echo "	<tr>";
-	//echo "		<td  class='vncellreq' valign='top'></td>";
 	echo "		<td  class='' colspan='2' align='left'>";
 	echo "            <strong>Content:</strong> ";
 	if ($rssoptional1 == "text/html") {

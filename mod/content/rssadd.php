@@ -37,60 +37,61 @@ else {
 
 if (count($_POST)>0) {
 
-	$rsssubcategory = check_str($_POST["rsssubcategory"]);
-	$rsstitle = check_str($_POST["rsstitle"]);
-	$rsslink = check_str($_POST["rsslink"]);
-	$rssdesc = check_str($_POST["rssdesc"]);
-	$rssimg = check_str($_POST["rssimg"]);
-	$rssoptional1 = check_str($_POST["rssoptional1"]);
-	$rssoptional2 = check_str($_POST["rssoptional2"]);
-	$rssoptional3 = check_str($_POST["rssoptional3"]);
-	$rssoptional4 = check_str($_POST["rssoptional4"]);
-	$rssoptional5 = check_str($_POST["rssoptional5"]);
-	$rssgroup = check_str($_POST["rssgroup"]);
-	$rssorder = check_str($_POST["rssorder"]);
+	//get the http values and set them as variables
+		$rsssubcategory = check_str($_POST["rsssubcategory"]);
+		$rsstitle = check_str($_POST["rsstitle"]);
+		$rsslink = check_str($_POST["rsslink"]);
+		$rssdesc = check_str($_POST["rssdesc"]);
+		$rssimg = check_str($_POST["rssimg"]);
+		$rssoptional1 = check_str($_POST["rssoptional1"]);
+		$rssoptional2 = check_str($_POST["rssoptional2"]);
+		$rssoptional3 = check_str($_POST["rssoptional3"]);
+		$rssoptional4 = check_str($_POST["rssoptional4"]);
+		$rssoptional5 = check_str($_POST["rssoptional5"]);
+		$rssgroup = check_str($_POST["rssgroup"]);
+		$rssorder = check_str($_POST["rssorder"]);
 
-	$sql = "insert into v_rss ";
-	$sql .= "(";
-	$sql .= "v_id, ";
-	$sql .= "rsscategory, ";
-	$sql .= "rsssubcategory, ";
-	$sql .= "rsstitle, ";
-	$sql .= "rsslink, ";
-	$sql .= "rssdesc, ";
-	$sql .= "rssimg, ";
-	$sql .= "rssoptional1, ";
-	$sql .= "rssoptional2, ";
-	$sql .= "rssoptional3, ";
-	$sql .= "rssoptional4, ";
-	$sql .= "rssoptional5, ";
-	$sql .= "rssgroup, ";
-	$sql .= "rssorder, ";
-	$sql .= "rssadddate, ";
-	$sql .= "rssadduser ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$v_id', ";
-	$sql .= "'$rsscategory', ";
-	$sql .= "'$rsssubcategory', ";
-	$sql .= "'$rsstitle', ";
-	$sql .= "'$rsslink', ";
-	$sql .= "'$rssdesc', ";
-	$sql .= "'$rssimg', ";
-	$sql .= "'$rssoptional1', ";
-	$sql .= "'$rssoptional2', ";
-	$sql .= "'$rssoptional3', ";
-	$sql .= "'$rssoptional4', ";
-	$sql .= "'$rssoptional5', ";
-	$sql .= "'$rssgroup', ";
-	$sql .= "'$rssorder', ";
-	$sql .= "now(), ";
-	$sql .= "'".$_SESSION["username"]."' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	//echo $sql;
-	unset($sql);
+	//insert the data into the database
+		$sql = "insert into v_rss ";
+		$sql .= "(";
+		$sql .= "v_id, ";
+		$sql .= "rsscategory, ";
+		$sql .= "rsssubcategory, ";
+		$sql .= "rsstitle, ";
+		$sql .= "rsslink, ";
+		$sql .= "rssdesc, ";
+		$sql .= "rssimg, ";
+		$sql .= "rssoptional1, ";
+		$sql .= "rssoptional2, ";
+		$sql .= "rssoptional3, ";
+		$sql .= "rssoptional4, ";
+		$sql .= "rssoptional5, ";
+		$sql .= "rssgroup, ";
+		$sql .= "rssorder, ";
+		$sql .= "rssadddate, ";
+		$sql .= "rssadduser ";
+		$sql .= ")";
+		$sql .= "values ";
+		$sql .= "(";
+		$sql .= "'$v_id', ";
+		$sql .= "'$rsscategory', ";
+		$sql .= "'$rsssubcategory', ";
+		$sql .= "'$rsstitle', ";
+		$sql .= "'$rsslink', ";
+		$sql .= "'$rssdesc', ";
+		$sql .= "'$rssimg', ";
+		$sql .= "'$rssoptional1', ";
+		$sql .= "'$rssoptional2', ";
+		$sql .= "'$rssoptional3', ";
+		$sql .= "'$rssoptional4', ";
+		$sql .= "'$rssoptional5', ";
+		$sql .= "'$rssgroup', ";
+		$sql .= "'$rssorder', ";
+		$sql .= "now(), ";
+		$sql .= "'".$_SESSION["username"]."' ";
+		$sql .= ")";
+		$db->exec(check_sql($sql));
+		unset($sql);
 
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
@@ -233,11 +234,32 @@ if (count($_POST)>0) {
 	echo "        </td>";
 	echo "	</tr>";
 
-
-	echo "	<tr>";
-	echo "		<td class='vncellreq'>Order:</td>";
-	echo "		<td class='vtable'><input type='text' class='formfld' name='rssorder' value='$rssorder'></td>";
-	echo "	</tr>";
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Order:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "              <select name='rssorder' class='formfld'>\n";
+	if (strlen(htmlspecialchars($rssorder))> 0) {
+		echo "              <option selected='yes' value='".htmlspecialchars($rssorder)."'>".htmlspecialchars($rssorder)."</option>\n";
+	}
+	$i=0;
+	while($i<=999) {
+		if (strlen($i) == 1) {
+			echo "              <option value='00$i'>00$i</option>\n";
+		}
+		if (strlen($i) == 2) {
+			echo "              <option value='0$i'>0$i</option>\n";
+		}
+		if (strlen($i) == 3) {
+			echo "              <option value='$i'>$i</option>\n";
+		}
+		$i++;
+	}
+	echo "              </select>\n";
+	echo "<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "	<tr>";
 	//echo "		<td  class='vncellreq' valign='top'></td>";
