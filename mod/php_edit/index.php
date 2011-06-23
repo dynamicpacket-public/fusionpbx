@@ -146,7 +146,7 @@ echo "	<title></title>";
 	// initialisation
 		editAreaLoader.init({
 			id: "edit1" // id of the textarea to transform
-			,start_highlight: true
+			,start_highlight: false
 			,allow_toggle: false
 			,word_wrap: false
 			,language: "en"
