@@ -460,20 +460,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($v_path_show) {
 		echo "<br />\n";
 		echo "<br />\n";
-		echo "<b>Additional Information</b>\n";
+		echo "<b>Conditions</b>\n";
 		echo "<br />\n";
 		echo "<br />\n";
-		echo "<a href='http://wiki.freeswitch.org/wiki/Dialplan_XML' target='_blank'>http://wiki.freeswitch.org/wiki/Dialplan_XML</a>";
 	}
 	?>
-	<br />
-	<br />
-	<br />
-	<br />
 
-	<b>Conditions</b>
-	<br />
-	<br />
 	Conditions are pattern matching tags that help decide if the current call should be processed in this extension or not. When matching conditions against the current call you have several <b>fields</b> that you can compare against.
 	<ul>
 		<li><b>context</b></li>
@@ -504,83 +496,69 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	<br />
 	<br />
 	Actions are executed when the <b>condition matches</b>. Anti-Actions are executed when the <b>condition does NOT match</b>.
-	<?php
-	if ($v_path_show) {
-		  echo "Additional information on applications for Actions and Anti-Actions.<br />\n";
-		  echo "<a href='http://wiki.freeswitch.org/wiki/Modules#Applications' target='_blank'>http://wiki.freeswitch.org/wiki/Modules#Applications</a>\n";
-		  echo "<br />\n";
-		  echo "<a href='http://wiki.freeswitch.org/wiki/Dialplan_Functions' target='_blank'>http://wiki.freeswitch.org/wiki/Dialplan_Functions</a>\n";
-	  }
-	  ?>
-	  <br />
-	  <br />
-	  <br />
-	  The following is a partial list of <b>applications</b>.
-	  <ul>
-	  <li><b>answer</b> answer the call</li>
-	  <li><b>bridge</b> bridge the call</li>
-	  <li><b>cond</b></li>
-	  <li><b>db</b> is a a runtime database either sqlite by default or odbc</li>
-	  <li><b>global_set</b> allows setting of global vars similar to the ones found in vars.xml</li>
-	  <li><b>group</b> allows grouping of several extensions for things like ring groups</li>
-	  <li><b>expr</b></li>
-	  <li><b>hangup</b> hangs up the call</li>
-	  <li><b>info</b> sends call info to the console</li>
-	  <li><b>javascript</b> run javascript .js files</li>
-	  <li><b>playback</b></li>
-	  <li><b>reject</b> reject the call</li>
-	  <li><b>respond</b></li>
-	  <li><b>ring_ready</b></li>
-	  <li><b>set</b> set a variable</li>
-	  <li><b>set_user</b></li>
-	  <li><b>sleep</b></li>
-	  <li><b>sofia_contact</b></li>
-	  <li><b>transfer</b> transfer the call to another extension or number</li>
-	  <li><b>voicemail</b> send the call to voicemail</li>
-	  </ul>
+	<br />
+	<br />
+	<br />
+	The following is a partial list of <b>applications</b>.
+	<ul>
+	<li><b>answer</b> answer the call</li>
+	<li><b>bridge</b> bridge the call</li>
+	<li><b>cond</b></li>
+	<li><b>db</b> is a a runtime database either sqlite by default or odbc</li>
+	<li><b>global_set</b> allows setting of global vars similar to the ones found in vars.xml</li>
+	<li><b>group</b> allows grouping of several extensions for things like ring groups</li>
+	<li><b>expr</b></li>
+	<li><b>hangup</b> hangs up the call</li>
+	<li><b>info</b> sends call info to the console</li>
+	<li><b>javascript</b> run javascript .js files</li>
+	<li><b>playback</b></li>
+	<li><b>reject</b> reject the call</li>
+	<li><b>respond</b></li>
+	<li><b>ring_ready</b></li>
+	<li><b>set</b> set a variable</li>
+	<li><b>set_user</b></li>
+	<li><b>sleep</b></li>
+	<li><b>sofia_contact</b></li>
+	<li><b>transfer</b> transfer the call to another extension or number</li>
+	<li><b>voicemail</b> send the call to voicemail</li>
+	</ul>
 
-	  <br />
-	  <br />
+	<br />
+	<br />
 
-	  <!--
-	  <b>Param</b>
-	  Example parameters by name and value
-	  <br />
-	  <?php
-	  if ($v_path_show) {
-		echo "<a href='http://wiki.freeswitch.org/wiki/Special:Search?search=param&go=Go' target='_blank'>http://wiki.freeswitch.org/wiki/Special:Search?search=param&go=Go</a>\n";
-	  }
-	  ?>
-	  <ul>
-	  <li><b>codec-ms</b> 20</li>
-	  <li><b>codec-prefs</b> PCMU@20i</li>
-	  <li><b>debug</b> 1</li>
-	  <li><b>dialplan</b> XML</li>
-	  <li><b>dtmf-duration</b> 100</li>
-	  <li><b>rfc2833-pt</b>" 101</li>
-	  <li><b>sip-port</b> 5060</li>
-	  <li><b>use-rtp-timer</b> true</li>
-	  </ul>
-	  <br />
-	  <br />
-	  -->
+	<!--
+	<b>Param</b>
+	Example parameters by name and value
+	<br />
+	<ul>
+	<li><b>codec-ms</b> 20</li>
+	<li><b>codec-prefs</b> PCMU@20i</li>
+	<li><b>debug</b> 1</li>
+	<li><b>dialplan</b> XML</li>
+	<li><b>dtmf-duration</b> 100</li>
+	<li><b>rfc2833-pt</b>" 101</li>
+	<li><b>sip-port</b> 5060</li>
+	<li><b>use-rtp-timer</b> true</li>
+	</ul>
+	<br />
+	<br />
+	-->
 
-	  <br />
-	  <br />
-	  <br />
-	  <br />
-	  <br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
 
 	</td>
 	</tr>
 	</table>
 
-	<?php
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
-
+<?php
+echo "	</td>";
+echo "	</tr>";
+echo "</table>";
+echo "</div>";
 
 require_once "includes/footer.php";
 ?>
