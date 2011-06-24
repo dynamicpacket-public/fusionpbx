@@ -649,6 +649,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].'/fusionpbx')){ $v_relative_url = $_SERVER["DOCUMENT_ROOT"].'/fusionpbx'; } else { $v_relative_url = '/'; }
 
 		$sql = "update v_system_settings set ";
+		$sql .= "v_domain = '".$_SERVER["HTTP_HOST"]."', ";
 		$sql .= "php_dir = '$install_php_dir', ";
 		$sql .= "tmp_dir = '$install_tmp_dir', ";
 		$sql .= "bin_dir = '$v_bin_dir', ";
