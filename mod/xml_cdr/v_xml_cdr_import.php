@@ -85,17 +85,30 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		}
 		unset($x);
 
-	//check whether a recording exists
-		$recording = '';
+	//get break down the date to year, month and day
+		$tmp_time = strtotime($start_stamp);
+		$tmp_year = date("Y", $tmp_time);
+		$tmp_month = date("M", $tmp_time);
+		$tmp_day = date("d", $tmp_time);
 
 	//find the v_id by using the domain
 		if (strlen($domain_name) == 0) { $domain_name = $_SERVER["HTTP_HOST"]; }
 		$sql = "";
-		$sql .= "select v_id from v_system_settings ";
+		$sql .= "select v_id, v_recordings_dir from v_system_settings ";
 		$sql .= "where v_domain = '".$domain_name."' ";
 		$row = $db->query($sql)->fetch();
 		$v_id = $row['v_id'];
+		$v_recordings_dir = $row['v_recordings_dir'];
 		if (strlen($v_id) == 0) { $v_id = '1'; }
+
+	//check whether a recording exists
+		$recording_relative_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+		if (file_exists($v_recordings_dir.$recording_relative_path.'/'.$uuid.'.wav')) {
+			$recording_file = $recording_relative_path.'/'.$uuid.'.wav';
+		}
+		if (file_exists($v_recordings_dir.$recording_relative_path.'/'.$uuid.'.mp3')) {
+			$recording_file = $recording_relative_path.'/'.$uuid.'.mp3';
+		}
 
 	//determine where the xml cdr will be archived
 		$sql = "select * from v_vars ";
@@ -208,7 +221,7 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		$sql .= "'".$network_addr."', ";
 		$sql .= "'".$hangup_cause."', ";
 		$sql .= "'".$hangup_cause_q850."', ";
-		$sql .= "'".$recording."', ";
+		$sql .= "'".$recording_file."', ";
 		$sql .= "'".$leg."' ";
 		$sql .= ")";
 		try {
