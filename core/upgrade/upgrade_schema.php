@@ -67,6 +67,25 @@
 		$x++;
 	}
 
+//find the v_conf_dir by the v_id
+	$sql = "";
+	$sql .= "select * from v_system_settings ";
+	$sql .= "where v_id = '".$v_id."' ";
+	$row = $db->query($sql)->fetch();
+	$v_conf_dir = $row['v_conf_dir'];
+
+//make sure that prefix-a-leg is set to true in the xml_cdr.conf.xml file
+	$file_contents = file_get_contents($v_conf_dir."/autoload_configs/xml_cdr.conf.xml");
+	$file_contents_new = str_replace("param name=\"prefix-a-leg\" value=\"false\"/", "param name=\"prefix-a-leg\" value=\"true\"/", $file_contents);
+	if (md5($file_contents) != md5($file_contents_new)) {
+		$fout = fopen($v_conf_dir."/autoload_configs/xml_cdr.conf.xml","w");
+		fwrite($fout, $file_contents_new);
+		fclose($fout);
+		if ($display_type == "text") {
+			echo "xml_cdr.conf.xml: 	updated\n";
+		}
+	}
+
 //if there are no permissions listed in v_group_permissions then set the default permissions
 	$sql = "";
 	$sql .= "select count(*) as count from v_group_permissions ";
