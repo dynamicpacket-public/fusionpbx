@@ -52,6 +52,11 @@ else {
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
 
+		//set the gateway type to enum
+			if (strtolower(substr($gateway, 0, 7)) == "enum") {
+				$gateway_type = 'enum';
+			}
+
 		//set the gateway type to freetdm
 			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
 				$gateway_type = 'freetdm';
@@ -75,6 +80,11 @@ else {
 
 		//set the gateway_2 variable
 			$gateway_2 = check_str($_POST["gateway_2"]);
+
+		//set the gateway type to enum
+			if (strtolower(substr($gateway_2, 0, 4)) == "enum") {
+				$gateway_2_type = 'enum';
+			}
 
 		//set the gateway type to freetdm
 			if (strtolower(substr($gateway_2, 0, 7)) == "freetdm") {
@@ -281,6 +291,7 @@ else {
 						$action_data = "sofia/gateway/".$tmp_gateway_name."/".$prefix_number."\$1";
 					}
 					if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
+						$extension_2_name = $gateway_2_name.".".$abbrv;
 						$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/".$prefix_number."\$1";
 					}
 					if ($gateway_type == "freetdm") {
@@ -288,6 +299,7 @@ else {
 						$action_data = $gateway."/1/a/".$prefix_number."\$1";
 					}
 					if ($gateway_2_type == "freetdm") {
+						$extension_2_name = "freetdm.".$abbrv;
 						$bridge_2_data .= $gateway_2."/1/a/".$prefix_number."\$1";
 					}
 					if ($gateway_type == "xmpp") {
@@ -295,7 +307,20 @@ else {
 						$action_data = "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
 					}
 					if ($gateway_2_type == "xmpp") {
+						$extension_2_name = "xmpp.".$abbrv;
 						$bridge_2_data .= "dingaling/gtalk/+".$prefix_number."\$1@voice.google.com";
+					}
+					if ($gateway_type == "enum") {
+						if (strlen($bridge_2_data) == 0) {
+							$extension_name = "enum.".$abbrv;
+						}
+						else {
+							$extension_name = $extension_2_name;
+						}
+						$action_data = "\${enum_auto_route}";
+					}
+					if ($gateway_2_type == "enum") {
+						$bridge_2_data .= "\${enum_auto_route}";
 					}
 					if (strlen($dialplanorder) == 0) {
 						$dialplanorder ='999';
@@ -365,52 +390,60 @@ else {
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
 					$fielddata = 'call_direction=outbound';
-					$fieldorder = '010';
-					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
-
-					$tag = 'action'; //condition, action, antiaction
-					$fieldtype = 'set';
-					$fielddata = 'hangup_after_bridge=true';
 					$fieldorder = '015';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
-					$fielddata = 'effective_caller_id_name=${outbound_caller_id_name}';
+					$fielddata = 'hangup_after_bridge=true';
 					$fieldorder = '020';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
-					$fielddata = 'effective_caller_id_number=${outbound_caller_id_number}';
+					$fielddata = 'effective_caller_id_name=${outbound_caller_id_name}';
 					$fieldorder = '025';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
-					$fielddata = 'inherit_codec=true';
+					$fielddata = 'effective_caller_id_number=${outbound_caller_id_number}';
 					$fieldorder = '030';
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+					$tag = 'action'; //condition, action, antiaction
+					$fieldtype = 'set';
+					$fielddata = 'inherit_codec=true';
+					$fieldorder = '035';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					if (strlen($bridge_2_data) > 0) {
 						$tag = 'action'; //condition, action, antiaction
 						$fieldtype = 'set';
 						$fielddata = 'continue_on_fail=true';
-						$fieldorder = '035';
+						$fieldorder = '040';
+						v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+					}
+
+					if ($gateway_type == "enum" || $gateway_2_type == "enum") {
+						$tag = 'action'; //condition, action, antiaction
+						$fieldtype = 'enum';
+						$fielddata = $prefix_number."$1 e164.org";
+						$fieldorder = '045';
 						v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 					}
 
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'bridge';
 					$fielddata = $action_data;
-					$fieldorder = '040';
+					$fieldorder = '050';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					if (strlen($bridge_2_data) > 0) {
 						$tag = 'action'; //condition, action, antiaction
 						$fieldtype = 'bridge';
 						$fielddata = $bridge_2_data;
-						$fieldorder = '045';
+						$fieldorder = '055';
 						v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 					}
 
@@ -569,6 +602,7 @@ function type_onchange(field_type) {
 		}
 	}
 	unset($sql, $result, $rowcount);
+	echo "<option value=\"enum\">enum</option>\n";
 	echo "<option value=\"freetdm\">freetdm</option>\n";
 	echo "<option value=\"xmpp\">xmpp</option>\n";
 	echo "</select>\n";
@@ -601,6 +635,7 @@ function type_onchange(field_type) {
 		}
 	}
 	unset($sql, $result, $rowcount);
+	echo "<option value=\"enum\">enum</option>\n";
 	echo "<option value=\"freetdm\">freetdm</option>\n";
 	echo "<option value=\"xmpp\">xmpp</option>\n";
 	echo "</select>\n";
