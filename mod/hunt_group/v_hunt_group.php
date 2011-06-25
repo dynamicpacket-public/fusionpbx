@@ -61,6 +61,10 @@ echo "<br />\n";
 $sql = "";
 $sql .= " select * from v_hunt_group ";
 $sql .= "where v_id = '$v_id' ";
+$sql .= "and huntgrouptype <> 'dnd' ";
+$sql .= "and huntgrouptype <> 'call_forward' ";
+$sql .= "and huntgrouptype <> 'follow_me_simultaneous' ";
+$sql .= "and huntgrouptype <> 'follow_me_sequence' ";
 if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
@@ -77,6 +81,10 @@ $offset = $rowsperpage * $page;
 $sql = "";
 $sql .= " select * from v_hunt_group ";
 $sql .= "where v_id = '$v_id' ";
+$sql .= "and huntgrouptype <> 'dnd' ";
+$sql .= "and huntgrouptype <> 'call_forward' ";
+$sql .= "and huntgrouptype <> 'follow_me_simultaneous' ";
+$sql .= "and huntgrouptype <> 'follow_me_sequence' ";
 if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 $sql .= " limit $rowsperpage offset $offset ";
 $prepstatement = $db->prepare(check_sql($sql));
