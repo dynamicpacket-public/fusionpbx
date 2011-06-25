@@ -77,7 +77,7 @@
 //make sure that prefix-a-leg is set to true in the xml_cdr.conf.xml file
 	$file_contents = file_get_contents($v_conf_dir."/autoload_configs/xml_cdr.conf.xml");
 	$file_contents_new = str_replace("param name=\"prefix-a-leg\" value=\"false\"/", "param name=\"prefix-a-leg\" value=\"true\"/", $file_contents);
-	if (md5($file_contents) != md5($file_contents_new)) {
+	if ($file_contents != $file_contents_new) {
 		$fout = fopen($v_conf_dir."/autoload_configs/xml_cdr.conf.xml","w");
 		fwrite($fout, $file_contents_new);
 		fclose($fout);
@@ -89,7 +89,7 @@
 //make sure that enum uses sofia internal in the enum.conf.xml file
 	$file_contents = file_get_contents($v_conf_dir."/autoload_configs/enum.conf.xml");
 	$file_contents_new = str_replace("service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/\${use_profile}/\$1", "service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/internal/\$1", $file_contents);
-	if (md5($file_contents) != md5($file_contents_new)) {
+	if ($file_contents != $file_contents_new) {
 		$fout = fopen($v_conf_dir."/autoload_configs/enum.conf.xml","w");
 		fwrite($fout, $file_contents_new);
 		fclose($fout);
