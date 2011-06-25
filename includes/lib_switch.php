@@ -2881,21 +2881,17 @@ function sync_package_v_hunt_group() {
 
 					//set ring back
 						if (isset($row['huntgroupringback'])){
-							if ($row['huntgroupringback'] == "ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
-								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
-							}
-							if ($row['huntgroupringback'] == "us-ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
-								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
-							}
-							if ($row['huntgroupringback'] == "uk-ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=\$\${uk-ring}\"); --set to ringtone\n";
-								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${uk-ring}\"); --set to ringtone\n";
-							}
 							if ($row['huntgroupringback'] == "music"){
 								$tmp .= "session:execute(\"set\", \"ringback=\${hold_music}\");          --set to music\n";
 								$tmp .= "session:execute(\"set\", \"transfer_ringback=\${hold_music}\"); --set to music\n";
+							}
+							else {
+								$tmp .= "session:execute(\"set\", \"ringback=\$\${".$row['huntgroupringback']."}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${".$row['huntgroupringback']."}\"); --set to ringtone\n";
+							}
+							if ($row['huntgroupringback'] == "ring"){
+								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
 							}
 						}
 						else {
@@ -3071,7 +3067,7 @@ function sync_package_v_hunt_group() {
 
 					//set the timeout destination
 						$huntgrouptimeoutdestination = $row['huntgrouptimeoutdestination'];
-						if ($row['huntgrouptimeouttype'] == "extension") { $huntgrouptimeouttype = "bridge"; }
+						if ($row['huntgrouptimeouttype'] == "extension") { $huntgrouptimeouttype = "transfer"; }
 						if ($row['huntgrouptimeouttype'] == "voicemail") { $huntgrouptimeouttype = "transfer"; $huntgrouptimeoutdestination = "*99".$huntgrouptimeoutdestination; }
 						if ($row['huntgrouptimeouttype'] == "sip uri") { $huntgrouptimeouttype = "bridge"; }
 						$tmp .= "\n";
@@ -3082,14 +3078,14 @@ function sync_package_v_hunt_group() {
 							$tmp .= "	--timeout\n";
 							if ($row['huntgrouptype'] != 'dnd') {
 								$tmp .= "	originate_disposition = session:getVariable(\"originate_disposition\");\n";
-								$tmp .= "	if originate_disposition == \"NO_ANSWER\" or originate_disposition == \"ALLOTTED_TIMEOUT\" or originate_disposition == \"USER_NOT_REGISTERED\" then\n";
+								$tmp .= "	if originate_disposition == \"NO_ANSWER\" or originate_disposition == \"ALLOTTED_TIMEOUT\" or originate_disposition == \"USER_NOT_REGISTERED\" or originate_disposition == \"SUBSCRIBER_ABSENT\" then\n";
 							}
 							$tmp .= "			session:execute(\"".$huntgrouptimeouttype."\", \"".$huntgrouptimeoutdestination."\");\n";
 							if ($row['huntgrouptype'] != 'dnd') {
 								$tmp .= "	end\n";
 							}
 						}
-						
+
 						if ($row['huntgroupcallerannounce'] == "true" || $row['hunt_group_call_prompt'] == "true") {
 							//do nothing
 						}
@@ -3105,7 +3101,7 @@ function sync_package_v_hunt_group() {
 							$tmp .= "end\n";
 							$tmp .= "\n";
 						}
-						
+
 					//unset variables
 						$tmp .= "\n";
 						$tmp .= "	--clear variables\n";
