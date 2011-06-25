@@ -887,11 +887,8 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//write the switch.conf.xml file
 		switch_conf_xml();
 
-	//get the list of installed apps from the core and mod directories
-		$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_defaults.php");
-		foreach ($default_list as &$default_path) {
-			include($default_path);
-		}
+	//make sure the database schema and installation have performed all necessary tasks
+		require_once "core/upgrade/upgrade_schema.php";
 
 	//synchronize the config with the saved settings
 		sync_package_freeswitch();
