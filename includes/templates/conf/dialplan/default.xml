@@ -798,7 +798,6 @@
 	<action application="execute_extension" data="ruri"/>
       </condition>
     </extension>
-    -->
 
     <extension name="enum">
       <condition field="${module_exists(mod_enum)}" expression="true"/>
@@ -806,6 +805,7 @@
 	<action application="transfer" data="$1 enum"/>
       </condition>
     </extension>
+    -->
 
   </context>
 </include>
