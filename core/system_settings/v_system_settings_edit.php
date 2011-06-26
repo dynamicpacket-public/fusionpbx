@@ -400,7 +400,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll();
 		foreach ($result as &$row) {
-			$v_id = $row["v_id"];
 			$v_domain = $row["v_domain"];
 			$v_account_code = $row["v_account_code"];
 			$v_server_protocol = $row["v_server_protocol"];
