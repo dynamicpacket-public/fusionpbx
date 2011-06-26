@@ -89,6 +89,7 @@ else {
 	}
 
 //delete the extension
+	unlink($v_conf_dir.'/directory/'.$v_domain.'.xml');
 	if (strlen($v_extensions_dir) > 0) {
 		system("rm -rf ".$v_extensions_dir);
 	}
@@ -112,6 +113,7 @@ else {
 	}
 
 //delete the dialplan
+	unlink($v_conf_dir.'/dialplan/'.$v_domain.'.xml');
 	if (strlen($v_dialplan_default_dir) > 0) {
 		system("rm -rf ".$v_dialplan_default_dir);
 	}
