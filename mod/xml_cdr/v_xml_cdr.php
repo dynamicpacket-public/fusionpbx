@@ -338,7 +338,7 @@ else {
 			}
 		}
 		else {
-			if ($value['extension'] > 0) { $sqlwhere .= "destination_number = 'no extension assigned' \n"; } //destination
+			$sqlwhere .= "destination_number = 'no extension assigned' \n"; //destination
 		}
 		$sqlwhere .= ") ";
 	}
