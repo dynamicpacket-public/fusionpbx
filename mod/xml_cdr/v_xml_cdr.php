@@ -322,7 +322,7 @@ else {
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 	if (!ifgroup("admin") && !ifgroup("superadmin")) {
 		$sqlwhere = "where v_id = '$v_id' ";
-		$sqlwhere = "and ( ";
+		$sqlwhere .= "and ( ";
 		if (count($extension_array) > 0) {
 			$x = 0;
 			foreach($extension_array as $value) {
