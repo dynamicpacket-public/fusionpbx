@@ -321,7 +321,8 @@ else {
 		// select caller_id_number, destination_number from v_xml_cdr where v_id = '1' 
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 	if (!ifgroup("admin") && !ifgroup("superadmin")) {
-		$sqlwhere = "where v_id = '$v_id' and ( ";
+		$sqlwhere = "where v_id = '$v_id' ";
+		$sqlwhere = "and ( ";
 		if (count($extension_array) > 0) {
 			$x = 0;
 			foreach($extension_array as $value) {
@@ -335,6 +336,9 @@ else {
 				if ($value['extension'] > 0) { $sqlwhere .= "or destination_number = '*99".$value['extension']."' \n"; } //destination
 				$x++;
 			}
+		}
+		else {
+			if ($value['extension'] > 0) { $sqlwhere .= "destination_number = 'no extension assigned' \n"; } //destination
 		}
 		$sqlwhere .= ") ";
 	}
