@@ -94,7 +94,6 @@ function db_column_exists ($db, $db_type, $db_name, $tmp_table_name, $tmp_column
 
 function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 	global $display_type;
-	$db->beginTransaction();
 
 	//PHP PDO check if table or column exists
 		//check if table exists
@@ -286,28 +285,28 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				if ($display_type == "text") {
 					echo "Database Schema:\n";
 				}
+				$db->beginTransaction();
 				$update_array = explode(";", $sql_update);
 				foreach($update_array as $sql) {
-					try {
-						$db->query(trim($sql));
-					}
-					catch (PDOException $error) {
-						if ($display_results) {
-							if ($display_type == "html") {
-								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+					if (strlen(trim($sql))) {
+						try {
+							$db->query(trim($sql));
+							if ($display_type == "text") {
+								echo " 	$sql\n";
 							}
-							else {
-								echo $error->getMessage()."\n";
+						}
+						catch (PDOException $error) {
+							if ($display_results) {
+								echo "	error: " . $error->getMessage() . "	sql: $sql<br/>";
 							}
 						}
 					}
-					$x++;
 				}
+				$db->commit();
 				echo "\n";
 				unset ($file_contents, $sql_update, $sql);
 			}
 
-	$db->commit();
 } //end function
 
 ?>
