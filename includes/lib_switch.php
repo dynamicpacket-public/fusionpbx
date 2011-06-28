@@ -2498,7 +2498,7 @@ function sync_package_v_hunt_group() {
 
 		$tmp = "";
 		$tmp .= "\n";
-		$tmp .= " domain = \"".$domain."\"; //by default this is the ipv4 address of FreeSWITCH used for transfer to voicemail\n";
+		$tmp .= " domain_name = \"".$domain."\"; //by default this is the ipv4 address of FreeSWITCH used for transfer to voicemail\n";
 		$tmp .= "\n";
 		$tmp .= "\n";
 
@@ -2512,8 +2512,6 @@ function sync_package_v_hunt_group() {
 						//this is a directory
 					} else {
 						if (substr($file,0, strlen($v_prefix)) == $v_prefix && substr($file,-4) == '.lua') {
-							//echo "file: $file<br />\n";
-							//echo "extension: ".substr($file,-3)."<br />";
 							if ($file != "huntgroup_originate.lua") {
 								unlink($v_scripts_dir.'/'.$file);
 							}
@@ -2800,7 +2798,6 @@ function sync_package_v_hunt_group() {
 					$tmp .= "uuid = session:getVariable(\"uuid\");\n";
 					$tmp .= "dialed_extension = session:getVariable(\"dialed_extension\");\n";
 					$tmp .= "domain_name = session:getVariable(\"domain_name\");\n";
-					$tmp .= "domain = session:getVariable(\"domain\");\n";
 					$tmp .= "caller_id_name = session:getVariable(\"caller_id_name\");\n";
 					$tmp .= "caller_id_number = session:getVariable(\"caller_id_number\");\n";
 					$tmp .= "effective_caller_id_name = session:getVariable(\"effective_caller_id_name\");\n";
@@ -2832,20 +2829,20 @@ function sync_package_v_hunt_group() {
 					//caller announce requested from caller if provided
 						if ($row['huntgroupcallerannounce'] == "true" || $row['hunt_group_call_prompt'] == "true") {
 							if ($row['huntgroupcallerannounce'] == "true") {
-								$tmp .=	"function originate(session, sipuri, extension, caller_id_name, caller_id_number, caller_announce) \n";
+								$tmp .=	"function originate(domain_name, session, sipuri, extension, caller_id_name, caller_id_number, caller_announce) \n";
 							}
 							else {
-								$tmp .=	"function originate(session, sipuri, extension, caller_id_name, caller_id_number) \n";
+								$tmp .=	"function originate(domain_name, session, sipuri, extension, caller_id_name, caller_id_number) \n";
 							}
 							$tmp .=	"	--caller_id_name = caller_id_name.replace(\" \", \"..\");\n";
 							$tmp .=	"	caller_id_name = string.gsub(caller_id_name, \" \", \"..\");\n";
-							//$tmp .=	"	--session:execute(\"luarun\", \"huntgroup_originate.lua \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\" \"..caller_announce);\n";
+							//$tmp .=	"	--session:execute(\"luarun\", \"huntgroup_originate.lua \"..domain_name..\" \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\" \"..caller_announce);\n";
 							$tmp .=	"	api = freeswitch.API();\n";
 							if ($row['huntgroupcallerannounce'] == "true") {
-								$tmp .=	"	result = api:execute(\"luarun\", \"huntgroup_originate.lua \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\" \"..caller_announce);\n";
+								$tmp .=	"	result = api:execute(\"luarun\", \"huntgroup_originate.lua \"..domain_name..\" \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\" \"..caller_announce);\n";
 							}
 							else {
-								$tmp .=	"	result = api:execute(\"luarun\", \"huntgroup_originate.lua \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\"\");\n";
+								$tmp .=	"	result = api:execute(\"luarun\", \"huntgroup_originate.lua \"..domain_name..\" \"..uuid..\" \"..sipuri..\" \"..extension..\" \"..caller_id_name..\" \"..caller_id_number..\"\");\n";
 							}
 							$tmp .=	"end";
 							$tmp .=	"\n";
@@ -2908,7 +2905,6 @@ function sync_package_v_hunt_group() {
 					$tmp .= "--freeswitch.consoleLog( \"info\", \"dialed extension:\"..dialed_extension..\"\\n\" );\n";
 					$tmp .= "--freeswitch.consoleLog( \"info\", \"domain: \"..domain..\"\\n\" );\n";
 					$tmp .= "--freeswitch.consoleLog( \"info\", \"us_ring: \"..us_ring..\"\\n\" );\n";
-					$tmp .= "--freeswitch.consoleLog( \"info\", \"domain: \"..domain..\"\\n\" );\n";
 					$tmp .= "--freeswitch.consoleLog( \"info\", \"domain_name: \"..domain_name..\"\\n\" );\n";
 					$tmp .= "\n";
 
@@ -2963,9 +2959,9 @@ function sync_package_v_hunt_group() {
 						}
 						if ($ent['destinationtype'] == "voicemail") {
 							$tmp_sub_array["application"] = "voicemail";
-							$tmp .= "	session:execute(\"voicemail\", \"default \${domain} ".$ent['destinationdata']."\");\n";
+							$tmp .= "	session:execute(\"voicemail\", \"default \${domain_name} ".$ent['destinationdata']."\");\n";
 							//$tmp_sub_array["application"] = "voicemail";
-							//$tmp_sub_array["data"] = "default \${domain} ".$ent['destinationdata'];
+							//$tmp_sub_array["data"] = "default \${domain_name} ".$ent['destinationdata'];
 							//$tmp_array[$i] = $tmp_sub_array;
 							unset($tmp_sub_array);
 						}
@@ -3017,10 +3013,10 @@ function sync_package_v_hunt_group() {
 									$tmpdata = $tmp_row["data"];
 									if ($tmp_row["application"] == "voicemail") { $tmpdata = "*99".$tmpdata; }
 									if ($row['huntgroupcallerannounce'] == "true") {
-										$tmp .= "	result = originate (session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+										$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
 									}
 									else {
-										$tmp .= "	result = originate (session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+										$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
 									}
 								}
 							}
@@ -3043,10 +3039,10 @@ function sync_package_v_hunt_group() {
 										$tmpdata = $tmp_row["data"];
 										if ($tmp_row["application"] == "voicemail") { $tmpdata = "*99".$tmpdata; }
 										if ($row['huntgroupcallerannounce'] == "true") {
-											$tmp .= "	result = originate (session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+											$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
 										}
 										else {
-											$tmp .= "	result = originate (session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+											$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
 										}
 									}
 								}
@@ -3107,7 +3103,6 @@ function sync_package_v_hunt_group() {
 						$tmp .= "	dialed_extension = \"\";\n";
 						$tmp .= "	new_extension = \"\";\n";
 						$tmp .= "	domain_name = \"\";\n";
-						$tmp .= "	domain = \"\";";
 						$tmp .= "\n";
 
 					//remove invalid characters from the file names
