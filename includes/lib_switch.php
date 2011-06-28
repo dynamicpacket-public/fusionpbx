@@ -75,19 +75,6 @@ require_once "includes/config.php";
 		$_SESSION["user_defined_variables"] = "set";
 	}
 
-//set http compression
-	if ($_SESSION['http_compression'] == "true") {
-		if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-			ob_start("ob_gzhandler");
-		}
-		else{
-			ob_start();
-		}
-	}
-	else {
-		ob_start();
-	}
-
 function v_settings() {
 	global $db, $v_id, $v_secure;
 
