@@ -1,10 +1,11 @@
 --get the argv values
-	uuid = argv[1];
-	sipuri = argv[2];
-	extension = argv[3];
-	caller_id_name = argv[4];
-	caller_id_number = argv[5];
-	caller_announce = argv[6];
+	domain_name = argv[1];
+	uuid = argv[2];
+	sipuri = argv[3];
+	extension = argv[4];
+	caller_id_name = argv[5];
+	caller_id_number = argv[6];
+	caller_announce = argv[7];
 
 --variable preparation
 	tmp_sipuri = '';
@@ -20,7 +21,7 @@ function explode ( seperator, str )
 	return arr
 end
 
-function originate (session, sipuri, extension, caller_announce, caller_id_name, caller_id_number)
+function originate (domain_name, session, sipuri, extension, caller_announce, caller_id_name, caller_id_number)
 
 	cid = ",origination_caller_id_name="..caller_id_name..",origination_caller_id_number="..caller_id_number;
 	local new_session = freeswitch.Session("{ignore_early_media=true"..cid.."}"..sipuri);
@@ -50,8 +51,8 @@ function originate (session, sipuri, extension, caller_announce, caller_id_name,
 
 			if ( dtmf_digits == "1" ) then
 				freeswitch.consoleLog("NOTICE", "followme: call accepted\n");
-				freeswitch.consoleLog("NOTICE", extension.."@${domain_name} out nowait\n");
-				new_session:execute("fifo", extension.."@${domain_name} out nowait");
+				freeswitch.consoleLog("NOTICE", extension.."@"..domain_name.." out nowait\n");
+				new_session:execute("fifo", extension.."@"..domain_name.." out nowait");
 				return true;
 			end
 			if ( dtmf_digits == "2" ) then
@@ -76,7 +77,7 @@ end
 sipuri_table = explode(",",sipuri);
 for index,tmp_sip_uri in pairs(sipuri_table) do
 	freeswitch.consoleLog("NOTICE", "sip_uri: "..tmp_sip_uri.."\n");
-	result = originate (session, tmp_sip_uri, extension, caller_announce, caller_id_name, caller_id_number);
+	result = originate (domain_name, session, tmp_sip_uri, extension, caller_announce, caller_id_name, caller_id_number);
 	if (result) then
 		break;
 		--exit;
