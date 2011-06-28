@@ -23,18 +23,34 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "includes/config.php";
+
+//check the permission
+	if(defined('STDIN')) {
+		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
+		preg_match("/^(.*)\/mod\/.*$/", $document_root, $matches);
+		$document_root = $matches[1];
+		set_include_path($document_root);
+		$_SERVER["DOCUMENT_ROOT"] = $document_root;
+		require_once "includes/config.php";
+		$display_type = 'text'; //html, text
+	}
+	else {
+		include "root.php";
+		require_once "includes/config.php";
+	}
 
 //set debug
 	$debug = false; //true //false
+	if($debug){
+		$time5 = microtime(true);
+		$insert_time=$insert_count=0;
+	}
 
 //increase limits
 	set_time_limit(3600);
 	ini_set('memory_limit', '256M');
 
 function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
-
 	//set global variable
 		global $debug;
 
@@ -46,32 +62,24 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			echo $e->getMessage();
 		}
 
-	//get the variables from the xml
-		$uuid = check_str(urldecode($xml->variables->uuid));
-		$domain_name = check_str(urldecode($xml->variables->domain_name));
-		$accountcode = check_str(urldecode($xml->variables->accountcode));
-		$direction = check_str(urldecode($xml->variables->call_direction));
-		$default_language = check_str(urldecode($xml->variables->default_language));
-		$xml_string = check_str($xml_string);
-		$start_epoch = check_str(urldecode($xml->variables->start_epoch));
-		$start_stamp = check_str(urldecode($xml->variables->start_stamp));
-		$start_uepoch = check_str(urldecode($xml->variables->start_uepoch));
-		$answer_stamp = check_str(urldecode($xml->variables->answer_stamp));
-		$answer_epoch = check_str(urldecode($xml->variables->answer_epoch));
-		$answer_uepoch = check_str(urldecode($xml->variables->answer_uepoch));
-		$end_epoch = check_str(urldecode($xml->variables->end_epoch));
-		$end_uepoch = check_str(urldecode($xml->variables->end_uepoch));
-		$end_stamp = check_str(urldecode($xml->variables->end_stamp));
-		$duration = check_str(urldecode($xml->variables->duration));
-		$mduration = check_str(urldecode($xml->variables->mduration));
-		$billsec = check_str(urldecode($xml->variables->billsec));
-		$billmsec = check_str(urldecode($xml->variables->billmsec));
-		$bridge_uuid = check_str(urldecode($xml->variables->bridge_uuid));
-		$read_codec = check_str(urldecode($xml->variables->read_codec));
-		$write_codec = check_str(urldecode($xml->variables->write_codec));
-		$remote_media_ip = check_str(urldecode($xml->variables->remote_media_ip));
-		$hangup_cause = check_str(urldecode($xml->variables->hangup_cause));
-		$hangup_cause_q850 = check_str(urldecode($xml->variables->hangup_cause_q850));
+	//get the variables from the xml & build a list of variable to save:
+	//This is an array where the variable in the xml_cdr is THE SAME as the column name.
+	$variables_named=array('uuid','domain_name','accountcode','default_language',
+			'start_epoch','start_stamp','start_uepoch',
+			'answer_stamp','answer_epoch','answer_uepoch','end_epoch',
+			'end_uepoch','end_stamp',
+			'duration','mduration','billsec','billmsec',
+			'bridge_uuid',
+			'read_codec','write_codec','remote_media_ip','hangup_cause','hangup_cause_q850',
+			'last_app','sip_hangup_disposition'
+			);
+		//set the $variable so we can use it.
+		foreach($variables_named as $var){
+			${$var} = check_str(urldecode($xml->variables->{$var}));
+		}//end get the variables from the xml loop.
+
+	//Add the other variables that are going to processed, rather than pulling the actual name from the XML.
+	//Pull data from the actual callflow.
 		$x = 0;
 		foreach ($xml->callflow as $row) {
 			if ($x == 0) {
@@ -84,6 +92,18 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			$x++;
 		}
 		unset($x);
+		array_push($variables_named, 'destination_number','context','network_addr','caller_id_name','caller_id_number');
+
+	//Store the call leg.
+	$variables_named[]='leg';
+
+	//Store the call direction.
+		$variables_named[]='direction';
+		$direction = check_str(urldecode($xml->variables->call_direction));
+
+	//Store PDD, Post Dial Delay, in milliseconds.
+		$variables_named[]='pddm';
+		$pddm = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
 
 	//get break down the date to year, month and day
 		$tmp_time = strtotime($start_stamp);
@@ -100,15 +120,17 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		$v_id = $row['v_id'];
 		$v_recordings_dir = $row['v_recordings_dir'];
 		if (strlen($v_id) == 0) { $v_id = '1'; }
+		$variables_named[]='v_id';
 
 	//check whether a recording exists
 		$recording_relative_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 		if (file_exists($v_recordings_dir.$recording_relative_path.'/'.$uuid.'.wav')) {
 			$recording_file = $recording_relative_path.'/'.$uuid.'.wav';
 		}
-		if (file_exists($v_recordings_dir.$recording_relative_path.'/'.$uuid.'.mp3')) {
+		elseif (file_exists($v_recordings_dir.$recording_relative_path.'/'.$uuid.'.mp3')) {
 			$recording_file = $recording_relative_path.'/'.$uuid.'.mp3';
 		}
+		if(isset($recording_file) && !empty($recording_file)) $variables_named[]='recording_file';
 
 	//determine where the xml cdr will be archived
 		$sql = "select * from v_vars ";
@@ -131,8 +153,14 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			break;
 		}
 
-	//archive the xml cdr string
-		if ($xml_cdr_archive == "dir") {
+	//if xml_cdr_archive is set to DB, then insert it.
+		if ($xml_cdr_archive == "db") {
+			$xml_cdr = check_str($xml_string);
+			$variables_named[]='xml_cdr';
+		}
+
+	//if xml_cdr_archive is set to dir, then store it.
+		elseif ($xml_cdr_archive == "dir") {
 			if (strlen($uuid) > 0) {
 				$tmp_time = strtotime($start_stamp);
 				$tmp_year = date("Y", $tmp_time);
@@ -148,86 +176,30 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		}
 
 	//insert xml_cdr into the db
-		$sql = "insert into v_xml_cdr ";
-		$sql .= "(";
-		$sql .= "v_id, ";
-		$sql .= "uuid, ";
-		$sql .= "domain_name, ";
-		$sql .= "accountcode, ";
-		$sql .= "direction, ";
-		$sql .= "default_language, ";
-		$sql .= "context, ";
-		if ($xml_cdr_archive == "db") {
-			$sql .= "xml_cdr, ";
-		}
-		$sql .= "caller_id_name, ";
-		$sql .= "caller_id_number, ";
-		$sql .= "destination_number, ";
-		$sql .= "start_epoch, ";
-		$sql .= "start_stamp, ";
-		$sql .= "start_uepoch, ";
-		$sql .= "answer_stamp, ";
-		$sql .= "answer_epoch, ";
-		$sql .= "answer_uepoch, ";
-		$sql .= "end_epoch, ";
-		$sql .= "end_uepoch, ";
-		$sql .= "end_stamp, ";
-		$sql .= "duration, ";
-		$sql .= "mduration, ";
-		$sql .= "billsec, ";
-		$sql .= "billmsec, ";
-		$sql .= "bridge_uuid, ";
-		$sql .= "read_codec, ";
-		$sql .= "write_codec, ";
-		$sql .= "remote_media_ip, ";
-		$sql .= "network_addr, ";
-		$sql .= "hangup_cause, ";
-		$sql .= "hangup_cause_q850, ";
-		$sql .= "recording_file, ";
-		$sql .= "leg ";
-		$sql .= ")";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'".$v_id."', ";
-		$sql .= "'".$uuid."', ";
-		$sql .= "'".$domain_name."', ";
-		$sql .= "'".$accountcode."', ";
-		$sql .= "'".$direction."', ";
-		$sql .= "'".$default_language."', ";
-		$sql .= "'".$context."', ";
-		if ($xml_cdr_archive == "db") {
-			$sql .= "'".$xml_string."', ";
-		}
-		$sql .= "'".$caller_id_name."', ";
-		$sql .= "'".$caller_id_number."', ";
-		$sql .= "'".$destination_number."', ";
-		$sql .= "'".$start_epoch."', ";
-		$sql .= "'".$start_stamp."', ";
-		$sql .= "'".$start_uepoch."', ";
-		$sql .= "'".$answer_stamp."', ";
-		$sql .= "'".$answer_epoch."', ";
-		$sql .= "'".$answer_uepoch."', ";
-		$sql .= "'".$end_epoch."', ";
-		$sql .= "'".$end_uepoch."', ";
-		$sql .= "'".$end_stamp."', ";
-		$sql .= "'".$duration."', ";
-		$sql .= "'".$mduration."', ";
-		$sql .= "'".$billsec."', ";
-		$sql .= "'".$billmsec."', ";
-		$sql .= "'".$bridge_uuid."', ";
-		$sql .= "'".$read_codec."', ";
-		$sql .= "'".$write_codec."', ";
-		$sql .= "'".$remote_media_ip."', ";
-		$sql .= "'".$network_addr."', ";
-		$sql .= "'".$hangup_cause."', ";
-		$sql .= "'".$hangup_cause_q850."', ";
-		$sql .= "'".$recording_file."', ";
-		$sql .= "'".$leg."' ";
-		$sql .= ")";
+		//build the insert string
+		$count=count($variables_named);
+		$name=$value='';
+		for($i=0;$i<$count;$i++){
+			$name	.=$variables_named[$i].",";
+			$values	.="'".${$variables_named[$i]}."',";
+			//if($i+1<$count) {$name	.=",";$values	.=",";}
+			}
+		$sql = 'insert into v_xml_cdr ('.substr($name,0,-1).') values ('.substr($values,0,-1).')';//substr to strip the extra , off the end.
+
+		//insert the values
 		try {
+			
 			if (strlen($uuid) > 0) {
-				if ($debug) { echo $sql."<br />\n"; }
+				if ($debug) {
+					$time5_insert=microtime(true);
+					echo $sql."<br />\n";
+					}
 				$db->exec(check_sql($sql));
+				if ($debug) {
+					GLOBAL $insert_time,$insert_count;
+					$insert_time+=microtime(true)-$time5_insert;//add this current query.
+					$insert_count++;
+					}
 			}
 		}
 		catch(Exception $e) {
@@ -291,7 +263,6 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			process_xml_cdr($db, $v_log_dir, $leg, $xml_string);
 	}
 
-
 //check the filesystem for xml cdr records that were missed
 	$xml_cdr_dir = $v_log_dir.'/xml_cdr';
 	$dir_handle = opendir($xml_cdr_dir);
@@ -322,16 +293,14 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 	}
 	closedir($dir_handle);
 
-
-//testing
+//debug true
 	if ($debug) {
-		//ob_end_clean(); //clean the buffer
-		//ob_start();
-		//phpinfo();
 		$content = ob_get_contents(); //get the output from the buffer
 		ob_end_clean(); //clean the buffer
+		$time="\n\n$insert_count inserts in: ".number_format($insert_time,5). " seconds.\n";
+		$time.="Other processing time: ".number_format((microtime(true)-$time5-$insert_time),5). " seconds.\n";
 		$fp = fopen('/tmp/xml_cdr_post.log', 'w');
-		fwrite($fp, $content);
+		fwrite($fp, $content.$time);
 		fclose($fp);
 	}
 
