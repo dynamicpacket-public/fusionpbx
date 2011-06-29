@@ -41,6 +41,16 @@ else {
 	require_once "includes/header.php";
 	require_once "includes/paging.php";
 
+	function number_prettify($number){
+		if(preg_match('~^1?([2-9]\d\d)([2-9]\d{2})(\d{4})$~',$number, $match)) return "1-".$match[1]."-".$match[2]."-".$match[3];//North America w/o 1.
+		elseif(preg_match('~^\+1([2-9]\d\d)([2-9]\d{2})(\d{4})$~',$number,$match)) return "1-".$match[1]."-".$match[2]."-".$match[3];//North America strip +
+		elseif(preg_match('~^(0\d\d?)(\d{3})(\d{4})$~',$number,$match)) return $match[1]."-".$match[2]."-".$match[3];//Israel local CID
+		elseif(preg_match('~^(1|2[1-689]\d|2[07]|3[0-469]|3[578]\d|4[0-13-9]|42\d|5[09]\d|5[1-8]|6[0-6]|6[7-9]\d|7|8[035789]\d|8[1246]|9[0-58]|9[679]\d)(\d{0,17})(\d{3})(\d{4})$~',$number,$match))
+			return $match[1]."-".$match[2]."-".$match[3]."-".$match[4];//international catch-all.
+		else return $number;
+		}
+
+
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
 
@@ -487,14 +497,14 @@ else {
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>";
 			if (strlen($tmp_name) > 0 && file_exists($v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
-				echo 	$row['caller_id_number'].' ';
+				echo 	number_prettify($row['caller_id_number']).' ';
 				echo "	  </a>";
 			}
 			else {
-				echo 	$row['caller_id_number'].' ';
+				echo 	number_prettify($row['caller_id_number']).' ';
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['destination_number']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_prettify($row['destination_number'])."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['end_stamp']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $row['billsec'])."</td>\n";
