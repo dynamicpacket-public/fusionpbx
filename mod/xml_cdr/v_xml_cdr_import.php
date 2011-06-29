@@ -102,8 +102,8 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		$direction = check_str(urldecode($xml->variables->call_direction));
 
 	//Store PDD, Post Dial Delay, in milliseconds.
-		$variables_named[]='pddm';
-		$pddm = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
+		$variables_named[]='pdd_ms';
+		$pdd_ms = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
 
 	//get break down the date to year, month and day
 		$tmp_time = strtotime($start_stamp);

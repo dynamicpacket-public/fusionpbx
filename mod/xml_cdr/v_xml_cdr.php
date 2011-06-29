@@ -428,7 +428,7 @@ else {
 	echo thorderby('start_stamp', 'Start', $orderby, $order);
 	//echo thorderby('end_stamp', 'End', $orderby, $order);
 	echo thorderby('duration', 'Length', $orderby, $order);
-	if (ifgroup("admin") || ifgroup("superadmin")) echo thorderby('pddm', 'PDD', $orderby, $order);
+	if (ifgroup("admin") || ifgroup("superadmin")) echo thorderby('pdd_ms', 'PDD', $orderby, $order);
 	echo thorderby('hangup_cause', 'Status', $orderby, $order);
 	echo "</tr>\n";
 
@@ -516,7 +516,7 @@ else {
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];//If they cancelled, show the ring time, not the bill time.
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
 			if (ifgroup("admin") || ifgroup("superadmin")) {
-				echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_format($row['pddm']/1000,2)."s</td>\n";
+				echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 				echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
 				//echo "	<td valign='top' align='right' width='50px'>\n";
 				//echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_xml_cdr_edit.php?id=".$row['xml_cdr_id']."'\" value='  >  '>\n";

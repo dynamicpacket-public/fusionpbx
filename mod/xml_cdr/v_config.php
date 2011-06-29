@@ -159,11 +159,11 @@
 		$apps[$x]['db'][0]['fields'][32]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][0]['fields'][32]['type']['mysql'] = 'char(1)';
 		$apps[$x]['db'][0]['fields'][32]['description'] = 'The leg of the call a or b.';
-		$apps[$x]['db'][0]['fields'][33]['name'] = 'pddm';
+		$apps[$x]['db'][0]['fields'][33]['name'] = 'pdd_ms';
 		$apps[$x]['db'][0]['fields'][33]['type']['pgsql'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][33]['type']['sqlite'] = 'numeric';
 		$apps[$x]['db'][0]['fields'][33]['type']['mysql'] = 'smallint';
-		$apps[$x]['db'][0]['fields'][33]['description'] = 'Post Dial Delay (PDD) in microseconds. Divide by 1000 for seconds.';
+		$apps[$x]['db'][0]['fields'][33]['description'] = 'Post Dial Delay (PDD) in miliseconds. Divide by 1000 for seconds.';
 		$apps[$x]['db'][0]['fields'][34]['name'] = 'last_app';
 		$apps[$x]['db'][0]['fields'][34]['type']['pgsql'] = 'char(9)';
 		$apps[$x]['db'][0]['fields'][34]['type']['sqlite'] = 'text';
