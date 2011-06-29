@@ -428,6 +428,7 @@ else {
 	echo thorderby('start_stamp', 'Start', $orderby, $order);
 	//echo thorderby('end_stamp', 'End', $orderby, $order);
 	echo thorderby('duration', 'Length', $orderby, $order);
+	if (ifgroup("admin") || ifgroup("superadmin")) echo thorderby('pddm', 'PDD', $orderby, $order);
 	echo thorderby('hangup_cause', 'Status', $orderby, $order);
 	echo "</tr>\n";
 
@@ -456,18 +457,22 @@ else {
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['default_language']."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['context']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>";
+			
 			$tmp_dir = $v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
-			if (file_exists($tmp_dir.'/'.$row['uuid'].'.wav')) {
+			if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
+				$tmp_name=$row['recording_file'];
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.wav')) {
 				$tmp_name = $row['uuid'].".wav";
 			}
-			if (file_exists($tmp_dir.'/'.$row['uuid'].'_1.wav')) {
+			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.wav')) {
 				$tmp_name = $row['uuid']."_1.wav";
 			}
-			if (file_exists($tmp_dir.'/'.$row['uuid'].'.mp3')) {
+			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'.mp3')) {
 				$tmp_name = $row['uuid'].".mp3";
 			}
-			if (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
+			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
 			if (strlen($tmp_name) > 0 && file_exists($v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
@@ -492,11 +497,12 @@ else {
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['destination_number']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['end_stamp']."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['duration']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $row['billsec'])."</td>\n";
 			if (ifgroup("admin") || ifgroup("superadmin")) {
+				echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_format($row['pddm']/1000,2)."s</td>\n";
 				echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
-				echo "	<td valign='top' align='right' width='50px'>\n";
-				echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_xml_cdr_edit.php?id=".$row['xml_cdr_id']."'\" value='  >  '>\n";
+				//echo "	<td valign='top' align='right' width='50px'>\n";
+				//echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_xml_cdr_edit.php?id=".$row['xml_cdr_id']."'\" value='  >  '>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
