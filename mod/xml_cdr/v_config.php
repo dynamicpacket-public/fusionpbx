@@ -159,5 +159,20 @@
 		$apps[$x]['db'][0]['fields'][32]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][0]['fields'][32]['type']['mysql'] = 'char(1)';
 		$apps[$x]['db'][0]['fields'][32]['description'] = 'The leg of the call a or b.';
+		$apps[$x]['db'][0]['fields'][33]['name'] = 'pddm';
+		$apps[$x]['db'][0]['fields'][33]['type']['pgsql'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][33]['type']['sqlite'] = 'numeric';
+		$apps[$x]['db'][0]['fields'][33]['type']['mysql'] = 'smallint';
+		$apps[$x]['db'][0]['fields'][33]['description'] = 'Post Dial Delay (PDD) in microseconds. Divide by 1000 for seconds.';
+		$apps[$x]['db'][0]['fields'][34]['name'] = 'last_app';
+		$apps[$x]['db'][0]['fields'][34]['type']['pgsql'] = 'char(9)';
+		$apps[$x]['db'][0]['fields'][34]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][0]['fields'][34]['type']['mysql'] = 'varchar(9)';
+		$apps[$x]['db'][0]['fields'][34]['description'] = 'Save the last application in the leg.';
+		$apps[$x]['db'][0]['fields'][35]['name'] = 'sip_hangup_disposition';
+		$apps[$x]['db'][0]['fields'][35]['type']['pgsql'] = 'char(11)';
+		$apps[$x]['db'][0]['fields'][35]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][0]['fields'][35]['type']['mysql'] = 'varchar(11)';
+		$apps[$x]['db'][0]['fields'][35]['description'] = 'Save who hung up or cancelled the leg.';
 
 ?>
