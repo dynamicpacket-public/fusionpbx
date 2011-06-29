@@ -507,7 +507,9 @@ else {
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_prettify($row['destination_number'])."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['end_stamp']."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $row['billsec'])."</td>\n";
+			
+			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];//If they cancelled, show the ring time, not the bill time.
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
 			if (ifgroup("admin") || ifgroup("superadmin")) {
 				echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_format($row['pddm']/1000,2)."s</td>\n";
 				echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
