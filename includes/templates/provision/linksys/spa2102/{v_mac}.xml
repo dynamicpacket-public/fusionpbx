@@ -1,20 +1,5 @@
-<!--
-This isn't a full profile, but it's set to manage the major changes that should be made.
-For more (default) variables, see:
-http://github.com/dhubler/sipxecs/blob/master/sipXconfig/plugins/linksys/test/org/sipfoundry/sipxconfig/phone/linksys/spa2102.cfg
-
-or the support PDF here for everything:
-http://www.cisco.com/en/US/docs/voice_ip_comm/csbpvga/ata/provisioning/guide/Cisco_Small_Business_IP_Telephony_Provisioning_Guide.pdf
-
-This profile does NOT lock down the web UI at all.
-
-Also, this does not set the few setting that are required for proper nat traversal - keep alive, send via, and port mapping.
--->
-
-
-
 <flat-profile>
-<Profile_Rule>http://{v_domain}{v_project_path}/mod/provision/?mac=$MA&password={v_password}</Profile_Rule>
+<Profile_Rule>http://{v_domain}{v_project_path}/mod/provision/?mac=$MA&amp;password={v_password}</Profile_Rule>
 <Resync_Periodic>3600</Resync_Periodic>
 
 <!--<GPP_B>{v_agent}</GPP_B>-->
@@ -62,8 +47,8 @@ Also, this does not set the few setting that are required for proper nat travers
 <G729b_Codec_Name>G729</G729b_Codec_Name> <!--suggestion by Callcentric.-->
 
 <!-- NAT_Settings 
-<NAT_Mapping_Enable_1_>no</NAT_Mapping_Enable_1_>
-<NAT_Keep_Alive_Enable_1_>no</NAT_Keep_Alive_Enable_1_>
+<NAT_Mapping_Enable_1_>yes</NAT_Mapping_Enable_1_>
+<NAT_Keep_Alive_Enable_1_>yes</NAT_Keep_Alive_Enable_1_>
 <NAT_Keep_Alive_Msg_1_>$NOTIFY</NAT_Keep_Alive_Msg_1_>
 <NAT_Keep_Alive_Dest_1_>$PROXY</NAT_Keep_Alive_Dest_1_>-->
 
