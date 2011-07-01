@@ -3236,7 +3236,12 @@ function sync_package_v_fax() {
 					//<action application="rxfax" data="$v_storage_dir/fax/inbox/${last_fax}.tif"/>
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'rxfax';
-					$fielddata = $v_storage_dir.'/fax/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+					if (count($_SESSION["domains"]) > 1) {
+						$fielddata = $v_storage_dir.'/fax/'.$_SESSION['domains'][$row['v_id']]['domain'].'/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+					}
+					else {
+						$fielddata = $v_storage_dir.'/fax/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+					}
 					$fieldorder = '005';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
@@ -3283,7 +3288,12 @@ function sync_package_v_fax() {
 				unset($sql);
 
 				//update the action
-				$fielddata = $v_storage_dir.'/fax/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+				if (count($_SESSION["domains"]) > 1) {
+					$fielddata = $v_storage_dir.'/fax/'.$_SESSION['domains'][$row['v_id']]['domain'].'/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+				}
+				else {
+					$fielddata = $v_storage_dir.'/fax/'.$row['faxextension'].'/inbox/${last_fax}.tif';
+				}
 				$sql = "";
 				$sql = "update v_dialplan_includes_details set ";
 				$sql .= "fielddata = '".$fielddata."' ";
