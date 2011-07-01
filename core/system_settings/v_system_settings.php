@@ -54,9 +54,9 @@ else {
 	$order = $_GET["order"];
 
 //change the tenant
-	if (strlen($_GET["id"]) > 0 && strlen($_GET["domain"]) > 0) {
+	if (strlen($_GET["v_id"]) > 0 && $_GET["domain_change"] == "true") {
 		//update the v_id and session variables
-			$v_id = $_GET["id"];
+			$v_id = $_GET["v_id"];
 			$_SESSION['v_id'] = $_SESSION['domains'][$v_id]['v_id'];
 			$_SESSION["v_domain"] = $_SESSION['domains'][$v_id]['domain'];
 			$_SESSION["v_template_name"] = $_SESSION['domains'][$v_id]['template_name'];
@@ -103,7 +103,7 @@ else {
 	echo "<tr>\n";
 	echo "<td align='left' nowrap><strong>System Settings</strong></td>\n";
 	echo "<td>&nbsp;</td>\n";
-	echo "<td align='right' align='right'><strong>Domain:</strong> ".$_SESSION['v_domain']."</td>\n";
+	echo "<td align='right' align='right'>&nbsp;</td>\n";
 	echo "<td align='right' width='42'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

@@ -512,7 +512,37 @@ function confirmdelete(url) {
 	<tr>
 	<td></td>
 	<td align='left' valign='middle' nowrap>
-		<a href='/'><img src='<!--{project_path}-->/themes/classic/logo.png' /></a>
+		<table border='0' cellpadding='0' cellspacing='0' width='100%'>
+			<tr>
+				<td>
+					<a href='/'><img src='<!--{project_path}-->/themes/enhanced/logo.png' /></a>
+				</td>
+				<?php
+				if (ifgroup("superadmin") && count($_SESSION['domains']) > 1) {
+					//$tmp_style = "style=\"opacity:0.7;filter:alpha(opacity=70)\" ";
+					//$tmp_style .= "onmouseover=\"this.style.opacity=1;this.filters.alpha.opacity=90\" ";
+					//$tmp_style .= "onmouseout=\"this.style.opacity=0.7;this.filters.alpha.opacity=70\" ";
+					$tmp_style = "style=\"opacity:0.7;\" ";
+					$tmp_style .= "onmouseover=\"this.style.opacity=1;\" ";
+					$tmp_style .= "onmouseout=\"this.style.opacity=0.7;\" ";
+					echo "	<td class=\"\" align='right' valign='middle'>\n";
+					echo "		<select id='v_id' name='v_id' class='formfld' onchange=\"window.location='/core/system_settings/v_system_settings.php?v_id='+this.value+'&domain_change=true';\" $tmp_style>\n";
+					echo "		<option value=''></option>\n";
+					foreach($_SESSION['domains'] as $row) {
+						if ($row['v_id'] == $v_id) {
+							echo "	<option value='".$row['v_id']."' selected='selected'>".$row['domain']."</option>\n";
+						}
+						else {
+							echo "	<option value='".$row['v_id']."'>".$row['domain']."</option>\n";
+						}
+					}
+					echo "	</select>\n";
+					echo "	</td>\n";
+					unset($tmp_style);
+				}
+				?>
+			</tr>
+		</table>
 	</td>
 	</tr>
 	<tr>
