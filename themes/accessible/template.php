@@ -19,7 +19,6 @@
 <style type='text/css'>
 
 img {
-	/*behavior: url('<!--{project_path}-->/includes/png.htc');*/
 	border: none;
 }
 
@@ -429,7 +428,7 @@ function confirmdelete(url) {
 					$tmp_style .= "onmouseover=\"this.style.opacity=1;\" ";
 					$tmp_style .= "onmouseout=\"this.style.opacity=0.7;\" ";
 					echo "	<td class=\"\" align='right' valign='middle'>\n";
-					echo "		<select id='v_id' name='v_id' class='formfld' onchange=\"window.location='/core/system_settings/v_system_settings.php?v_id='+this.value+'&domain_change=true';\" $tmp_style>\n";
+					echo "		<select id='v_id' name='v_id' class='formfld' onchange=\"window.location='".PROJECT_PATH."/core/system_settings/v_system_settings.php?v_id='+this.value+'&domain_change=true';\" $tmp_style>\n";
 					echo "		<option value=''></option>\n";
 					foreach($_SESSION['domains'] as $row) {
 						if ($row['v_id'] == $v_id) {
