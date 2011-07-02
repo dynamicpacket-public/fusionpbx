@@ -45,7 +45,7 @@ session_start();
 		//if the username from the form is not provided then send to login.php
 			if (strlen(check_str($_POST["username"])) == 0) {
 				$strphpself = $_SERVER["PHP_SELF"];
-				$msg = "Please provide a username.";
+				$msg = "username required";
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($strphpself)."&msg=".urlencode($msg));
 				exit;
 			}
@@ -70,7 +70,7 @@ session_start();
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$_POST["username"]);
 				closelog();
 
-				$msg = "Username or Password were incorrect. Please try again.";
+				$msg = "incorrect account information";
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($strphpself)."&msg=".urlencode($msg));
 				exit;
 			}

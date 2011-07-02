@@ -39,7 +39,35 @@ if (strlen($msg) > 0) {
 	echo "<th align='left'>Message</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td class='rowstyle1'><strong>$msg</strong></td>\n";
+	echo "<td class='rowstyle1'>\n";
+
+	switch ($msg) {
+		case "username required":
+			echo "<strong>Please provide a username.</strong>";
+			break;
+		case "incorrect account information":
+		   echo "<strong>The username or password was incorrect. Please try again.</strong>";
+			break;
+		case "install complete":
+			echo "<br />\n";
+			echo "Installation is complete. <br />";
+			echo "<br /> ";
+			echo  "<strong>Getting Started:</strong><br /> ";
+			echo "<ul><li>There are two levels of admins 1. superadmin 2. admin.<br />";
+			echo "<br />\n";
+			echo "username: <strong>superadmin</strong> <br />password: <strong>fusionpbx</strong> <br />\n";
+			echo "<br />\n";
+			echo "username: <strong>admin</strong> <br />password: <strong>fusionpbx</strong> <br/><br/>\n";
+			echo "</li>\n";
+			echo "<li>\n";
+			echo "The database connection settings have been saved to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php.<br />\n";
+			echo "</li>\n";
+			echo "</ul>\n";
+			echo "<strong>\n";
+			break;
+	}
+
+	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</div>\n";

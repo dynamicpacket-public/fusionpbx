@@ -897,20 +897,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$_SESSION["reload_xml"] = false;
 
 	//redirect to the login page
-		$msg = "</strong><br />\n";
-		$msg .= "Installation is complete. <br />";
-		$msg .= "<br /> ";
-		$msg .= "<strong>Getting Started:</strong><br /> ";
-		$msg .= "<ul><li>There are two levels of admins 1. superadmin 2. admin.<br />";
-		$msg .= "<br />\n";
-		$msg .= "username: <strong>superadmin</strong> <br />password: <strong>fusionpbx</strong> <br />\n";
-		$msg .= "<br />\n";
-		$msg .= "username: <strong>admin</strong> <br />password: <strong>fusionpbx</strong> <br/><br/>\n";
-		$msg .= "</li>\n";
-		$msg .= "<li>\n";
-		$msg .= "The database connection settings have been saved to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php.<br />\n";
-		$msg .= "</li>\n";
-		$msg .= "</ul><strong>\n";
+		$msg = "install complete";
 		header("Location: ".PROJECT_PATH."/login.php?msg=".urlencode($msg));
 }
 
