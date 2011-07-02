@@ -335,14 +335,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 			exit;
 		}
 
-	//get the list of installed apps from the core and mod directories
-		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
-		$x=0;
-		foreach ($config_list as &$config_path) {
-			include($config_path);
-			$x++;
-		}
-
 	//create the sqlite database
 			if ($db_type == "sqlite") {
 				//sqlite database will be created when the config.php is loaded and only if the database file does not exist
@@ -688,6 +680,14 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$sql .= "where v_id = '$v_id' ";
 		$db_tmp->exec($sql);
 		unset($sql);
+
+	//get the list of installed apps from the core and mod directories
+		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+		$x=0;
+		foreach ($config_list as &$config_path) {
+			include($config_path);
+			$x++;
+		}
 
 	//assign the default permissions to the groups
 		$db_tmp->beginTransaction();
