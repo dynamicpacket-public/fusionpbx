@@ -684,7 +684,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//get the list of installed apps from the core and mod directories
 		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
 		$x=0;
-		foreach ($config_list as &$config_path) {
+		foreach ($config_list as $config_path) {
 			include($config_path);
 			$x++;
 		}

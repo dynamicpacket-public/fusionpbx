@@ -383,7 +383,7 @@ function build_menu() {
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_hunt_group.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_hunt_group_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_hunt_group_destinations.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_hunt_group_destinations_edit.php") { $menu_selected = true; }	
+		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_hunt_group_destinations_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_auto_attendant.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_auto_attendant_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $v_relative_url."/v_auto_attendant_options_edit.php") { $menu_selected = true; }
@@ -4420,7 +4420,7 @@ function sync_package_v_dialplan_includes() {
 		$result2 = $prepstatement2->fetchAll(PDO::FETCH_NAMED);
 		$resultcount2 = count($result2);
 		unset ($prepstatement2, $sql);
-		
+
 		//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
 			$details = '';
 			$previous_tag = '';
@@ -4627,7 +4627,7 @@ function sync_package_v_public_includes() {
 	global $db, $v_id;
 
 	//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
-		$v_needle = 'v_public_';
+		$v_needle = '_v_';
 		if($dh = opendir($v_dialplan_public_dir."/")) {
 			$files = Array();
 			while($file = readdir($dh)) {
@@ -4647,7 +4647,8 @@ function sync_package_v_public_includes() {
 	//loop through all the public includes aka inbound routes
 		$sql = "";
 		$sql .= "select * from v_public_includes ";
-		$sql .= "where enabled = 'true' ";
+		$sql .= "where v_id = $v_id ";
+		$sql .= "and enabled = 'true' ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
@@ -4771,12 +4772,7 @@ function sync_package_v_public_includes() {
 			$extension_name = str_replace(" ", "_", $extension_name);
 			$extension_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension_name);
 
-			if (count($_SESSION["domains"]) > 1) {
-				$public_include_filename = $public_order."_v_public_".$_SESSION['domains'][$row['v_id']]['domain'].'_'.$extension_name.".xml";
-			}
-			else {
-				$public_include_filename = $public_order."_v_public_".$extension_name.".xml";
-			}
+			$public_include_filename = $public_order."_v_".$extension_name.".xml";
 			$fout = fopen($v_dialplan_public_dir."/".$public_include_filename,"w");
 			fwrite($fout, $tmp);
 			fclose($fout);

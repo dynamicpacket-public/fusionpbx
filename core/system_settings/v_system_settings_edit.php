@@ -322,56 +322,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 			} //if ($action == "update")
 
-			//if there are no items in the menu then add the default menu
-				$sql = "SELECT * FROM v_menu where v_id = '$v_id' ";
-				$prepstatement = $db->prepare(check_sql($sql));
-				if ($prepstatement) {
-					$prepstatement->execute();
-					$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						require_once "includes/classes/menu_restore.php";
-						$menu_restore = new menu_restore;
-						$menu_restore->db = $db;
-						$menu_restore->v_id = $v_id;
-						$menu_restore->restore();
-					}
-				}
-				unset($prepstatement, $result);
-
-			//if the are no groups add the default groups
-				$sql = "SELECT * FROM v_groups where v_id = '$v_id' ";
-				$result = $db->query($sql)->fetch();
-				$prepstatement = $db->prepare(check_sql($sql));
-				if ($prepstatement) {
-					$prepstatement->execute();
-					$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-					if (count($result) == 0) {
-						$sql = "INSERT INTO v_groups (v_id, groupid, groupdesc) VALUES ($v_id,'hidden','Hidden Group hides items in the menu');"; $db->exec(check_sql($sql));
-						$sql = "INSERT INTO v_groups (v_id, groupid, groupdesc) VALUES ($v_id,'user','User Group');"; $db->exec(check_sql($sql));
-						$sql = "INSERT INTO v_groups (v_id, groupid, groupdesc) VALUES ($v_id,'agent','Call Center Agent Group');"; $db->exec(check_sql($sql));
-						$sql = "INSERT INTO v_groups (v_id, groupid, groupdesc) VALUES ($v_id,'admin','Administrator Group');"; $db->exec(check_sql($sql));
-						$sql = "INSERT INTO v_groups (v_id, groupid, groupdesc) VALUES ($v_id,'superadmin','Super Administrator Group');"; $db->exec(check_sql($sql));
-					}
-				}
-				unset($prepstatement, $result);
-
-			//check if the recordings and disa dialplan entries exist
-				require_once "includes/v_dialplan_entry_exists.php";
-
-			//if the extensions directory doesn't exist then create it
-				if (!is_dir($v_extensions_dir)) { mkdir($v_extensions_dir,0777,true); }
-
-			//get the list of installed apps from the core and mod directories
-				$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_defaults.php");
-				foreach ($default_list as &$default_path) {
-					include($default_path);
-				}
+			//upgrade the database schema and ensure necessary files and directories exist
+				$display_results = false;
+				require_once "core/upgrade/upgrade_schema.php";
 
 			//clear the domains session array so that it is updated
 				unset($_SESSION["domains"]);
-
-			//synchronize the xml config
-				sync_package_v_dialplan_includes();
 
 			//redirect the user
 				require_once "includes/header.php";
