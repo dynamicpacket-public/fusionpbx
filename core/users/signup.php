@@ -96,7 +96,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	//username is already used.
 	if (strlen($username) == 0) {
-		$msgerror .= "Please provid a Username.<br>\n";
+		$msgerror .= "Please provide a Username.<br>\n";
 	}
 	else {
 		$sql = "SELECT * FROM v_users ";
