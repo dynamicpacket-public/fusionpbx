@@ -102,6 +102,7 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo thorderby('extension', 'Extension', $orderby, $order);
+	echo thorderby('callgroup', 'Call Group', $orderby, $order);
 	echo thorderby('vm_mailto', 'Voicemail Mail To', $orderby, $order);
 	echo thorderby('enabled', 'Enabled', $orderby, $order);
 	echo thorderby('description', 'Description', $orderby, $order);
@@ -118,6 +119,7 @@ require_once "includes/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['extension']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['callgroup']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['vm_mailto']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['enabled']."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
