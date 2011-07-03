@@ -52,7 +52,7 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo "<td colspan='2' align='left'>\n";
 
-echo "Phones in this list are automatcally added to the list when they contact the provisioning \n";
+echo "Phones in this list are automatically added to the list when they contact the provisioning \n";
 echo "server or added manually by an administrator. \n";
 echo "Items in this list can be assigned from the extensions page.<br /><br />\n";
 echo "</td>\n";
