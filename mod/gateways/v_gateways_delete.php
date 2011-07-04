@@ -35,10 +35,46 @@ else {
 }
 
 if (count($_GET)>0) {
-	$id = $_GET["id"];
+	if (is_numeric($_GET["id"])) {
+		$id = $_GET["id"];
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 }
 
 if (strlen($id)>0) {
+
+	//get the gateway name
+		$sql = "";
+		$sql .= "select * from v_gateways ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and gateway_id = '$id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll();
+		foreach ($result as &$row) {
+			$gateway = $row["gateway"];
+			break; //limit to 1 row
+		}
+		unset ($prepstatement);
+
+	//create the event socket connection and stop the gateway
+		if (!$fp) {
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		}
+		if ($fp) {
+			//send the api gateway stop command over event socket
+				if (count($_SESSION["domains"]) > 1) {
+					$tmp_cmd = 'api sofia profile external killgw '.$v_domain.'-'.$gateway;
+				}
+				else {
+					$tmp_cmd = 'api sofia profile external killgw '.$gateway;
+				}
+				$response = event_socket_request($fp, $tmp_cmd);
+				unset($tmp_cmd);
+		}
 
 	//delete gateway
 		$sql = "";
@@ -87,8 +123,10 @@ if (strlen($id)>0) {
 		sync_package_v_dialplan_includes();
 
 	//rescan the external profile to look for new or stopped gateways
-		//create the event socket connection
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		//create the event socket connection and send a command
+			if (!$fp) {
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			}
 			if ($fp) {
 				//send the api commandover event socket
 					$tmp_cmd = 'api sofia profile external rescan';
