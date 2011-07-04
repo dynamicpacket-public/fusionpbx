@@ -85,13 +85,13 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$msgerror = '';
 
 	//--- begin captcha verification ---------------------
-	  //session_start(); //make sure sessions are started
-	  if (strtolower($_SESSION["captcha"]) != strtolower($_REQUEST["captcha"]) || strlen($_SESSION["captcha"]) == 0) {
-		//$msgerror .= "Captcha Verification Failed<br>\n";
-	  }
-	  else {
-		  //echo "verified";
-	  }
+		//session_start(); //make sure sessions are started
+		if (strtolower($_SESSION["captcha"]) != strtolower($_REQUEST["captcha"]) || strlen($_SESSION["captcha"]) == 0) {
+			//$msgerror .= "Captcha Verification Failed<br>\n";
+		}
+		else {
+			//echo "verified";
+		}
 	//--- end captcha verification -----------------------
 
 	//username is already used.
@@ -274,24 +274,32 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='90%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr>\n";
 	echo "	<td align=\"left\">\n";
 	echo "      <br>";
 
 	$tablewidth ='width="100%"';
 	echo "<form method='post' action=''>";
-
-	echo "<b>To sign up as a member, please fill out this form completely. All fields are required. </b><br>";
 	echo "<div class='borderlight' style='padding:10px;'>\n";
-	echo "<table $tablewidth cellpadding='6' cellspacing='0'>";
 
+	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
+	echo "	<tr>\n";
+	echo "		<td width='80%'>\n";
+	echo "			<b>To sign up as a user, please fill out this form completely. All fields are required. </b><br>";
+	echo "		</td>\n";
+	echo "		<td width='20%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='back' alt='back' onclick=\"window.history.back()\" value='Back'>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
+	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
 	if (ifgroup("superadmin")) {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncellreq\" style='text-align: left;'>\n";
 		echo "		Domain: \n";
 		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
+		echo "	<td colspan='2' class=\"vtable\">\n";
 		echo "		<select id='v_id' name='v_id' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		foreach($_SESSION['domains'] as $row) {
@@ -311,7 +319,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq' width='40%'>Username:</td>";
-	echo "		<td  class='vtable' width='60%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
+	echo "		<td class='vtable' width='60%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -320,7 +328,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>Confirm Password:</td>";
-	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
+	echo "		<td class='vtable><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>First Name:</td>";
