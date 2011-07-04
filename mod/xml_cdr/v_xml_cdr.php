@@ -125,13 +125,13 @@ else {
 
 	//search the call detail records
 		if (ifgroup("admin") || ifgroup("superadmin")) {
-			echo "<form method='post' action=''>";
-			echo "<table width='95%' cellpadding='3' border='0'>";
-			echo "<tr>";
+			echo "<form method='post' action=''>\n";
+			echo "<table width='95%' cellpadding='3' border='0'>\n";
+			echo "<tr>\n";
 			echo "<td width='33.3%'>\n";
-				echo "<table width='100%' border='0'>";
-				echo "	<tr>";
-				echo "		<td align='left' width='25%'>Direction:</td>";
+				echo "<table width='100%' border='0'>\n";
+				echo "	<tr>\n";
+				echo "		<td align='left' width='25%'>Direction:</td>\n";
 				echo "		<td align='left' width='75%'>\n";
 				echo "			<select name='direction' style='width:100%' class='formfld'>\n";
 				echo "			<option value=''>                                </option>\n";
@@ -154,28 +154,28 @@ else {
 					echo "			<option value='local'>local</option>\n";
 				}
 				echo "			</select>\n";
-				echo "		</td>";
-				echo "	</tr>";
+				echo "		</td>\n";
+				echo "	</tr>\n";
 
-				echo "	<tr>";
-				echo "		<td>CID Name:</td>";
-				echo "		<td><input type='text' class='formfld' name='caller_id_name' style='width:100%' value='$caller_id_name'></td>";
-				echo "	</tr>";
+				echo "	<tr>\n";
+				echo "		<td>CID Name:</td>\n";
+				echo "		<td><input type='text' class='formfld' name='caller_id_name' style='width:100%' value='$caller_id_name'></td>\n";
+				echo "	</tr>\n";
 
 				echo "</table>\n";
 
 			echo "</td>\n";
 			echo "<td width='33.3%'>\n";
 
-				echo "<table width='100%'>";
-				echo "	<tr>";
-				echo "		<td align='left' width='25%'>Source:</td>";
-				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='caller_id_number' style='width:100%' value='$caller_id_number'></td>";
-				echo "	</tr>";
-				echo "	<tr>";
-				echo "		<td align='left' width='25%'>Destination:</td>";
-				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='destination_number' style='width:100%' value='$destination_number'></td>";
-				echo "	</tr>";	
+				echo "<table width='100%'>\n";
+				echo "	<tr>\n";
+				echo "		<td align='left' width='25%'>Source:</td>\n";
+				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='caller_id_number' style='width:100%' value='$caller_id_number'></td>\n";
+				echo "	</tr>\n";
+				echo "	<tr>\n";
+				echo "		<td align='left' width='25%'>Destination:</td>\n";
+				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='destination_number' style='width:100%' value='$destination_number'></td>\n";
+				echo "	</tr>\n";
 				echo "</table>\n";
 
 			echo "</td>\n";
@@ -195,34 +195,68 @@ else {
 				//echo "		<td><input type='text' class='formfld' name='end_stamp' style='width:100%' value='$end_stamp'></td>";
 				//echo "	</tr>";
 
-				echo "	<tr>";
-				echo "		<td align='left' width='25%'>Start:</td>";
-				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='start_stamp' style='width:100%' value='$start_stamp'></td>";
-				echo "	</tr>";
+				echo "	<tr>\n";
+				echo "		<td align='left' width='25%'>Start:</td>\n";
+				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='start_stamp' style='width:100%' value='$start_stamp'></td>\n";
+				echo "	</tr>\n";
 
-				echo "	<tr>";
-				echo "		<td align='left' width='25%'>Status:</td>";
+				echo "	<tr>\n";
+				echo "		<td align='left' width='25%'>Status:</td>\n";
 				echo "		<td align='left' width='75%'>\n";
 				echo "			<select name=\"hangup_cause\" style='width:100%' class='formfld'>\n";
-				echo "			<option value=\"\"></option>\n";
+				echo "			<option value='".$hangup_cause."' selected='selected'>".$hangup_cause."</option>\n";
+				if (strlen($hangup_cause) > 0) {
+					echo "			<option value=''></option>\n";
+				}
+				echo "			<option value='NORMAL_CLEARING'>NORMAL_CLEARING</option>\n";
+				echo "			<option value='ORIGINATOR_CANCEL'>ORIGINATOR_CANCEL</option>\n";
+				echo "			<option value='BLIND_TRANSFER'>BLIND_TRANSFER</option>\n";
+				echo "			<option value='LOSE_RACE'>LOSE_RACE</option>\n";
+				echo "			<option value='NO_ANSWER'>NO_ANSWER</option>\n";
+				echo "			<option value='NORMAL_UNSPECIFIED'>NORMAL_UNSPECIFIED</option>\n";
+				echo "			<option value='NO_USER_RESPONSE'>NO_USER_RESPONSE</option>\n";
+				echo "			<option value='NO_ROUTE_DESTINATION'>NO_ROUTE_DESTINATION</option>\n";
+				echo "			<option value='SUBSCRIBER_ABSENT'>SUBSCRIBER_ABSENT</option>\n";
+				echo "			<option value='NORMAL_TEMPORARY_FAILURE'>NORMAL_TEMPORARY_FAILURE</option>\n";
+				echo "			<option value='ATTENDED_TRANSFER'>ATTENDED_TRANSFER</option>\n";
+				echo "			<option value='PICKED_OFF'>PICKED_OFF</option>\n";
+				echo "			<option value='USER_BUSY'>USER_BUSY</option>\n";
+				echo "			<option value='CALL_REJECTED'>CALL_REJECTED</option>\n";
+				echo "			<option value='INVALID_NUMBER_FORMAT'>INVALID_NUMBER_FORMAT</option>\n";
+				echo "			<option value='NETWORK_OUT_OF_ORDER'>NETWORK_OUT_OF_ORDER</option>\n";
+				echo "			<option value='DESTINATION_OUT_OF_ORDER'>DESTINATION_OUT_OF_ORDER</option>\n";
+				echo "			<option value='RECOVERY_ON_TIMER_EXPIRE'>RECOVERY_ON_TIMER_EXPIRE</option>\n";
+				echo "			<option value='MANAGER_REQUEST'>MANAGER_REQUEST</option>\n";
+				echo "			<option value='MEDIA_TIMEOUT'>MEDIA_TIMEOUT</option>\n";
+				echo "			<option value='UNALLOCATED_NUMBER'>UNALLOCATED_NUMBER</option>\n";
+				echo "			<option value='NONE'>NONE</option>\n";
+				echo "			<option value='EXCHANGE_ROUTING_ERROR'>EXCHANGE_ROUTING_ERROR</option>\n";
+				echo "			<option value='ALLOTTED_TIMEOUT'>ALLOTTED_TIMEOUT</option>\n";
+				echo "			<option value='CHAN_NOT_IMPLEMENTED'>CHAN_NOT_IMPLEMENTED</option>\n";
+				echo "			<option value='INCOMPATIBLE_DESTINATION'>INCOMPATIBLE_DESTINATION</option>\n";
+				echo "			<option value='USER_NOT_REGISTERED'>USER_NOT_REGISTERED</option>\n";
+				echo "			<option value='SYSTEM_SHUTDOWN'>SYSTEM_SHUTDOWN</option>\n";
+				echo "			<option value='MANDATORY_IE_MISSING'>MANDATORY_IE_MISSING</option>\n";
+				/*
 				$sql = "";
 				$sql .= "select distinct(hangup_cause) from v_xml_cdr ";
 				$sql .= "where v_id = '$v_id' ";
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
-				$result = $prepstatement->fetchAll();
+				$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($result as &$row) {
 					if ($row["hangup_cause"] == $hangup_cause) {
-						echo "			<option value=\"".$row["hangup_cause"]."\" selected='selected'>".$row["hangup_cause"]."</option>\n";
+						echo "			<option value='".$row["hangup_cause"]."' selected='selected'>".$row["hangup_cause"]."</option>\n";
 					}
 					else {
-						echo "			<option value=\"".$row["hangup_cause"]."\">".$row["hangup_cause"]."</option>\n";
+						echo "			<option value='".$row["hangup_cause"]."'>".$row["hangup_cause"]."</option>\n";
 					}
 				}
 				unset ($prepstatement);
-				echo "			</select>";
+				*/
+				echo "			</select>\n";
 				echo "		</td>\n";
-				echo "	</tr>";
+				echo "	</tr>\n";
 
 				//echo "	<tr>";
 				//echo "		<td align='left' width='25%'>Duration:</td>";
@@ -309,7 +343,7 @@ else {
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$x = 0;
-	$result = $prepstatement->fetchAll();
+	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		$extension_array[$x]['extension_id'] = $row["extension_id"];
 		$extension_array[$x]['extension'] = $row["extension"];
@@ -422,13 +456,16 @@ else {
 	//echo thorderby('direction', 'Direction', $orderby, $order);
 	//echo thorderby('default_language', 'Language', $orderby, $order);
 	//echo thorderby('context', 'Context', $orderby, $order);
+	//echo thorderby('leg', 'Leg', $orderby, $order);
 	echo thorderby('caller_id_name', 'Name', $orderby, $order);
 	echo thorderby('caller_id_number', 'Number', $orderby, $order);
 	echo thorderby('destination_number', 'Destination', $orderby, $order);
 	echo thorderby('start_stamp', 'Start', $orderby, $order);
 	//echo thorderby('end_stamp', 'End', $orderby, $order);
 	echo thorderby('duration', 'Length', $orderby, $order);
-	if (ifgroup("admin") || ifgroup("superadmin")) echo thorderby('pdd_ms', 'PDD', $orderby, $order);
+	if (ifgroup("admin") || ifgroup("superadmin")) { 
+		echo thorderby('pdd_ms', 'PDD', $orderby, $order); 
+	}
 	echo thorderby('hangup_cause', 'Status', $orderby, $order);
 	echo "</tr>\n";
 
@@ -456,8 +493,9 @@ else {
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['direction']."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['default_language']."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['context']."</td>\n";
+			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['leg']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>";
-			
+
 			$tmp_dir = $v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
 			if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
@@ -513,19 +551,18 @@ else {
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['end_stamp']."</td>\n";
 			
-			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];//If they cancelled, show the ring time, not the bill time.
+			//If they cancelled, show the ring time, not the bill time.
+			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
+
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
 			if (ifgroup("admin") || ifgroup("superadmin")) {
 				echo "	<td valign='top' class='".$rowstyle[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 				echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
-				//echo "	<td valign='top' align='right' width='50px'>\n";
-				//echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_xml_cdr_edit.php?id=".$row['xml_cdr_id']."'\" value='  >  '>\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
 			}
 			else {
 				echo "	<td valign='top' class='".$rowstyle[$c]."'>".$hangup_cause."</td>\n";
 			}
+			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $rowcount);

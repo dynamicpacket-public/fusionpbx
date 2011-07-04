@@ -50,6 +50,9 @@
 	set_time_limit(3600);
 	ini_set('memory_limit', '256M');
 
+//set pdo attribute that enables exception handling
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 	//set global variable
 		global $debug;
@@ -65,13 +68,16 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 	//get the variables from the xml & build a list of variable to save:
 	//This is an array where the variable in the xml_cdr is THE SAME as the column name.
 	$variables_named=array('uuid','domain_name','accountcode','default_language',
-			'start_epoch','start_stamp','start_uepoch',
-			'answer_stamp','answer_epoch','answer_uepoch','end_epoch',
-			'end_uepoch','end_stamp',
+			'start_epoch','start_stamp',
+			'answer_stamp','answer_epoch','end_epoch',
+			'end_stamp',
 			'duration','mduration','billsec','billmsec',
 			'bridge_uuid',
-			'read_codec','write_codec','remote_media_ip','hangup_cause','hangup_cause_q850',
-			'last_app','sip_hangup_disposition'
+			'digits_dialed',
+			'read_codec','read_rate','write_codec','write_rate','remote_media_ip','hangup_cause','hangup_cause_q850',
+			'cc_side','cc_member_uuid','cc_queue_joined_epoch','cc_queue','cc_member_session_uuid','cc_agent','cc_agent_type',
+			'last_app','last_arg','sip_hangup_disposition',
+			'conference_name','conference_uuid','conference_member_id'
 			);
 		//set the $variable so we can use it.
 		foreach($variables_named as $var){
@@ -92,17 +98,21 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			$x++;
 		}
 		unset($x);
-		array_push($variables_named, 'destination_number','context','network_addr','caller_id_name','caller_id_number');
+		$variables_named[] = 'destination_number';
+		$variables_named[] = 'context';
+		$variables_named[] = 'network_addr';
+		$variables_named[] = 'caller_id_name';
+		$variables_named[] = 'caller_id_number';
 
 	//Store the call leg.
 	$variables_named[]='leg';
 
 	//Store the call direction.
-		$variables_named[]='direction';
+		$variables_named[] = 'direction';
 		$direction = check_str(urldecode($xml->variables->call_direction));
 
 	//Store PDD, Post Dial Delay, in milliseconds.
-		$variables_named[]='pdd_ms';
+		$variables_named[] = 'pdd_ms';
 		$pdd_ms = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
 
 	//get break down the date to year, month and day
@@ -112,10 +122,15 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 		$tmp_day = date("d", $tmp_time);
 
 	//find the v_id by using the domain
-		if (strlen($domain_name) == 0) { $domain_name = $_SERVER["HTTP_HOST"]; }
+		$domain = check_str(urldecode($xml->variables->{$domain}));
 		$sql = "";
 		$sql .= "select v_id, v_recordings_dir from v_system_settings ";
-		$sql .= "where v_domain = '".$domain_name."' ";
+		if (strlen($domain) == 0 && $context != 'public' && $context != 'default') {
+			$sql .= "where v_domain = '".$context."' ";
+		}
+		else {
+			$sql .= "where v_domain = '".$domain."' ";
+		}
 		$row = $db->query($sql)->fetch();
 		$v_id = $row['v_id'];
 		$v_recordings_dir = $row['v_recordings_dir'];
@@ -159,51 +174,67 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 			$variables_named[]='xml_cdr';
 		}
 
-	//if xml_cdr_archive is set to dir, then store it.
-		elseif ($xml_cdr_archive == "dir") {
-			if (strlen($uuid) > 0) {
-				$tmp_time = strtotime($start_stamp);
-				$tmp_year = date("Y", $tmp_time);
-				$tmp_month = date("M", $tmp_time);
-				$tmp_day = date("d", $tmp_time);
-				$tmp_dir = $v_log_dir.'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-				mkdir($tmp_dir, 0777, true);
-				$tmp_file = $uuid.'.xml';
-				$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-				fwrite($fh, $xml_string);
-				fclose($fh);
-			}
-		}
-
 	//insert xml_cdr into the db
 		//build the insert string
 		$count=count($variables_named);
 		$name=$value='';
 		for($i=0;$i<$count;$i++){
-			$name	.=$variables_named[$i].",";
-			$values	.="'".${$variables_named[$i]}."',";
+			if (strlen(${$variables_named[$i]}) > 0) {
+				$name	.= $variables_named[$i].",";
+				$values	.= "'".${$variables_named[$i]}."',";
+			}
 			//if($i+1<$count) {$name	.=",";$values	.=",";}
 			}
 		$sql = 'insert into v_xml_cdr ('.substr($name,0,-1).') values ('.substr($values,0,-1).')';//substr to strip the extra , off the end.
 
-		//insert the values
-		try {
-			
-			if (strlen($uuid) > 0) {
-				if ($debug) {
-					$time5_insert=microtime(true);
-					echo $sql."<br />\n";
-					}
-				$db->exec(check_sql($sql));
-				if ($debug) {
-					GLOBAL $insert_time,$insert_count;
-					$insert_time+=microtime(true)-$time5_insert;//add this current query.
-					$insert_count++;
-					}
+	//insert the values
+		if (strlen($uuid) > 0) {
+			if ($debug) {
+				$time5_insert=microtime(true);
+				echo $sql."<br />\n";
 			}
-		}
-		catch(Exception $e) {
-			echo $e->getMessage();
+			try {
+				$error = "false";
+				$db->exec(check_sql($sql));
+			}
+			catch(PDOException $e) {
+				$tmp_dir = $v_log_dir.'/xml_cdr/failed/';
+				if(!file_exists($tmp_dir)) {
+					mkdir($tmp_dir, 0777, true);
+				}
+				$tmp_file = $uuid.'.xml';
+				$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+				fwrite($fh, $xml_string);
+				fclose($fh);
+				if ($debug) {
+					echo $e->getMessage();
+				}
+				$error = "true";
+			}
+			//if xml_cdr_archive is set to dir, then store it.
+			if ($xml_cdr_archive == "dir" && $error != "true") {
+				if (strlen($uuid) > 0) {
+					$tmp_time = strtotime($start_stamp);
+					$tmp_year = date("Y", $tmp_time);
+					$tmp_month = date("M", $tmp_time);
+					$tmp_day = date("d", $tmp_time);
+					$tmp_dir = $v_log_dir.'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+					if(!file_exists($tmp_dir)) {
+						mkdir($tmp_dir, 0777, true);
+					}
+					$tmp_file = $uuid.'.xml';
+					$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+					fwrite($fh, $xml_string);
+					fclose($fh);
+				}
+			}
+			unset($error);
+	
+			if ($debug) {
+				GLOBAL $insert_time,$insert_count;
+				$insert_time+=microtime(true)-$time5_insert;//add this current query.
+				$insert_count++;
+			}
 		}
 		unset($sql);
 }
