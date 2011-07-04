@@ -117,19 +117,23 @@ if (count($_POST)>0) {
 			echo "".$sql."<br /><br />";
 
 			if (strlen($sql) > 0) {
-				$prepstatement = $db->prepare(check_sql($sql));
-				if ($prepstatement) { 
+				$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				try {
+					$prepstatement = $db->prepare(check_sql($sql));
 					$prepstatement->execute();
 					$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
+					echo "<b>Results: ".count($result)."</b><br />";
 				}
-				else {
-					echo "<b>Error:</b>\n";
-					echo "<pre>\n";
-					print_r($db->errorInfo());
-					echo "</pre>\n";
+				catch(PDOException $e) {
+					echo "<b>Error:</b><br />\n";
+					echo "<table>\n";
+					echo "<tr>\n";
+					echo "<td>\n";
+					echo $e->getMessage();
+					echo "</td>\n";
+					echo "</tr>\n";
+					echo "</table>\n";
 				}
-
-				echo "<b>Results: ".count($result)."</b><br />";
 
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				$x = 0;
