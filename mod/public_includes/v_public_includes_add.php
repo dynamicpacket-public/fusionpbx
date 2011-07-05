@@ -564,7 +564,7 @@ if (field_type == "action_application_2") {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<table style='width: 60%;' border='0'>\n";
 		echo "	<tr>\n";
-		echo "	<td style='width: 62px;'>Field</td>\n";
+		echo "	<td style='width: 62px;'>Field:</td>\n";
 		echo "	<td style='width: 35%;'>\n";
 
 		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='type_onchange(\"condition_field_1\");' style='width:100%'>\n";
@@ -588,7 +588,7 @@ if (field_type == "action_application_2") {
 		echo "    </select><br />\n";
 
 		echo "	</td>\n";
-		echo "	<td style='width: 73px;'>&nbsp; Expression</td>\n";
+		echo "	<td style='width: 73px;'>&nbsp; Expression:</td>\n";
 		echo "	<td>\n";
 		echo "		<input class='formfld' type='text' name='condition_expression_1' maxlength='255' style='width:100%' value=\"$condition_expression_1\">\n";
 		echo "	</td>\n";
@@ -600,7 +600,7 @@ if (field_type == "action_application_2") {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Condition 2\n";
+		echo "	Condition 2:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
