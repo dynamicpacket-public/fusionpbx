@@ -56,7 +56,6 @@
 		}
 	}
 
-
 	if (!function_exists('recursive_copy')) {
 		function recursive_copy($src,$dst) {
 			$dir = opendir($src);
@@ -82,17 +81,18 @@
 		}
 	}
 
-
 	if (!function_exists('ifgroup')) {
 		function ifgroup($group) {
 			//set default false
 				$result = false;
 			//search for the permission
-				foreach($_SESSION["groups"] as $row) {
-					if ($row['groupid'] == $group) {
-						$result = true;
-						break;
-					}				
+				if (count($_SESSION["groups"]) > 0) {
+					foreach($_SESSION["groups"] as $row) {
+						if ($row['groupid'] == $group) {
+							$result = true;
+							break;
+						}
+					}
 				}
 			//return the result
 				return $result;
@@ -104,11 +104,13 @@
 			//set default false
 				$result = false;
 			//search for the permission
-				foreach($_SESSION["permissions"] as $row) {
-					if ($row['permission_id'] == $permission) {
-						$result = true;
-						break;
-					}				
+				if (count($_SESSION["permissions"]) > 0) {
+					foreach($_SESSION["permissions"] as $row) {
+						if ($row['permission_id'] == $permission) {
+							$result = true;
+							break;
+						}
+					}
 				}
 			//return the result
 				return $result;
@@ -136,7 +138,6 @@
 		}
 	}
 
-
 	if (!function_exists('ifgroupmember')) {
 		function ifgroupmember($groupmemberlist, $group) {
 			if (stripos($groupmemberlist, "||".$group."||") === false) {
@@ -147,7 +148,6 @@
 			}
 		}
 	}
-
 
 	if (!function_exists('superadminlist')) {
 		function superadminlist($db) {
@@ -181,7 +181,6 @@
 			}
 		}
 	}
-
 
 	if (!function_exists('htmlselectother')) {
 		function htmlselectother($db, $tablename, $fieldname, $sqlwhereoptional, $fieldcurrentvalue) {
@@ -280,7 +279,6 @@
 	}
 	//$tablename = 'v_templates'; $fieldname = 'templatename'; $sqlwhereoptional = "where v_id = '$v_id' "; $fieldcurrentvalue = '';
 	//echo htmlselect($db, $tablename, $fieldname, $sqlwhereoptional, $fieldcurrentvalue);
-
 
 	if (!function_exists('htmlselectonchange')) {
 		function htmlselectonchange($db, $tablename, $fieldname, $sqlwhereoptional, $fieldcurrentvalue, $onchange, $fieldvalue = '') {
@@ -386,7 +384,6 @@
 	//$logtype = ''; $logstatus=''; $logadduser=''; $logdesc='';
 	//logadd($db, $logtype, $logstatus, $logdesc, $logadduser, $_SERVER["REMOTE_ADDR"]);
 
-
 	if (!function_exists('get_ext')) {
 		function get_ext($filename) {
 			preg_match('/[^?]*/', $filename, $matches);
@@ -409,7 +406,6 @@
 		//echo "ext: ".get_ext('test.txt');
 	}
 
-
 	if (!function_exists('fileupload')) {
 			function fileupload($field = '', $file_type = '', $dest_dir = '') {
 
@@ -426,12 +422,12 @@
 					//$dest_dir = '/tmp';
 
 					if ($file_size ==  0){
-						 return;
+						return;
 					}
 
 					if (!is_dir($dest_dir)) {
-					   echo "dest_dir not found<br />\n";
-						 return;
+						echo "dest_dir not found<br />\n";
+						return;
 					}
 
 					//check if allowed file type
@@ -453,25 +449,24 @@
 									return false;
 							}
 					}
-
-						if ($file_type == "file") {
-							switch (strtolower($file_ext)) {
-								case "doc":
-									break;
-								case "pdf":
-									break;
-								case "ppt":
-									break;
-								case "xls":
-									break;
-								case "zip":
-									break;
-								case "exe":
-									break;
-								default:
-									return false;
-								}
-						}
+					if ($file_type == "file") {
+						switch (strtolower($file_ext)) {
+							case "doc":
+								break;
+							case "pdf":
+								break;
+							case "ppt":
+								break;
+							case "xls":
+								break;
+							case "zip":
+								break;
+							case "exe":
+								break;
+							default:
+								return false;
+							}
+					}
 
 					//find unique filename: check if file exists if it does then increment the filename
 						$i = 1;
@@ -675,7 +670,6 @@ function format_string ($format, $data) {
 		}
 		return $phone_number;
 	}
-
 
 //browser detection without browscap.ini dependency
 	function http_user_agent() { 
