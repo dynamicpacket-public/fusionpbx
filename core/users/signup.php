@@ -285,7 +285,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
 	echo "	<tr>\n";
 	echo "		<td width='80%'>\n";
-	echo "			<b>To sign up as a user, please fill out this form completely. All fields are required. </b><br>";
+	echo "			<b>To add a user, please fill out this form completely. All fields are required. </b><br>";
 	echo "		</td>\n";
 	echo "		<td width='20%' align='right'>\n";
 	echo "			<input type='button' class='btn' name='back' alt='back' onclick=\"window.history.back()\" value='Back'>\n";
@@ -328,7 +328,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>Confirm Password:</td>";
-	echo "		<td class='vtable><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
+	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>First Name:</td>";
