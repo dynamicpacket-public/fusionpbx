@@ -311,43 +311,42 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='huntgrouptype'>\n";
 	echo "    <option value=''></option>\n";
-	if ($huntgrouptype == "call_forward") { 
-		echo "    <option value='call_forward' SELECTED >call_forward</option>\n";
-	}
-	else {
-		echo "    <option value='call_forward'>call_forward</option>\n";
-	}
-	if ($huntgrouptype == "dnd") { 
-		echo "    <option value='dnd' SELECTED >dnd</option>\n";
-	}
-	else {
-		echo "    <option value='dnd'>dnd</option>\n";
-	}
-	if ($huntgrouptype == "follow_me_sequence") { 
-		echo "    <option value='follow_me_sequence' SELECTED >follow_me_sequence</option>\n";
-	}
-	else {
-		echo "    <option value='follow_me_sequence'>follow_me_sequence</option>\n";
-	}
-
-	if ($huntgrouptype == "follow_me_simultaneous") { 
-		echo "    <option value='follow_me_simultaneous' SELECTED >follow_me_simultaneous</option>\n";
-	}
-	else {
-		echo "    <option value='follow_me_simultaneous'>follow_me_simultaneous</option>\n";
-	}
 	if ($huntgrouptype == "simultaneous") { 
-		echo "    <option value='simultaneous' SELECTED >simultaneous</option>\n";
+		echo "    <option value='simultaneous' selected='selected'>simultaneous</option>\n";
 	}
 	else {
 		echo "    <option value='simultaneous'>simultaneous</option>\n";
 	}
 	if ($huntgrouptype == "sequentially") { 
-		echo "    <option value='sequentially' SELECTED >sequentially</option>\n";
+		echo "    <option value='sequentially' selected='selected'>sequentially</option>\n";
 	}
 	else {
 		echo "    <option value='sequentially'>sequentially</option>\n";
 	}
+	//if ($huntgrouptype == "call_forward") { 
+	//	echo "    <option value='call_forward' selected='selected'>call_forward</option>\n";
+	//}
+	//else {
+	//	echo "    <option value='call_forward'>call_forward</option>\n";
+	//}
+	//if ($huntgrouptype == "dnd") { 
+	//	echo "    <option value='dnd' selected='selected'>dnd</option>\n";
+	//}
+	//else {
+	//	echo "    <option value='dnd'>dnd</option>\n";
+	//}
+	//if ($huntgrouptype == "follow_me_sequence") { 
+	//	echo "    <option value='follow_me_sequence' selected='selected'>follow_me_sequence</option>\n";
+	//}
+	//else {
+	//	echo "    <option value='follow_me_sequence'>follow_me_sequence</option>\n";
+	//}
+	//if ($huntgrouptype == "follow_me_simultaneous") { 
+	//	echo "    <option value='follow_me_simultaneous' selected='selected'>follow_me_simultaneous</option>\n";
+	//}
+	//else {
+	//	echo "    <option value='follow_me_simultaneous'>follow_me_simultaneous</option>\n";
+	//}
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "\n";
