@@ -504,7 +504,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	<li><b>answer</b> answer the call</li>
 	<li><b>bridge</b> bridge the call</li>
 	<li><b>cond</b></li>
-	<li><b>db</b> is a a runtime database either sqlite by default or odbc</li>
+	<li><b>db</b> is a runtime database either sqlite by default or odbc</li>
 	<li><b>global_set</b> allows setting of global vars similar to the ones found in vars.xml</li>
 	<li><b>group</b> allows grouping of several extensions for things like ring groups</li>
 	<li><b>expr</b></li>
