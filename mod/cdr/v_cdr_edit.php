@@ -256,7 +256,7 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	$cdr_id = $_GET["id"];
 	$sql = "";
 	$sql .= "select * from v_cdr ";	
-	if (!ifgroup("admin") || !ifgroup("superadmin")) {
+	if (!(ifgroup("admin") || ifgroup("superadmin"))) {
 		if (trim($sqlwhere) == "where") { $sqlwhere = ""; }
 		if (count($extension_array) > 0) {
 			foreach($extension_array as $value) {

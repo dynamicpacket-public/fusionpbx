@@ -60,7 +60,7 @@ function destination_select($select_name, $select_value, $select_default) {
 	$sql .= "select * from v_extensions ";
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and extension_id = '$extension_id' ";
-	if (!ifgroup("admin") || !ifgroup("superadmin")) {
+	if (!(ifgroup("admin") || ifgroup("superadmin"))) {
 		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	}
 	$sql .= "and enabled = 'true' ";

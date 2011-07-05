@@ -46,7 +46,7 @@ else {
 			$sql = "";
 			$sql .= "select * from v_dialplan_includes_details ";
 			$sql .= "where v_id = '$v_id' ";
-			if (!ifgroup("admin") || !ifgroup("superadmin")) {
+			if (!(ifgroup("admin") || ifgroup("superadmin"))) {
 				//find the assigned users
 					$sql .= "and fielddata like 'conference_user_list%' and fielddata like '%|".$_SESSION['username']."|%' ";
 			}

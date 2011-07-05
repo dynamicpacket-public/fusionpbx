@@ -314,7 +314,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "faxdescription = '$faxdescription' ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and fax_id = '$fax_id' ";
-				if (!ifgroup("admin") || !ifgroup("superadmin")) {
+				if (!(ifgroup("admin") || ifgroup("superadmin"))) {
 					$sql .= "and fax_user_list like '%|".$_SESSION["username"]."|%' ";
 				}
 				$db->exec(check_sql($sql));
