@@ -138,7 +138,7 @@ require_once "includes/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
+	echo "<td colspan='6' align='left'>\n";
 	echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
@@ -161,7 +161,6 @@ require_once "includes/paging.php";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	echo "</table>";
 	echo "</div>";
