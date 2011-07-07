@@ -78,7 +78,7 @@ if (strlen($_SESSION["menu"]) == 0) {
 			$sql .= "where v_id = '$v_id' ";
 			$sql .= "and (menu_parent_guid = '' or menu_parent_guid is null) ";
 			$sql .= "and menu_guid in ";
-			$sql .= "(select menu_guid from v_menu_groups where v_id = '1' ";
+			$sql .= "(select menu_guid from v_menu_groups where v_id = '$v_id' ";
 			$sql .= "and ( ";
 			if (count($_SESSION['groups']) == 0) {
 				$sql .= "group_id = 'public' ";

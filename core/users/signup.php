@@ -35,9 +35,6 @@ else {
 	return;
 }
 
-if (ifgroup("superadmin") && strlen($_POST["v_id"]) > 0) {
-	$v_id = check_str($_POST["v_id"]);
-}
 $username = check_str($_POST["username"]);
 $password = check_str($_POST["password"]);
 $confirmpassword = check_str($_POST["confirmpassword"]);
@@ -237,7 +234,6 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= "now(), ";
 	$sql .= "'".$_SESSION["username"]."' ";
 	$sql .= ")";
-	//echo $sql;
 	$db->exec(check_sql($sql));
 	unset($sql);
 
@@ -294,29 +290,6 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "</table>\n";
 
 	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
-	if (ifgroup("superadmin")) {
-		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncellreq\" style='text-align: left;'>\n";
-		echo "		Domain: \n";
-		echo "	</td>\n";
-		echo "	<td colspan='2' class=\"vtable\">\n";
-		echo "		<select id='v_id' name='v_id' class='formfld' style=''>\n";
-		echo "		<option value=''></option>\n";
-		foreach($_SESSION['domains'] as $row) {
-			if ($row['v_id'] == $v_id) {
-				echo "	<option value='".$row['v_id']."' selected='selected'>".$row['domain']."</option>\n";
-			}
-			else {
-				echo "	<option value='".$row['v_id']."'>".$row['domain']."</option>\n";
-			}
-		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		//echo "	Select the domain.<br />\n";
-		echo "	</td>\n";
-		echo "	</tr>\n";
-	}
-
 	echo "	<tr>";
 	echo "		<td class='vncellreq' width='40%'>Username:</td>";
 	echo "		<td class='vtable' width='60%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";

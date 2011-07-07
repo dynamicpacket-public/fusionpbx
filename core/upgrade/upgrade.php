@@ -60,7 +60,9 @@
 if ($display_type == 'text') {
 	echo "\n";
 	echo "Upgrade\n";
-	echo "---------------------------------\n";
+	echo "-----------------------------------------\n";
+	echo "\n";
+	echo "Database\n";
 }
 
 //upgrade the database schema

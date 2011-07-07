@@ -82,7 +82,7 @@
 		fwrite($fout, $file_contents_new);
 		fclose($fout);
 		if ($display_type == "text") {
-			echo "xml_cdr.conf.xml: 	updated\n";
+			echo "	xml_cdr.conf.xml: 	updated\n";
 		}
 	}
 
@@ -94,7 +94,7 @@
 		fwrite($fout, $file_contents_new);
 		fclose($fout);
 		if ($display_type == "text") {
-			echo "enum.conf.xml: 	updated\n";
+			echo "	enum.conf.xml: 	updated\n";
 		}
 	}
 
@@ -169,6 +169,15 @@
 					$menu_restore->db = $db;
 					$menu_restore->v_id = $v_id;
 					$menu_restore->restore();
+					unset($menu_restore);
+					if ($display_type == "text") {
+						echo "	Menu:			added\n";
+					}
+				}
+				else {
+					if ($display_type == "text") {
+						echo "	Menu:			no change\n";
+					}
 				}
 			}
 			unset($prep_statement, $sub_result);
@@ -201,12 +210,12 @@
 			unset ($prep_statement);
 			if ($sub_result['count'] > 0) {
 				if ($display_type == "text") {
-					echo "Goup Permissions: 	no change\n";
+					echo "	Group Permissions:	no change\n";
 				}
 			}
 			else {
 				if ($display_type == "text") {
-					echo "Goup Permissions: 	added\n";
+					echo "	Group Permissions:	added\n";
 				}
 				//no permissions found add the defaults
 				$db->beginTransaction();
@@ -244,12 +253,12 @@
 			unset ($prep_statement);
 			if ($sub_result['count'] > 0) {
 				if ($display_type == "text") {
-					echo "Menu Groups: 		no change\n";
+					echo "	Menu Groups:		no change\n";
 				}
 			}
 			else {
 				if ($display_type == "text") {
-					echo "Menu Groups: 		added\n";
+					echo "	Menu Groups:		added\n";
 				}
 				//no menu groups found add the defaults
 					$db->beginTransaction();
@@ -296,7 +305,7 @@
 			unset ($sql, $prep_statement);
 			if ($v_recording_action == 'add') {
 				if ($display_type == "text") {
-					echo "Dialplan Recording: 	added\n";
+					echo "	Dialplan Recording: 	added\n";
 				}
 				$extensionname = 'Recordings';
 				$dialplanorder ='900';
@@ -346,7 +355,7 @@
 			}
 			else {
 				if ($display_type == "text") {
-					echo "Dialplan Recording: 	no change\n";
+					echo "	Dialplan Recording: 	no change\n";
 				}
 			}
 
@@ -366,7 +375,7 @@
 			unset ($sql, $prep_statement);
 			if ($v_disa_action == 'add') {
 				if ($display_type == "text") {
-					echo "Dialplan DISA: 		added\n";
+					echo "	Dialplan DISA: 		added\n";
 				}
 				$extensionname = 'DISA';
 				$dialplanorder ='900';
@@ -398,7 +407,7 @@
 			}
 			else {
 				if ($display_type == "text") {
-					echo "Dialplan DISA: 		no change\n";
+					echo "	Dialplan DISA: 		no change\n";
 				}
 			}
 
@@ -438,7 +447,7 @@
 						$db->exec($sql);
 						unset($sql);
 						if ($display_type == "text") {
-							echo "Public Directory:	added domain\n";
+							echo "	Public Directory:	added domain\n";
 						}
 					//synch the xml files
 						sync_package_v_public_includes();

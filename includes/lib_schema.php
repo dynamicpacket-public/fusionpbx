@@ -279,11 +279,11 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		//loop line by line through all the lines of sql code
 			$x = 0;
 			if (strlen($sql_update) == 0 && $display_type == "text") {
-				echo "Database Schema: 	no change\n";
+				echo "	Schema:			no change\n";
 			}
 			else {
 				if ($display_type == "text") {
-					echo "Database Schema:\n";
+					echo "	Schema:\n";
 				}
 				$db->beginTransaction();
 				$update_array = explode(";", $sql_update);

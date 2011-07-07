@@ -50,13 +50,8 @@ else {
 //get the username from v_users
 	$sql = "";
 	$sql .= "select * from v_users ";
-	if (ifgroup("superadmin")) {
-		$sql .= "where id = '$id' ";
-	}
-	else {
-		$sql .= "where v_id = '$v_id' ";
-		$sql .= "and id = '$id' ";
-	}
+	$sql .= "where v_id = '$v_id' ";
+	$sql .= "and id = '$id' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
@@ -94,10 +89,6 @@ else {
 	}
 
 if (count($_POST)>0 && $_POST["persistform"] != "1") {
-	if (ifgroup("superadmin")) {
-		$v_id = check_str($_REQUEST["v_id"]);
-	}
-	$v_id_orig = $_REQUEST["v_id_orig"];
 	$id = $_REQUEST["id"];
 	$password = check_str($_POST["password"]);
 	$confirmpassword = check_str($_POST["confirmpassword"]);
@@ -142,9 +133,6 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$groupmember = check_str($_POST["groupmember"]);
 
 	//if (strlen($password) == 0) { $msgerror .= "Password cannot be blank.<br>\n"; }
-	if (ifgroup("superadmin")) {
-		if (strlen($v_id) == 0) { $msgerror .= "Please provide the domain.<br>\n"; }
-	}
 	if (strlen($username) == 0) { $msgerror .= "Please provide the username.<br>\n"; }
 	if ($password != $confirmpassword) { $msgerror .= "Passwords did not match.<br>\n"; }
 	if (strlen($userfirstname) == 0) { $msgerror .= "Please provide a first name.<br>\n"; }
@@ -213,24 +201,8 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 			}
 		}
 
-	//if the user is moved to another domain then move the groups with them
-		if (ifgroup("superadmin")) {
-			if ($v_id != $v_id_orig) {
-				$sql = "update v_group_members ";
-				$sql .= "set v_id = '$v_id' ";
-				$sql .= "where v_id = '$v_id_orig' ";
-				if (!$db->exec($sql)) {
-					$info = $db->errorInfo();
-					print_r($info);
-				}
-			}
-		}
-
 	//sql update
 		$sql  = "update v_users set ";
-		if (ifgroup("superadmin")) {
-			$sql .= "v_id = '$v_id', ";
-		}
 		if (ifgroup("admin") && strlen($_POST["username"])> 0) {
 			$sql .= "username = '$username', ";
 		}
@@ -276,13 +248,8 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		$sql .= "user_time_zone = '$user_time_zone', ";
 		$sql .= "useremail = '$useremail' ";
 		if (strlen($id)> 0) {
-			if (ifgroup("superadmin")) {
-				$sql .= "where id = $id ";
-			}
-			else {
-				$sql .= "where v_id = '$v_id' ";
-				$sql .= "and id = $id ";
-			}
+			$sql .= "where v_id = '$v_id' ";
+			$sql .= "and id = $id ";
 		}
 		else {
 			$sql .= "where v_id = '$v_id' ";
@@ -318,15 +285,10 @@ else {
 	$sql = "";
 	$sql .= "select * from v_users ";
 	//allow admin access
-	if (ifgroup("admin")) {
+	if (ifgroup("admin") || ifgroup("superadmin")) {
 		if (strlen($id)> 0) {
-			if (ifgroup("superadmin")) {
-				$sql .= "where id = '$id' ";
-			}
-			else {
-				$sql .= "where v_id = '$v_id' ";
-				$sql .= "and id = '$id' ";
-			}
+			$sql .= "where v_id = '$v_id' ";
+			$sql .= "and id = '$id' ";
 		}
 		else {
 			$sql .= "where v_id = '$v_id' ";
@@ -343,9 +305,6 @@ else {
 	foreach ($result as &$row) {
 		if (ifgroup("admin")) {
 			$username = $row["username"];
-		}
-		if (ifgroup("superadmin")) {
-			$v_id = $row["v_id"];
 		}
 		$password = $row["password"];
 		$userfirstname = $row["userfirstname"];
@@ -433,30 +392,6 @@ else {
 	echo "		<td width='70%' class='vtable'>$username</td>";
 	echo "	</tr>";
 
-	if (ifgroup("superadmin")) {
-		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Domain:\n";
-		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
-		echo "		<select id='v_id' name='v_id' class='formfld' style=''>\n";
-		echo "		<option value=''></option>\n";
-		foreach($_SESSION['domains'] as $row) {
-			if ($row['v_id'] == $v_id) {
-				echo "	<option value='".$row['v_id']."' selected='selected'>".$row['domain']."</option>\n";
-			}
-			else {
-				echo "	<option value='".$row['v_id']."'>".$row['domain']."</option>\n";
-			}
-		}
-		echo "	</select>\n";
-		echo "	<br />\n";
-		//echo "	Select the domain.<br />\n";
-		echo "		<input type='hidden' name='v_id_orig' value=\"$v_id\">\n";
-		echo "	</td>\n";
-		echo "	</tr>\n";
-	}
-
 	echo "	<tr>";
 	echo "		<td class='vncell'>Password:</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
@@ -482,7 +417,7 @@ else {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>Groups:</td>";
 	echo "		<td class='vtable'>";
-	
+
 	echo "<table width='52%'>\n";
 	$sql = "SELECT * FROM v_group_members ";
 	$sql .= "where v_id=:v_id ";
