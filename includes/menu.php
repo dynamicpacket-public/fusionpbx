@@ -121,7 +121,9 @@ if (strlen($_SESSION["menu"]) == 0) {
 					$menu_tags = "href='".PROJECT_PATH."$menu_str'";
 					break;
 				case "external":
-					$menu_str = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menu_str);
+					if (substr($menu_str, 0,1) == "/") {
+						$menu_str = PROJECT_PATH . $menu_str;
+					}
 					$menu_tags = "href='$menu_str' target='_blank'";
 					break;
 				case "email":
@@ -224,7 +226,9 @@ if (strlen($_SESSION["menu"]) == 0) {
 						$menu_tags = "href='".PROJECT_PATH."$menu_str'";
 						break;
 					case "external":
-						$menu_str = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menu_str);
+						if (substr($menu_str, 0,1) == "/") {
+							$menu_str = PROJECT_PATH . $menu_str;
+						}
 						$menu_tags = "href='$menu_str' target='_blank'";
 						break;
 					case "email":
