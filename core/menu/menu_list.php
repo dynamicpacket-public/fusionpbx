@@ -73,7 +73,9 @@ function builddbchildmenulist ($db, $menulevel, $menu_guid, $c) {
 						$menutitle = "<a href='".PROJECT_PATH."$menustr'>$menutitle</a>";
 						break;
 					case "external":
-						$menustr = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menustr);
+						if (substr($menustr, 0,1) == "/") {
+							$menustr = PROJECT_PATH . $menustr;
+						}
 						$menutitle = "<a href='$menustr' target='_blank'>$menutitle</a>";
 						break;
 					case "email":
@@ -223,7 +225,9 @@ $order = $_GET["order"];
 					$menutitle = "<a href='".PROJECT_PATH."$menustr'>$menutitle</a>";
 					break;
 				case "external":
-					$menustr = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menustr);
+					if (substr($menustr, 0,1) == "/") {
+						$menustr = PROJECT_PATH . $menustr;
+					}
 					$menutitle = "<a href='$menustr' target='_blank'>$menutitle</a>";
 					break;
 				case "email":

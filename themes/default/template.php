@@ -763,13 +763,15 @@ if (!function_exists('builddbchildmenu2')) {
 					$menu_guid = $row['menu_guid'];
 					$menu_parent_guid = $row['menu_parent_guid'];
 
-					$menuatags = '';
+					$menutags = '';
 					switch ($menucategory) {
 						case "internal":
 							$menutags = "href='".PROJECT_PATH.$menustr."'";
 							break;
 						case "external":
-							$menustr = str_replace ("<!--{project_path}-->", PROJECT_PATH, $menustr);
+							if (substr($menustr, 0,1) == "/") {
+								$menustr = PROJECT_PATH . $menustr;
+							}
 							$menutags = "href='".$menustr."' target='_blank'";
 							break;
 						case "email":
