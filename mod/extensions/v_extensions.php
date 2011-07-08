@@ -119,7 +119,7 @@ require_once "includes/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['extension']."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['callgroup']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['callgroup']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['vm_mailto']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['enabled']."</td>\n";
 			echo "	<td valign='top' class='rowstylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
