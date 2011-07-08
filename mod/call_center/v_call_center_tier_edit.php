@@ -160,7 +160,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true") 
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -232,10 +231,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//$catcount = count($result);
 	foreach($result as $field) {
 		if ($field[username] == $agent_name) {
-			echo "<option value='".$field[username]."' selected='selected'>".$field[username]."</option>\n";
+			echo "<option value='".$field['username']."' selected='selected'>".$field['username']."</option>\n";
 		}
 		else {
-			echo "<option value='".$field[username]."'>".$field[username]."</option>\n";
+			echo "<option value='".$field['username']."'>".$field['username']."</option>\n";
 		}
 	}
 	echo "</select>";
@@ -266,10 +265,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//$catcount = count($result);
 	foreach($result as $field) {
 		if ($field[queue_name] == $queue_name) {
-			echo "<option value='".$field[queue_name]."' selected='selected'>".$field[queue_name]."</option>\n";
+			echo "<option value='".$field['queue_name']."' selected='selected'>".$field['queue_name']."</option>\n";
 		}
 		else {
-			echo "<option value='".$field[queue_name]."'>".$field[queue_name]."</option>\n";
+			echo "<option value='".$field['queue_name']."'>".$field['queue_name']."</option>\n";
 		}
 	}
 	echo "</select>";
@@ -289,55 +288,55 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='tier_level'>\n";
 	//echo "	<option value=''></option>\n";
 	if ($tier_level == "1") { 
-		echo "	<option value='1' SELECTED >1</option>\n";
+		echo "	<option value='1' selected='selected' >1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
 	if ($tier_level == "2") { 
-		echo "	<option value='2' SELECTED >2</option>\n";
+		echo "	<option value='2' selected='selected' >2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
 	if ($tier_level == "3") { 
-		echo "	<option value='3' SELECTED >3</option>\n";
+		echo "	<option value='3' selected='selected' >3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
 	if ($tier_level == "4") { 
-		echo "	<option value='4' SELECTED >4</option>\n";
+		echo "	<option value='4' selected='selected' >4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
 	if ($tier_level == "5") { 
-		echo "	<option value='5' SELECTED >5</option>\n";
+		echo "	<option value='5' selected='selected' >5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
 	if ($tier_level == "6") { 
-		echo "	<option value='6' SELECTED >6</option>\n";
+		echo "	<option value='6' selected='selected' >6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
 	if ($tier_level == "7") { 
-		echo "	<option value='7' SELECTED >7</option>\n";
+		echo "	<option value='7' selected='selected' >7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
 	if ($tier_level == "8") { 
-		echo "	<option value='8' SELECTED >8</option>\n";
+		echo "	<option value='8' selected='selected' >8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
 	if ($tier_level == "9") { 
-		echo "	<option value='9' SELECTED >9</option>\n";
+		echo "	<option value='9' selected='selected' >9</option>\n";
 	}
 	else {
 		echo "	<option value='9'>9</option>\n";
@@ -356,55 +355,55 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='tier_position'>\n";
 	//echo "	<option value=''></option>\n";
 	if ($tier_position == "1") { 
-		echo "	<option value='1' SELECTED >1</option>\n";
+		echo "	<option value='1' selected='selected' >1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
 	if ($tier_position == "2") { 
-		echo "	<option value='2' SELECTED >2</option>\n";
+		echo "	<option value='2' selected='selected' >2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
 	if ($tier_position == "3") { 
-		echo "	<option value='3' SELECTED >3</option>\n";
+		echo "	<option value='3' selected='selected' >3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
 	if ($tier_position == "4") { 
-		echo "	<option value='4' SELECTED >4</option>\n";
+		echo "	<option value='4' selected='selected' >4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
 	if ($tier_position == "5") { 
-		echo "	<option value='5' SELECTED >5</option>\n";
+		echo "	<option value='5' selected='selected' >5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
 	if ($tier_position == "6") { 
-		echo "	<option value='6' SELECTED >6</option>\n";
+		echo "	<option value='6' selected='selected' >6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
 	if ($tier_position == "7") { 
-		echo "	<option value='7' SELECTED >7</option>\n";
+		echo "	<option value='7' selected='selected' >7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
 	if ($tier_position == "8") { 
-		echo "	<option value='8' SELECTED >8</option>\n";
+		echo "	<option value='8' selected='selected' >8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
 	if ($tier_position == "9") { 
-		echo "	<option value='9' SELECTED >9</option>\n";
+		echo "	<option value='9' selected='selected' >9</option>\n";
 	}
 	else {
 		echo "	<option value='9'>9</option>\n";

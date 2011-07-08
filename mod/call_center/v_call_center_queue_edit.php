@@ -291,7 +291,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "List of queues for the call center.<br /><br />\n";
+	//echo "Call Center queue settings.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -415,13 +415,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_time_base_score'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_time_base_score == "system") {
-		echo "	<option value='system' SELECTED >system</option>\n";
+		echo "	<option value='system' selected='selected' >system</option>\n";
 	}
 	else {
 		echo "	<option value='system'>system</option>\n";
 	}
 	if ($queue_time_base_score == "queue") {
-		echo "	<option value='queue' SELECTED >queue</option>\n";
+		echo "	<option value='queue' selected='selected' >queue</option>\n";
 	}
 	else {
 		echo "	<option value='queue'>queue</option>\n";
@@ -474,13 +474,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_tier_rules_apply'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_tier_rules_apply == "true") {
-		echo "	<option value='true' SELECTED >true</option>\n";
+		echo "	<option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
 	if ($queue_tier_rules_apply == "false") {
-		echo "	<option value='false' SELECTED >false</option>\n";
+		echo "	<option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "	<option value='false'>false</option>\n";
@@ -510,13 +510,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_tier_rule_wait_multiply_level'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_tier_rule_wait_multiply_level == "true") {
-		echo "	<option value='true' SELECTED >true</option>\n";
+		echo "	<option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
 	if ($queue_tier_rule_wait_multiply_level == "false") {
-		echo "	<option value='false' SELECTED >false</option>\n";
+		echo "	<option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "	<option value='false'>false</option>\n";
@@ -535,13 +535,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_tier_rule_no_agent_no_wait'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_tier_rule_no_agent_no_wait == "true") {
-		echo "	<option value='true' SELECTED >true</option>\n";
+		echo "	<option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
 	if ($queue_tier_rule_no_agent_no_wait == "false") {
-		echo "	<option value='false' SELECTED >false</option>\n";
+		echo "	<option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "	<option value='false'>false</option>\n";
@@ -571,13 +571,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_abandoned_resume_allowed'>\n";
 	echo "	<option value=''></option>\n";
 	if ($queue_abandoned_resume_allowed == "true") {
-		echo "	<option value='true' SELECTED >true</option>\n";
+		echo "	<option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
 	if ($queue_abandoned_resume_allowed == "false") {
-		echo "	<option value='false' SELECTED >false</option>\n";
+		echo "	<option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "	<option value='false'>false</option>\n";
