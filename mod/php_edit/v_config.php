@@ -13,7 +13,7 @@
 		$apps[$x]['menu'][0]['title']['en'] = 'PHP Editor';
 		$apps[$x]['menu'][0]['guid'] = 'EAE1F2D6-789B-807C-CC26-44501E848693';
 		$apps[$x]['menu'][0]['parent_guid'] = '594D99C5-6128-9C88-CA35-4B33392CEC0F';
-		$apps[$x]['menu'][0]['category'] = 'internal';
+		$apps[$x]['menu'][0]['category'] = 'external';
 		$apps[$x]['menu'][0]['path'] = '/mod/php_edit/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 

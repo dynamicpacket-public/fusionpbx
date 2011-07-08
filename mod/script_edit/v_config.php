@@ -13,7 +13,7 @@
 		$apps[$x]['menu'][0]['title']['en'] = 'Script Editor';
 		$apps[$x]['menu'][0]['guid'] = 'F1905FEC-0577-DAEF-6045-59D09B7D3F94';
 		$apps[$x]['menu'][0]['parent_guid'] = '594D99C5-6128-9C88-CA35-4B33392CEC0F';
-		$apps[$x]['menu'][0]['category'] = 'internal';
+		$apps[$x]['menu'][0]['category'] = 'external';
 		$apps[$x]['menu'][0]['path'] = '/mod/script_edit/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
