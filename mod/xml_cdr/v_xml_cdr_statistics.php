@@ -40,18 +40,19 @@ else {
 //page title and description
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width='50%' nowrap='nowrap'><b>Call Detail Record Statistics</b></td>\n";
-	echo "		<td>\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
+	echo "<tr>\n";
+	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>Call Detail Record Statistics</b></td>\n";
+	echo "	<td width='70%' align='right' valign='top'>\n";
+	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_xml_cdr.php'\" value='Back'>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			Call Detail Records Statics summarize the call information. \n";
 	echo "			<br />\n";
 	echo "			<br />\n";
 	echo "		</td>\n";
-	echo "	</tr>\n";
+	echo "</tr>\n";
 	echo "</table>\n";
 
 //get a list of assigned extensions for this user
