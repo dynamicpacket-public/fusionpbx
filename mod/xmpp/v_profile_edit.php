@@ -108,7 +108,7 @@ if (strlen($error) > 0) {
 }
 
 // Save New Entry
-if ($action == "add" || permission_exists('xmpp_add')) {
+if ($action == "add" && permission_exists('xmpp_add')) {
 	$sql = "";
 	$sql .= "insert into v_xmpp (";
  	$sql .= "v_id, ";
