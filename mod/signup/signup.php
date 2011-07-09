@@ -26,8 +26,11 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/recaptchalib.php";
+require_once "includes/EmailAddressValidator.php";
 include "config.php";
 include "v_fields.php";
+
+$v_salt = 'e3.7d.12';
 
 # the response from reCAPTCHA
 $resp = null;
@@ -146,13 +149,15 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$sql .= "useremail, ";
 	$sql .= "useremailemergency, ";
 	$sql .= "useradddate, ";
-	$sql .= "useradduser ";
+	$sql .= "useradduser, ";
+	$sql .= "usercategory, ";
+	$sql .= "usertype ";
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
 	$sql .= "'$v_id', ";
 	$sql .= "'" . $request['username'] . "', ";
-	$sql .= "'".md5('e3.7d.12'.$password)."', ";
+	$sql .= "'" . md5($v_salt.$request['password']) . "', ";
 	$sql .= "'" . $request['userfirstname'] . "', ";
 	$sql .= "'" . $request['userlastname'] . "', ";
 	$sql .= "'" . $request['usercompanyname'] . "', ";
@@ -190,8 +195,13 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$sql .= "'" . $request['useremail'] . "', ";
 	$sql .= "'" . $request['useremailemergency'] . "', ";
 	$sql .= "now(), ";
-	$sql .= "'".$_SESSION["username"]."' ";
-	$sql .= ")";
+	$sql .= "'".$_SESSION["username"]."', ";
+	$sql .= "'user', ";
+	$sql .= "'Individual' ";
+	$sql .= ") ";
+	if ($db_type == "pgsql") {
+
+	}
 	$db->exec(check_sql($sql));
 	unset($sql);
 
@@ -208,9 +218,9 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
-	$sql .= "'$v_id', ";
-	$sql .= "'$groupid', ";
-	$sql .= "'$username' ";
+	$sql .= "'" . $v_id . "', ";
+	$sql .= "'" . $groupid . "', ";
+	$sql .= "'" . $request['username']. "' ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
