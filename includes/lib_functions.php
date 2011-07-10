@@ -26,7 +26,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '2.0.5';
+			return '2.0.6';
 		}
 	}
 

@@ -2419,8 +2419,8 @@ function outbound_route_to_bridge ($destination_number) {
 			}
 			if ($regex_match) {
 				foreach ($sub_result as &$sub_row) {
-					if ($sub_row['tag'] == "action" && $sub_row['fieldtype'] == "bridge") {
-						$field_data = $sub_row['fielddata'];
+					$field_data = $sub_row['fielddata'];
+					if ($sub_row['tag'] == "action" && $sub_row['fieldtype'] == "bridge" && $field_data != "\${enum_auto_route}") {
 						$field_data = str_replace("\$1", $regex_match_1, $field_data);
 						$field_data = str_replace("\$2", $regex_match_2, $field_data);
 						$field_data = str_replace("\$3", $regex_match_3, $field_data);
