@@ -2778,7 +2778,19 @@ function sync_package_v_hunt_group() {
 					$tmp .= "extension = '".$row['huntgroupextension']."';\n";
 					$tmp .= "result = '';\n";
 					$tmp .= "timeoutpin = 7500;\n";
+					$tmp .= "sip_profile = 'internal';\n";
 					$tmp .= "\n";
+
+					$tmp .=	"function extension_registered(domain_name, sip_profile, extension)\n";
+					$tmp .=	"	api = freeswitch.API();\n";
+					$tmp .=	"	result = api:execute(\"sofia_contact\", sip_profile..\"/\"..extension..\"@\"..domain_name);\n";
+					$tmp .=	"	if (result == \"error/user_not_registered\") then\n";
+					$tmp .=	"		return false;\n";
+					$tmp .=	"	else\n";
+					$tmp .=	"		return true;\n";
+					$tmp .=	"	end\n";
+					$tmp .=	"end\n";
+					$tmp .=	"\n";
 
 					$tmp .= "\n";
 					$tmp .= "sounds_dir = session:getVariable(\"sounds_dir\");\n";
@@ -2939,6 +2951,8 @@ function sync_package_v_hunt_group() {
 						if ($ent['destinationtype'] == "extension") {
 							//$tmp .= "	sofia_contact_".$ent['destinationdata']." = \"\${sofia_contact(".$ent['destinationprofile']."/".$ent['destinationdata']."@\"..domain_name..\")}\";\n";
 							$tmp_sub_array["application"] = "bridge";
+							$tmp_sub_array["type"] = "extension";
+							$tmp_sub_array["extension"] = $ent['destinationdata'];
 							//$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout]\"..sofia_contact_".$ent['destinationdata'];
 							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout]user/".$ent['destinationdata']."@\"..domain_name";
 							$tmp_array[$i] = $tmp_sub_array;
@@ -2946,6 +2960,7 @@ function sync_package_v_hunt_group() {
 						}
 						if ($ent['destinationtype'] == "voicemail") {
 							$tmp_sub_array["application"] = "voicemail";
+							$tmp_sub_array["type"] = "voicemail";
 							$tmp .= "	session:execute(\"voicemail\", \"default \${domain_name} ".$ent['destinationdata']."\");\n";
 							//$tmp_sub_array["application"] = "voicemail";
 							//$tmp_sub_array["data"] = "default \${domain_name} ".$ent['destinationdata'];
@@ -2954,6 +2969,7 @@ function sync_package_v_hunt_group() {
 						}
 						if ($ent['destinationtype'] == "sip uri") {
 							$tmp_sub_array["application"] = "bridge";
+							$tmp_sub_array["type"] = "sip uri";
 							//$destination_data = "{user=foo}loopback/".$ent['destinationdata']."/default/XML";
 							$bridge_array = outbound_route_to_bridge ($ent['destinationdata']);
 							$destination_data = $bridge_array[0];
@@ -2998,12 +3014,23 @@ function sync_package_v_hunt_group() {
 							if (count($tmp_array) > 0) {
 								foreach ($tmp_array as $tmp_row) {
 									$tmpdata = $tmp_row["data"];
-									if ($tmp_row["application"] == "voicemail") { $tmpdata = "*99".$tmpdata; }
-									if ($row['huntgroupcallerannounce'] == "true") {
-										$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+									if ($tmp_row["application"] == "voicemail") { 
+										$tmpdata = "*99".$tmpdata;
 									}
 									else {
-										$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+										if ($tmp_row["type"] == "extension") {
+											$tmp .= "if (extension_registered(domain_name, sip_profile, '".$tmp_row["extension"]."')) then\n";
+											$tmp .= "	";
+										}
+										if ($row['huntgroupcallerannounce'] == "true") {
+											$tmp .= "result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+										}
+										else {
+											$tmp .= "result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+										}
+										if ($tmp_row["type"] == "extension") {
+											$tmp .= "end\n";
+										}
 									}
 								}
 							}
@@ -3024,12 +3051,23 @@ function sync_package_v_hunt_group() {
 								if (count($tmp_array) > 0) {
 									foreach ($tmp_array as $tmp_row) {
 										$tmpdata = $tmp_row["data"];
-										if ($tmp_row["application"] == "voicemail") { $tmpdata = "*99".$tmpdata; }
-										if ($row['huntgroupcallerannounce'] == "true") {
-											$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+										if ($tmp_row["application"] == "voicemail") { 
+											$tmpdata = "*99".$tmpdata;
 										}
 										else {
-											$tmp .= "	result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+											if ($tmp_row["type"] == "extension") {
+												$tmp .= "if (extension_registered(domain_name, sip_profile, '".$tmp_row["extension"]."')) then\n";
+												$tmp .= "	";
+											}
+											if ($row['huntgroupcallerannounce'] == "true") {
+												$tmp .= "result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number, caller_announce);\n";
+											}
+											else {
+												$tmp .= "result = originate (domain_name, session, ".$tmpdata.", extension, caller_id_name, caller_id_number);\n";
+											}
+											if ($tmp_row["type"] == "extension") {
+												$tmp .= "end\n";
+											}
 										}
 									}
 								}
@@ -3086,10 +3124,10 @@ function sync_package_v_hunt_group() {
 
 					//unset variables
 						$tmp .= "\n";
-						$tmp .= "	--clear variables\n";
-						$tmp .= "	dialed_extension = \"\";\n";
-						$tmp .= "	new_extension = \"\";\n";
-						$tmp .= "	domain_name = \"\";\n";
+						$tmp .= "--clear variables\n";
+						$tmp .= "dialed_extension = \"\";\n";
+						$tmp .= "new_extension = \"\";\n";
+						$tmp .= "domain_name = \"\";\n";
 						$tmp .= "\n";
 
 					//remove invalid characters from the file names

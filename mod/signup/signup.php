@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/recaptchalib.php";
-require_once "includes/EmailAddressValidator.php";
+require_once "includes/email_address_validator.php";
 include "config.php";
 include "v_fields.php";
 

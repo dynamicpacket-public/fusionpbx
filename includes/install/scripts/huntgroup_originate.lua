@@ -68,7 +68,7 @@ function originate (domain_name, session, sipuri, extension, caller_announce, ca
 			end
 			if ( dtmf_digits == "3" ) then
 				freeswitch.consoleLog("NOTICE", "followme: call sent to voicemail\n");
-				cmd = "uuid_transfer "..uuid.." *99"..extension.." XML default";
+				cmd = "uuid_transfer "..uuid.." *99"..extension;
 				api = freeswitch.API();
 				reply = api:executeString(cmd);
 				return true;
