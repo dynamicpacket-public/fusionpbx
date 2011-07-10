@@ -25,10 +25,16 @@ function originate (domain_name, session, sipuri, extension, caller_announce, ca
 
 	cid = ",origination_caller_id_name="..caller_id_name..",origination_caller_id_number="..caller_id_number;
 	local new_session = freeswitch.Session("{ignore_early_media=true"..cid.."}"..sipuri);
-	new_session:execute("set", "call_timeout=30");
+	new_session:execute("set", "call_timeout=60");
+	new_session:execute("sleep", "1000");
 
 	if ( new_session:ready() ) then
+		--do nothing
+	else
+		new_session:execute("sleep", "1000");
+	end
 
+	if ( new_session:ready() ) then
 		--set the sounds path for the language, dialect and voice
 			default_language = new_session:getVariable("default_language");
 			default_dialect = new_session:getVariable("default_dialect");
@@ -71,6 +77,8 @@ function originate (domain_name, session, sipuri, extension, caller_announce, ca
 				freeswitch.consoleLog("NOTICE", "followme: no dtmf detected\n");
 				return false;
 			end
+	else
+		freeswitch.consoleLog("err", "followme: session not ready\n");
 	end
 end
 
