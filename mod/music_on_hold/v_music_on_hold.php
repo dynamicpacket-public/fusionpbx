@@ -57,10 +57,10 @@ if ($_GET['a'] == "download") {
 			else {
 				$file_ext = substr(base64_decode($_GET['filename']), -3);
 				if ($file_ext == "wav") {
-				  header("Content-Type: audio/x-wav");
+					header("Content-Type: audio/x-wav");
 				}
 				if ($file_ext == "mp3") {
-				  header("Content-Type: audio/mp3");
+					header("Content-Type: audio/mp3");
 				}
 			}
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -97,8 +97,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 //begin the content
 	echo "<script>\n";
 	echo "function EvalSound(soundobj) {\n";
-	echo "  var thissound= eval(\"document.\"+soundobj);\n";
-	echo "  thissound.Play();\n";
+	echo "	var thissound= eval(\"document.\"+soundobj);\n";
+	echo "	thissound.Play();\n";
 	echo "}\n";
 	echo "</script>";
 
@@ -106,45 +106,44 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
-
-	echo "  	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-	echo "      <tr>\n";
-	echo "        <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>Music on Hold:<br>\n";
-	echo "            </strong></span>\n";
-	echo "            Music on hold can be in WAV or MP3 format. To play an MP3 file you must have\n";
-	echo "            mod_shout enabled on the 'Modules' tab. You can adjust the volume of the MP3\n";
-	echo "            audio from the 'Settings' tab. For best performance upload 16bit 8khz/16khz Mono WAV files.\n";
-	//echo "            <!--Click on the 'Filename' to download it or the 'Recording Name' to\n";
-	//echo "            play the audio.-->\n";
-	echo "            </span></p></td>\n";
-	echo "      </tr>\n";
-	echo "    </table>\n";
+	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "		<tr>\n";
+	echo "			<td align='left'>\n";
+	echo "				<p><span class=\"vexpl\">\n";
+	echo "				<strong>Music on Hold</strong><br>\n";
+	echo "				Music on hold can be in WAV or MP3 format. To play an MP3 file you must have\n";
+	echo "				mod_shout enabled on the 'Modules' tab. You can adjust the volume of the MP3\n";
+	echo "				audio from the 'Settings' tab. For best performance upload 16bit 8khz/16khz Mono WAV files.\n";
+	echo "				</span></p>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
 	echo "\n";
-	echo "    <br />\n";
+	echo "	<br />\n";
 	echo "\n";
 	if (permission_exists('music_on_hold_add')) {
-		echo "  	<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-		echo "  	<table width='100%' border='0'>\n";
-		echo "  		<tr>\n";
-		echo "  		<td align='left' width='50%'>";
-	
+		echo "		<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+		echo "		<table width='100%' border='0'>\n";
+		echo "			<tr>\n";
+		echo "			<td align='left' width='50%'>";
+
 		if ($v_path_show) {
 			echo "<b>location:</b> ";
 			echo $dir_music_on_hold_8000;
 		}
-	
+
 		echo "			</td>\n";
 		echo "			<td valign=\"top\" class=\"label\">\n";
 		echo "				<input name=\"type\" type=\"hidden\" value=\"moh\">\n";
 		echo "			</td>\n";
-		echo "  		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
-		echo "  			File to upload:\n";
-		echo "  			<input name=\"ulfile\" type=\"file\" class=\"button\" id=\"ulfile\">\n";
-		echo "  			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"Upload\">\n";
-		echo "  		</td>\n";
-		echo "  		</tr>\n";
-		echo "  	</table>\n";
-		echo "  	</form>\n";
+		echo "			<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+		echo "				File to upload:\n";
+		echo "				<input name=\"ulfile\" type=\"file\" class=\"button\" id=\"ulfile\">\n";
+		echo "				<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"Upload\">\n";
+		echo "			</td>\n";
+		echo "			</tr>\n";
+		echo "		</table>\n";
+		echo "		</form>\n";
 		echo "\n";
 		echo "\n";
 	}
@@ -156,7 +155,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "		<th width=\"30%\" class=\"listhdr\">Last Modified</th>\n";
 	echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size</th>\n";
 	echo "		<td width='22px' class=\"\" nowrap>&nbsp;</td>\n";	
-	echo "		</tr>";
+	echo "	</tr>";
 
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
@@ -176,27 +175,27 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 				echo "		</a>";
 				echo "	</td>\n";
 				echo "	<td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
-				echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('v_music_on_hold_play.php?a=download&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_music_on_hold_play.php?a=download&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 				$tmp_file_array = explode("\.",$file);
-				echo "    	".$tmp_file_array[0];
-				echo "	  </a>";
-				echo "  </td>\n";
-				echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+				echo "		".$tmp_file_array[0];
+				echo "		</a>";
+				echo "	</td>\n";
+				echo "	<td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
 				echo 		date ("F d Y H:i:s", filemtime($dir_music_on_hold_8000."/".$file));
-				echo "  </td>\n";
-				echo "  <td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
+				echo "	</td>\n";
+				echo "	<td class='".$rowstyle[$c]."' ondblclick=\"\">\n";
 				echo "	".$tmp_filesize;
-				echo "  </td>\n";
-				echo "  <td valign=\"middle\" width='22' nowrap class=\"list\">\n";
-				echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"5\">\n";
-				echo "      <tr>\n";
-				//echo "        <td valign=\"middle\"><a href=\"v_music_on_hold.php?id=$i\"><img src=\"/themes/".$g['theme']."/images/icons/icon_e.gif\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
+				echo "	</td>\n";
+				echo "	<td valign=\"middle\" width='22' nowrap class=\"list\">\n";
+				echo "		<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\">\n";
+				echo "		<tr>\n";
+				//echo "			<td valign=\"middle\"><a href=\"v_music_on_hold.php?id=$i\"><img src=\"/themes/".$g['theme']."/images/icons/icon_e.gif\" width=\"17\" height=\"17\" border=\"0\"></a></td>\n";
 				if (permission_exists('music_on_hold_delete')) {
-					echo "        <td><a href=\"v_music_on_hold.php?type=moh&act=del&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+					echo "			<td><a href=\"v_music_on_hold.php?type=moh&act=del&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
 				}
-				echo "      </tr>\n";
-				echo "   </table>\n";
-				echo "  </td>\n";
+				echo "		</tr>\n";
+				echo "		</table>\n";
+				echo "	</td>\n";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 
@@ -205,11 +204,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		closedir($handle);
 	}
 
-	echo "     <tr>\n";
-	echo "       <td class=\"list\" colspan=\"3\"></td>\n";
-	echo "       <td class=\"list\"></td>\n";
-	echo "     </tr>\n";
-	echo "     </table>\n";
+	echo "	<tr>\n";
+	echo "		<td class=\"list\" colspan=\"3\"></td>\n";
+	echo "		<td class=\"list\"></td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
 
 	echo "\n";
 	echo "<br>\n";
