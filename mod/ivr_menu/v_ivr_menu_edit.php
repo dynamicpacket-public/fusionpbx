@@ -603,16 +603,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
 	echo "	<option value=''></option>\n";
 	if ($ivr_menu_direct_dial == "true") { 
-		echo "	<option value='true' SELECTED >enabled</option>\n";
+		echo "	<option value='true' selected='selected'>true</option>\n";
 	}
 	else {
-		echo "	<option value='true'>enabled</option>\n";
+		echo "	<option value='true'>true</option>\n";
 	}
 	if ($ivr_menu_direct_dial == "false") { 
-		echo "	<option value='false' SELECTED >disable</option>\n";
+		echo "	<option value='false' selected='selected'>false</option>\n";
 	}
 	else {
-		echo "	<option value='false'>disable</option>\n";
+		echo "	<option value='false'>false</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -776,16 +776,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
 	echo "	<option value=''></option>\n";
 	if ($ivr_menu_enabled == "true") { 
-		echo "	<option value='true' SELECTED >enabled</option>\n";
+		echo "	<option value='true' selected='selected'>true</option>\n";
 	}
 	else {
-		echo "	<option value='true'>enabled</option>\n";
+		echo "	<option value='true'>true</option>\n";
 	}
 	if ($ivr_menu_enabled == "false") { 
-		echo "	<option value='false' SELECTED >disable</option>\n";
+		echo "	<option value='false' selected='selected'>false</option>\n";
 	}
 	else {
-		echo "	<option value='false'>disable</option>\n";
+		echo "	<option value='false'>false</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";

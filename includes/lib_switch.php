@@ -2845,6 +2845,7 @@ function sync_package_v_hunt_group() {
 							}
 							$tmp .=	"end";
 							$tmp .=	"\n";
+
 							if ($row['huntgroupcallerannounce'] == "true") {
 								$tmp .=	"caller_announce = \"".$tmp_dir."/\"..extension..\"_\"..uuid..\".wav\";\n";
 								$tmp .=	"session:streamFile(sounds_dir..\"/\"..default_language..\"/\"..default_dialect..\"/\"..default_voice..\"/custom/please_say_your_name_and_reason_for_calling.wav\");\n";
@@ -5346,7 +5347,7 @@ if (!function_exists('sync_package_v_ivr_menu')) {
 					unset ($sub_prepstatement, $sub_row);
 
 					if ($ivr_menu_direct_dial == "true") {
-						$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\*\d{3,5}$|^\d{3,5}$)/\" param=\"transfer $1 XML ".$_SESSION["context"]."\"/>\n";
+						$tmp .= "		<entry action=\"menu-exec-app\" digits=\"/(^\d{3,6}$)/\" param=\"transfer $1 XML ".$_SESSION["context"]."\"/>\n";
 					}
 					$tmp .= "	</menu>\n";
 					$tmp .= "</include>\n";
