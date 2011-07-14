@@ -114,12 +114,12 @@ $order = $_GET["order"];
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
-		if (strlen($extension_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
+		if (strlen($extension_name) == 0) { $msg .= "Please provide: Conference Name<br>\n"; }
 		if (strlen($extension_number) == 0) { $msg .= "Please provide: Extension Number<br>\n"; }
 		//if (strlen($pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
-		//if (strlen($profile) == 0) { $msg .= "Please provide: profile<br>\n"; }
+		if (strlen($profile) == 0) { $msg .= "Please provide: profile<br>\n"; }
 		//if (strlen($flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-		//if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
+		if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
 		//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
@@ -515,11 +515,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='profile' style='width: 60%;'>\n";
-	echo "    <option value=''></option>\n";
-	if ($profile == "default") { echo "<option value='default' SELECTED >default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
-	if ($profile == "wideband") { echo "<option value='wideband' SELECTED >wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
-	if ($profile == "ultrawideband") { echo "<option value='ultrawideband' SELECTED >ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
-	if ($profile == "cdquality") { echo "<option value='cdquality' SELECTED >cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
+	//if the profile has no value set it to default
+	if ($profile == "") { $profile = "default"; }
+
+	if ($profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
+	if ($profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
+	if ($profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
+	if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "Conference Profile is a collection of settings for the conference.\n";
