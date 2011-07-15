@@ -126,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "modulecat = '$modulecat', ";
 				$sql .= "moduleenabled = '$moduleenabled', ";
 				$sql .= "moduledefaultenabled = '$moduledefaultenabled' ";
-				$sql .= "where module_id = '$module_id'";
+				$sql .= "where module_id = '$module_id' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
