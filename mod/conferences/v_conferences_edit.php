@@ -48,8 +48,8 @@ $order = $_GET["order"];
 	}
 
 //check if the user has been assigned this conference room
-	if (ifgroup("admin") || ifgroup("superadmin")) {
-		//allow admin and superadmin access to all conference rooms
+	if (permission_exists('conferences_add') && permission_exists('conferences_edit')) {
+		//allow users that have been assigned conferences_add or conferences_edit to all conference rooms
 	}
 	else {
 		//get the list of conference numbers the user is assigned to
@@ -111,213 +111,199 @@ $order = $_GET["order"];
 		if (strlen($enabled) == 0) { $enabled = "true"; } //set default to enabled
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
-	//check for all required data
-		if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
-		if (strlen($extension_name) == 0) { $msg .= "Please provide: Conference Name<br>\n"; }
-		if (strlen($extension_number) == 0) { $msg .= "Please provide: Extension Number<br>\n"; }
-		//if (strlen($pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
-		if (strlen($profile) == 0) { $msg .= "Please provide: profile<br>\n"; }
-		//if (strlen($flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
-		//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
-			require_once "includes/persistformvar.php";
-			echo "<div align='center'>\n";
-			echo "<table><tr><td>\n";
-			echo $msg."<br />";
-			echo "</td></tr></table>\n";
-			persistformvar($_POST);
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
-		}
-
-	//start the atomic transaction
-		$count = $db->exec("BEGIN;"); //returns affected rows
-
-	//prepare the fieldata so that it combines the conference name, profile, pin number and flags
-		if (strlen($action) > 0) {
-			$tmp_pin_number = ''; if (strlen($pin_number) > 0) { $tmp_pin_number = "+".$pin_number; }
-			$tmp_flags = ''; if (strlen($flags) > 0) { $tmp_flags = "+flags{".$flags."}"; }
-			$tmp_fielddata = $extension_name.'-'.$v_domain."@".$profile.$tmp_pin_number.$tmp_flags;
-		}
-
-	if ($action == "add" && permission_exists('conferences_add')) {
-
-		//add the main dialplan include entry
-			$sql = "insert into v_dialplan_includes ";
-			$sql .= "(";
-			$sql .= "v_id, ";
-			$sql .= "extensionname, ";
-			$sql .= "dialplanorder, ";
-			$sql .= "extensioncontinue, ";
-			$sql .= "context, ";
-			$sql .= "enabled, ";
-			$sql .= "descr ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$v_id', ";
-			$sql .= "'$extension_name', ";
-			$sql .= "'$dialplan_order', ";
-			$sql .= "'false', ";
-			$sql .= "'default', ";
-			$sql .= "'$enabled', ";
-			$sql .= "'$description' ";
-			$sql .= ")";
-			if ($db_type == "sqlite" || $db_type == "mysql" ) {
-				$db->exec(check_sql($sql));
-				$dialplan_include_id = $db->lastInsertId($id);
+//process the http post
+	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+		//check for all required data
+			if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
+			if (strlen($extension_name) == 0) { $msg .= "Please provide: Conference Name<br>\n"; }
+			if (strlen($extension_number) == 0) { $msg .= "Please provide: Extension Number<br>\n"; }
+			//if (strlen($pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
+			if (strlen($profile) == 0) { $msg .= "Please provide: profile<br>\n"; }
+			//if (strlen($flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
+			if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
+			//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
+				require_once "includes/header.php";
+				require_once "includes/persistformvar.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 			}
-			if ($db_type == "pgsql") {
-				$sql .= " RETURNING dialplan_include_id ";
+
+		//start the atomic transaction
+			$count = $db->exec("BEGIN;"); //returns affected rows
+
+		//prepare the fieldata so that it combines the conference name, profile, pin number and flags
+			if (strlen($action) > 0) {
+				$tmp_pin_number = ''; if (strlen($pin_number) > 0) { $tmp_pin_number = "+".$pin_number; }
+				$tmp_flags = ''; if (strlen($flags) > 0) { $tmp_flags = "+flags{".$flags."}"; }
+				$tmp_fielddata = $extension_name.'-'.$v_domain."@".$profile.$tmp_pin_number.$tmp_flags;
+			}
+
+		if ($action == "add" && permission_exists('conferences_add')) {
+
+			//add the main dialplan include entry
+				$sql = "insert into v_dialplan_includes ";
+				$sql .= "(";
+				$sql .= "v_id, ";
+				$sql .= "extensionname, ";
+				$sql .= "dialplanorder, ";
+				$sql .= "extensioncontinue, ";
+				$sql .= "context, ";
+				$sql .= "enabled, ";
+				$sql .= "descr ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$v_id', ";
+				$sql .= "'$extension_name', ";
+				$sql .= "'$dialplan_order', ";
+				$sql .= "'false', ";
+				$sql .= "'default', ";
+				$sql .= "'$enabled', ";
+				$sql .= "'$description' ";
+				$sql .= ")";
+				if ($db_type == "sqlite" || $db_type == "mysql" ) {
+					$db->exec(check_sql($sql));
+					$dialplan_include_id = $db->lastInsertId($id);
+				}
+				if ($db_type == "pgsql") {
+					$sql .= " RETURNING dialplan_include_id ";
+					$prepstatement = $db->prepare(check_sql($sql));
+					$prepstatement->execute();
+					$result = $prepstatement->fetchAll();
+					foreach ($result as &$row) {
+						$dialplan_include_id = $row["dialplan_include_id"];
+					}
+					unset($prepstatement, $result);
+				}
+				unset($sql);
+
+			if (strlen($dialplan_include_id) > 0) {
+				//add condition for the extension number
+					$sql = "insert into v_dialplan_includes_details ";
+					$sql .= "(";
+					$sql .= "v_id, ";
+					$sql .= "dialplan_include_id, ";
+					$sql .= "tag, ";
+					$sql .= "fieldtype, ";
+					$sql .= "fielddata, ";
+					$sql .= "fieldorder ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$v_id', ";
+					$sql .= "'$dialplan_include_id', ";
+					$sql .= "'condition', ";
+					$sql .= "'destination_number', ";
+					$sql .= "'^".$extension_number."$', ";
+					$sql .= "'1' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+				//add action answer
+					$sql = "insert into v_dialplan_includes_details ";
+					$sql .= "(";
+					$sql .= "v_id, ";
+					$sql .= "dialplan_include_id, ";
+					$sql .= "tag, ";
+					$sql .= "fieldtype, ";
+					$sql .= "fielddata, ";
+					$sql .= "fieldorder ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$v_id', ";
+					$sql .= "'$dialplan_include_id', ";
+					$sql .= "'action', ";
+					$sql .= "'answer', ";
+					$sql .= "'', ";
+					$sql .= "'2' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+				//add action set
+					$sql = "insert into v_dialplan_includes_details ";
+					$sql .= "(";
+					$sql .= "v_id, ";
+					$sql .= "dialplan_include_id, ";
+					$sql .= "tag, ";
+					$sql .= "fieldtype, ";
+					$sql .= "fielddata, ";
+					$sql .= "fieldorder ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$v_id', ";
+					$sql .= "'$dialplan_include_id', ";
+					$sql .= "'action', ";
+					$sql .= "'set', ";
+					$sql .= "'conference_user_list=$user_list', ";
+					$sql .= "'3' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+				//add action conference
+					$sql = "insert into v_dialplan_includes_details ";
+					$sql .= "(";
+					$sql .= "v_id, ";
+					$sql .= "dialplan_include_id, ";
+					$sql .= "tag, ";
+					$sql .= "fieldtype, ";
+					$sql .= "fielddata, ";
+					$sql .= "fieldorder ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$v_id', ";
+					$sql .= "'$dialplan_include_id', ";
+					$sql .= "'action', ";
+					$sql .= "'conference', ";
+					$sql .= "'".$tmp_fielddata."', ";
+					$sql .= "'4' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+					unset($fielddata);
+			} //end if (strlen($dialplan_include_id) > 0)
+		} //if ($action == "add")
+
+		//update the data
+			if ($action == "update" && permission_exists('conferences_edit')) {
+				$sql = "update v_dialplan_includes set ";
+				$sql .= "extensionname = '$extension_name', ";
+				$sql .= "dialplanorder = '$dialplan_order', ";
+				//$sql .= "extensioncontinue = '$extensioncontinue', ";
+				$sql .= "context = '$context', ";
+				$sql .= "enabled = '$enabled', ";
+				$sql .= "descr = '$description' ";
+				$sql .= "where v_id = '$v_id' ";
+				$sql .= "and dialplan_include_id = '$dialplan_include_id'";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$sql = "";
+				$sql .= "select * from v_dialplan_includes_details ";
+				$sql .= "where v_id = '$v_id' ";
+				$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
 				$prepstatement = $db->prepare(check_sql($sql));
 				$prepstatement->execute();
 				$result = $prepstatement->fetchAll();
-				foreach ($result as &$row) {
-					$dialplan_include_id = $row["dialplan_include_id"];
-				}
-				unset($prepstatement, $result);
-			}
-			unset($sql);
-
-		if (strlen($dialplan_include_id) > 0) {
-			//add condition for the extension number
-				$sql = "insert into v_dialplan_includes_details ";
-				$sql .= "(";
-				$sql .= "v_id, ";
-				$sql .= "dialplan_include_id, ";
-				$sql .= "tag, ";
-				$sql .= "fieldtype, ";
-				$sql .= "fielddata, ";
-				$sql .= "fieldorder ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$v_id', ";
-				$sql .= "'$dialplan_include_id', ";
-				$sql .= "'condition', ";
-				$sql .= "'destination_number', ";
-				$sql .= "'^".$extension_number."$', ";
-				$sql .= "'1' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-			//add action answer
-				$sql = "insert into v_dialplan_includes_details ";
-				$sql .= "(";
-				$sql .= "v_id, ";
-				$sql .= "dialplan_include_id, ";
-				$sql .= "tag, ";
-				$sql .= "fieldtype, ";
-				$sql .= "fielddata, ";
-				$sql .= "fieldorder ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$v_id', ";
-				$sql .= "'$dialplan_include_id', ";
-				$sql .= "'action', ";
-				$sql .= "'answer', ";
-				$sql .= "'', ";
-				$sql .= "'2' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-			//add action set
-				$sql = "insert into v_dialplan_includes_details ";
-				$sql .= "(";
-				$sql .= "v_id, ";
-				$sql .= "dialplan_include_id, ";
-				$sql .= "tag, ";
-				$sql .= "fieldtype, ";
-				$sql .= "fielddata, ";
-				$sql .= "fieldorder ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$v_id', ";
-				$sql .= "'$dialplan_include_id', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'conference_user_list=$user_list', ";
-				$sql .= "'3' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-			//add action conference
-				$sql = "insert into v_dialplan_includes_details ";
-				$sql .= "(";
-				$sql .= "v_id, ";
-				$sql .= "dialplan_include_id, ";
-				$sql .= "tag, ";
-				$sql .= "fieldtype, ";
-				$sql .= "fielddata, ";
-				$sql .= "fieldorder ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$v_id', ";
-				$sql .= "'$dialplan_include_id', ";
-				$sql .= "'action', ";
-				$sql .= "'conference', ";
-				$sql .= "'".$tmp_fielddata."', ";
-				$sql .= "'4' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-				unset($fielddata);
-		} //end if (strlen($dialplan_include_id) > 0)
-	} //if ($action == "add")
-
-	//update the data
-		if ($action == "update" && permission_exists('conferences_edit')) {
-			$sql = "update v_dialplan_includes set ";
-			$sql .= "extensionname = '$extension_name', ";
-			$sql .= "dialplanorder = '$dialplan_order', ";
-			//$sql .= "extensioncontinue = '$extensioncontinue', ";
-			$sql .= "context = '$context', ";
-			$sql .= "enabled = '$enabled', ";
-			$sql .= "descr = '$description' ";
-			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and dialplan_include_id = '$dialplan_include_id'";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-			$sql = "";
-			$sql .= "select * from v_dialplan_includes_details ";
-			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-			$prepstatement = $db->prepare(check_sql($sql));
-			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
-			unset($prepstatement);
-			foreach ($result as $row) {
-				if ($row['fieldtype'] == "destination_number") {
-					$sql = "update v_dialplan_includes_details set ";
-					//$sql .= "tag = '$tag', ";
-					//$sql .= "fieldtype = '$fieldtype', ";
-					$sql .= "fielddata = '^".$extension_number."$', ";
-					$sql .= "fieldorder = '".$row['fieldorder']."' ";
-					$sql .= "where v_id = '$v_id' ";
-					$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-					$sql .= "and dialplan_includes_detail_id = '".$row['dialplan_includes_detail_id']."' ";
-					//echo $sql."<br />\n";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				if (ifgroup("superadmin")) {
-					$fielddata_array = explode("=", $row['fielddata']);
-					if ($fielddata_array[0] == "conference_user_list") {
+				unset($prepstatement);
+				foreach ($result as $row) {
+					if ($row['fieldtype'] == "destination_number") {
 						$sql = "update v_dialplan_includes_details set ";
 						//$sql .= "tag = '$tag', ";
 						//$sql .= "fieldtype = '$fieldtype', ";
-						$sql .= "fielddata = 'conference_user_list=".$user_list."', ";
+						$sql .= "fielddata = '^".$extension_number."$', ";
 						$sql .= "fieldorder = '".$row['fieldorder']."' ";
 						$sql .= "where v_id = '$v_id' ";
 						$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
@@ -326,45 +312,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
+					if (permission_exists('conferences_add') && permission_exists('conferences_edit')) {
+						$fielddata_array = explode("=", $row['fielddata']);
+						if ($fielddata_array[0] == "conference_user_list") {
+							$sql = "update v_dialplan_includes_details set ";
+							//$sql .= "tag = '$tag', ";
+							//$sql .= "fieldtype = '$fieldtype', ";
+							$sql .= "fielddata = 'conference_user_list=".$user_list."', ";
+							$sql .= "fieldorder = '".$row['fieldorder']."' ";
+							$sql .= "where v_id = '$v_id' ";
+							$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
+							$sql .= "and dialplan_includes_detail_id = '".$row['dialplan_includes_detail_id']."' ";
+							//echo $sql."<br />\n";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+					}
+					if ($row['fieldtype'] == "conference") {
+						$sql = "update v_dialplan_includes_details set ";
+						//$sql .= "tag = '$tag', ";
+						//$sql .= "fieldtype = '$fieldtype', ";
+						$sql .= "fielddata = '".$tmp_fielddata."', ";
+						$sql .= "fieldorder = '".$row['fieldorder']."' ";
+						$sql .= "where v_id = '$v_id' ";
+						$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
+						$sql .= "and dialplan_includes_detail_id = '".$row['dialplan_includes_detail_id']."' ";
+						$db->exec(check_sql($sql));
+						//echo $sql."<br />\n";
+						unset($sql);
+						unset($fielddata);
+					}
 				}
-				if ($row['fieldtype'] == "conference") {
-					$sql = "update v_dialplan_includes_details set ";
-					//$sql .= "tag = '$tag', ";
-					//$sql .= "fieldtype = '$fieldtype', ";
-					$sql .= "fielddata = '".$tmp_fielddata."', ";
-					$sql .= "fieldorder = '".$row['fieldorder']."' ";
-					$sql .= "where v_id = '$v_id' ";
-					$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-					$sql .= "and dialplan_includes_detail_id = '".$row['dialplan_includes_detail_id']."' ";
-					$db->exec(check_sql($sql));
-					//echo $sql."<br />\n";
-					unset($sql);
-					unset($fielddata);
-				}
-			}
 
-		} //if ($action == "update")
+			} //if ($action == "update")
 
-	//commit the atomic transaction
-		$count = $db->exec("COMMIT;"); //returns affected rows
+		//commit the atomic transaction
+			$count = $db->exec("COMMIT;"); //returns affected rows
 
-	//synchronize the xml config
-		sync_package_v_dialplan_includes();
+		//synchronize the xml config
+			sync_package_v_dialplan_includes();
 
-	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_conferences.php\">\n";
-	echo "<div align='center'>\n";
-	if ($action == "add") {
-		echo "Add Complete\n";
-	}
-	if ($action == "update") {
-		echo "Update Complete\n";
-	}
-	echo "</div>\n";
-	require_once "includes/footer.php";
-	return;
+		require_once "includes/header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=v_conferences.php\">\n";
+		echo "<div align='center'>\n";
+		if ($action == "add") {
+			echo "Add Complete\n";
+		}
+		if ($action == "update") {
+			echo "Update Complete\n";
+		}
+		echo "</div>\n";
+		require_once "includes/footer.php";
+		return;
 
-} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 
 //pre-populate the form
@@ -420,7 +421,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "		<br>";
@@ -435,7 +435,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</span></span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
-	if (ifgroup("superadmin") && $action == "update") {
+	if (permission_exists('conferences_advanced_view') && $action == "update") {
 		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_conferences_edit_advanced.php?id=$dialplan_include_id'\" value='Advanced'>\n";
 	}
 	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_conferences.php'\" value='Back'>\n";
@@ -487,7 +487,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('conferences_add') || permission_exists('conferences_edit')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "		User List:\n";
@@ -545,7 +545,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
-	//echo "              <option></option>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
 		echo "              <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
@@ -568,7 +567,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='enabled' style='width: 60%;'>\n";
-	//echo "    <option value=''></option>\n";
 	if ($enabled == "true") { 
 		echo "    <option value='true' SELECTED >true</option>\n";
 	}

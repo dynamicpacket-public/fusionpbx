@@ -48,8 +48,8 @@ require_once "includes/paging.php";
 	$sql = "";
 	$sql .= "select * from v_dialplan_includes_details ";
 	$sql .= "where v_id = '$v_id' ";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
-		//allow admin and superadmin access to all conference rooms
+	if (permission_exists('conferences_add') && permission_exists('conferences_edit')) {
+		//allow users with the conferences_add or conferences_edit permission to all conference rooms
 	}
 	else {
 		//find the assigned users
@@ -62,7 +62,7 @@ require_once "includes/paging.php";
 	foreach ($result as &$row) {
 		$dialplan_include_id = $row["dialplan_include_id"];
 		$fieldtype = $row["fieldtype"];
-		if (ifgroup("admin") || ifgroup("superadmin")) {
+		if (permission_exists('conferences_add') && permission_exists('conferences_edit')) {
 			if ($fieldtype == "conference") {
 				$conference_array[$x]['dialplan_include_id'] = $dialplan_include_id;
 				$x++;
@@ -98,7 +98,7 @@ require_once "includes/paging.php";
 	echo "	<td align='left' colspan='2'>\n";
 	echo "		<span class=\"vexpl\">\n";
 	echo "			Conferences is used to setup conference rooms with a name, description, and optional pin number.\n";
-	if (ifgroup("admin") || ifgroup("superadmin")) {
+	if (permission_exists('conferences_active_view')) {
 		echo "			Show <a href='".PROJECT_PATH."/mod/conferences_active/v_conferences_active.php'>Active Conferences</a> and then select a conference to monitor and interact with it.\n";
 	}
 	echo "		</span>\n";
@@ -131,7 +131,12 @@ require_once "includes/paging.php";
 			$x++;
 		}
 	}
-	if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; } else { $sql .= "order by dialplanorder, extensionname asc "; }
+	if (strlen($orderby)> 0) {
+		$sql .= "order by $orderby $order ";
+	}
+	else {
+		$sql .= "order by dialplanorder, extensionname asc ";
+	}
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
@@ -180,7 +185,6 @@ require_once "includes/paging.php";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo thorderby('extensionname', 'Conference Name', $orderby, $order);
 	echo "<th>Tools</th>\n";
@@ -199,11 +203,11 @@ require_once "includes/paging.php";
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
+	if ($resultcount == 0) {
+		//no results
 	}
-	else { //received results
+	else {
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>&nbsp;&nbsp;".$row['extensionname']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='".PROJECT_PATH."/mod/conferences_active/v_conference_interactive.php?c=".$row['extensionname']."'>view</a></td>\n";
@@ -225,7 +229,6 @@ require_once "includes/paging.php";
 		} //end foreach
 		unset($sql, $result, $rowcount);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='6'>\n";
