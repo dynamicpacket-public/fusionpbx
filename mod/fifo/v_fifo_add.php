@@ -285,7 +285,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			<span class=\"vexpl\">\n";
-	echo "			In simple terms queues are holding patterns for callers to wait until until someone is available to take the call. Also known as FIFO Queues.\n";
+	echo "			In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.\n";
 	echo "			</span>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
