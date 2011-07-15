@@ -1619,7 +1619,7 @@ function sync_package_v_settings() {
  
 	$sql = "";
 	$sql .= "select * from v_settings ";
-	$sql .= "where v_id = '$v_id' ";
+	$sql .= "where v_id = '1' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
@@ -2239,53 +2239,40 @@ function sync_package_v_modules() {
 		$$name = $value;
 	}
 
-	$fout = fopen($v_conf_dir."/autoload_configs/modules.conf.xml","w");
-
-	$tmpxml ="";
-	$tmpxml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
-	$tmpxml .= "	<modules>\n";
-	//$tmpxml .= "\n";
-	//$tmpxml .= "    <!-- Loggers (I'd load these first) -->\n";
-	//$tmpxml .= "    <load module=\"mod_console\"/>\n"; //if ($row['mod_console'] == "enable"){   $tmpxml .= "    <load module=\"mod_console\"/>\n"; }
-	//$tmpxml .= "    <load module=\"mod_logfile\"/>\n"; //if ($row['mod_logfile'] == "enable"){   $tmpxml .= "    <load module=\"mod_logfile\"/>\n"; }
-	//if ($row['mod_syslog'] == "enable"){    $tmpxml .= "    <load module=\"mod_syslog\"/>\n"; }
-	//$tmpxml .= "\n";
+	$xml = "";
+	$xml .= "<configuration name=\"modules.conf\" description=\"Modules\">\n";
+	$xml .= "	<modules>\n";
 
 	$sql = "";
 	$sql .= "select * from v_modules ";
-	$sql .= "where v_id = '$v_id' ";
+	$sql .= "where v_id = '1' ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
-	$prevmodulecat = '';
+	$prev_module_cat = '';
 	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$modulelabel = $row["modulelabel"];
-		$modulename = $row["modulename"];
-		$moduledesc = $row["moduledesc"];
-		$modulecat = $row["modulecat"];
-		$moduleenabled = $row["moduleenabled"];
-		$moduledefaultenabled = $row["moduledefaultenabled"];
+		//$modulelabel = $row["modulelabel"];
+		//$modulename = $row["modulename"];
+		//$moduledesc = $row["moduledesc"];
+		//$modulecat = $row["modulecat"];
+		//$moduleenabled = $row["moduleenabled"];
+		//$moduledefaultenabled = $row["moduledefaultenabled"];
 
-		//if ($row["modulename"] == "mod_console" || $row["modulename"] == "mod_logfile") {
-			//do nothing
-			//echo "do nothing <br />\n";
-		//}
-		//else {
-			//echo "do something <br />\n";
-			if ($prevmodulecat != $row[modulecat]) {
-				$tmpxml .= "\n		<!-- ".$row["modulecat"]." -->\n";
-			}
-			if ($row['moduleenabled'] == "true"){	$tmpxml .= "		<load module=\"".$row["modulename"]."\"/>\n"; }
-		//}
-		$prevmodulecat = $row[modulecat];
+		if ($prev_module_cat != $row['modulecat']) {
+			$xml .= "\n		<!-- ".$row['modulecat']." -->\n";
+		}
+		if ($row['moduleenabled'] == "true"){
+			$xml .= "		<load module=\"".$row['modulename']."\"/>\n"; 
+		}
+		$prev_module_cat = $row['modulecat'];
 	}
-	//exit;
-	$tmpxml .= "\n";
-	$tmpxml .= "	</modules>\n";
-	$tmpxml .= "</configuration>";
+	$xml .= "\n";
+	$xml .= "	</modules>\n";
+	$xml .= "</configuration>";
 
-	fwrite($fout, $tmpxml);
-	unset($tmpxml);
+	$fout = fopen($v_conf_dir."/autoload_configs/modules.conf.xml","w");
+	fwrite($fout, $xml);
+	unset($xml);
 	fclose($fout);
 
 	//apply settings reminder
@@ -2304,41 +2291,40 @@ function sync_package_v_vars() {
 	}
 
 	$fout = fopen($v_conf_dir."/vars.xml","w");
-	$tmpxml ="";
+	$xml = '';
 
 	$sql = "";
 	$sql .= "select * from v_vars ";
-	$sql .= "where v_id = '$v_id' ";
+	$sql .= "where v_id = '1' ";
 	$sql .= "order by var_cat, var_order asc ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$prev_var_cat = '';
 	$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
+		//$var_name = $row["var_name"];
+		//$var_value = $row["var_value"];
+		//$var_cat = $row["var_cat"];
+		//$var_order = $row["var_order"];
+		//$var_enabled = $row["var_enabled"];
+		//$var_desc = $row["var_desc"];
 
-		$var_name = $row["var_name"];
-		$var_value = $row["var_value"];
-		$var_cat = $row["var_cat"];
-		$var_order = $row["var_order"];
-		$var_enabled = $row["var_enabled"];
-		$var_desc = $row["var_desc"];
-
-		if ($var_cat != 'Provision') {
-			if ($prev_var_cat != $row[var_cat]) {
-				$tmpxml .= "\n<!-- ".$row["var_cat"]." -->\n";
+		if ($row['var_cat'] != 'Provision') {
+			if ($prev_var_cat != $row['var_cat']) {
+				$xml .= "\n<!-- ".$row['var_cat']." -->\n";
 				if (strlen($row["var_desc"]) > 0) {
-					$tmpxml .= "<!-- ".base64_decode($row["var_desc"])." -->\n";
+					$xml .= "<!-- ".base64_decode($row['var_desc'])." -->\n";
 				}
 			}
-			if ($row['var_enabled'] == "true"){	$tmpxml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row["var_name"]."=".$row["var_value"]."\"/>\n"; }
+			if ($row['var_enabled'] == "true"){	$xml .= "<X-PRE-PROCESS cmd=\"set\" data=\"".$row['var_name']."=".$row['var_value']."\"/>\n"; }
 		}
 
-		$prev_var_cat = $row[var_cat];
+		$prev_var_cat = $row['var_cat'];
 	}
-	$tmpxml .= "\n"; 
+	$xml .= "\n"; 
 
-	fwrite($fout, $tmpxml);
-	unset($tmpxml);
+	fwrite($fout, $xml);
+	unset($xml);
 	fclose($fout);
 
 	//apply settings reminder

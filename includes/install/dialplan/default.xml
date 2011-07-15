@@ -20,6 +20,12 @@
       </condition>
     </extension>
 
+    <extension name="call_direction" continue="true">
+      <condition field="${call_direction}" expression="^(inbound|outbound|local)$">
+        <anti-action application="set" data="call_direction=local"/>
+      </condition>
+    </extension>
+
     <!-- Example of doing things based on time of day. 
 
 	 year = 4 digit year. Example year="2009"
@@ -104,14 +110,6 @@
       <condition field="destination_number" expression="^\*8$">
 	<action application="answer"/>
 	<action application="intercept" data="${hash(select/${domain_name}-last_dial/${callgroup})}"/>
-	<action application="sleep" data="2000"/>
-      </condition>
-    </extension>
-
-    <extension name="intercept-ext">
-      <condition field="destination_number" expression="^\*\*(\d+)$">
-	<action application="answer"/>
-	<action application="intercept" data="${hash(select/${domain_name}-last_dial_ext/$1)}"/>
 	<action application="sleep" data="2000"/>
       </condition>
     </extension>
@@ -239,6 +237,14 @@
     <extension name="call-group-order">
       <condition field="destination_number" expression="^\*83(\d{2})$">
 	<action application="bridge" data="{leg_timeout=15,ignore_early_media=true}${group(call:$1@${domain_name}:order)}"/>
+      </condition>
+    </extension>
+
+    <extension name="intercept-ext">
+      <condition field="destination_number" expression="^\*\*(\d+)$">
+	<action application="answer"/>
+	<action application="intercept" data="${hash(select/${domain_name}-last_dial_ext/$1)}"/>
+	<action application="sleep" data="2000"/>
       </condition>
     </extension>
 
@@ -796,7 +802,6 @@
 	<action application="execute_extension" data="ruri"/>
       </condition>
     </extension>
-    -->
 
     <extension name="enum">
       <condition field="${module_exists(mod_enum)}" expression="true"/>
@@ -804,6 +809,7 @@
 	<action application="transfer" data="$1 enum"/>
       </condition>
     </extension>
+    -->
 
   </context>
 </include>
