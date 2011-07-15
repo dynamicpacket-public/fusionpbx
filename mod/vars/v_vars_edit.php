@@ -134,7 +134,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "var_order = '$var_order', ";
 				$sql .= "var_desc = '".base64_encode($var_desc)."' ";
 				$sql .= "where v_id = '1' ";
-				$sql .= "and var_id = '$var_id'";
+				$sql .= "and var_id = '$var_id' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
