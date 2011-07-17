@@ -3330,15 +3330,24 @@ function sync_package_v_fax() {
 				$db->query($sql);
 
 				//update the action
-				$fielddata = $php_dir.'/'.$php_exe.' '.$v_secure.'/fax_to_email.php email='.$row['faxemail'].' extension='.$row['faxextension'].' name=${last_fax}';
+				$tag = 'action'; //condition, action, antiaction
+				$fieldtype = 'set';
+				$fielddata = "api_hangup_hook=system ".$php_dir."/".$php_exe." ".$v_secure."/fax_to_email.php ";
+				$fielddata .= "email=".$row['faxemail']." ";
+				$fielddata .= "extension=".$row['faxextension']." ";
+				$fielddata .= "name=\\\\\\\${last_fax} ";
+				$fielddata .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+				if (count($_SESSION["domains"]) > 1) {
+					$fielddata .= "domain=".$v_domain;
+				}
 				$sql = "";
 				$sql = "update v_dialplan_includes_details set ";
-				$sql .= "fielddata = '".$fielddata."' ";
+				$sql .= "fielddata = '".check_str($fielddata)."' ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and tag = 'action' ";
-				$sql .= "and fieldtype = 'system' ";
+				$sql .= "and fieldtype = 'set' ";
 				$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-				//echo $sql."<br />";
+				$sql .= "and fielddata like 'api_hangup_hook=%' ";
 				$db->query($sql);
 
 				unset($extensionname);
@@ -5931,6 +5940,7 @@ if (!function_exists('sync_package_freeswitch')) {
 		sync_package_v_hunt_group();
 		sync_package_v_ivr_menu();
 		sync_package_v_call_center();
+		sync_package_v_fax();
 	}
 }
 
