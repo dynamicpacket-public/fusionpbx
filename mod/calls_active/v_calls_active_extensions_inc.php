@@ -34,6 +34,9 @@ else {
 	exit;
 }
 
+//set debug to true or false
+	$debug = false;
+
 //http get and set variables
 	if (strlen($_GET['url']) > 0) {
 		$url = $_GET['url'];
@@ -48,42 +51,37 @@ else {
 	$rowstyle["1"] = "rowstyle1";
 
 //get the user status
-	if ($_SESSION['user_status_display'] == "false") {
-		//hide the user_status when it is set to false
+	$sql = "";
+	$sql .= "select e.extension, u.username, u.user_status, e.user_list ";
+	$sql .= "from v_users as u, v_extensions as e ";
+	$sql .= "where e.v_id = '$v_id' ";
+	$sql .= "and u.v_id = '$v_id' ";
+	$sql .= "and u.usercategory = 'user' ";
+	if ($db_type == "sqlite") {
+		$sql .= "and e.user_list like '%|' || u.username || '|%' ";
 	}
-	else {
-		$sql = "";
-		$sql .= "select e.extension, u.username, u.user_status, e.user_list ";
-		$sql .= "from v_users as u, v_extensions as e ";
-		$sql .= "where e.v_id = '$v_id' ";
-		$sql .= "and u.v_id = '$v_id' ";
-		$sql .= "and u.usercategory = 'user' ";
-		if ($db_type == "sqlite") {
-			$sql .= "and e.user_list like '%|' || u.username || '|%' ";
-		}
-		if ($db_type == "pgsql") {
-			$sql .= "and e.user_list like '%|' || u.username || '|%' ";
-		}
-		if ($db_type == "mysql") {
-			$sql .= "and e.user_list like CONCAT('%|', u.username, '|%'); ";
-		}
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$x = 0;
-		$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			if (strlen($row["user_status"]) > 0) {
-				$user_array[$row["extension"]]['username'] = $row["username"];
-				$user_array[$row["extension"]]['user_status'] = $row["user_status"];
-				$username_array[$row["username"]]['user_status'] = $row["user_status"];
-				if ($row["username"] == $_SESSION["username"]) {
-					$user_status = $row["user_status"];
-				}
+	if ($db_type == "pgsql") {
+		$sql .= "and e.user_list like '%|' || u.username || '|%' ";
+	}
+	if ($db_type == "mysql") {
+		$sql .= "and e.user_list like CONCAT('%|', u.username, '|%'); ";
+	}
+	$prepstatement = $db->prepare(check_sql($sql));
+	$prepstatement->execute();
+	$x = 0;
+	$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		if (strlen($row["user_status"]) > 0) {
+			$user_array[$row["extension"]]['username'] = $row["username"];
+			$user_array[$row["extension"]]['user_status'] = $row["user_status"];
+			$username_array[$row["username"]]['user_status'] = $row["user_status"];
+			if ($row["username"] == $_SESSION["username"]) {
+				$user_status = $row["user_status"];
 			}
-			$x++;
 		}
-		unset ($prepstatement, $x);
+		$x++;
 	}
+	unset ($prepstatement, $x);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -315,10 +313,7 @@ else {
 				include "v_calls_active_assigned_extensions_inc.php";
 
 			//list all extensions
-				if ($_SESSION['active_extensions_list_display'] == "false" && !ifgroup("superadmin")) {
-					//hide the list when active_extensions_list_display is set to false, unless it's the superadmin
-				}
-				else {
+				if (permission_exists('extensions_active_list_view')) {
 					echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td valign='top'>\n";
@@ -350,6 +345,7 @@ else {
 					}
 					echo "</tr>\n";
 					$x = 1;
+					
 					foreach ($_SESSION['extension_array'] as $row) {
 						$v_id = $row['v_id'];
 						$extension = $row['extension'];

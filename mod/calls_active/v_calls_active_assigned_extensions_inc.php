@@ -26,37 +26,31 @@
 include "root.php";
 require_once "includes/config.php";
 require_once "includes/checkauth.php";
-if (permission_exists('extensions_active_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+if (permission_exists('extensions_active_assigned_view')) {
 
-//http get and set variables
-	if (strlen($_GET['url']) > 0) {
-		$url = $_GET['url'];
-	}
-
-//get a list of assigned extensions for this user
-	if (count($_SESSION['user_extension_array']) == 0) {
-		$sql = "";
-		$sql .= "select * from v_extensions ";
-		$sql .= "where v_id = '$v_id' ";
-		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$x = 0;
-		$result = $prepstatement->fetchAll();
-		foreach ($result as &$row) {
-			$user_extension_array[$x]['extension_id'] = $row["extension_id"];
-			$user_extension_array[$x]['extension'] = $row["extension"];
-			$x++;
+	//http get and set variables
+		if (strlen($_GET['url']) > 0) {
+			$url = $_GET['url'];
 		}
-		unset ($prepstatement, $x);
-		$_SESSION['user_extension_array'] = $user_extension_array;
-	}
+
+	//get a list of assigned extensions for this user
+		if (count($_SESSION['user_extension_array']) == 0) {
+			$sql = "";
+			$sql .= "select * from v_extensions ";
+			$sql .= "where v_id = '$v_id' ";
+			$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			$x = 0;
+			$result = $prepstatement->fetchAll();
+			foreach ($result as &$row) {
+				$user_extension_array[$x]['extension_id'] = $row["extension_id"];
+				$user_extension_array[$x]['extension'] = $row["extension"];
+				$x++;
+			}
+			unset ($prepstatement, $x);
+			$_SESSION['user_extension_array'] = $user_extension_array;
+		}
 
 		echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -252,5 +246,6 @@ else {
 		echo "<span id='cid_num_2' style='visibility:hidden;'>$cid_num_2</span>\n";
 
 		echo "<br />\n";
+}
 
 ?>

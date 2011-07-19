@@ -68,4 +68,14 @@
 		$apps[$x]['permissions'][9]['name'] = 'extensions_active_rec';
 		$apps[$x]['permissions'][9]['groups'][] = 'admin';
 		$apps[$x]['permissions'][9]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][10]['name'] = 'extensions_active_list_view';
+		$apps[$x]['permissions'][10]['groups'][] = 'user';
+		$apps[$x]['permissions'][10]['groups'][] = 'admin';
+		$apps[$x]['permissions'][10]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][11]['name'] = 'extensions_active_assigned_view';
+		$apps[$x]['permissions'][11]['groups'][] = 'user';
+		$apps[$x]['permissions'][11]['groups'][] = 'admin';
+		$apps[$x]['permissions'][11]['groups'][] = 'superadmin';
 ?>
