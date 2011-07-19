@@ -106,6 +106,7 @@ include "root.php";
 	$tmp_file = 'originate.js'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'recordings.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'roku.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
+	$tmp_file = 'fifo_member.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 
 //copy additional the flash mp3 player
 	$srcfile = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/htdocs/slim.swf';
