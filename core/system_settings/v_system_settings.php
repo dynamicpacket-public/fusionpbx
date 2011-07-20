@@ -62,6 +62,13 @@ else {
 			$_SESSION["v_template_name"] = $_SESSION['domains'][$v_id]['template_name'];
 		//clear the menu session so that it is regenerated for the current tenant
 			$_SESSION["menu"] = '';
+		//set the context
+			if (count($_SESSION["domains"]) > 1) {
+				$_SESSION["context"] = $_SESSION["v_domain"];
+			}
+			else {
+				$_SESSION["context"] = 'default';
+			}
 	}
 
 //include the header
