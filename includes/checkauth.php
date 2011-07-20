@@ -86,6 +86,9 @@ session_start();
 						//user defined time zone
 						$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
 					}
+					if (strlen($row["customer_id"]) > 0) {
+						$_SESSION["customer_id"] = $row["customer_id"];
+					}
 					break;
 				}
 				//echo "username: ".$_SESSION["username"]." and password are correct";

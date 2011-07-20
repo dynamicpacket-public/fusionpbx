@@ -296,5 +296,7 @@
 		$apps[$x]['db'][3]['fields'][50]['name'] = 'useradddate';
 		$apps[$x]['db'][3]['fields'][50]['type'] = 'text';
 		$apps[$x]['db'][3]['fields'][50]['description'] = '';
-
+		$apps[$x]['db'][3]['fields'][51]['name'] = 'customer_id';
+		$apps[$x]['db'][3]['fields'][51]['type'] = 'numeric';
+		$apps[$x]['db'][3]['fields'][51]['description'] = '';
 ?>
