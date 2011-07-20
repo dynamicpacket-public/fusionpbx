@@ -19,6 +19,9 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'log_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['name'] = 'log_download';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][2]['name'] = 'log_path_view';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 ?>

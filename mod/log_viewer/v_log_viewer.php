@@ -39,7 +39,7 @@ else {
 	$rowstyle["0"] = "rowstyle0";
 	$rowstyle["1"] = "rowstyle1";
 
-if (ifgroup("superadmin")) {
+if (permission_exists('log_download')) {
 	if ($_GET['a'] == "download") {
 		if ($_GET['t'] == "logs") {
 			$tmp = $v_log_dir.'/';
@@ -86,7 +86,7 @@ echo "	<b>Logs</b><br />\n";
 
 echo "</td>\n";
 echo "<td width='50%' align='right'>\n";
-if (ifgroup("superadmin")) {
+if (permission_exists('log_download')) {
 	echo "  <input type='button' class='btn' value='download logs' onclick=\"document.location.href='v_log_viewer.php?a=download&t=logs';\" />\n";
 }
 echo "</tr>\n";
@@ -110,7 +110,7 @@ else {
 echo "</td>\n";
 echo "</tr>";
 
-if (ifgroup("superadmin")) {
+if (permission_exists('log_path_view')) {
 	echo "<tr>\n";
 	echo "<td>\n";
 	echo $v_log_dir.'/'.$v_name.".log<br /><br />\n";
