@@ -29,14 +29,15 @@
 
 include "root.php";
 require_once "includes/config.php";
-require_once "includes/checkauth.php";
+/*
+ require_once "includes/checkauth.php";
 if (permission_exists('flashphoner_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
-}
+} */
 $extension_id = $_REQUEST['extension_id'];
 $key = $_REQUEST['key'];
 $username = $_REQUEST['username'];
