@@ -42,7 +42,7 @@ if (count($_GET)>0) {
 	if (strlen($id)>0) {
 		$sql = "";
 		$sql .= "delete from v_vars ";
-		$sql .= "where v_id = '$v_id' ";
+		$sql .= "where v_id = '1' ";
 		$sql .= "and var_id = '$id' ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
