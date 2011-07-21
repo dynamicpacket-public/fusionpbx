@@ -43,11 +43,13 @@ else {
 		$extension_name = check_str($_POST["extension_name"]);
 		$dialplanorder = check_str($_POST["dialplanorder"]);
 		$dialplan_expression = check_str($_POST["dialplan_expression"]);
+		$prefix_number = check_str($_POST["prefix_number"]);
 		$condition_field_1 = check_str($_POST["condition_field_1"]);
 		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
 		$condition_field_2 = check_str($_POST["condition_field_2"]);
 		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
 		$gateway = check_str($_POST["gateway"]);
+
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
@@ -142,17 +144,6 @@ else {
 
 		if (strlen(trim($_POST['dialplan_expression']))> 0) {
 
-			$sql = "";
-			$sql .= "select * from v_settings ";
-			$sql .= "where v_id = '$v_id' ";
-			$prepstatement = $db->prepare(check_sql($sql));
-			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
-			foreach ($result as &$row) {
-				$default_area_code = $row["default_area_code"];
-				break;
-			}
-
 			$tmp_array = explode("\n", $_POST['dialplan_expression']);
 
 			foreach($tmp_array as $dialplan_expression) {
@@ -172,116 +163,93 @@ else {
 					}
 					switch ($dialplan_expression) {
 					case "^(\d{7})$":
-						$prefix_number = $default_area_code;
 						$label = "7 digits";
 						$abbrv = "7d";
 						break;
 					case "^(\d{8})$":
-						$prefix_number = '';
 						$label = "8 digits";
 						$abbrv = "8d";
 						break;
 					case "^(\d{9})$":
-						$prefix_number = '';
 						$label = "9 digits";
 						$abbrv = "9d";
 						break;
 					case "^(\d{10})$":
-						$prefix_number = '1';
 						$label = "10 digits";
 						$abbrv = "10d";
 						break;
 					case "^\+?(\d{11})$":
-						$prefix_number = '';
 						$label = "11 digits";
 						$abbrv = "11d";
 						break;
 					case "^(\d{12})$":
-						$prefix_number = '';
 						$label = "12 digits";
 						$abbrv = "12d";
 						break;
 					case "^(\d{13})$":
-						$prefix_number = '';
 						$label = "13 digits";
 						$abbrv = "13d";
 						break;
 					case "^(\d{14})$":
-						$prefix_number = '';
 						$label = "14 digits";
 						$abbrv = "14d";
 						break;
 					case "^(\d{12,15})$":
-						$prefix_number = '';
 						$label = "International";
 						$abbrv = "Intl";
 						break;
 					case "^(311)$":
-						$prefix_number = '';
 						$label = "311";
 						$abbrv = "311";
 						break;
 					case "^(411)$":
-						$prefix_number = '';
 						$label = "411";
 						$abbrv = "411";
 						break;
 					case "^(911)$":
-						$prefix_number = '';
 						$label = "911";
 						$abbrv = "911";
 						break;
 					case "^9(\d{3})$":
-						$prefix_number = '';
 						$label = "dial 9, 3 digits";
 						$abbrv = "9.3d";
 						break;
 					case "^9(\d{4})$":
-						$prefix_number = '';
 						$label = "dial 9, 4 digits";
 						$abbrv = "9.4d";
 						break;	
 					case "^9(\d{7})$":
-						$prefix_number = $default_area_code;
 						$label = "dial 9, 7 digits";
 						$abbrv = "9.7d";
 						break;
 					case "^9(\d{10})$":
-						$prefix_number = '1';
 						$label = "dial 9, 10 digits";
 						$abbrv = "9.10d";
 						break;
 					case "^9(\d{11})$":
-						$prefix_number = '';
 						$label = "dial 9, 11 digits";
 						$abbrv = "9.11d";
 						break;
 					case "^9(\d{12})$":
-						$prefix_number = '';
 						$label = "dial 9, 12 digits";
 						$abbrv = "9.Intl";
 						break;
 					case "^9(\d{13})$":
-						$prefix_number = '';
 						$label = "dial 9, 13 digits";
 						$abbrv = "9.13d";
 						break;
 					case "^9(\d{14})$":
-						$prefix_number = '';
 						$label = "dial 9, 14 digits";
 						break;
 					case "^9(\d{12,15})$":
-						$prefix_number = '';
 						$label = "dial 9, International";
 						$abbrv = "9.Intl";
 						break;
 					case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
-						$prefix_number = '1';
 						$label = "toll free";
 						$abbrv = "tollfree";
 						break;
 					default:
-						$prefix_number = '';
 						$label = $dialplan_expression;
 						$abbrv = filename_safe($dialplan_expression);
 					}
@@ -804,6 +772,17 @@ function type_onchange(field_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 	*/
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Prefix:\n";
+	echo "</td>\n";
+	echo "<td colspan='4' class='vtable' align='left'>\n";
+	echo "    <input class='formfld' style='width: 60%;' type='text' name='prefix_number' maxlength='255' value=\"$prefix_number\">\n";
+	echo "<br />\n";
+	echo "Enter a prefix number to add to the beginning of the destination number.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";

@@ -47,7 +47,6 @@ else {
 	if (count($_POST)>0) {
 		$numbering_plan = check_str($_POST["numbering_plan"]);
 		$default_gateway = check_str($_POST["default_gateway"]);
-		$default_area_code = check_str($_POST["default_area_code"]);
 		$event_socket_ip_address = check_str($_POST["event_socket_ip_address"]);
 		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
 		$event_socket_port = check_str($_POST["event_socket_port"]);
@@ -78,7 +77,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		//if (strlen($numbering_plan) == 0) { $msg .= "Please provide: Numbering Plan<br>\n"; }
 		//if (strlen($default_gateway) == 0) { $msg .= "Please provide: Default Gateway<br>\n"; }
-		//if (strlen($default_area_code) == 0) { $msg .= "Please provide: Default Area Code<br>\n"; }
 		if (strlen($event_socket_port) == 0) { $msg .= "Please provide: Event Socket Port<br>\n"; }
 		if (strlen($event_socket_password) == 0) { $msg .= "Please provide: Event Socket Password<br>\n"; }
 		//if (strlen($xml_rpc_http_port) == 0) { $msg .= "Please provide: XML RPC HTTP Port<br>\n"; }
@@ -116,7 +114,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "v_id, ";
 				$sql .= "numbering_plan, ";
 				$sql .= "default_gateway, ";
-				$sql .= "default_area_code, ";
 				$sql .= "event_socket_ip_address, ";
 				$sql .= "event_socket_port, ";
 				$sql .= "event_socket_password, ";
@@ -140,7 +137,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'1', ";
 				$sql .= "'$numbering_plan', ";
 				$sql .= "'$default_gateway', ";
-				$sql .= "'$default_area_code', ";
 				$sql .= "'$event_socket_ip_address', ";
 				$sql .= "'$event_socket_port', ";
 				$sql .= "'$event_socket_password', ";
@@ -179,7 +175,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "v_id = '1', ";
 				$sql .= "numbering_plan = '$numbering_plan', ";
 				$sql .= "default_gateway = '$default_gateway', ";
-				$sql .= "default_area_code = '$default_area_code', ";
 				$sql .= "event_socket_ip_address = '$event_socket_ip_address', ";
 				$sql .= "event_socket_port = '$event_socket_port', ";
 				$sql .= "event_socket_password = '$event_socket_password', ";
@@ -228,7 +223,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$numbering_plan = $row["numbering_plan"];
 			$default_gateway = $row["default_gateway"];
-			$default_area_code = $row["default_area_code"];
 			$event_socket_ip_address = $row["event_socket_ip_address"];
 			$event_socket_port = $row["event_socket_port"];
 			$event_socket_password = $row["event_socket_password"];
@@ -296,17 +290,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo " Enter the default gateway name here.\n";
 	//echo "</td>\n";
 	//echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Default Area Code:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='default_area_code' maxlength='255' value=\"$default_area_code\">\n";
-	echo "<br />\n";
-	echo "Enter the area code here. example: 208\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
