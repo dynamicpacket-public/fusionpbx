@@ -288,7 +288,7 @@ foreach($v_settings_array as $name => $value) {
 
 
 //get the extensions that are assigned to this user
-	if (strlen($_SESSION['user_extension_list']) == 0) {
+	if (strlen($_SESSION["username"]) > 0 && strlen($_SESSION['user_extension_list']) == 0) {
 		//get the user extension list
 			$_SESSION['user_extension_list'] = '';
 			$sql = "";
