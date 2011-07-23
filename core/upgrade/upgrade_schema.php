@@ -343,13 +343,13 @@
 				$tag = 'action'; //condition, action, antiaction
 				$fieldtype = 'set';
 				$fielddata = 'pin_number='.generate_password(6, 1);
-				$fieldorder = '001';
+				$fieldorder = '004';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 				$tag = 'action'; //condition, action, antiaction
 				$fieldtype = 'lua';
 				$fielddata = 'recordings.lua';
-				$fieldorder = '002';
+				$fieldorder = '005';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 				break; //limit to 1 row
 			}
@@ -379,7 +379,7 @@
 				}
 				$extensionname = 'DISA';
 				$dialplanorder ='900';
-				$context = 'default';
+				$context = $_SESSION['context'];
 				$enabled = 'false';
 				$descr = '*3472 Direct Inward System Access ';
 				$opt1name = 'disa';
@@ -399,9 +399,15 @@
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 				$tag = 'action'; //condition, action, antiaction
+				$fieldtype = 'set';
+				$fielddata = 'context='.$_SESSION['context'];
+				$fieldorder = '002';
+				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+				$tag = 'action'; //condition, action, antiaction
 				$fieldtype = 'lua';
 				$fielddata = 'disa.lua';
-				$fieldorder = '002';
+				$fieldorder = '003';
 				v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 				break; //limit to 1 row
 			}
