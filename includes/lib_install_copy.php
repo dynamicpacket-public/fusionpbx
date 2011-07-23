@@ -99,7 +99,7 @@ include "root.php";
 	$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/scripts';
 	$dst_dir = $v_scripts_dir;
 	$tmp_file = 'call_broadcast_originate.js'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
-	$tmp_file = 'call_forward_basic.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
+	$tmp_file = 'call_forward.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'disa.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'huntgroup_originate.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
 	$tmp_file = 'intercom.lua'; if (!copy($src_dir.'/'.$tmp_file, $dst_dir.'/'.$tmp_file)) { echo "copy failed from ".$src_dir."/".$tmp_file." to ".$dst_dir."/".$tmp_file."<br />\n"; }
