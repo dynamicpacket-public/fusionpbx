@@ -888,15 +888,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//write the switch.conf.xml file
 		switch_conf_xml();
 
-	//synchronize the config with the saved settings
-		sync_package_freeswitch();
-
-	//do not show the apply settings reminder on the login page
-		$_SESSION["reload_xml"] = false;
-
-	//clear the menu
-		$_SESSION["menu"] = "";
-
 	//login the user account
 		$_SESSION["username"] = 'superadmin';
 
@@ -933,6 +924,15 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 	//make sure the database schema and installation have performed all necessary tasks
 		require_once "core/upgrade/upgrade_schema.php";
+
+	//synchronize the config with the saved settings
+		sync_package_freeswitch();
+
+	//do not show the apply settings reminder on the login page
+		$_SESSION["reload_xml"] = false;
+
+	//clear the menu
+		$_SESSION["menu"] = "";
 
 	//redirect to the login page
 		$msg = "install complete";
