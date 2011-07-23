@@ -266,7 +266,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 	echo "<td align='left' width='30%' nowrap><b>Setting Update</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_settings.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='javascript:history.go(-1)'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
