@@ -50,6 +50,7 @@ if ( session:ready() ) then
 	digit_min_length = session:getVariable("digit_min_length");
 	digit_max_length = session:getVariable("digit_max_length");
 	gateway = session:getVariable("gateway");
+	context = session:getVariable("context");
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -123,7 +124,7 @@ if ( session:ready() ) then
 	--transfer or bridge the call
 		if (string.len(destination_number) < 7) then
 			--local call
-			session:execute("transfer", destination_number .. " XML default");
+			session:execute("transfer", destination_number .. " XML " .. context);
 		else
 			--remote call
 			if (gateway) then
@@ -134,7 +135,7 @@ if ( session:ready() ) then
 			else
 				session:execute("set", "effective_caller_id_name="..caller_id_name);
 				session:execute("set", "effective_caller_id_number="..caller_id_number);
-				session:execute("transfer", destination_number .. " XML default");
+				session:execute("transfer", destination_number .. " XML " .. context);
 			end
 		end
 
