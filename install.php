@@ -62,8 +62,9 @@ $v_id = '1';
 
 //if the config file exists then disable the install page
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php")) {
-		$msg .= "Already installed.<br />\n";
-		header("Location: ".PROJECT_PATH."/login.php?msg=".urlencode($msg));
+		$msg .= "Already Installed";
+		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
+		exit;
 	}
 
 //set the max execution time to 1 hour
@@ -887,18 +888,55 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//write the switch.conf.xml file
 		switch_conf_xml();
 
-	//make sure the database schema and installation have performed all necessary tasks
-		require_once "core/upgrade/upgrade_schema.php";
-
 	//synchronize the config with the saved settings
 		sync_package_freeswitch();
 
 	//do not show the apply settings reminder on the login page
 		$_SESSION["reload_xml"] = false;
 
+	//clear the menu
+		$_SESSION["menu"] = "";
+
+	//login the user account
+		$_SESSION["username"] = 'superadmin';
+
+	//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
+		$sql = "SELECT * FROM v_group_members ";
+		$sql .= "where v_id=:v_id ";
+		$sql .= "and username=:username ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->bindParam(':v_id', $v_id);
+		$prepstatement->bindParam(':username', $_SESSION["username"]);
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll(PDO::FETCH_NAMED);
+		$_SESSION["groups"] = $result;
+		unset($sql, $rowcount, $prepstatement);
+
+	//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
+		$x = 0;
+		$sql = "select distinct(permission_id) from v_group_permissions ";
+		foreach($_SESSION["groups"] as $field) {
+			if (strlen($field['groupid']) > 0) {
+				if ($x == 0) {
+					$sql .= "where (v_id = '".$v_id."' and group_id = '".$field['groupid']."') ";
+				}
+				else {
+					$sql .= "or (v_id = '".$v_id."' and group_id = '".$field['groupid']."') ";
+				}
+				$x++;
+			}
+		}
+		$prepstatementsub = $db->prepare($sql);
+		$prepstatementsub->execute();
+		$_SESSION['permissions'] = $prepstatementsub->fetchAll(PDO::FETCH_NAMED);
+		unset($sql, $prepstatementsub);
+
+	//make sure the database schema and installation have performed all necessary tasks
+		require_once "core/upgrade/upgrade_schema.php";
+
 	//redirect to the login page
 		$msg = "install complete";
-		header("Location: ".PROJECT_PATH."/login.php?msg=".urlencode($msg));
+		header("Location: ".PROJECT_PATH."/index2.php?msg=".urlencode($msg));
 }
 
 //set a default template

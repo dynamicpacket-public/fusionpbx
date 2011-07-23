@@ -127,9 +127,9 @@ session_start();
 
 		//redirect the user
 			$path = check_str($_POST["path"]);
-			if(isset($path) && !empty($path) && $path!="index2.php") {
+			if(isset($path) && !empty($path) && $path!="index2.php" && $path!="/install.php") {
 				header("Location: ".$path);
-				die();
+				exit();
 			}
 	}
 
