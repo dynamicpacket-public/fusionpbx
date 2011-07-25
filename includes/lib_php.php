@@ -65,7 +65,7 @@
 
 	//if magic quotes is enabled remove the slashes
 		if (get_magic_quotes_gpc()) {
-			$in = array(&$_GET, &$_POST, &$_COOKIE);
+			$in = array(&$_GET, &$_POST, &$_REQUEST, &$_COOKIE);
 			while (list($k,$v) = each($in)) {
 					foreach ($v as $key => $val) {
 							if (!is_array($val)) {
