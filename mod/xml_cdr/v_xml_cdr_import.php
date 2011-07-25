@@ -240,7 +240,7 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 }
 
 //get cdr details from the http post
-	if (strlen($_REQUEST["cdr"]) > 0) {
+	if (strlen($_POST["cdr"]) > 0) {
 
 		//authentication for xml cdr http post
 			if (strlen($_SESSION["xml_cdr_username"]) == 0) {
@@ -280,7 +280,7 @@ function process_xml_cdr($db, $v_log_dir, $leg, $xml_string) {
 				//}
 
 		//get the http post variable
-			$xml_string = trim($_REQUEST["cdr"]);
+			$xml_string = trim($_POST["cdr"]);
 
 		//get the leg of the call
 			if (substr($_REQUEST['uuid'], 0, 2) == "a_") {
