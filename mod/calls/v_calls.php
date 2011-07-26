@@ -61,7 +61,7 @@ $order = $_GET["order"];
 	$sql .= " select * from v_extensions ";
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and enabled = 'true' ";
-	if (!(ifgroup("admin") || !ifgroup("superadmin"))) {
+	if (!(ifgroup("admin") || ifgroup("superadmin"))) {
 		$sql .= "and user_list like '%|".$_SESSION["username"]."|%' ";
 	}
 	if (strlen($orderby)> 0) {

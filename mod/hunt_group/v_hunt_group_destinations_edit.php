@@ -56,7 +56,6 @@ require_once "includes/checkauth.php";
 		}
 		$destinationdata = check_str($_POST["destinationdata"]);
 		$destinationtype = check_str($_POST["destinationtype"]);
-		$destinationprofile = check_str($_POST["destinationprofile"]);
 		$destination_timeout = check_str($_POST["destination_timeout"]);
 		$destinationorder = check_str($_POST["destinationorder"]);
 		$destination_enabled = check_str($_POST["destination_enabled"]);
@@ -74,8 +73,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
 		if (strlen($destinationdata) == 0) { $msg .= "Please provide: Destination<br>\n"; }
 		if (strlen($destinationtype) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		if (strlen($destinationprofile) == 0) { $msg .= "Please provide: Profile<br>\n"; }
-		if (strlen($destination_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
+		//if (strlen($destination_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		//if (strlen($destinationorder) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($destination_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($destinationdescr) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -101,7 +99,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "hunt_group_id, ";
 				$sql .= "destinationdata, ";
 				$sql .= "destinationtype, ";
-				$sql .= "destinationprofile, ";
 				$sql .= "destination_timeout, ";
 				$sql .= "destinationorder, ";
 				$sql .= "destination_enabled, ";
@@ -113,7 +110,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$hunt_group_id', ";
 				$sql .= "'$destinationdata', ";
 				$sql .= "'$destinationtype', ";
-				$sql .= "'$destinationprofile', ";
 				$sql .= "'$destination_timeout', ";
 				$sql .= "'$destinationorder', ";
 				$sql .= "'$destination_enabled', ";
@@ -140,7 +136,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "hunt_group_id = '$hunt_group_id', ";
 				$sql .= "destinationdata = '$destinationdata', ";
 				$sql .= "destinationtype = '$destinationtype', ";
-				$sql .= "destinationprofile = '$destinationprofile', ";
 				$sql .= "destination_timeout = '$destination_timeout', ";
 				$sql .= "destinationorder = '$destinationorder', ";
 				$sql .= "destination_enabled = '$destination_enabled', ";
@@ -177,7 +172,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$hunt_group_id = $row["hunt_group_id"];
 			$destinationdata = $row["destinationdata"];
 			$destinationtype = $row["destinationtype"];
-			$destinationprofile = $row["destinationprofile"];
 			$destination_timeout = $row["destination_timeout"];
 			$destinationorder = $row["destinationorder"];
 			$destination_enabled = $row["destination_enabled"];
@@ -261,36 +255,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Profile:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "                <select name='destinationprofile' class='formfld'>\n";
-	echo "                <option></option>\n";
-	if (htmlspecialchars($destinationprofile) == "auto") {
-		echo "                <option selected='yes'>auto</option>\n";
-	}
-	else {
-		echo "                <option>auto</option>\n";
-	}
-	foreach (ListFiles($v_conf_dir.'/sip_profiles') as $key=>$sip_profile_file){
-		$sip_profile_name = str_replace(".xml", "", $sip_profile_file);
-
-		if (htmlspecialchars($destinationprofile) == $sip_profile_name) {
-			echo "                <option selected='yes'>$sip_profile_name</option>\n";
-		}
-		else {
-			echo "                <option>$sip_profile_name</option>\n";
-		}
-	}
-	echo "                </select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    Timeout:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

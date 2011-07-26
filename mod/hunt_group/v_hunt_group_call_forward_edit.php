@@ -65,7 +65,9 @@ function destination_select($select_name, $select_value, $select_default) {
 	$sql .= "select * from v_hunt_group ";
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and hunt_group_id = '$hunt_group_id' ";
-	$sql .= "and hunt_group_user_list like '%|".$_SESSION["username"]."|%' ";
+	if (!(permission_exists('hunt_group_add') || permission_exists('hunt_group_edit'))) {
+		$sql .= "and hunt_group_user_list like '%|".$_SESSION["username"]."|%' ";
+	}
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
@@ -137,7 +139,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "select huntgroupextension from v_hunt_group ";
 		$sql .= "where v_id = '$v_id' ";
 		$sql .= "and hunt_group_id = '$hunt_group_id' ";
-		$sql .= "and hunt_group_user_list like '%|".$_SESSION["username"]."|%' ";
+		if (!(permission_exists('hunt_group_add') || permission_exists('hunt_group_edit'))) {
+			$sql .= "and hunt_group_user_list like '%|".$_SESSION["username"]."|%' ";
+		}
 		$sql .= ") ";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();

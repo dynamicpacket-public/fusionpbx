@@ -36,9 +36,6 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][4]['name'] = 'hunt_group_call_forward';
-		$apps[$x]['permissions'][4]['groups'][] = 'user';
-		$apps[$x]['permissions'][4]['groups'][] = 'admin';
-		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
 	//schema details
 		$apps[$x]['db'][0]['table'] = 'v_hunt_group';
