@@ -87,13 +87,14 @@
 	<td width="47%" valign="top">
 		<table width='100%' border="0" cellpadding="0" cellspacing="0">
 <tr><th colspan='2'>Ticket Status</th></tr>
+<?php if ($isadmin) { ?>
 <tr> 
 <td class='vncell' valign='top' align='left' nowrap='nowrap'> 
 	Ticket Owner: 
 </td> 
 <td class='vtable' align='left'> 
 	<select name="ticket_owner">
-		<option>--</option>
+		<option value=''>--</option>
 		<?php foreach ($queue_members as $qm) {
 			echo "<option value='" . $qm['user_id'] . "' ";
 			if ($qm['user_id'] == $ticket_header['ticket_owner']) echo "selected='selected'";
@@ -103,11 +104,13 @@
 	</select>
 </td> 
 </tr> 
+<?php } ?>
 <tr> 
 <td class='vncell' valign='top' align='left' nowrap='nowrap'> 
 	Ticket status: 
 </td> 
 <td class='vtable' align='left'> 
+	<?php if ($isadmin) { ?>
 	<select name="ticket_status">
 		<?php foreach ($ticket_statuses as $ts) {
 			echo "<option value='" . $ts['status_id'] . "' ";
@@ -116,13 +119,19 @@
 		}
 		?>
 	</select>
+	<?php } else { 
+		foreach($ticket_statuses as $ts) {
+			if ($ts['status_id'] == $ticket_header['ticket_status']) echo $ts['status_name'];
+		}
+	      } ?>
 </td> 
 </tr> 
 <tr> 
 <td class='vncell' valign='top' align='left' nowrap='nowrap'> 
 	Ticket Queue: 
 </td> 
-<td class='vtable' align='left'> 
+<td class='vtable' align='left'>
+	<?php if ($isadmin) { ?>
 	<select name="queue_id">
 		<?php foreach ($ticket_queues as $tq) {
 			echo "<option value='" . $tq['queue_id'] . "' ";
@@ -131,6 +140,11 @@
 		}
 		?>
 	</select>
+	<?php } else {
+		foreach ($ticket_queues as $tq) {
+			if ($tq['queue_id'] == $ticket_header['queue_id']) echo $tq['queue_name'];
+		}
+	} ?>
 </td> 
 </tr> 
 		</table>

@@ -27,8 +27,8 @@ foreach($tickets as $ticket){
 ?>
 <tr>
 	<td><?php echo $ticket['ticket_number']; ?></td>
-	<td><?php echo $ticket['queue_id']; ?></td>
-        <td><?php echo $ticket['ticket_status']; ?></td>
+	<td><?php echo $queues[$ticket['queue_id']]; ?></td>
+        <td><?php echo $statuses[$ticket['ticket_status']]; ?></td>
 	<td><?php echo $ticket['last_update_stamp']; ?></td>
 	<td><?php echo $ticket['subject']; ?></td>
 <td align='right' width='42'>

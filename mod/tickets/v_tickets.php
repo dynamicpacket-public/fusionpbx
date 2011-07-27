@@ -38,11 +38,21 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+if (isset($_REQUEST['show_closed'])) { 
+	$show_closed = true; 
+}
+
 //get a list of assigned extensions for this user
 $sql = "";
 $sql .= "select * from v_tickets ";
 $sql .= "where v_id = '$v_id' ";
-$sql .= "order by ticket_status";
+if (!$show_closed) {
+	$sql .= "and ticket_status < 6 ";
+}
+if (!ifgroup("superadmin") && !ifgroup("admin")){
+	$sql .= "and user_id = " . $_SESSION['user_id'] . " ";
+}
+$sql .= "order by ticket_status, queue_id ";
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
 $x = 0;
@@ -50,6 +60,29 @@ $result = $prepstatement->fetchAll();
 foreach ($result as &$row) {
 	$tickets[$x] = $row;
 	$x++;
+}
+unset ($prepstatement);
+
+$sql = "";
+$sql .= "select * from v_ticket_statuses ";
+$prepstatement = $db->prepare(check_sql($sql));
+$prepstatement->execute();
+$x = 0;
+$result = $prepstatement->fetchAll();
+foreach ($result as &$row) {
+	$statuses[$row['status_id']] = $row['status_name'];
+}
+unset ($prepstatement);
+
+$sql = "";
+$sql .= "select * from v_ticket_queues ";
+$sql .= "where v_id = $v_id ";
+$prepstatement = $db->prepare(check_sql($sql));
+$prepstatement->execute();
+$x = 0;
+$result = $prepstatement->fetchAll();
+foreach ($result as &$row) {
+	$queues[$row['queue_id']] = $row['queue_name'];
 }
 unset ($prepstatement);
 

@@ -42,6 +42,11 @@ require_once "includes/header.php";
 
 $v_domain = $_SESSION['domains'][$v_id]['domain'];
 
+// Check to see if we're an admin and if we are set the $isadmin to true for use in the template and sql query building
+if (ifgroup("superadmin") || ifgroup("admin")){
+	$isadmin = true;
+}
+
 //add or update the database
 if (isset($_REQUEST['id']) || isset($_REQUEST['uuid'])) {
 	$action = "update";
@@ -75,7 +80,7 @@ if ($action == "update") {
 	if (isset($_REQUEST["uuid"])) { 
 		$sql .= "and a.ticket_uuid = '$ticket_uuid' ";
 	}
-	if (!ifgroup("superadmin") && !ifgroup("admin")){
+	if (!$isadmin) {
 		$sql .= "and a.user_id = " . $_SESSION['user_id'] . " ";
 	}
 
@@ -126,6 +131,7 @@ if ($action == "update") {
 
 	$sql = "";
 	$sql .= "SELECT * from v_ticket_statuses ";
+	$sql .= "where v_id = $v_id ";
 	$sql .= "ORDER by status_id ";
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();

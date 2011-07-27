@@ -152,6 +152,9 @@
 		$apps[$x]['db'][3]['fields'][1]['name'] = 'status_name';
 		$apps[$x]['db'][3]['fields'][1]['type'] = 'character varying';
 		$apps[$x]['db'][3]['fields'][1]['description'] = '';
+		$apps[$x]['db'][3]['fields'][1]['name'] = 'v_id';
+		$apps[$x]['db'][3]['fields'][1]['type'] = 'integer';
+		$apps[$x]['db'][3]['fields'][1]['description'] = '';
 
 	// CREATE TABLE v_tickets 
 		$apps[$x]['db'][4]['table'] = 'v_tickets';
