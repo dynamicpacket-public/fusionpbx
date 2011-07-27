@@ -186,7 +186,7 @@ unset ($prepstatement);
 
 } 
 writeout:
-include "client_template.php";
+include "update_complete.php";
 
 end:
 //show the footer
