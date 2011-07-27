@@ -38,41 +38,71 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
-if ($_SESSION['db_tables']['v_xmpp'] != 'valid') {
-	if ($db_type == "pgsql") {
-		$sql = "select count(*) from pg_tables where schemaname='public' and tablename = 'v_xmpp'";
-	} elseif ($db_type == "mysql") {
-		$sql = "select count(*) as count from information_schema.tables where TABLE_SCHEMA='" . $db_name . "' and TABLE_NAME='roomlist';";
-	} elseif ($db_type == "sqlite") {
-		$sql = "select count(*) as count from sqlite_master WHERE type IN ('table','view') AND name = 'registrations';";
-	}
-
-	$row = $db->query($sql)->fetch();
-
-	if ($row['count'] < 1) {
-		include "db_create.php";
-		$db->exec(sql_tables($db_type));
-		// $create = $db->query(sql_tables($db_type))->fetch();
-		$_SESSION['db_tables']['v_xmpp'] = 'valid';
+if (isset($_REQUEST)) {
+	foreach ($_REQUEST as $field => $data){
+        	$request[$field] = check_str($data);
 	}
 }
 
-//get a list of assigned extensions for this user
 $sql = "";
-$sql .= "select * from v_xmpp ";
-$sql .= "where v_id = '$v_id' ";
+if (isset($_REQUEST['queue_name'])) {
+	if (isset($_REQUEST['queue_id'])){
+		//do Queue Update
+		$sql .= "UPDATE v_ticket_queues SET ";
+		$sql .= "queue_name = '" . $request['queue_name'] . "', ";
+		$sql .= "queue_email = '" . $request['queue_email'] . "', ";
+		$sql .= "WHERE queue_id = " . $request['queue_id'] . " ";
+	} else {
+		//do Queue Create
+		$sql .= "INSERT into v_ticket_queues (queue_name, queue_email, v_id) values ";
+		$sql .= "('" . $request['queue_name'] . "', '" . $request['queue_email'] . "', $v_id) ";
+	}
+	$db->exec($sql);
+}
+
+if (isset($_REQUEST['status_name'])) {
+	if (isset($_REQUEST['status_id'])){
+		//do Status Update
+		$sql .= "UPDATE v_ticket_statuses SET ";
+		$sql .= "status_name = '" . $request['status_name'] . "' ";
+		$sql .= "WHERE status_id = " . $request['status_id'] . " ";
+	} else {
+		//do Status Create
+		$sql .= "INSERT into v_ticket_statuses (status_name, v_id) values ";
+		$sql .= "('" . $request['status_name'] . "', $v_id) ";
+	}
+	$db->exec($sql);
+}
+
+// Get a List of the Ticket Statuses
+$sql = "";
+$sql .= "select * from v_ticket_statuses ";
+$sql .= "where v_id = $v_id ";
+$sql .= "order by status_id ";
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
 $x = 0;
 $result = $prepstatement->fetchAll();
 foreach ($result as &$row) {
-	$profiles_array[$x] = $row;
-	$x++;
+	$statuses[$row['status_id']] = $row;
+}
+unset ($prepstatement);
+
+$sql = "";
+$sql .= "select * from v_ticket_queues ";
+$sql .= "where v_id = $v_id ";
+$sql .= "order by queue_id ";
+$prepstatement = $db->prepare(check_sql($sql));
+$prepstatement->execute();
+$x = 0;
+$result = $prepstatement->fetchAll();
+foreach ($result as &$row) {
+	$queues[$row['queue_id']] = $row;
 }
 unset ($prepstatement);
 
 //include the view
-include "profile_list.php";
+include "ticket_manager.php";
 
 //include the footer
 require_once "includes/footer.php";
