@@ -122,7 +122,7 @@ else {
 	echo "<th width='40%'>Description</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('system_settings_add')) {
-		echo "	<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='v_system_settings_add.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -239,10 +239,10 @@ else {
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='".$url."'>".$row['v_domain']."</a></td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'><a href='v_system_settings.php?id=".$row['v_id']."&domain=".$row['v_domain']."'>".$row['v_domain']."</a></td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_package_version']."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_label']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_label']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_name']."</td>\n";
 			//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['v_dir']."</td>\n";
-			echo "	<td valign='top' class='rowstylebg'>".$row['v_description']."</td>\n";
+			echo "	<td valign='top' class='rowstylebg'>".$row['v_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('system_settings_edit')) {
 				echo "		<a href='v_system_settings_edit.php?id=".$row['v_id']."' alt='edit'>$v_link_label_edit</a>\n";
@@ -265,7 +265,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('system_settings_add')) {
-		echo "			<a href='v_system_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='v_system_settings_add.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

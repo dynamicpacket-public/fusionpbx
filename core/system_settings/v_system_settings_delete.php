@@ -39,149 +39,143 @@ else {
 		$id = check_str($_GET["id"]);
 	}
 
-//get the $apps array from the installed apps from the core and mod directories
-	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
-	$x=0;
-	foreach ($config_list as &$config_path) {
-		include($config_path);
-		$x++;
-	}
-
-//set the needle
-	if (count($_SESSION["domains"]) > 1) {
-		$v_needle = 'v_'.$v_domain.'_';
+//allow delete for ids other than v_id = '1'
+	if ($id == "1") {
+		// id 1 is used for the system defaults and for some system wide tools do not allow it to be deleted.
 	}
 	else {
-		$v_needle = 'v_';
-	}
-
-//get the domain using the id
-	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "select * from v_system_settings ";
-		$sql .= "where v_id = '$id' ";
-		$prepstatement = $db->prepare(check_sql($sql));
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll();
-		foreach ($result as &$row) {
-			$v_domain = $row["v_domain"];
-			$v_recordings_dir = $row["v_recordings_dir"];
-			$v_dialplan_default_dir = $row["v_dialplan_default_dir"];
-			$v_extensions_dir = $row["v_extensions_dir"];
-			$v_dialplan_public_dir = $row["v_dialplan_public_dir"];
-			$v_scripts_dir = $row["v_scripts_dir"];
-			break; //limit to 1 row
-		}
-		unset ($prepstatement);
-	}
-
-//delete the system_settings entry by the id and all child data
-	if (strlen($id)>0) {
-		$db->beginTransaction();
-		foreach ($apps as &$app) {
-			foreach ($app['db'] as $row) {
-				$table_name = $row['table'];
-				$sql = "delete from $table_name where v_id = '$id' ";
-				$db->query($sql);
+		//get the $apps array from the installed apps from the core and mod directories
+			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/v_config.php");
+			$x=0;
+			foreach ($config_list as &$config_path) {
+				include($config_path);
+				$x++;
 			}
-		}
-		$db->commit();
-	}
 
-//delete the extension
-	unlink($v_conf_dir.'/directory/'.$v_domain.'.xml');
-	if (strlen($v_extensions_dir) > 0) {
-		system("rm -rf ".$v_extensions_dir);
-	}
+		//set the needle
+			if (count($_SESSION["domains"]) > 1) {
+				$v_needle = 'v_'.$v_domain.'_';
+			}
+			else {
+				$v_needle = 'v_';
+			}
 
-//delete the gateways
-	if($dh = opendir($v_gateways_dir."")) {
-		$files = Array();
-		while($file = readdir($dh)) {
-			if($file != "." && $file != ".." && $file[0] != '.') {
-				if(is_dir($dir . "/" . $file)) {
-					//this is a directory do nothing
-				} else {
-					//check if file extension is xml
-					if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-						unlink($v_gateways_dir."/".$file);
+		//get the domain using the id
+			if (strlen($id)>0) {
+				$sql = "";
+				$sql .= "select * from v_system_settings ";
+				$sql .= "where v_id = '$id' ";
+				$prepstatement = $db->prepare(check_sql($sql));
+				$prepstatement->execute();
+				$result = $prepstatement->fetchAll();
+				foreach ($result as &$row) {
+					$v_domain = $row["v_domain"];
+					$v_recordings_dir = $row["v_recordings_dir"];
+					$v_dialplan_default_dir = $row["v_dialplan_default_dir"];
+					$v_extensions_dir = $row["v_extensions_dir"];
+					$v_dialplan_public_dir = $row["v_dialplan_public_dir"];
+					$v_scripts_dir = $row["v_scripts_dir"];
+					break; //limit to 1 row
+				}
+				unset ($prepstatement);
+			}
+
+		//delete the system_settings entry by the id and all child data
+			if (strlen($id)>0) {
+				$db->beginTransaction();
+				foreach ($apps as &$app) {
+					foreach ($app['db'] as $row) {
+						$table_name = $row['table'];
+						$sql = "delete from $table_name where v_id = '$id' ";
+						$db->query($sql);
 					}
 				}
+				$db->commit();
 			}
-		}
-		closedir($dh);
-	}
 
-//delete the dialplan
-	unlink($v_conf_dir.'/dialplan/'.$v_domain.'.xml');
-	if (strlen($v_dialplan_default_dir) > 0) {
-		system("rm -rf ".$v_dialplan_default_dir);
-	}
+		//delete the extension
+			unlink($v_conf_dir.'/directory/'.$v_domain.'.xml');
+			if (strlen($v_extensions_dir) > 0) {
+				system("rm -rf ".$v_extensions_dir);
+			}
 
-//delete the recordings
-	if (strlen($v_recordings_dir) > 0) {
-		system("rm -rf ".$v_recordings_dir);
-	}
-
-//delete the ivr menu
-	if($dh = opendir($v_conf_dir."/ivr_menus/")) {
-		$files = Array();
-		while($file = readdir($dh)) {
-			if($file != "." && $file != ".." && $file[0] != '.') {
-				if(is_dir($dir . "/" . $file)) {
-					//this is a directory
-				} else {
-					if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-						//echo "file: $file<br />\n";
-						unlink($v_conf_dir."/ivr_menus/".$file);
+		//delete the gateways
+			if($dh = opendir($v_gateways_dir."")) {
+				$files = Array();
+				while($file = readdir($dh)) {
+					if($file != "." && $file != ".." && $file[0] != '.') {
+						if(is_dir($dir . "/" . $file)) {
+							//this is a directory do nothing
+						} else {
+							//check if file extension is xml
+							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+								unlink($v_gateways_dir."/".$file);
+							}
+						}
 					}
 				}
+				closedir($dh);
 			}
-		}
-		closedir($dh);
-	}
 
-//delete the public dialplan
-	$v_needle = 'v_public_'.$v_domain.'_';
-	if($dh = opendir($v_dialplan_public_dir."/")) {
-		$files = Array();
-		while($file = readdir($dh)) {
-			if($file != "." && $file != ".." && $file[0] != '.') {
-				if(is_dir($dir . "/" . $file)) {
-					//this is a directory
-				} else {
-					if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-						unlink($v_dialplan_public_dir."/".$file);
+		//delete the dialplan
+			unlink($v_conf_dir.'/dialplan/'.$v_domain.'.xml');
+			if (strlen($v_dialplan_default_dir) > 0) {
+				system("rm -rf ".$v_dialplan_default_dir);
+			}
+
+		//delete the recordings
+			if (strlen($v_recordings_dir) > 0) {
+				system("rm -rf ".$v_recordings_dir);
+			}
+
+		//delete the ivr menu
+			if($dh = opendir($v_conf_dir."/ivr_menus/")) {
+				$files = Array();
+				while($file = readdir($dh)) {
+					if($file != "." && $file != ".." && $file[0] != '.') {
+						if(is_dir($dir . "/" . $file)) {
+							//this is a directory
+						} else {
+							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+								//echo "file: $file<br />\n";
+								unlink($v_conf_dir."/ivr_menus/".$file);
+							}
+						}
 					}
 				}
+				closedir($dh);
 			}
-		}
-		closedir($dh);
-	}
 
-//delete the hunt group lua scripts
-	$v_prefix = 'v_huntgroup_'.$v_domain.'_';
-	if($dh = opendir($v_scripts_dir)) {
-		$files = Array();
-		while($file = readdir($dh)) {
-			if($file != "." && $file != ".." && $file[0] != '.') {
-				if(is_dir($dir . "/" . $file)) {
-					//this is a directory
-				} else {
-					if (substr($file,0, strlen($v_prefix)) == $v_prefix && substr($file,-4) == '.lua') {
-						unlink($v_scripts_dir.'/'.$file);
+		//delete the public dialplan
+			if (substr($v_dialplan_public_dir, - strlen($v_domain)) == $v_domain) {
+				system("rm -rf ".$v_dialplan_public_dir);
+				unlink(substr($v_dialplan_public_dir, 0, ($v_dialplan_public_dir - (strlen($v_domain) +1)))."/".$v_domain.".xml");
+			}
+
+		//delete the hunt group lua scripts
+			$v_prefix = 'v_huntgroup_'.$v_domain.'_';
+			if($dh = opendir($v_scripts_dir)) {
+				$files = Array();
+				while($file = readdir($dh)) {
+					if($file != "." && $file != ".." && $file[0] != '.') {
+						if(is_dir($dir . "/" . $file)) {
+							//this is a directory
+						} else {
+							if (substr($file,0, strlen($v_prefix)) == $v_prefix && substr($file,-4) == '.lua') {
+								unlink($v_scripts_dir.'/'.$file);
+							}
+						}
 					}
 				}
+				closedir($dh);
 			}
-		}
-		closedir($dh);
+
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
+
+		//clear the domains session array so that it is updated
+			unset($_SESSION["domains"]);
 	}
-
-//apply settings reminder
-	$_SESSION["reload_xml"] = true;
-
-//clear the domains session array so that it is updated
-	unset($_SESSION["domains"]);
 
 //redirect the user
 	require_once "includes/header.php";

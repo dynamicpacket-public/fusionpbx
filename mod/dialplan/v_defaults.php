@@ -26,41 +26,6 @@
 
 //if the dialplan default directory doesn't exist then create it
 	if (!is_dir($v_dialplan_default_dir)) { mkdir($v_dialplan_default_dir,0777,true); }
-
-//if the disa dialplan entry does not exist then add it
-	$sql = "select dialplan_include_id from v_dialplan_includes_details ";
-	$sql .= "where fielddata like 'disa.lua' ";
-	$sql .= "and v_id = '$v_id' ";
-	$result = $db->query($sql)->fetch();
-	$prepstatement = $db->prepare(check_sql($sql));
-	if ($prepstatement) {
-		$prepstatement->execute();
-		$result = $prepstatement->fetchAll(PDO::FETCH_ASSOC);
-		if (count($result) == 0) {
-			//add the disa dialplan entry
-				$sql = "INSERT INTO v_dialplan_includes (v_id, extensionname, extensioncontinue, dialplanorder, context, enabled, descr, opt1name, opt1value) VALUES(".$v_id.",'DISA','',900,'default','true','*3472 Direct Inward System Access ','disa',3472) ";
-				if ($db_type == "sqlite" || $db_type == "mysql" ) {
-					$db->exec(check_sql($sql));
-					$dialplan_include_id = $db->lastInsertId($id);
-				}
-				if ($db_type == "pgsql") {
-					$sql .= " RETURNING dialplan_include_id ";
-					$prepstatement = $db->prepare(check_sql($sql));
-					$prepstatement->execute();
-					$result = $prepstatement->fetchAll();
-					foreach ($result as &$row) {
-						$dialplan_include_id = $row["dialplan_include_id"];
-					}
-					unset($prepstatement, $result);
-				}
-			//add the disa dialplan inclue entry
-				$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'condition',0,'destination_number','^\\*3472$','');"; $db->exec(check_sql($sql));
-				$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'action',1,'set','pin_number=".generate_password(6, 1)."','');"; $db->exec(check_sql($sql));
-				$sql = "INSERT INTO v_dialplan_includes_details (v_id, dialplan_include_id, parent_id, tag, fieldorder, fieldtype, fielddata, fieldbreak) VALUES(".$v_id.",".$dialplan_include_id.",NULL,'action',2,'lua','disa.lua','');"; $db->exec(check_sql($sql));
-		}
-	}
-	unset($prepstatement, $result);
-
 //write the dialplan/default.xml if it does not exist
 	//get the contents of the dialplan/default.xml
 		$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/templates/conf/dialplan/default.xml';
@@ -78,10 +43,142 @@
 			//set the file path
 				$file_path = $v_conf_dir.'/dialplan/'.$v_domain.'.xml';
 		}
+
 	//write the default dialplan
 		if (!file_exists($file_path)) {
 			$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
 			fwrite($fh, $file_default_contents);
 			fclose($fh);
 		}
+
+// add a recordings dialplan entry if it doesn't exist
+	$v_recording_action = 'add';
+	$sql = "";
+	$sql .= "select * from v_dialplan_includes ";
+	$sql .= "where v_id = '$v_id' ";
+	$sql .= "and opt1name = 'recordings' ";
+	$sql .= "and (opt1value = '732' or opt1value = '732673') ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	while($sub_row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+		$v_recording_action = 'update';
+		break; //limit to 1 row
+	}
+	unset ($sql, $prep_statement);
+	if ($v_recording_action == 'add') {
+		if ($display_type == "text") {
+			echo "	Dialplan Recording: 	added\n";
+		}
+		$extensionname = 'Recordings';
+		$dialplanorder ='900';
+		$context = 'default';
+		$enabled = 'true';
+		$descr = '*732 default system recordings tool';
+		$opt1name = 'recordings';
+		$opt1value = '732';
+		$dialplan_include_id = v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context, $enabled, $descr, $opt1name, $opt1value);
+
+		$tag = 'condition'; //condition, action, antiaction
+		$fieldtype = 'destination_number';
+		$fielddata = '^\*(732)$';
+		$fieldorder = '000';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'recordings_dir='.$v_recordings_dir;
+		$fieldorder = '001';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'recording_slots=true';
+		$fieldorder = '002';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'recording_prefix=recording';
+		$fieldorder = '003';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'pin_number='.generate_password(6, 1);
+		$fieldorder = '004';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'lua';
+		$fielddata = 'recordings.lua';
+		$fieldorder = '005';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+	}
+	else {
+		if ($display_type == "text") {
+			echo "	Dialplan Recording: 	no change\n";
+		}
+	}
+
+// add a disa dialplan entry if it doesn't exist
+	$v_disa_action = 'add';
+	$sql = "";
+	$sql .= "select * from v_dialplan_includes ";
+	$sql .= "where v_id = '$v_id' ";
+	$sql .= "and opt1name = 'disa' ";
+	$sql .= "and opt1value = '3472' ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	while($sub_row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+		$v_disa_action = 'update';
+		break; //limit to 1 row
+	}
+	unset ($sql, $prep_statement);
+	if ($v_disa_action == 'add') {
+		if ($display_type == "text") {
+			echo "	Dialplan DISA: 		added\n";
+		}
+		$extensionname = 'DISA';
+		$dialplanorder ='900';
+		$context = $_SESSION['context'];
+		$enabled = 'false';
+		$descr = '*3472 Direct Inward System Access ';
+		$opt1name = 'disa';
+		$opt1value = '3472';
+		$dialplan_include_id = v_dialplan_includes_add($v_id, $extensionname, $dialplanorder, $context, $enabled, $descr, $opt1name, $opt1value);
+
+		$tag = 'condition'; //condition, action, antiaction
+		$fieldtype = 'destination_number';
+		$fielddata = '^\*(3472)$';
+		$fieldorder = '000';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'pin_number='.generate_password(6, 1);
+		$fieldorder = '001';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'set';
+		$fielddata = 'context='.$_SESSION['context'];
+		$fieldorder = '002';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+		$tag = 'action'; //condition, action, antiaction
+		$fieldtype = 'lua';
+		$fielddata = 'disa.lua';
+		$fieldorder = '003';
+		v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+	}
+	else {
+		if ($display_type == "text") {
+			echo "	Dialplan DISA: 		no change\n";
+		}
+	}
+
+// synchronize the dialplan
+	if ($v_recording_action == 'add' || $v_disa_action == 'add') {
+		sync_package_v_dialplan_includes();
+	}
 ?>

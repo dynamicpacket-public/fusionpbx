@@ -322,12 +322,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 			} //if ($action == "update")
 
-			//upgrade the database schema and ensure necessary files and directories exist
-				$display_results = false;
-				require_once "core/upgrade/upgrade_schema.php";
-
 			//clear the domains session array so that it is updated
 				unset($_SESSION["domains"]);
+
+			//rebuild the domains session array
+				include "includes/lib_pdo.php";
+
+			//upgrade the database schema and ensure necessary files and directories exist
+				$display_results = false;
+				require "core/upgrade/upgrade_schema.php";
 
 			//redirect the user
 				require_once "includes/header.php";
@@ -420,6 +423,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($v_dialplan_public_dir) == 0) { $v_dialplan_public_dir = $v_conf_dir.'/dialplan/public'; }
 	if (strlen($v_extensions_dir) == 0) { $v_extensions_dir = $v_conf_dir.'/directory/default'; }
 	if (strlen($v_dialplan_default_dir) == 0) { $v_dialplan_default_dir = $v_conf_dir.'/dialplan/default'; }
+	if ($action == "add") {
+		$v_extensions_dir = $v_conf_dir.'/directory/'.$_GET['v_domain'];
+		$v_dialplan_public_dir = $v_conf_dir.'/dialplan/public/'.$_GET['v_domain'];
+		$v_dialplan_default_dir = $v_conf_dir.'/dialplan/'.$_GET['v_domain'];
+		$v_recordings_dir = $v_recordings_dir.'/'.$_GET['v_domain'];
+
+		$v_domain = $_GET['v_domain'];
+		$v_template_name = $_GET['v_template_name'];
+		$v_description = $_GET['v_description'];
+		$v_time_zone = $_GET['v_time_zone'];
+	}
 
 //show the header
 	require_once "includes/header.php";

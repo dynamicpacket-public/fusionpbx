@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//if the recordings directory doesn't exist then create it
-	if (!is_dir($v_recordings_dir)) { mkdir($v_recordings_dir,0777,true); }
+//if the extensions dir doesn't exist then create it
+	if (!is_dir($v_extensions_dir)) { mkdir($v_extensions_dir,0777,true); }
 
 ?>
