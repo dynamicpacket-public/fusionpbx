@@ -79,15 +79,6 @@ else {
 
 $fax_file_warning = "";
 if (file_exists($dir_fax.'/'.$fax_name.".tif")) {
-	if (!file_exists($dir_fax.'/'.$fax_name.".png")) {
-		//cd /usr/local/freeswitch/storage/fax/9975/inbox/;/usr/local/bin/tiff2png /usr/local/freeswitch/storage/fax/9975/inbox/1001-2009-06-06-01-15-11.tif
-		//echo "cd $dir_fax; /usr/bin/tiff2png ".$dir_fax.'/'.$fax_name.".tif\n";
-		$tmp_tiff2png = exec("which tiff2png");
-		if (strlen($tmp_tiff2png) > 0) {
-			exec("cd ".$dir_fax."; ".$tmp_tiff2png." ".$dir_fax.'/'.$fax_name.".tif");
-		}
-	}
-
 	if (!file_exists($dir_fax.'/'.$fax_name.".pdf")) {
 		//echo "cd $dir_fax; /usr/bin/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax.'/'.$fax_name.".tif\n";
 		$tmp_tiff2pdf = exec("which tiff2pdf");
@@ -163,11 +154,6 @@ $tmp_texthtml = $tmp_textplain;
 		}
 		if (file_exists($dir_fax.'/'.$fax_name.".pdf")) {
 			$mail->AddAttachment($dir_fax.'/'.$fax_name.'.pdf');  // pdf attachment
-		}
-		if (!file_exists($dir_fax.'/'.$fax_name.".pdf")) {
-			if (file_exists($dir_fax.'/'.$fax_name.".png")) {
-				$mail->AddAttachment($dir_fax.'/'.$fax_name.'.png');  // png attachment
-			}
 		}
 		//$filename='fax.tif'; $encoding = "base64"; $type = "image/tif";
 		//$mail->AddStringAttachment(base64_decode($strfax),$filename,$encoding,$type);
