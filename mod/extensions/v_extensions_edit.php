@@ -147,26 +147,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add" && permission_exists('extension_add')) {
-			$userfirstname='extension';$useremail='';
+			$user_first_name = 'extension';
+			$user_email = '';
 			if ($autogen_users == "true") {
 				$auto_user = $extension;
 				for ($i=1; $i<=$range; $i++){
-					$userlastname = $auto_user;
+					$user_last_name = $auto_user;
 					$user_password = generate_password();
-					user_add($auto_user, $user_password, $userfirstname, $userlastname, $useremail);
+					user_add($auto_user, $user_password, $user_first_name, $user_last_name, $user_email);
 					$generated_users[$i]['username'] = $auto_user;
 					$generated_users[$i]['password'] = $user_password;
 					$auto_user++;
 				}
 			} else {
-				$userlastname = $extension;
 				$user_list_array = explode("|", $user_list);
-				foreach($user_list_array as $tmp_user){
-					$user_password = generate_password();
-					user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
+				$i = 0;
+				foreach($user_list_array as $auto_user){
+					if (strlen($auto_user) > 0) {
+						if (!user_exists($auto_user)) {
+							$user_last_name = $extension;
+							$user_password = generate_password();
+							user_add($auto_user, $user_password, $user_first_name, $user_last_name, $user_email);
+							$generated_users[$i]['username'] = $auto_user;
+							$generated_users[$i]['password'] = $user_password;
+							$i++;
+						}
+					}
 				}
 			}
-			unset($tmp_user);
+			unset($auto_user);
 
 			$db->beginTransaction();
 			for ($i=1; $i<=$range; $i++) {
@@ -263,22 +272,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<br />\n";
 				echo "<div align='center'>\n";
-				if ($autogen_users != "true") {
+				if (count($generated_users) == 0) {
 					//action add
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
-					echo "	<table width='40%'>\n";
-					echo "		<tr>\n";
-					echo "			<th align='left'>Message</th>\n";
-					echo "		</tr>\n";
-					echo "		<tr>\n";
-					echo "			<td class='rowstyle1'><strong>Add Complete</strong></td>\n";
-					echo "		</tr>\n";
-					echo "	</table>\n";
-					echo "	<br />\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+						echo "	<table width='40%'>\n";
+						echo "		<tr>\n";
+						echo "			<th align='left'>Message</th>\n";
+						echo "		</tr>\n";
+						echo "		<tr>\n";
+						echo "			<td class='rowstyle1'><strong>Add Complete</strong></td>\n";
+						echo "		</tr>\n";
+						echo "	</table>\n";
+						echo "	<br />\n";
 				}
 				else {
 					// auto-generate user with extension as login name
-					if ($autogen_users == "true") {
 						echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
 						echo "		<tr>\n";
 						echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
@@ -295,7 +303,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						if ($c==0) { $c=1; } else { $c=0; }
 						echo "	</table>";
-					}
 				}
 				echo "</div>\n";
 				require_once "includes/footer.php";
