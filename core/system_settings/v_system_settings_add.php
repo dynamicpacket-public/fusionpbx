@@ -80,6 +80,17 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Label:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='v_label' maxlength='255' value=\"\">\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 	echo "		Template: \n";
@@ -108,7 +119,7 @@ else {
 	echo "		Select a template to set as the default.<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
-	
+
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 	echo "		Time Zone: \n";

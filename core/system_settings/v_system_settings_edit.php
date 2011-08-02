@@ -116,7 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($v_package_version) == 0) { $msg .= "Please provide: Package Version<br>\n"; }
 		//if (strlen($v_build_version) == 0) { $msg .= "Please provide: Build Version<br>\n"; }
 		//if (strlen($v_build_revision) == 0) { $msg .= "Please provide: Build Revision<br>\n"; }
-		if (strlen($v_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
+		//if (strlen($v_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 		if (strlen($v_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		//if (strlen($v_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		//if (strlen($v_dir) == 0) { $msg .= "Please provide: FreeSWITCH Directory<br>\n"; }
@@ -427,9 +427,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$v_extensions_dir = $v_conf_dir.'/directory/'.$_GET['v_domain'];
 		$v_dialplan_public_dir = $v_conf_dir.'/dialplan/public/'.$_GET['v_domain'];
 		$v_dialplan_default_dir = $v_conf_dir.'/dialplan/'.$_GET['v_domain'];
+
+		//remove the domain from the v_recordings dir if it is found
+		if  (substr($v_recordings_dir, -(strlen($_SESSION['v_domain']))) == $_SESSION['v_domain']) {
+			$v_recordings_dir = substr($v_recordings_dir, 0, -(strlen($_SESSION['v_domain']))-1);
+		}
+		//add the new domain to the end of the recordings path
 		$v_recordings_dir = $v_recordings_dir.'/'.$_GET['v_domain'];
 
 		$v_domain = $_GET['v_domain'];
+		$v_label = $_GET['v_label'];
 		$v_template_name = $_GET['v_template_name'];
 		$v_description = $_GET['v_description'];
 		$v_time_zone = $_GET['v_time_zone'];
@@ -468,6 +475,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='v_domain' maxlength='255' value=\"$v_domain\">\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Label:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='v_label' maxlength='255' value=\"$v_label\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -578,17 +596,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='v_build_revision' maxlength='255' value=\"$v_build_revision\">\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Label:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='v_label' maxlength='255' value=\"$v_label\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
