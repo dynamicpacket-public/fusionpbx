@@ -56,43 +56,47 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 	echo "<br />";
 
-	$sql = "";
-	$sql .= " select * from v_extensions ";
-	$sql .= "where v_id = '$v_id' ";
-	if (strlen($orderby)> 0) {
-		$sql .= "order by $orderby $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$numrows = count($result);
-	unset ($prepstatement, $result, $sql);
+	//get the number of rows in v_extensions 
+		$sql = "";
+		$sql .= " select count(*) as num_rows from v_extensions ";
+		$sql .= "where v_id = '$v_id' ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		if ($prepstatement) {
+			$prepstatement->execute();
+			$row = $prepstatement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+			}
+			else {
+				$num_rows = '0';
+			}
+		}
+		unset($prepstatement, $result);
 
-	$rowsperpage = 150;
-	$param = "";
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($pagingcontrols, $rowsperpage, $var3) = paging($numrows, $param, $rowsperpage); 
-	$offset = $rowsperpage * $page; 
+	//prepare to page the results
+		$rows_per_page = 150;
+		$param = "";
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
+		list($pagingcontrols, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
+		$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= " select * from v_extensions ";
-	$sql .= "where v_id = '$v_id' ";
-	if (strlen($orderby)> 0) {
-		$sql .= "order by $orderby $order ";
-	}
-	else {
-		$sql .= "order by extension asc ";
-	}
-	$sql .= " limit $rowsperpage offset $offset ";
-	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$resultcount = count($result);
-	unset ($prepstatement, $sql);
+	//get the extension list
+		$sql = "";
+		$sql .= " select * from v_extensions ";
+		$sql .= "where v_id = '$v_id' ";
+		if (strlen($orderby)> 0) {
+			$sql .= "order by $orderby $order ";
+		}
+		else {
+			$sql .= "order by extension asc ";
+		}
+		$sql .= " limit $rows_per_page offset $offset ";
+		$prepstatement = $db->prepare(check_sql($sql));
+		$prepstatement->execute();
+		$result = $prepstatement->fetchAll();
+		$resultcount = count($result);
+		unset ($prepstatement, $sql);
 
 	$c = 0;
 	$rowstyle["0"] = "rowstyle0";
