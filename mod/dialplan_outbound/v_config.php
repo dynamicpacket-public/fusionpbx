@@ -29,8 +29,13 @@
 
 		$apps[$x]['permissions'][2]['name'] = 'outbound_route_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-		
+
 		$apps[$x]['permissions'][3]['name'] = 'outbound_route_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][4]['name'] = 'outbound_route_any_gateway';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][4]['description'] = 'Add outbound routes for any gateways on any domain.';
+
 ?>
