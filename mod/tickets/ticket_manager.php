@@ -27,16 +27,22 @@
 			<table width='100%' border="0" cellpadding="0" cellspacing="0">
 <!-- <tr><td colspan='2'>Queues</td></tr> -->
 <tr><th>ID</th><th>Queue Name</th><th>Queue Email</th><td></td></tr>
-<?php foreach ($queues as $queue) { ?>
+<?php 
+$rowstyle[0] = 'rowstyle0';
+$rowstyle[1] = 'rowstyle1';
+$rs = 0;
+foreach ($queues as $queue) { 
+if ($rs == 1) { $rs = 0; } else { $rs = 1; }
+?>
 <form method='post' name='ifrm' action=''>
 <tr>
-<td width="10%" class='vncell' align="center"><?php echo $queue['queue_id']; ?>
+<td width="10%" class='<?php echo $rowstyle[$rs]; ?>' align="center"><?php echo $queue['queue_id']; ?>
 	<input type="hidden" name="queue_id" value="<?php echo $queue['queue_id']; ?>"/>
 </td>
-<td width="20%" class='vncell' align='left' nowrap='nowrap'> 
+<td width="20%" class='<?php echo $rowstyle[$rs]; ?>' align='left' nowrap='nowrap'> 
 	<input class='formfld' style="width:100%" type="text" name="queue_name" value="<?php echo $queue['queue_name']; ?>"/>
 </td> 
-<td width="70%" class='vncell' align='left'> 
+<td width="70%" class='<?php echo $rowstyle[$rs]; ?>' align='left'> 
 	<input class='formfld' style="width:100%" type="text" name="queue_email" value="<?php echo $queue['queue_email']; ?>"/>
 </td>
 <td align='left' nowrap='nowrap'>
@@ -44,15 +50,17 @@
 </td>
 </tr> 
 </form>
-<?php } ?>
+<?php } 
+if ($rs == 1) { $rs = 0; } else { $rs = 1; }
+?>
 <form method='post' name='ifrm' action=''>
 <tr>
-<td width="10%" class='vncell' align="center" nowrap='nowrap'>
+<td width="10%" class='<?php echo $rowstyle[$rs]; ?>' align="center" nowrap='nowrap'>
 </td>
-<td width="20%" class='vncell' align='left' nowrap='nowrap'> 
+<td width="20%" class='<?php echo $rowstyle[$rs]; ?>' align='left' nowrap='nowrap'> 
 	<input class='formfld' style="width:100%" type="text" name="queue_name" />
 </td> 
-<td width="70%" class='vncell' align='left'> 
+<td width="70%" class='<?php echo $rowstyle[$rs]; ?>' align='left'> 
 	<input class='formfld' style="width:100%" type="text" name="queue_email" />
 </td>
 <td align='left' nowrap='nowrap'>
@@ -70,14 +78,17 @@
 		<table width='100%' border="0" cellpadding="0" cellspacing="0">
 <!-- <tr><th colspan='2'>Statuses</th></tr> -->
 <tr><th>Status ID</th><th>Status Name</th><td></td></tr>
-<?php foreach ($statuses as $status) { ?>
+<?php 
+foreach ($statuses as $status) { 
+if ($rs == 1) { $rs = 0; } else { $rs = 1; }
+?>
 <form method='post' name='ifrm' action=''>
 <tr> 
-<td class='vncell' align='left' nowrap='nowrap' width="20%"> 
+<td class='<?php echo $rowstyle[$rs]; ?>' align='left' nowrap='nowrap' width="20%"> 
 	<input type="hidden" name="status_id" value="<?php echo $status['status_id']; ?>"/>
 	<?php echo $status['status_id']; ?>
 </td> 
-<td class='vncell' align='left'> 
+<td class='<?php echo $rowstyle[$rs]; ?>' align='left'> 
 	<input class='formfld' type="text" style="width:100%" name="status_name" value="<?php echo $status['status_name']; ?>"/>
 </td> 
 <td align='left' nowrap='nowrap'>
@@ -85,12 +96,14 @@
 </td>
 </tr>
 </form>
-<?php } ?>
+<?php } 
+if ($rs == 1) { $rs = 0; } else { $rs = 1; }
+?>
 <form method='post' name='ifrm' action=''>
 <tr> 
-<td class='vncell' align='left' nowrap='nowrap' width="20%"> 
+<td class='<?php echo $rowstyle[$rs]; ?>' align='left' nowrap='nowrap' width="20%"> 
 </td> 
-<td class='vncell' align='left'> 
+<td class='<?php echo $rowstyle[$rs]; ?>' align='left'> 
 	<input class='formfld' type="text" style="width:100%" name="status_name"/>
 </td> 
 <td align='left' nowrap='nowrap'>
