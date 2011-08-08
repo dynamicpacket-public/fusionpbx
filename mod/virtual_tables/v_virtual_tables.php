@@ -112,7 +112,7 @@ require_once "includes/paging.php";
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_label']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_name']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_auth']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_table_desc']."&nbsp;</td>\n";

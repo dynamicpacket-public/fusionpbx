@@ -71,8 +71,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
-		if (strlen($virtual_field_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-		if (strlen($virtual_field_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
+		//if (strlen($virtual_field_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
+		if (strlen($virtual_field_name) == 0 && $virtual_field_type != "label") { $msg .= "Please provide: Name<br>\n"; }
 		if (strlen($virtual_field_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
 		//if (strlen($virtual_field_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
 		if (strlen($virtual_field_list_hidden) == 0) { $msg .= "Please provide: List Visibility<br>\n"; }
@@ -281,6 +281,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<option value='email'>Email</option>\n";
 	}
+	if ($virtual_field_type == "label") { 
+		echo "	<option value='label' selected='selected' >Label</option>\n";
+	}
+	else {
+		echo "	<option value='label'>Label</option>\n";
+	}
 	if ($virtual_field_type == "phone") { 
 		echo "	<option value='phone' selected='selected' >Phone</option>\n";
 	}
@@ -426,13 +432,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='virtual_field_list_hidden'>\n";
 	echo "	<option value=''></option>\n";
 	if ($virtual_field_list_hidden == "show") { 
-		echo "	<option value='show' SELECTED >show</option>\n";
+		echo "	<option value='show'  selected='selected'>show</option>\n";
 	}
 	else {
 		echo "	<option value='show'>show</option>\n";
 	}
 	if ($virtual_field_list_hidden == "hide") { 
-		echo "	<option value='hide' SELECTED >hide</option>\n";
+		echo "	<option value='hide'  selected='selected'>hide</option>\n";
 	}
 	else {
 		echo "	<option value='hide'>hide</option>\n";
@@ -462,13 +468,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='virtual_field_required'>\n";
 	echo "	<option value=''></option>\n";
 	if ($virtual_field_required == "yes") { 
-		echo "	<option value='yes' SELECTED >yes</option>\n";
+		echo "	<option value='yes'  selected='selected'>yes</option>\n";
 	}
 	else {
 		echo "	<option value='yes'>yes</option>\n";
 	}
 	if ($virtual_field_required == "no") { 
-		echo "	<option value='no' SELECTED >no</option>\n";
+		echo "	<option value='no' selected='selected'>no</option>\n";
 	}
 	else {
 		echo "	<option value='no'>no</option>\n";

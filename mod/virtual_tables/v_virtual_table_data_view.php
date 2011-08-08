@@ -180,14 +180,18 @@ if (strlen($_GET["id"]) > 0) {
 	$sql .= "'virtual_table_parent_id' NUMERIC, ";
 	$sql .= "'virtual_data_parent_row_id' NUMERIC, ";
 	foreach($result_names as $row) {
-		$virtual_field_label = $row["virtual_field_label"];
-		$virtual_field_name = $row["virtual_field_name"];
-		$virtual_field_type = $row["virtual_field_type"];
-		if ($virtual_field_type == "number") {
-			$sql .= "'$virtual_field_name' NUMERIC, ";
-		}
-		else {
-			$sql .= "'$virtual_field_name' TEXT, ";
+		if ($row["virtual_field_type"] != "label") {
+			if ($row["virtual_field_name"] != "v_id") {
+				//$row["virtual_field_label"];
+				//$row["virtual_field_name"]
+				//$row["virtual_field_type"];
+				if ($row["virtual_field_name"] == "number") {
+					$sql .= "'".$row["virtual_field_name"]."' NUMERIC, ";
+				}
+				else {
+					$sql .= "'".$row["virtual_field_name"]."' TEXT, ";
+				}
+			}
 		}
 	}
 	$sql .= "'v_id' NUMERIC ";

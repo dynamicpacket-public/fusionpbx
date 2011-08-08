@@ -104,7 +104,7 @@ $order = $_GET["order"];
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_label']."</td>\n";
-			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_name']."</td>\n";
+			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_type']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_column']."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row['virtual_field_required']."</td>\n";
