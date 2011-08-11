@@ -3234,28 +3234,42 @@ function sync_package_v_fax() {
 					if (count($_SESSION["domains"]) > 1) {
 						$fielddata .= "domain=".$v_domain;
 					}
-					$fieldorder = '001';
+					$fieldorder = '005';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, check_str($fielddata));
 
 					//<action application="answer" />
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'answer';
 					$fielddata = '';
-					$fieldorder = '002';
+					$fieldorder = '010';
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+					////<action application="set" data="fax_enable_t38=true"/>
+					$tag = 'action'; //condition, action, antiaction
+					$fieldtype = 'set';
+					$fielddata = 'fax_enable_t38=true';
+					$fieldorder = '015';
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
+
+					////<action application="set" data="fax_enable_t38_request=true"/>
+					$tag = 'action'; //condition, action, antiaction
+					$fieldtype = 'set';
+					$fielddata = 'fax_enable_t38_request=true';
+					$fieldorder = '020';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					//<action application="playback" data="silence_stream://2000"/>
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'playback';
 					$fielddata = 'silence_stream://2000';
-					$fieldorder = '003';
+					$fieldorder = '025';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					//<action application="set" data="last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}"/>
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'set';
 					$fielddata = 'last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}';
-					$fieldorder = '004';
+					$fieldorder = '030';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					//<action application="rxfax" data="$v_storage_dir/fax/inbox/${last_fax}.tif"/>
@@ -3267,14 +3281,14 @@ function sync_package_v_fax() {
 					else {
 						$fielddata = $v_storage_dir.'/fax/'.$row['faxextension'].'/inbox/${last_fax}.tif';
 					}
-					$fieldorder = '005';
+					$fieldorder = '035';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					//<action application="hangup"/>
 					$tag = 'action'; //condition, action, antiaction
 					$fieldtype = 'hangup';
 					$fielddata = '';
-					$fieldorder = '006';
+					$fieldorder = '040';
 					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 				}
 				//unset($fax_id);
