@@ -4448,7 +4448,7 @@ function sync_package_v_dialplan_includes() {
 		$sql .= " select * from v_dialplan_includes_details ";
 		$sql .= " where dialplan_include_id = '".$row['dialplan_include_id']."' ";
 		$sql .= " and v_id = $v_id ";
-		$sql .= " order by field_group asc, fieldorder asc";
+		$sql .= " order by field_group asc, fieldorder asc ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
 		$result2 = $prepstatement2->fetchAll(PDO::FETCH_NAMED);
@@ -4461,22 +4461,74 @@ function sync_package_v_dialplan_includes() {
 			$details[$group]['condition_count'] = '';
 			//conditions
 				$x = 0;
+				$y = 0;
 				foreach($result2 as $row2) {
 					if ($row2['tag'] == "condition") {
-						$group = $row2['field_group'];
-						foreach ($row2 as $key => $val) {
-							$details[$group][$x][$key] = $val;
-						}
+						//get the group
+							$group = $row2['field_group'];
+						//get the generic type
+							switch ($row2['fieldtype']) {
+							case "hour":
+								$type = 'time';
+								break;
+							case "minute":
+								$type = 'time';
+								break;
+							case "minute-of-day":
+								$type = 'time';
+								break;
+							case "mday":
+								$type = 'time';
+								break;
+							case "mweek":
+								$type = 'time';
+								break;
+							case "mon":
+								$type = 'time';
+								break;
+							case "yday":
+								$type = 'time';
+								break;
+							case "year":
+								$type = 'time';
+								break;
+							case "wday":
+								$type = 'time';
+								break;
+							case "week":
+								$type = 'time';
+								break;
+							default:
+								$type = 'default';
+							}
+
+						//add the conditions to the details array
+							$details[$group]['condition-'.$x]['tag'] = $row2['tag'];
+							$details[$group]['condition-'.$x]['fieldtype'] = $row2['fieldtype'];
+							$details[$group]['condition-'.$x]['dialplan_include_id'] = $row2['dialplan_include_id'];
+							$details[$group]['condition-'.$x]['fieldorder'] = $row2['fieldorder'];
+							$details[$group]['condition-'.$x]['field'][$y]['type'] = $row2['fieldtype'];
+							$details[$group]['condition-'.$x]['field'][$y]['data'] = $row2['fielddata'];
+							$details[$group]['condition-'.$x]['fieldbreak'] = $row2['fieldbreak'];
+							$details[$group]['condition-'.$x]['field_group'] = $row2['field_group'];
+							$details[$group]['condition-'.$x]['field_inline'] = $row2['field_inline'];
+							if ($type == "time") {
+								$y++;
+							}
 					}
-					$x++;
+					if ($type == "default") {
+						$x++;
+						$y = 0;
+					}
 				}
+
 			//actions
 				$x = 0;
 				foreach($result2 as $row2) {
 					if ($row2['tag'] == "action") {
 						$group = $row2['field_group'];
 						foreach ($row2 as $key => $val) {
-							$details[$group][$x][$key] = $val;
+							$details[$group]['action-'.$x][$key] = $val;
 						}
 					}
 					$x++;
@@ -4487,7 +4539,7 @@ function sync_package_v_dialplan_includes() {
 					if ($row2['tag'] == "anti-action") {
 						$group = $row2['field_group'];
 						foreach ($row2 as $key => $val) {
-							$details[$group][$x][$key] = $val;
+							$details[$group]['anti-action-'.$x][$key] = $val;
 						}
 					}
 					$x++;
@@ -4495,11 +4547,7 @@ function sync_package_v_dialplan_includes() {
 			unset($result2);
 
 		$i=1;
-		if ($resultcount2 == 0) { 
-			//no results
-		}
-		else { //received results
-
+		if ($resultcount2 > 0) { 
 			foreach($details as $group) {
 				$current_count = 0;
 				$x = 0;
@@ -4507,59 +4555,61 @@ function sync_package_v_dialplan_includes() {
 					$current_tag = $ent['tag'];
 					$c = 0;
 					if ($ent['tag'] == "condition") {
-						//determine the correct attribute
+						//get the generic type
 							switch ($ent['fieldtype']) {
 							case "hour":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "minute":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "minute-of-day":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "mday":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "mweek":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "mon":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "yday":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "year":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "wday":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							case "week":
-								$condition_attribute = $ent['fieldtype'].'="'.$ent['fielddata'].'"';
-								$condition_expression = '';
+								$type = 'time';
 								break;
 							default:
-								$condition_attribute = 'field="'.$ent['fieldtype'].'"';
-								$condition_expression = 'expression="'.$ent['fielddata'].'"';
+								$type = 'default';
 							}
-						
+
+						//set the attribute and expression
+							$condition_attribute = '';
+							foreach($ent['field'] as $field) {
+								if ($type == "time") {
+									$condition_attribute .= $field['type'].'="'.$field['data'].'" ';
+									$condition_expression = '';
+								}
+								if ($type == "default") {
+									$condition_attribute = 'field="'.$field['type'].'" ';
+									$condition_expression = 'expression="'.$field['data'].'" ';
+								}
+							}
+
 						//get the condition break attribute
 							$condition_break = '';
 							if (strlen($ent['fieldbreak']) > 0) {
-								$condition_break = "break=\"".$ent['fieldbreak']."\"";
+								$condition_break = "break=\"".$ent['fieldbreak']."\" ";
 							}
-						
+
 						//get the count
 							$count = 0;
 							foreach($details as $group2) {
@@ -4569,22 +4619,22 @@ function sync_package_v_dialplan_includes() {
 									}
 								}
 							}
-						//determine and then send the correct type of tag
+
+						//use the correct type of tag open or self closed
 							if ($count == 1) { //single condition
 								//start tag
-								$tmp .= "   <condition $condition_attribute $condition_expression $condition_break>\n";
+								$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
 							}
 							else { //more than one condition
 								$current_count++;
 								if ($current_count < $count) {
 									//all tags should be self-closing except the last one
-									$tmp .= "   <condition $condition_attribute $condition_expression $condition_break/>\n";
+									$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break."/>\n";
 								}
 								else {
 									//for the last tag use the start tag
-									$tmp .= "   <condition $condition_attribute $condition_expression $condition_break>\n";
+									$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
 								}
-
 							}
 					}
 					//actions
@@ -4594,7 +4644,6 @@ function sync_package_v_dialplan_includes() {
 							if (strlen($ent['field_inline']) > 0) {
 								$action_inline = "inline=\"".$ent['field_inline']."\"";
 							}
-							
 							if (strlen($ent['fielddata']) > 0) {
 								$tmp .= "       <action application=\"".$ent['fieldtype']."\" data=\"".$ent['fielddata']."\" $action_inline/>\n";
 							}
