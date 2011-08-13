@@ -76,11 +76,13 @@ if ($action == "update") {
  	$profile['dialplan'] = "XML";
 	$profile['context'] = $v_domain;
 	$profile['rtp_ip'] = '$${local_ip_v4}';
+	$profile['ext_rtp_ip'] = '$${external_rtp_ip}';
  	$profile['auto_login'] = "true";
  	$profile['sasl_type'] = "plain";
  	$profile['tls_enable'] = "true";
  	$profile['usr_rtp_timer'] = "true";
- 	$profile['vad'] = "none";
+ 	$profile['vad'] = "both";
+	$profile['candidate_acl'] = "wan.auto";
  	$profile['local_network_acl'] = "localnet.auto";
 }
 
