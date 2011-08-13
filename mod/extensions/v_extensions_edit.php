@@ -179,77 +179,83 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			$db->beginTransaction();
 			for ($i=1; $i<=$range; $i++) {
-				$password = generate_password();
-				$sql = "insert into v_extensions ";
-				$sql .= "(";
-				$sql .= "v_id, ";
-				$sql .= "extension, ";
-				$sql .= "password, ";
-				$sql .= "user_list, ";
-				$sql .= "provisioning_list, ";
-				$sql .= "vm_password, ";
-				$sql .= "accountcode, ";
-				$sql .= "effective_caller_id_name, ";
-				$sql .= "effective_caller_id_number, ";
-				$sql .= "outbound_caller_id_name, ";
-				$sql .= "outbound_caller_id_number, ";
-				$sql .= "vm_enabled, ";
-				$sql .= "vm_mailto, ";
-				$sql .= "vm_attach_file, ";
-				$sql .= "vm_keep_local_after_email, ";
-				$sql .= "user_context, ";
-				$sql .= "toll_allow, ";
-				$sql .= "callgroup, ";
-				$sql .= "auth_acl, ";
-				$sql .= "cidr, ";
-				$sql .= "sip_force_contact, ";
-				if (strlen($sip_force_expires) > 0) {
-					$sql .= "sip_force_expires, ";
+				if (extension_exists($extension)) {
+					//extension exists
 				}
-				if (strlen($nibble_account) > 0) {
-					$sql .= "nibble_account, ";
+				else {
+					//extension does not exist add it
+					$password = generate_password();
+					$sql = "insert into v_extensions ";
+					$sql .= "(";
+					$sql .= "v_id, ";
+					$sql .= "extension, ";
+					$sql .= "password, ";
+					$sql .= "user_list, ";
+					$sql .= "provisioning_list, ";
+					$sql .= "vm_password, ";
+					$sql .= "accountcode, ";
+					$sql .= "effective_caller_id_name, ";
+					$sql .= "effective_caller_id_number, ";
+					$sql .= "outbound_caller_id_name, ";
+					$sql .= "outbound_caller_id_number, ";
+					$sql .= "vm_enabled, ";
+					$sql .= "vm_mailto, ";
+					$sql .= "vm_attach_file, ";
+					$sql .= "vm_keep_local_after_email, ";
+					$sql .= "user_context, ";
+					$sql .= "toll_allow, ";
+					$sql .= "callgroup, ";
+					$sql .= "auth_acl, ";
+					$sql .= "cidr, ";
+					$sql .= "sip_force_contact, ";
+					if (strlen($sip_force_expires) > 0) {
+						$sql .= "sip_force_expires, ";
+					}
+					if (strlen($nibble_account) > 0) {
+						$sql .= "nibble_account, ";
+					}
+					$sql .= "enabled, ";
+					$sql .= "description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$v_id', ";
+					$sql .= "'$extension', ";
+					$sql .= "'$password', ";
+					if ($autogen_users == "true") { 
+						$sql .= "'|$extension|', ";
+					} else {
+						$sql .= "'$user_list', ";
+					}
+					$sql .= "'$provisioning_list', ";
+					$sql .= "'#".generate_password(4, 1)."', ";
+					$sql .= "'$accountcode', ";
+					$sql .= "'$effective_caller_id_name', ";
+					$sql .= "'$effective_caller_id_number', ";
+					$sql .= "'$outbound_caller_id_name', ";
+					$sql .= "'$outbound_caller_id_number', ";
+					$sql .= "'$vm_enabled', ";
+					$sql .= "'$vm_mailto', ";
+					$sql .= "'$vm_attach_file', ";
+					$sql .= "'$vm_keep_local_after_email', ";
+					$sql .= "'$user_context', ";
+					$sql .= "'$toll_allow', ";
+					$sql .= "'$callgroup', ";
+					$sql .= "'$auth_acl', ";
+					$sql .= "'$cidr', ";
+					$sql .= "'$sip_force_contact', ";
+					if (strlen($sip_force_expires) > 0) {
+						$sql .= "'$sip_force_expires', ";
+					}
+					if (strlen($nibble_account) > 0) {
+						$sql .= "'$nibble_account', ";
+					}
+					$sql .= "'$enabled', ";
+					$sql .= "'$description' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 				}
-				$sql .= "enabled, ";
-				$sql .= "description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$v_id', ";
-				$sql .= "'$extension', ";
-				$sql .= "'$password', ";
-				if ($autogen_users == "true") { 
-					$sql .= "'|$extension|', ";
-				} else {
-					$sql .= "'$user_list', ";
-				}
-				$sql .= "'$provisioning_list', ";
-				$sql .= "'#".generate_password(4, 1)."', ";
-				$sql .= "'$accountcode', ";
-				$sql .= "'$effective_caller_id_name', ";
-				$sql .= "'$effective_caller_id_number', ";
-				$sql .= "'$outbound_caller_id_name', ";
-				$sql .= "'$outbound_caller_id_number', ";
-				$sql .= "'$vm_enabled', ";
-				$sql .= "'$vm_mailto', ";
-				$sql .= "'$vm_attach_file', ";
-				$sql .= "'$vm_keep_local_after_email', ";
-				$sql .= "'$user_context', ";
-				$sql .= "'$toll_allow', ";
-				$sql .= "'$callgroup', ";
-				$sql .= "'$auth_acl', ";
-				$sql .= "'$cidr', ";
-				$sql .= "'$sip_force_contact', ";
-				if (strlen($sip_force_expires) > 0) {
-					$sql .= "'$sip_force_expires', ";
-				}
-				if (strlen($nibble_account) > 0) {
-					$sql .= "'$nibble_account', ";
-				}
-				$sql .= "'$enabled', ";
-				$sql .= "'$description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
 
 				$extension++;
 			}
