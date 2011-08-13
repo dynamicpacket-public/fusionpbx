@@ -99,7 +99,9 @@
 		$apps[$x]['db'][0]['fields'][1]['type'] = 'integer';
 		$apps[$x]['db'][0]['fields'][1]['description'] = '';
 		$apps[$x]['db'][0]['fields'][2]['name'] = 'create_stamp';
-		$apps[$x]['db'][0]['fields'][2]['type'] = 'timestamp with time zone';
+		$apps[$x]['db'][0]['fields'][2]['type']['pgsql'] = 'timestamp with time zone';
+		$apps[$x]['db'][0]['fields'][2]['type']['sqlite'] = 'timestamp';
+		$apps[$x]['db'][0]['fields'][2]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][0]['fields'][2]['description'] = '';
 		$apps[$x]['db'][0]['fields'][3]['name'] = 'create_user_id';
 		$apps[$x]['db'][0]['fields'][3]['type'] = 'integer';
@@ -179,7 +181,9 @@
 		$apps[$x]['db'][4]['fields'][5]['type'] = 'text';
 		$apps[$x]['db'][4]['fields'][5]['description'] = '';
 		$apps[$x]['db'][4]['fields'][6]['name'] = 'create_stamp';
-		$apps[$x]['db'][4]['fields'][6]['type'] = 'timestamp with time zone';
+		$apps[$x]['db'][4]['fields'][6]['type']['pgsql'] = 'timestamp with time zone';
+		$apps[$x]['db'][4]['fields'][6]['type']['sqlite'] = 'timestamp';
+		$apps[$x]['db'][4]['fields'][6]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][4]['fields'][6]['description'] = '';
 		$apps[$x]['db'][4]['fields'][7]['name'] = 'create_user_id';
 		$apps[$x]['db'][4]['fields'][7]['type'] = 'integer';
@@ -188,7 +192,9 @@
 		$apps[$x]['db'][4]['fields'][8]['type'] = 'integer';
 		$apps[$x]['db'][4]['fields'][8]['description'] = '';
 		$apps[$x]['db'][4]['fields'][9]['name'] = 'last_update_stamp';
-		$apps[$x]['db'][4]['fields'][9]['type'] = 'timestamp with time zone';
+		$apps[$x]['db'][4]['fields'][9]['type']['pgsql'] = 'timestamp with time zone';
+		$apps[$x]['db'][4]['fields'][9]['type']['sqlite'] = 'timestamp';
+		$apps[$x]['db'][4]['fields'][9]['type']['mysql'] = 'timestamp';
 		$apps[$x]['db'][4]['fields'][9]['description'] = '';
 		$apps[$x]['db'][4]['fields'][10]['name'] = 'last_update_user_id';
 		$apps[$x]['db'][4]['fields'][10]['type'] = 'integer';
