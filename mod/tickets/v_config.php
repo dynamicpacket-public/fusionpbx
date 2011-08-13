@@ -108,7 +108,7 @@
 		$apps[$x]['db'][0]['fields'][4]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][4]['description'] = '';
 		$apps[$x]['db'][0]['fields'][5]['name'] = 'file_pointer';
-		$apps[$x]['db'][0]['fields'][5]['type'] = 'character varying';
+		$apps[$x]['db'][0]['fields'][5]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][5]['description'] = '';
 
 	// CREATE TABLE v_ticket_queue_members 
@@ -133,10 +133,10 @@
 		$apps[$x]['db'][2]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][2]['fields'][0]['description'] = '';
 		$apps[$x]['db'][2]['fields'][1]['name'] = 'queue_name';
-		$apps[$x]['db'][2]['fields'][1]['type'] = 'character varying';
+		$apps[$x]['db'][2]['fields'][1]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][1]['description'] = '';
 		$apps[$x]['db'][2]['fields'][2]['name'] = 'queue_email';
-		$apps[$x]['db'][2]['fields'][2]['type'] = 'character varying';
+		$apps[$x]['db'][2]['fields'][2]['type'] = 'text';
 		$apps[$x]['db'][2]['fields'][2]['description'] = '';
 		$apps[$x]['db'][2]['fields'][3]['name'] = 'v_id';
 		$apps[$x]['db'][2]['fields'][3]['type'] = 'integer';
@@ -150,7 +150,7 @@
 		$apps[$x]['db'][3]['fields'][0]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 		$apps[$x]['db'][3]['fields'][0]['description'] = '';
 		$apps[$x]['db'][3]['fields'][1]['name'] = 'status_name';
-		$apps[$x]['db'][3]['fields'][1]['type'] = 'character varying';
+		$apps[$x]['db'][3]['fields'][1]['type'] = 'text';
 		$apps[$x]['db'][3]['fields'][1]['description'] = '';
 		$apps[$x]['db'][3]['fields'][2]['name'] = 'v_id';
 		$apps[$x]['db'][3]['fields'][2]['type'] = 'integer';
@@ -176,7 +176,7 @@
 		$apps[$x]['db'][4]['fields'][4]['type'] = 'integer';
 		$apps[$x]['db'][4]['fields'][4]['description'] = '';
 		$apps[$x]['db'][4]['fields'][5]['name'] = 'subject';
-		$apps[$x]['db'][4]['fields'][5]['type'] = 'character varying';
+		$apps[$x]['db'][4]['fields'][5]['type'] = 'text';
 		$apps[$x]['db'][4]['fields'][5]['description'] = '';
 		$apps[$x]['db'][4]['fields'][6]['name'] = 'create_stamp';
 		$apps[$x]['db'][4]['fields'][6]['type'] = 'timestamp with time zone';
@@ -194,13 +194,13 @@
 		$apps[$x]['db'][4]['fields'][10]['type'] = 'integer';
 		$apps[$x]['db'][4]['fields'][10]['description'] = '';
 		$apps[$x]['db'][4]['fields'][11]['name'] = 'ticket_uuid';
-		$apps[$x]['db'][4]['fields'][11]['type'] = 'character varying';
+		$apps[$x]['db'][4]['fields'][11]['type'] = 'text';
 		$apps[$x]['db'][4]['fields'][11]['description'] = '';
 		$apps[$x]['db'][4]['fields'][12]['name'] = 'ticket_number';
-		$apps[$x]['db'][4]['fields'][12]['type'] = 'character varying';
+		$apps[$x]['db'][4]['fields'][12]['type'] = 'text';
 		$apps[$x]['db'][4]['fields'][12]['description'] = '';
 		$apps[$x]['db'][4]['fields'][13]['name'] = 'customer_ticket_number';
-		$apps[$x]['db'][4]['fields'][13]['type'] = 'character varying';
+		$apps[$x]['db'][4]['fields'][13]['type'] = 'text';
 		$apps[$x]['db'][4]['fields'][13]['description'] = '';
 		$apps[$x]['db'][4]['fields'][14]['name'] = 'ticket_owner';
 		$apps[$x]['db'][4]['fields'][14]['type'] = 'integer';
