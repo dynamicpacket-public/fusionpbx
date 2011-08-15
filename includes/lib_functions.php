@@ -518,26 +518,6 @@
 	}
 	//echo realpath(sys_get_temp_dir());
 
-	if (!function_exists('extension_exists')) {
-		function extension_exists($extension) {
-			global $db, $v_id;
-			$extension_exists = false;
-			$sql = "select * from v_extensions ";
-			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and extension = '".$extension."' ";
-			$prepstatement = $db->prepare(check_sql($sql));
-			$prepstatement->execute();
-			$result = $prepstatement->fetchAll();
-			$resultcount = count($result);
-			if ($resultcount > 0) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-	}
-
 	if (!function_exists('user_exists')) {
 		function user_exists($username) {
 			global $db, $v_id;
