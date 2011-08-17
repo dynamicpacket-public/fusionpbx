@@ -915,8 +915,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Choose sip-force-contact can be used to NDLB-connectile-dysfunction rewrites contact IP and port,
-	and NDLB-tls-connectile-dysfunction rewrites the contact port.\n";
+	echo "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
