@@ -3347,8 +3347,8 @@ function sync_package_v_fax() {
 				$tag = 'action'; //condition, action, antiaction
 				$fieldtype = 'set';
 				$fielddata = "api_hangup_hook=system ".$php_dir."/".$php_exe." ".$v_secure."/fax_to_email.php ";
-				$fielddata .= "email=".$row['faxemail']." ";
-				$fielddata .= "extension=".$row['faxextension']." ";
+				$fielddata .= "email=".check_str($row['faxemail'])." ";
+				$fielddata .= "extension=".check_str($row['faxextension'])." ";
 				$fielddata .= "name=\\\\\\\${last_fax} ";
 				$fielddata .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
 				if (count($_SESSION["domains"]) > 1) {
@@ -3356,7 +3356,7 @@ function sync_package_v_fax() {
 				}
 				$sql = "";
 				$sql = "update v_dialplan_includes_details set ";
-				$sql .= "fielddata = '".check_str($fielddata)."' ";
+				$sql .= "fielddata = '".$fielddata."' ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and tag = 'action' ";
 				$sql .= "and fieldtype = 'set' ";
