@@ -2344,86 +2344,130 @@ function sync_package_v_public() {
 }
 
 function outbound_route_to_bridge ($destination_number) {
-	global $v_id, $db;
+		global $v_id, $db;
 
-	$destination_number = trim($destination_number);
-	if (is_numeric($destination_number)) {
-		//not found, continue to process the function
-	}
-	else {
-		//not a number, brige_array and exit the function
-		$bridge_array[0] = $destination_number;
-		return $bridge_array;
-	}
+		$destination_number = trim($destination_number);
+		if (is_numeric($destination_number)) {
+				//not found, continue to process the function
+		}
+		else {
+				//not a number, brige_array and exit the function
+				$bridge_array[0] = $destination_number;
+				return $bridge_array;
+		}
 
-	$sql = "";
-	$sql .= "select * from v_dialplan_includes ";
-	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and opt1name= 'gateway_id' ";
-	$sql .= "and enabled = 'true' ";
-	$sql .= "order by dialplanorder asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$x = 0;
-	foreach ($result as &$row) {
-		$dialplan_include_id = $row['dialplan_include_id'];
-		$tag = $row["tag"];
-		$field_type = $row['fieldtype'];
-		$extension_continue = $row['extensioncontinue'];
-
-		//get the extension number using the dialplan_include_id
-			$sql = "select * ";
-			$sql .= "from v_dialplan_includes_details ";
+		//get the outbound routes and set as the dialplan array
+			$sql = "";
+			$sql .= "select * from v_dialplan_includes_details ";
 			$sql .= "where v_id = '$v_id' ";
-			$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
-			$sql .= "order by fieldorder asc ";
-			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			$regex_match = false;
-			foreach ($sub_result as &$sub_row) {
-				if ($sub_row['tag'] == "condition") {
-					if ($sub_row['fieldtype'] == "destination_number") {
-						//print_r($sub_row);
-						$field_data = $sub_row['fielddata'];
-						$pattern = '/'.$field_data.'/';
-						preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
-						if (count($matches) == 0) {
-							$regex_match = false;
-						}
-						else {
-							$regex_match = true;
-							$regex_match_1 = $matches[1][0];
-							$regex_match_2 = $matches[2][0];
-							$regex_match_3 = $matches[3][0];
-							$regex_match_4 = $matches[4][0];
-							$regex_match_5 = $matches[5][0];
-							//echo "regex_match_1: ".$regex_match_1;
-							//print_r($matches);
-						}
-					}
-				}
+			$sql .= "and (";
+			$sql .= "fielddata like '%sofia/gateway/%' ";
+			$sql .= "or fielddata like '%freetdm%' ";
+			$sql .= "or fielddata like '%openzap%' ";
+			$sql .= "or fielddata like '%dingaling%' ";
+			$sql .= "or fielddata like '%enum_auto_route%' ";
+			$sql .= ") ";
+			$prepstatement = $db->prepare(check_sql($sql));
+			$prepstatement->execute();
+			$x = 0;
+			$result = $prepstatement->fetchAll();
+			foreach ($result as &$row) {
+				$dialplan_include_id = $row["dialplan_include_id"];
+				//$tag = $row["tag"];
+				//$fieldorder = $row["fieldorder"];
+				//$fieldtype = $row["fieldtype"];
+				//$fielddata = $row["fielddata"];
+				$dialplan_array[$x]['dialplan_include_id'] = $dialplan_include_id;
+				$x++;
 			}
-			if ($regex_match) {
-				foreach ($sub_result as &$sub_row) {
-					$field_data = $sub_row['fielddata'];
-					if ($sub_row['tag'] == "action" && $sub_row['fieldtype'] == "bridge" && $field_data != "\${enum_auto_route}") {
-						$field_data = str_replace("\$1", $regex_match_1, $field_data);
-						$field_data = str_replace("\$2", $regex_match_2, $field_data);
-						$field_data = str_replace("\$3", $regex_match_3, $field_data);
-						$field_data = str_replace("\$4", $regex_match_4, $field_data);
-						$field_data = str_replace("\$5", $regex_match_5, $field_data);
-						//echo "field_data: $field_data";
-						$bridge_array[$x] = $field_data;
-						$x++;
-						if ($extension_continue == "false") {
-							break 2;
-						}
-					}
+			unset ($prepstatement);
+
+        $sql = "";
+        $sql .= "select * from v_dialplan_includes ";
+		if (count($dialplan_array) == 0) {
+			//when there are no outbound routes do this to hide all remaining entries
+			$sql .= " where v_id = '$v_id' ";
+			$sql .= " and context = 'hide' ";
+		}
+		else {
+			$x = 0;
+			foreach ($dialplan_array as &$row) {
+				if ($x == 0) {
+					$sql .= " where v_id = '$v_id' \n";
+					$sql .= " and dialplan_include_id = '".$row['dialplan_include_id']."' \n";
+					$sql .= "and enabled = 'true' ";
 				}
+				else {
+					$sql .= " or v_id = $v_id \n";
+					$sql .= " and dialplan_include_id = '".$row['dialplan_include_id']."' \n";
+					$sql .= "and enabled = 'true' ";
+				}
+				$x++;
 			}
-	}
-	return $bridge_array;
-	unset ($prep_statement);
+		}
+		$sql .= "order by dialplanorder asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$x = 0;
+		foreach ($result as &$row) {
+				$dialplan_include_id = $row['dialplan_include_id'];
+				$tag = $row["tag"];
+				$field_type = $row['fieldtype'];
+				$extension_continue = $row['extensioncontinue'];
+
+				//get the extension number using the dialplan_include_id
+						$sql = "select * ";
+						$sql .= "from v_dialplan_includes_details ";
+						$sql .= "where v_id = '$v_id' ";
+						$sql .= "and dialplan_include_id = '$dialplan_include_id' ";
+						$sql .= "order by fieldorder asc ";
+						$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+						$regex_match = false;
+						foreach ($sub_result as &$sub_row) {
+								if ($sub_row['tag'] == "condition") {
+										if ($sub_row['fieldtype'] == "destination_number") {
+												//print_r($sub_row);
+												$field_data = $sub_row['fielddata'];
+												$pattern = '/'.$field_data.'/';
+												preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+												if (count($matches) == 0) {
+														$regex_match = false;
+												}
+												else {
+														$regex_match = true;
+														$regex_match_1 = $matches[1][0];
+														$regex_match_2 = $matches[2][0];
+														$regex_match_3 = $matches[3][0];
+														$regex_match_4 = $matches[4][0];
+														$regex_match_5 = $matches[5][0];
+														//echo "regex_match_1: ".$regex_match_1;
+														//print_r($matches);
+												}
+										}
+								}
+						}
+						if ($regex_match) {
+								foreach ($sub_result as &$sub_row) {
+										$field_data = $sub_row['fielddata'];
+										if ($sub_row['tag'] == "action" && $sub_row['fieldtype'] == "bridge" && $field_data != "\${enum_auto_route}") {
+												$field_data = str_replace("\$1", $regex_match_1, $field_data);
+												$field_data = str_replace("\$2", $regex_match_2, $field_data);
+												$field_data = str_replace("\$3", $regex_match_3, $field_data);
+												$field_data = str_replace("\$4", $regex_match_4, $field_data);
+												$field_data = str_replace("\$5", $regex_match_5, $field_data);
+												//echo "field_data: $field_data";
+												$bridge_array[$x] = $field_data;
+												$x++;
+												if ($extension_continue == "false") {
+														break 2;
+												}
+										}
+								}
+						}
+		}
+		return $bridge_array;
+		unset ($prep_statement);
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($destination_number);
