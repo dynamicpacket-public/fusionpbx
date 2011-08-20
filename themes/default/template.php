@@ -747,7 +747,7 @@ if (!function_exists('builddbchildmenu2')) {
 		$sql .= ") ";
 		$sql .= "and menu_guid <> '' ";
 		$sql .= ") ";
-		$sql .= "order by menuorder asc ";
+		$sql .= "order by menutitle asc ";
 		$prepstatement2 = $db->prepare($sql);
 		$prepstatement2->execute();
 		$result2 = $prepstatement2->fetchAll();
