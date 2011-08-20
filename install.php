@@ -45,6 +45,10 @@ $v_id = '1';
 		//extract tgz files with a php class
 			//http://www.phpclasses.org/browse/package/945.html
 
+//get the domain
+	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+	$domain = $domain_array[0];
+
 //make sure the sys_get_temp_dir exists 
 	if ( !function_exists('sys_get_temp_dir')) {
 		function sys_get_temp_dir() {
@@ -642,7 +646,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].'/fusionpbx')){ $v_relative_url = $_SERVER["DOCUMENT_ROOT"].'/fusionpbx'; } else { $v_relative_url = '/'; }
 
 		$sql = "update v_system_settings set ";
-		$sql .= "v_domain = '".$_SERVER["HTTP_HOST"]."', ";
+		$sql .= "v_domain = '".$domain."', ";
 		$sql .= "php_dir = '$install_php_dir', ";
 		$sql .= "tmp_dir = '$install_tmp_dir', ";
 		$sql .= "bin_dir = '$v_bin_dir', ";
