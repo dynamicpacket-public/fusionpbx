@@ -28,13 +28,16 @@ function originate (domain_name, session, sipuri, extension, caller_announce, ca
 	new_session:execute("set", "call_timeout=60");
 	new_session:execute("sleep", "1000");
 
-	if ( new_session:ready() ) then
-		--do nothing
-	else
-		new_session:execute("sleep", "1000");
-	end
+	--if the session is not ready wait longer
+		if ( new_session:ready() ) then
+			--do nothing
+		else
+			new_session:execute("sleep", "1000");
+		end
 
 	if ( new_session:ready() ) then
+		--get the session id
+			uuid = new_session:getVariable("uuid");
 		--set the sounds path for the language, dialect and voice
 			default_language = new_session:getVariable("default_language");
 			default_dialect = new_session:getVariable("default_dialect");
@@ -51,8 +54,20 @@ function originate (domain_name, session, sipuri, extension, caller_announce, ca
 		--set the sounds directory
 			sounds_dir = new_session:getVariable("sounds_dir");
 
-		--promt user for action
-			dtmf_digits = new_session:playAndGetDigits(1, 1, 3, 3000, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/8000/press_1_to_accept_2_to_reject_or_3_for_voicemail.wav", "", "\\d+");
+		--check the fifo status if it is empty hangup the call
+			api = freeswitch.API();
+			cmd = "fifo count "..extension.."@"..domain_name;
+			result = api:executeString(cmd);
+			--freeswitch.consoleLog("notice", "result " .. result .. "\n");
+			result_table = explode(":",result);
+			if (result_table[3] == "0") then
+				--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/your_pin_number_is_incorect_goodbye.wav");
+				new_session:hangup("NORMAL_CLEARING");
+				return;
+			end
+
+		--prompt user for action
+			dtmf_digits = new_session:playAndGetDigits(1, 1, 2, 3000, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/8000/press_1_to_accept_2_to_reject_or_3_for_voicemail.wav", "", "\\d+");
 			freeswitch.consoleLog("NOTICE", "followme: "..dtmf_digits.."\n");
 
 			if ( dtmf_digits == "1" ) then
