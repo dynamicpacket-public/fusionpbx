@@ -900,11 +900,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		Template: \n";
+	echo "		Theme: \n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "		<select id='v_template_name' name='v_template_name' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
+	//add all the themes to the list
 	$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 	if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
 		while (false !== ($dir_name = readdir($handle))) {
@@ -923,10 +924,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
-	echo "		Select a template to set as the default.<br />\n";
+	echo "		Select a theme to set as the default.<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
-	
+
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 	echo "		Time Zone: \n";
@@ -935,7 +936,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<select id='v_time_zone' name='v_time_zone' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
-    $time_zone_identifiers = DateTimeZone::listIdentifiers();
+    	$time_zone_identifiers = DateTimeZone::listIdentifiers();
 	$previous_category = '';
 	$x = 0;
 	foreach ($time_zone_identifiers as $key => $row) {
