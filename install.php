@@ -91,6 +91,7 @@ $v_id = '1';
 	$install_tmp_dir = $_POST["install_tmp_dir"];
 	$install_v_backup_dir = $_POST["install_v_backup_dir"];
 	$install_v_dir = $_POST["install_v_dir"];
+	$install_v_template_name = $_POST["install_v_template_name"];
 
 //clean up the values
 	if (strlen($install_v_dir) > 0) { 
@@ -314,11 +315,13 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 			//install_v_dir not required for the freebsd freeswitch port;
 		}
 		else {
-			if (strlen($install_v_dir) == 0) { $msg .= "Please provide the Switch Directory<br>\n"; }
+			if (strlen($install_v_dir) == 0) { $msg .= "Please provide the Switch Directory.<br>\n"; }
 		}
-		if (strlen($install_php_dir) == 0) { $msg .= "Please provide the PHP Directory<br>\n"; }
-		if (strlen($install_tmp_dir) == 0) { $msg .= "Please provide the Temp Directory<br>\n"; }
-		if (strlen($install_v_backup_dir) == 0) { $msg .= "Please provide the Backup Directory<br>\n"; }
+		if (strlen($install_php_dir) == 0) { $msg .= "Please provide the PHP Directory.<br>\n"; }
+		if (strlen($install_tmp_dir) == 0) { $msg .= "Please provide the Temp Directory.<br>\n"; }
+		if (strlen($install_v_backup_dir) == 0) { $msg .= "Please provide the Backup Directory.<br>\n"; }
+		if (strlen($install_v_template_name) == 0) { $msg .= "Please provide the Theme.<br>\n"; }
+
 		if (!is_writable($install_v_dir."/conf/vars.xml")) {
 			if (stristr(PHP_OS, 'WIN')) { 
 				//some windows operating systems report read only but are writable
@@ -639,7 +642,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$v_package_version = '';
 		$v_build_version = '';
 		$v_build_revision = '';
-		$v_label = 'FusionPBX';
+		$v_label = '';
 		$v_name = 'freeswitch';
 		$v_web_dir = $_SERVER["DOCUMENT_ROOT"];
 		$v_web_root = $_SERVER["DOCUMENT_ROOT"];
@@ -677,7 +680,8 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$sql .= "v_voicemail_dir = '$v_voicemail_dir', ";
 		$sql .= "v_recordings_dir = '$v_recordings_dir', ";
 		$sql .= "v_sounds_dir = '$v_sounds_dir', ";
-		$sql .= "v_download_path = '$v_download_path' ";
+		$sql .= "v_download_path = '$v_download_path', ";
+		$sql .= "v_template_name = '$install_v_template_name' ";
 		//$sql .= "v_provisioning_tftp_dir = '$v_provisioning_tftp_dir', ";
 		//$sql .= "v_provisioning_ftp_dir = '$v_provisioning_ftp_dir', ";
 		//$sql .= "v_provisioning_https_dir = '$v_provisioning_https_dir', ";
@@ -944,7 +948,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 }
 
 //set a default template
-	if (strlen($_SESSION["template_name"]) == 0) { $_SESSION["template_name"] = 'default'; }
+	if (strlen($_SESSION["template_name"]) == 0) { $_SESSION["template_name"] = 'enhanced'; }
 
 //get the contents of the template and save it to the template variable
 	$template = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/'.$_SESSION["template_name"].'/template.php');
@@ -978,7 +982,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
-	  //print_info_box($installmsg);
 	}
 
 	echo "<div align='center'>\n";
@@ -1080,6 +1083,38 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "</tr>\n";
 
 		echo "	<tr>\n";
+		echo "	<td width='20%' class=\"vncellreq\" style='text-align: left;'>\n";
+		echo "		Theme: \n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "		<select id='install_v_template_name' name='install_v_template_name' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		//set the default theme
+			$install_v_template_name = "enhanced";
+		//add all the themes to the list
+			$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
+			if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
+				while (false !== ($dir_name = readdir($handle))) {
+					if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && is_dir($theme_dir.'/'.$dir_name)) {
+						$dir_label = str_replace('_', ' ', $dir_name);
+						$dir_label = str_replace('-', ' ', $dir_label);
+						if ($dir_name == $install_v_template_name) {
+							echo "		<option value='$dir_name' selected='selected'>$dir_label</option>\n";
+						}
+						else {
+							echo "		<option value='$dir_name'>$dir_label</option>\n";
+						}
+					}
+				}
+				closedir($handle);
+			}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		Select a theme to set as the default.<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+
+		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_v_backup_dir' value='$install_v_backup_dir'>\n";
@@ -1101,8 +1136,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - SQLite</b></td>\n";
-		echo "<td width='70%' align='right'>&nbsp;</td>\n";
-		//echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_dialplan_includes_edit.php?id=".$dialplan_include_id."'\" value='Back'></td>\n";
+		echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"history.go(-1);\" value='Back'></td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
@@ -1135,6 +1169,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_v_backup_dir' value='$install_v_backup_dir'>\n";
 		echo "			<input type='hidden' name='install_step' value='3'>\n";
+		echo "			<input type='hidden' name='install_v_template_name' value='$install_v_template_name'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='Next'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
@@ -1160,8 +1195,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - MySQL</b></td>\n";
-		echo "<td width='70%' align='right'>&nbsp;</td>\n";
-		//echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_dialplan_includes_edit.php?id=".$dialplan_include_id."'\" value='Back'></td>\n";
+		echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"history.go(-1);\" value='Back'></td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
@@ -1250,6 +1284,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_v_backup_dir' value='$install_v_backup_dir'>\n";
 		echo "			<input type='hidden' name='install_step' value='3'>\n";
+		echo "			<input type='hidden' name='install_v_template_name' value='$install_v_template_name'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='Next'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
@@ -1272,8 +1307,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - Postgres</b></td>\n";
-		echo "<td width='70%' align='right'>&nbsp;</td>\n";
-		//echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_dialplan_includes_edit.php?id=".$dialplan_include_id."'\" value='Back'></td>\n";
+		echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"history.go(-1);\" value='Back'></td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
@@ -1363,6 +1397,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_v_backup_dir' value='$install_v_backup_dir'>\n";
 		echo "			<input type='hidden' name='install_step' value='3'>\n";
+		echo "			<input type='hidden' name='install_v_template_name' value='$install_v_template_name'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='Install'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
