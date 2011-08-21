@@ -298,8 +298,10 @@ if ($db_type == "pgsql") {
 				$_SESSION['domains'][$row['v_id']]['v_id'] = $row['v_id'];
 				$_SESSION['domains'][$row['v_id']]['domain'] = $row['v_domain'];
 				$_SESSION['domains'][$row['v_id']]['template_name'] = $row['v_template_name'];
+			//get the domain
+				$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 			//get v_id, and check for an assigned template 
-				if ($row['v_domain'] == $_SERVER['HTTP_HOST'] || $row['v_domain'] == 'www.'.$_SERVER['HTTP_HOST']) {
+				if ($row['v_domain'] == $domain_array[0] || $row['v_domain'] == 'www.'.$domain_array[0]) {
 					$_SESSION["v_id"] = $row["v_id"];
 					$_SESSION["template_name"] = $row["v_template_name"];
 					$_SESSION["v_template_name"] = $row["v_template_name"];
