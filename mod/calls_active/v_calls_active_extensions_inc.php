@@ -394,13 +394,12 @@ else {
 							if (ifgroup("admin") || ifgroup("superadmin")) {
 								if (strlen(($_GET['rows'])) == 0) {
 									if (strlen($url) == 0) {
-										echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_name."</td>\n";
-										echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_num."</td>\n";
+										$url = "/mod/contacts/v_contacts.php?search_all={cid_num}";
 									}
-									else {
-										echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."cid_name=".$cid_name."&cid_num=".$cid_num."' style='color: #444444;' target='_blank'>".$cid_name."</a></td>\n";
-										echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."cid_name=".$cid_name."&cid_num=".$cid_num."' style='color: #444444;' target='_blank'>".$cid_num."</a></td>\n";
-									}
+									$url = str_replace ("{cid_num}", $cid_num, $url);
+									$url = str_replace ("{cid_name}", $cid_name, $url);
+									echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."' style='color: #444444;' target='_blank'>".$cid_name."</a></td>\n";
+									echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."' style='color: #444444;' target='_blank'>".$cid_num."</a></td>\n";
 								}
 							}
 							if (ifgroup("admin") || ifgroup("superadmin")) {

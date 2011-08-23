@@ -126,32 +126,31 @@ if (permission_exists('extensions_active_assigned_view')) {
 							echo "<td class='".$rowstyle[$c]."' $style_alternate>".$user_array[$extension]['user_status']."&nbsp;</td>\n";
 						}
 						echo "<td class='".$rowstyle[$c]."' $style_alternate width='20px;'>".$call_length."</td>\n";
+
 						if (strlen($url) == 0) {
-							echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_name."</td>\n";
-							echo "<td class='".$rowstyle[$c]."' $style_alternate>".$cid_num."</td>\n";
+							$url = "/mod/contacts/v_contacts.php?search_all={cid_num}";
 						}
-						else {
-							echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."cid_name=".$cid_name."&cid_num=".$cid_num."' style='color: #444444;' target='_blank'>".$cid_name."</a></td>\n";
-							echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."cid_name=".$cid_name."&cid_num=".$cid_num."' style='color: #444444;' target='_blank'>".$cid_num."</a></td>\n";
-						}
-						
+						$url = str_replace ("{cid_num}", $cid_num, $url);
+						$url = str_replace ("{cid_name}", $cid_name, $url);
+						echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."' style='color: #444444;' target='_blank'>".$cid_name."</a></td>\n";
+						echo "<td class='".$rowstyle[$c]."' $style_alternate><a href='".$url."' style='color: #444444;' target='_blank'>".$cid_num."</a></td>\n";
+
 						//get the active uuid list
 							if (strlen($uuid) > 1) {
-								if ($x == 1) {
+								if (strlen($uuid_1) == 0) {
 									$uuid_1 = $uuid;
-									$direction_1 = $direction;
+									//$direction_1 = $direction;
 									$cid_name_1 = $cid_name;
 									$cid_num_1 = $cid_num;
-									$x++;
 								}
-								if ($x == 2) {
+								if (strlen($uuid_1) > 0 && $uuid != $uuid_1) {
 									$uuid_2 = $uuid;
-									$direction_2 = $direction;
+									//$direction_2 = $direction;
 									$cid_name_2 = $cid_name;
 									$cid_num_2 = $cid_num;
-									$x++;
 								}
 							}
+
 						echo "<td class='".$rowstyle[$c]."' $style_alternate>\n";
 						if ($application == "valet_park") {
 							echo $valet_array[trim($uuid)]['extension']."\n";
@@ -236,12 +235,12 @@ if (permission_exists('extensions_active_assigned_view')) {
 		echo "</table>\n";
 
 		echo "<span id='uuid_1' style='visibility:hidden;'>$uuid_1</span>\n";
-		echo "<span id='direction_1' style='visibility:hidden;'>$direction_1</span>\n";
+		//echo "<span id='direction_1' style='visibility:hidden;'>$direction_1</span>\n";
 		echo "<span id='cid_name_1' style='visibility:hidden;'>$cid_name_1</span>\n";
 		echo "<span id='cid_num_1' style='visibility:hidden;'>$cid_num_1</span>\n";
 
 		echo "<span id='uuid_2' style='visibility:hidden;'>$uuid_2</span>\n";
-		echo "<span id='direction_2' style='visibility:hidden;'>$direction_2</span>\n";
+		//echo "<span id='direction_2' style='visibility:hidden;'>$direction_2</span>\n";
 		echo "<span id='cid_name_2' style='visibility:hidden;'>$cid_name_2</span>\n";
 		echo "<span id='cid_num_2' style='visibility:hidden;'>$cid_num_2</span>\n";
 
