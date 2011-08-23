@@ -12,6 +12,9 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+//get the search criteria
+	$search_all = $_GET["search_all"];
+
 //get variables used to control the order
 	$orderby = $_GET["orderby"];
 	$order = $_GET["order"];
@@ -23,15 +26,17 @@ require_once "includes/paging.php";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
 
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' nowrap><b>Contact List</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2'>\n";
-	echo "			The contact is a list of individuals and organizations.<br /><br />\n";
-	echo "		</td>\n";
+	echo "	<td align=\"left\" valign=\"top\"><strong>Contacts</strong><br>\n";
+	echo "		The contact is a list of individuals and organizations.\n";
+	echo "	</td>\n";
+	echo "	<td align=\"right\" valign=\"top\">\n";
+	echo "		<form method=\"GET\" name=\"frm_search\" action=\"\">\n";
+	echo "			<input class=\"formfld\" type=\"text\" name=\"search_all\" value=\"$search_all\">\n";
+	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"Search All\">\n";
+	echo "		</form>\n";
+	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
@@ -39,6 +44,29 @@ require_once "includes/paging.php";
 		$sql = "";
 		$sql .= " select count(*) as num_rows from v_contacts ";
 		$sql .= " where v_id = '$v_id' ";
+		if (strlen($search_all) > 0) {
+			if (is_numeric($search_all)) {
+				$sql .= "and contact_id in (select contact_id from v_contacts_tel where tel_number like '%".$search_all."%') \n";
+			}
+			else {
+				$sql .= "and contact_id in (\n";
+				$sql .= "	select contact_id from v_contacts where v_id = '$v_id' \n";
+				$sql .= "	and (\n";
+				$sql .= "	org like '%".$search_all."%' or \n";
+				$sql .= "	n_given like '%".$search_all."%' or \n";
+				$sql .= "	n_family like '%".$search_all."%' or \n";
+				$sql .= "	nickname like '%".$search_all."%' or \n";
+				$sql .= "	title like '%".$search_all."%' or \n";
+				$sql .= "	role like '%".$search_all."%' or \n";
+				$sql .= "	email like '%".$search_all."%' or \n";
+				$sql .= "	url like '%".$search_all."%' or \n";
+				$sql .= "	tz like '%".$search_all."%' or \n";
+				$sql .= "	note like '%".$search_all."%' or \n";
+				$sql .= "	type like '%".$search_all."%'\n";
+				$sql .= "	)\n";
+				$sql .= ")\n";
+			}
+		}
 		if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -53,7 +81,7 @@ require_once "includes/paging.php";
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = 30;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
@@ -64,6 +92,29 @@ require_once "includes/paging.php";
 		$sql = "";
 		$sql .= " select * from v_contacts ";
 		$sql .= " where v_id = '$v_id' ";
+		if (strlen($search_all) > 0) {
+			if (is_numeric($search_all)) {
+				$sql .= "and contact_id in (select contact_id from v_contacts_tel where tel_number like '%".$search_all."%') \n";
+			}
+			else {
+				$sql .= "and contact_id in (\n";
+				$sql .= "	select contact_id from v_contacts where v_id = '$v_id' \n";
+				$sql .= "	and (\n";
+				$sql .= "	org like '%".$search_all."%' or \n";
+				$sql .= "	n_given like '%".$search_all."%' or \n";
+				$sql .= "	n_family like '%".$search_all."%' or \n";
+				$sql .= "	nickname like '%".$search_all."%' or \n";
+				$sql .= "	title like '%".$search_all."%' or \n";
+				$sql .= "	role like '%".$search_all."%' or \n";
+				$sql .= "	email like '%".$search_all."%' or \n";
+				$sql .= "	url like '%".$search_all."%' or \n";
+				$sql .= "	tz like '%".$search_all."%' or \n";
+				$sql .= "	note like '%".$search_all."%' or \n";
+				$sql .= "	type like '%".$search_all."%'\n";
+				$sql .= "	)\n";
+				$sql .= ")\n";
+			}
+		}
 		if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
