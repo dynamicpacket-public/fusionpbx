@@ -40,6 +40,33 @@ else {
 	$file_ext = $_GET['ext'];
 	$type = $_GET['type']; //vm
 	$desc = $_GET['desc'];
+	$id = $_GET['id'];
+
+//get the domain from the domains array
+	$domain = $_SESSION['domains'][$v_id]['domain'];
+	
+//create the event socket connection
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (!$fp) {
+		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
+	}
+	
+//show the error message or show the content
+	if (strlen($msg) > 0) {
+		require_once "includes/header.php";
+		echo "<div align='center'>\n";
+		echo "	<table width='40%'>\n";
+		echo "		<tr>\n";
+		echo "			<th align='left'>Message</th>\n";
+		echo "		</tr>\n";
+		echo "		<tr>\n";
+		echo "			<td class='rowstyle1'><strong>$msg</strong></td>\n";
+		echo "		</tr>\n";
+		echo "	</table>\n";
+		echo "</div>\n";
+		require_once "includes/footer.php";
+		return;
+	}
 
 ?>
 <html>
@@ -56,17 +83,27 @@ else {
 	<tr>
 	<td align='center'>
 	<?php
-	if ($file_ext == "wav") {
-		echo "<embed src=\"v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid."\" autostart=true width=200 height=40 name=\"sound".$uuid."\" enablejavascript=\"true\">\n";
-	 }
-	 if ($file_ext == "mp3") {
-		echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($uuid)."&song_url=".urlencode($v_relative_url."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\">\n";
-		echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=".urlencode($v_relative_url."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\" />\n";
-		echo "<param name=\"quality\" value=\"high\"/>\n";
-		echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
-		echo "</object>\n";
-	}
-
+	//mark voicemail as read
+		$cmd = "api vm_read " .$id."@".$domain." read ".$uuid;
+		$response = trim(event_socket_request($fp, $cmd));
+		if (strcmp($response,"+OK")==0) {
+			$msg = "Complete";
+		}
+		else {
+			$msg = "Failed";
+		}
+	//embed html tag to play the wav file
+		if ($file_ext == "wav") {
+			echo "<embed src=\"v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid."\" autostart=true width=200 height=40 name=\"sound".$uuid."\" enablejavascript=\"true\">\n";
+		}
+	//object html tag to add flash player that can play the mp3 file
+		if ($file_ext == "mp3") {
+			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($uuid)."&song_url=".urlencode($v_relative_url."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\">\n";
+			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=".urlencode($v_relative_url."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\" />\n";
+			echo "<param name=\"quality\" value=\"high\"/>\n";
+			echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
+			echo "</object>\n";
+		}
 	?>
 	</td>
    </tr>

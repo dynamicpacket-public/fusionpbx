@@ -253,25 +253,32 @@ else {
 							$tmp_message_len = round(($tmp_message_len/60), 2). " min";
 						}
 
+						if ($row[read_epoch] == 0) {
+							$style = "style=\"font-weight: bold;\"";
+						}
+						else {
+							$style = "";
+						}
+
 						echo "<tr >\n";
-						echo "   <td valign='top' class='".$rowstyle[$c]."' nowrap>";
+						echo "   <td valign='top' class='".$rowstyle[$c]."' $style nowrap=\"nowrap\">";
 						echo date("j M Y g:i a",$row[created_epoch]);
 						echo "</td>\n";
 						//echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[read_epoch]."</td>\n";
 						//echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[username]."</td>\n";
 						//echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[domain]."</td>\n";
 						//echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[uuid]."</td>\n";
-						echo "   <td valign='top' class='".$rowstyle[$c]."' nowrap>".$row[cid_name]."</td>\n";
-						echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[cid_number]."</td>\n";
-						echo "   <td valign='top' class='".$rowstyle[$c]."'>".$row[in_folder]."</td>\n";
-						echo "	<td valign='top' class='".$rowstyle[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['uuid']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+						echo "   <td valign='top' class='".$rowstyle[$c]."' $style nowrap=\"nowrap\">".$row[cid_name]."</td>\n";
+						echo "   <td valign='top' class='".$rowstyle[$c]."' $style>".$row[cid_number]."</td>\n";
+						echo "   <td valign='top' class='".$rowstyle[$c]."' $style>".$row[in_folder]."</td>\n";
+						echo "	<td valign='top' class='".$rowstyle[$c]."' $style>\n";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['uuid']."&id=".$row['username']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 						echo "		$tmp_message_len";
 						echo "		</a>";
 						echo "	</td>\n";
 						//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[flags]."&nbsp;</td>\n";
 						//echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[read_flags]."</td>\n";
-						echo "	<td valign='top' class='".$rowstyle[$c]."' nowrap>";
+						echo "	<td valign='top' class='".$rowstyle[$c]."'  $style nowrap=\"nowrap\">";
 						echo "		<a href=\"v_voicemail_msgs.php?a=download&type=vm&t=bin&uuid=".$row['uuid']."\">\n";
 						echo $tmp_filesize;
 						echo "		</a>";
