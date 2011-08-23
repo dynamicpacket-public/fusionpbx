@@ -75,27 +75,37 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	echo "<tr>\n";
-	echo thorderby('notes', 'Notes', $orderby, $order);
-	echo thorderby('last_mod_date', 'Modified Date', $orderby, $order);
-	echo thorderby('last_mod_user', 'Modified By', $orderby, $order);
-	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
-	echo "</td>\n";
-	echo "<tr>\n";
-
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			//print_r( $row );
+			$notes = $row['notes'];
+			$notes = str_replace("\n","<br />",$notes);
+
+			echo "<tr>\n";
+			echo "<th>\n";
+			echo "	User: ".$row['last_mod_user']." &nbsp; &nbsp; \n";
+			echo "	Date: ".$row['last_mod_date']."&nbsp; &nbsp; \n";
+			echo "</th>\n";
+			//echo "<th>Modified Date ".$row['last_mod_date']."</th>\n";
+			//echo "<th>Modified By ".$row['last_mod_user']."</th>\n";
+			echo "<td align='right' width='42'>\n";
+			echo "	<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+			echo "</td>\n";
+			echo "<tr>\n";
+
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['notes']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_date']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_user']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><br />".$notes."&nbsp;<br /><br /></td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_date']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_user']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='v_contacts_notes_edit.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='v_contacts_notes_delete.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
+
+			echo "<tr>\n";
+			echo "	<td>&nbsp;</td>\n";
+			echo "<tr>\n";
+
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
