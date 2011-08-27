@@ -2804,7 +2804,7 @@ function sync_package_v_hunt_group() {
 				//get the list of destinations then build the Hunt Group Lua
 					$tmp = "";
 					$tmp .= "\n";
-					$tmp .= "session:answer();\n";
+					$tmp .= "session:preAnswer();\n";
 					$tmp .= "extension = '".$row['huntgroupextension']."';\n";
 					$tmp .= "result = '';\n";
 					$tmp .= "timeoutpin = 7500;\n";
@@ -3119,7 +3119,7 @@ function sync_package_v_hunt_group() {
 					//set the timeout destination
 						$huntgrouptimeoutdestination = $row['huntgrouptimeoutdestination'];
 						if ($row['huntgrouptimeouttype'] == "extension") { $huntgrouptimeouttype = "transfer"; }
-						if ($row['huntgrouptimeouttype'] == "voicemail") { $huntgrouptimeouttype = "transfer"; $huntgrouptimeoutdestination = "*99".$huntgrouptimeoutdestination; }
+						if ($row['huntgrouptimeouttype'] == "voicemail") { $huntgrouptimeouttype = "voicemail"; $huntgrouptimeoutdestination = "default \${domain_name} ".$huntgrouptimeoutdestination; }
 						if ($row['huntgrouptimeouttype'] == "sip uri") { $huntgrouptimeouttype = "bridge"; }
 						$tmp .= "\n";
 						if ($row['huntgroupcallerannounce'] == "true" || $row['hunt_group_call_prompt'] == "true") {
