@@ -94,9 +94,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		//if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
 		if (strlen($extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		if ($action == "update") {
-			if (strlen($password) == 0) { $msg .= "Please provide: Password<br>\n"; }
-		}
 		//if (strlen($user_list) == 0) { $msg .= "Please provide: User List<br>\n"; }
 		//if (strlen($vm_password) == 0) { $msg .= "Please provide: Voicemail Password<br>\n"; }
 		//if (strlen($accountcode) == 0) { $msg .= "Please provide: Account Code<br>\n"; }
@@ -323,6 +320,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
 			}
 			unset($tmp_user);
+
+			if (strlen($password) == 0) {
+				$password = generate_password();
+			}
 
 			$sql = "update v_extensions set ";
 			$sql .= "extension = '$extension', ";
