@@ -58,35 +58,42 @@ echo "</tr>\n";
 echo "</table>\n";
 echo "<br />\n";
 
+//get the number of rows in v_hunt_group
 $sql = "";
-$sql .= " select * from v_hunt_group ";
+$sql .= " select count(*) as num_rows from v_hunt_group ";
 $sql .= "where v_id = '$v_id' ";
-$sql .= "and huntgrouptype <> 'dnd' ";
-$sql .= "and huntgrouptype <> 'call_forward' ";
-$sql .= "and huntgrouptype <> 'follow_me_simultaneous' ";
-$sql .= "and huntgrouptype <> 'follow_me_sequence' ";
-if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 $prepstatement = $db->prepare(check_sql($sql));
-$prepstatement->execute();
-$result = $prepstatement->fetchAll();
-$numrows = count($result);
-unset ($prepstatement, $result, $sql);
+if ($prepstatement) {
+	$prepstatement->execute();
+	$row = $prepstatement->fetch(PDO::FETCH_ASSOC);
+	if ($row['num_rows'] > 0) {
+		$num_rows = $row['num_rows'];
+	}
+	else { 
+		$num_rows = '0';
+	}
+}
+unset($prepstatement, $result);
 
-$rowsperpage = 150;
+//prepare to page the results
+$rows_per_page = 150;
 $param = "";
 $page = $_GET['page'];
 if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-list($pagingcontrols, $rowsperpage, $var3) = paging($numrows, $param, $rowsperpage); 
-$offset = $rowsperpage * $page; 
+list($pagingcontrols, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
+$offset = $rows_per_page * $page; 
+
+//get the hunt group list
 $sql = "";
 $sql .= " select * from v_hunt_group ";
 $sql .= "where v_id = '$v_id' ";
-$sql .= "and huntgrouptype <> 'dnd' ";
-$sql .= "and huntgrouptype <> 'call_forward' ";
-$sql .= "and huntgrouptype <> 'follow_me_simultaneous' ";
-$sql .= "and huntgrouptype <> 'follow_me_sequence' ";
-if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
-$sql .= " limit $rowsperpage offset $offset ";
+if (strlen($orderby)> 0) {
+	$sql .= "order by $orderby $order ";
+}
+else {
+	$sql .= "order by huntgroupextension asc ";
+}
+$sql .= " limit $rows_per_page offset $offset ";
 $prepstatement = $db->prepare(check_sql($sql));
 $prepstatement->execute();
 $result = $prepstatement->fetchAll();
