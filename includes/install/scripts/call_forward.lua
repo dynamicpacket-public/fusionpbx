@@ -40,6 +40,8 @@ if ( session:ready() ) then
 	dialplan_default_dir = session:getVariable("dialplan_default_dir");
 	call_forward_number = session:getVariable("call_forward_number");
 	extension_required = session:getVariable("extension_required");
+	context = session:getVariable("context");
+	if (not context ) then context = 'default'; end
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -97,7 +99,7 @@ if ( session:ready() ) then
 		--write the xml file
 			xml = "<extension name=\"call_forward_"..extension.."\" >\n";
 			xml = xml .. "	<condition field=\"destination_number\" expression=\"^"..extension.."$\">\n";
-			xml = xml .. "		<action application=\"transfer\" data=\""..call_forward_number.." XML default\"/>\n";
+			xml = xml .. "		<action application=\"transfer\" data=\""..call_forward_number.." XML "..context.."\"/>\n";
 			xml = xml .. "	</condition>\n";
 			xml = xml .. "</extension>\n";
 			session:execute("log", xml);
