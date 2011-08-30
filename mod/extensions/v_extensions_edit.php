@@ -80,6 +80,7 @@ else {
 		$sip_force_contact = check_str($_POST["sip_force_contact"]);
 		$sip_force_expires = check_str($_POST["sip_force_expires"]);
 		$nibble_account = check_str($_POST["nibble_account"]);
+		$mwi_account = check_str($_POST["mwi_account"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
 	}
@@ -211,6 +212,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($nibble_account) > 0) {
 						$sql .= "nibble_account, ";
 					}
+					if (strlen($mwi_account) > 0) {
+						$sql .= "mwi_account, ";
+					}
 					$sql .= "enabled, ";
 					$sql .= "description ";
 					$sql .= ")";
@@ -246,6 +250,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					if (strlen($nibble_account) > 0) {
 						$sql .= "'$nibble_account', ";
+					}
+					if (strlen($mwi_account) > 0) {
+						if (strpos($mwi_account, '@') === false) {
+							$mwi_account .= "@\${domain_name}";
+						}
+						$sql .= "'$mwi_account', ";
 					}
 					$sql .= "'$enabled', ";
 					$sql .= "'$description' ";
@@ -352,6 +362,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (strlen($nibble_account) > 0) {
 				$sql .= "nibble_account = '$nibble_account', ";
 			}
+			if (strlen($mwi_account) > 0) {
+				if (strpos($mwi_account, '@') === false) {
+					$mwi_account .= "@\${domain_name}";
+				}
+			}
+			$sql .= "mwi_account = '$mwi_account', ";
 			$sql .= "enabled = '$enabled', ";
 			$sql .= "description = '$description' ";
 			$sql .= "where v_id = '$v_id' ";
@@ -426,6 +442,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sip_force_contact = $row["sip_force_contact"];
 			$sip_force_expires = $row["sip_force_expires"];
 			$nibble_account = $row["nibble_account"];
+			$mwi_account = $row["mwi_account"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 			break; //limit to 1 row
@@ -939,6 +956,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"$nibble_account\">\n";
 	echo "<br />\n";
 	echo "Enter the account number for nibblebill to use.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    MWI Account:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"$mwi_account\">\n";
+	echo "<br />\n";
+	echo "MWI Account with user@domain of the voicemail to monitor.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

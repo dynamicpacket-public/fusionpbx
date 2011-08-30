@@ -1906,6 +1906,9 @@ function sync_package_v_extensions() {
 				}
 				$tmpxml .= "      <param name=\"vm-mailto\" value=\"" . $row['vm_mailto'] . "\"/>\n";
 			}
+			if (strlen($row['mwi_account']) > 0) {
+				$tmpxml .= "      <param name=\"MWI-Account\" value=\"" . $row['mwi_account'] . "\"/>\n";
+			}
 			if (strlen($row['auth-acl']) > 0) {
 				$tmpxml .= "      <param name=\"auth-acl\" value=\"" . $row['auth_acl'] . "\"/>\n";
 			}

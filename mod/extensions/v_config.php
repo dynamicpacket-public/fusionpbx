@@ -120,5 +120,8 @@
 		$apps[$x]['db'][0]['fields'][26]['name'] = 'description';
 		$apps[$x]['db'][0]['fields'][26]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][26]['description'] = '';
+		$apps[$x]['db'][0]['fields'][27]['name'] = 'mwi_account';
+		$apps[$x]['db'][0]['fields'][27]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][27]['description'] = '';
 
 ?>
