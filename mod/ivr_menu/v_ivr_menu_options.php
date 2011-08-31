@@ -60,28 +60,38 @@ $order = $_GET["order"];
 	echo "</tr>\n";
 	echo "</table>\n";
 
+//get the number of rows in v_ivr_menu_options
 	$sql = "";
-	$sql .= " select * from v_ivr_menu_options ";
+	$sql .= " select count(*) as num_rows from v_ivr_menu_options ";
 	$sql .= " where v_id = '$v_id' ";
 	$sql .= " and ivr_menu_id = '$ivr_menu_id' ";
-	$sql .= "order by ivr_menu_options_order asc "; 
 	$prepstatement = $db->prepare(check_sql($sql));
-	$prepstatement->execute();
-	$result = $prepstatement->fetchAll();
-	$numrows = count($result);
-	unset ($prepstatement, $result, $sql);
-	$rowsperpage = 100;
+	if ($prepstatement) {
+		$prepstatement->execute();
+		$row = $prepstatement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+			}
+			else {
+				$num_rows = '0';
+			}
+		}
+		unset($prepstatement, $result);
+
+//prepare to page the results
+	$rows_per_page = 100;
 	$param = $_SERVER["QUERY_STRING"];
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($pagingcontrols, $rowsperpage, $var3) = paging($numrows, $param, $rowsperpage); 
-	$offset = $rowsperpage * $page;
+	list($pagingcontrols, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
+	$offset = $rows_per_page * $page;
 
+//get the menu options
 	$sql = "";
 	$sql .= "select * from v_ivr_menu_options ";
 	$sql .= "where v_id = '$v_id' ";
 	$sql .= "and ivr_menu_id = '$ivr_menu_id' ";
-	$sql .= "order by ivr_menu_options_order asc "; 
+	$sql .= "order by ivr_menu_options_digits, ivr_menu_options_order asc "; 
 	$prepstatement = $db->prepare(check_sql($sql));
 	$prepstatement->execute();
 	$result = $prepstatement->fetchAll();
