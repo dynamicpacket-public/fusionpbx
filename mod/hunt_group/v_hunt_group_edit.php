@@ -602,7 +602,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= " select * from v_hunt_group_destinations ";
 		$sql .= " where v_id = '$v_id' ";
 		$sql .= " and hunt_group_id = '$hunt_group_id' ";
-		$sql .= " order by destinationorder asc";
+		$sql .= " order by destinationorder, destinationdata asc";
 		$prepstatement = $db->prepare(check_sql($sql));
 		$prepstatement->execute();
 		$result = $prepstatement->fetchAll();
