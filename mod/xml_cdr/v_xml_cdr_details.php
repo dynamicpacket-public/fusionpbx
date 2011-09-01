@@ -253,7 +253,33 @@ else {
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$key."</td>\n";
 		if ($key == "bridge_uuid" || $key == "signal_bond") {
-			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'><a href='v_xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>\n";
+			echo "		<a href='v_xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;\n";
+			$tmp_dir = $v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+			$tmp_name = '';
+			if (file_exists($tmp_dir.'/'.$value.'.wav')) {
+				$tmp_name = $value.".wav";
+			}
+			elseif (file_exists($tmp_dir.'/'.$value.'_1.wav')) {
+				$tmp_name = $value."_1.wav";
+			}
+			elseif (file_exists($tmp_dir.'/'.$value.'.mp3')) {
+				$tmp_name = $value.".mp3";
+			}
+			elseif (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
+				$tmp_name = $value."_1.mp3";
+			}
+			if (strlen($tmp_name) > 0 && file_exists($v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+				echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+				echo "		play";
+				echo "	</a>&nbsp;";
+			}
+			if (strlen($tmp_name) > 0 && file_exists($v_recordings_dir.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+				echo "	<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				echo "		download";
+				echo "	</a>";
+			}
+			echo "</td>\n";
 		}
 		else {
 			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
