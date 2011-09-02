@@ -30,20 +30,20 @@
 	//session handling
 		//start the session
 			session_start();
+		//set the last activity time stamp
+			$_SESSION['session']['last_activity'] = time();
 		//check whether to timout the session
-			if (isset($_SESSION['session_last_activity']) && (time() - $_SESSION['session_last_activity'] > 14400)) {
-				// last request was more than 4 hours ago
-				session_destroy();   // destroy session data in storage
-				session_unset();     // unset $_SESSION variable for the runtime
-			}
-			$_SESSION['session_last_activity'] = time(); // update last activity time stamp
+			//if (isset($_SESSION['session']['last_activity']) && (time() - $_SESSION['session']['last_activity'] > 14400)) {
+			//	session_destroy();	// destroy session data in storage
+			//	session_unset();	// unset $_SESSION variable for the runtime
+			//}
 		//regenerate sessions to avoid session id attacks such as session fixation
-			if (!isset($_SESSION['session_created'])) {
-				$_SESSION['session_created'] = time();
-			} else if (time() - $_SESSION['session_created'] > 1800) {
+			if (!isset($_SESSION['session']['created'])) {
+				$_SESSION['session']['created'] = time();
+			} else if (time() - $_SESSION['session']['created'] > 1800) {
 				// session started more than 30 minutes ago
-				session_regenerate_id(true);    // change session ID for the current session an invalidate old session ID
-				$_SESSION['session_created'] = time();  // update creation time
+				session_regenerate_id(true);    // rotate the session id
+				$_SESSION['session']['created'] = time();  // update creation time
 			}
 
 	//get the document_root parent directory
