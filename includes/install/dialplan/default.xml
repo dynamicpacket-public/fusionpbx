@@ -470,23 +470,23 @@
     </extension>
 
     <!-- 
-	 Parking extensions... transferring calls to 5900 will park them in a queue.
+     Parking extensions... transferring calls to *5900 - *5999 will park them in a queue.
     -->
-    <extension name="park">
-      <condition field="destination_number" expression="^\*5900$">
-	<action application="set" data="fifo_music=$${hold_music}"/>
-	<action application="fifo" data="5900@${domain_name} in"/>
-      </condition>
-    </extension>
-
-    <!-- 
-	 Parking pickup extension.  Calling 5901 will pickup the call.
-    -->
-    <extension name="unpark">
-      <condition field="destination_number" expression="^\*5901$">
-	<action application="answer"/>
-	<action application="fifo" data="5900@${domain_name} out nowait"/>
-      </condition>
+    <extension name="parking_slots">
+    	<condition field="destination_number" expression="^(\*59[0-9][0-9])$" break="on-false">
+		<!-- Get count of callers in the specified parking slot (FIFO) --> 
+		<action inline="true" application="set" data="slot_count=${fifo(count $1@${domain_name})}"/>
+		<action inline="true" application="set" data="slot_count=${slot_count:-3:2}"/>
+	</condition>
+	<condition field="${slot_count}" expression="^\:0$" break="always">
+		<!-- FIFO settings for parking FIFOs -->
+		<action application="unset" data="fifo_chime_list"/>
+		<action application="set" data="fifo_chime_freq=0"/>
+		<!-- FIFO is empty, so park the caller: -->
+		<action application="fifo" data="${destination_number}@${domain_name} in undef local_stream://moh"/>
+		<!-- FIFO has a caller, so un-park the caller: -->
+		<anti-action application="fifo" data="${destination_number}@${domain_name} out nowait"/>
+	</condition>
     </extension>
 
 	<!--
