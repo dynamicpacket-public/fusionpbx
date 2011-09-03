@@ -46,7 +46,6 @@ $order = $_GET["order"];
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
 
-
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' nowrap='nowrap' align='left'><b>IVR Menu Option List</b></td>\n";
@@ -110,7 +109,7 @@ $order = $_GET["order"];
 	echo "<th>Description</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "	<a href='v_ivr_menu_options_edit.php?ivr_menu_id=".$row[ivr_menu_id]."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='v_ivr_menu_options_edit.php?ivr_menu_id=".$ivr_menu_id."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -158,7 +157,7 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' align='center' nowrap>$pagingcontrols</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "			<a href='v_ivr_menu_options_edit.php?ivr_menu_id=".$row['ivr_menu_id']."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='v_ivr_menu_options_edit.php?ivr_menu_id=".$ivr_menu_id."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
