@@ -223,7 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='extensionname' maxlength='255' value=\"$extensionname\">\n";
+	echo "    <input class='formfld' type='text' name='extensionname' maxlength='255' value=\"".htmlspecialchars($extensionname)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -234,7 +234,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Number:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='extension_number' maxlength='255' value=\"$extension_number\">\n";
+	echo "    <input class='formfld' type='text' name='extension_number' maxlength='255' value=\"".htmlspecialchars($extension_number)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -337,7 +337,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Description:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea class='formfld' name='descr' rows='4'>$descr</textarea>\n";
+	echo "    <textarea class='formfld' name='descr' rows='4'>".htmlspecialchars($descr)."</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";

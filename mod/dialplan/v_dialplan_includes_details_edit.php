@@ -153,10 +153,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "and dialplan_includes_detail_id = '$dialplan_includes_detail_id'";
 				$db->exec(check_sql($sql));
 				unset($sql);
-	
+
 				//synchronize the xml config
 				sync_package_v_dialplan_includes();
-				
+
 				require_once "includes/header.php";
 
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_dialplan_includes_edit.php?id=".$dialplan_include_id."\">\n";
@@ -334,7 +334,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='fieldtype' maxlength='255' value=\"$fieldtype\">\n";
+	echo "    <input class='formfld' type='text' name='fieldtype' maxlength='255' value=\"".htmlspecialchars($fieldtype)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -345,7 +345,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Data:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='fielddata' value=\"$fielddata\">\n";
+	echo "    <input class='formfld' type='text' name='fielddata' value=\"".htmlspecialchars($fielddata).\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
