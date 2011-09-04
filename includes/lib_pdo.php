@@ -243,25 +243,30 @@ if ($db_type == "sqlite") {
 if ($db_type == "mysql") {
 	//database connection
 	try {
-		if (strlen($db_host) == 0 && strlen($db_port) == 0) {
-			//if both host and port are empty use the unix socket
-			$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password);
-		}
-		else {
-			if (strlen($db_port) == 0) {
-				//leave out port if it is empty
-				$db = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_username, $db_password, array(
-				PDO::ATTR_ERRMODE,
-				PDO::ERRMODE_EXCEPTION
-				));
+		//required for mysql_real_escape_string
+			if (function_exists(mysql_connect)) {
+				$mysql_connection = mysql_connect($db_host, $db_username, $db_password);
+			}
+		//mysql pdo connection
+			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
+				//if both host and port are empty use the unix socket
+				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password);
 			}
 			else {
-				$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;", $db_username, $db_password, array(
-				PDO::ATTR_ERRMODE,
-				PDO::ERRMODE_EXCEPTION
-				));
+				if (strlen($db_port) == 0) {
+					//leave out port if it is empty
+					$db = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_username, $db_password, array(
+					PDO::ATTR_ERRMODE,
+					PDO::ERRMODE_EXCEPTION
+					));
+				}
+				else {
+					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;", $db_username, $db_password, array(
+					PDO::ATTR_ERRMODE,
+					PDO::ERRMODE_EXCEPTION
+					));
+				}
 			}
-		}
 	}
 	catch (PDOException $error) {
 		print "error: " . $error->getMessage() . "<br/>";
