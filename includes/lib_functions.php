@@ -31,28 +31,35 @@
 	}
 
 	if (!function_exists('check_str')) {
-		function check_str($strtemp) {
+		function check_str($str) {
+			global $db_type;
 			//when code in db is urlencoded the ' does not need to be modified
-			$strtemp = str_replace ("'", "''", $strtemp); //escape the single quote
-			$strtemp = trim ($strtemp); //remove white space
-			return $strtemp;
+			if ($db_type == "sqlite") {
+				$str = sqlite_escape_string($str);
+			}
+			if ($db_type == "pgsql") {
+				$str = pg_escape_string($str);
+			}
+			if ($db_type == "mysql") {
+				$tmp_str = mysql_real_escape_string($str);
+				if (strlen($tmp_str)) {
+					$str = $tmp_str;
+				}
+				else {
+					$search = array("\x00", "\n", "\r", "\\", "'", "\"", "\x1a");
+					$replace = array("\\x00", "\\n", "\\r", "\\\\" ,"\'", "\\\"", "\\\x1a");
+					$str = str_replace($search, $replace, $str);
+				}
+			}
+			$str = trim ($str); //remove white space
+			return $str;
 		}
 	}
 
 	if (!function_exists('check_sql')) {
-		function check_sql($strtemp) {
-			global $db_type;
-			if ($db_type == "sqlite") {
-				//place holder
-			}
-			if ($db_type == "pgsql") {
-				$strtemp = str_replace ("\\", "\\\\", $strtemp); //escape the backslash
-			}
-			if ($db_type == "mysql") {
-				$strtemp = str_replace ("\\", "\\\\", $strtemp); //escape the backslash
-			}
-			$strtemp = trim ($strtemp); //remove white space
-			return $strtemp;
+		function check_sql($str) {
+			$str = trim ($str); //remove white space
+			return $str;
 		}
 	}
 
