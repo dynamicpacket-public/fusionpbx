@@ -81,6 +81,7 @@ else {
 		$sip_force_expires = check_str($_POST["sip_force_expires"]);
 		$nibble_account = check_str($_POST["nibble_account"]);
 		$mwi_account = check_str($_POST["mwi_account"]);
+		$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
 		$enabled = check_str($_POST["enabled"]);
 		$description = check_str($_POST["description"]);
 	}
@@ -215,6 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($mwi_account) > 0) {
 						$sql .= "mwi_account, ";
 					}
+					$sql .= "sip_bypass_media, ";
 					$sql .= "enabled, ";
 					$sql .= "description ";
 					$sql .= ")";
@@ -262,6 +264,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						$sql .= "'$mwi_account', ";
 					}
+					$sql .= "'$sip_bypass_media', ";
 					$sql .= "'$enabled', ";
 					$sql .= "'$description' ";
 					$sql .= ")";
@@ -383,6 +386,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			}
 			$sql .= "mwi_account = '$mwi_account', ";
+			$sql .= "sip_bypass_media = '$sip_bypass_media', ";
 			$sql .= "enabled = '$enabled', ";
 			$sql .= "description = '$description' ";
 			$sql .= "where v_id = '$v_id' ";
@@ -458,6 +462,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sip_force_expires = $row["sip_force_expires"];
 			$nibble_account = $row["nibble_account"];
 			$mwi_account = $row["mwi_account"];
+			$sip_bypass_media = $row["sip_bypass_media"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 			break; //limit to 1 row
@@ -982,6 +987,36 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <input class='formfld' type='text' name='mwi_account' maxlength='255' value=\"$mwi_account\">\n";
 	echo "<br />\n";
 	echo "MWI Account with user@domain of the voicemail to monitor.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    SIP Bypass Media:\n";        echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='sip_bypass_media'>\n";
+	echo "    <option value=''></option>\n";
+        if ($sip_bypass_media == "bypass-media") {
+		echo "    <option value='bypass-media' SELECTED >Bypass Media</option>\n";
+	}
+	else {
+		echo "    <option value='bypass-media'>Bypass Media</option>\n";
+	}
+	if ($sip_bypass_media == "bypass-media-after-bridge") {
+		echo "    <option value='bypass-media-after-bridge' SELECTED >Bypass Media After Bridge</option>\n";
+	}
+	else {
+		echo "    <option value='bypass-media-after-bridge'>Bypass Media After Bridge</option>\n";
+	}
+	if ($sip_bypass_media == "proxy-media") {
+		echo "    <option value='proxy-media' SELECTED >Proxy Media</option>\n";
+	}
+	else {
+		echo "    <option value='proxy-media'>Proxy Media</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Choose whether to send the media stream point to point or in transparent proxy mode.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

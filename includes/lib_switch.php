@@ -1943,6 +1943,18 @@ function sync_package_v_extensions() {
 			if (strlen($row['nibble_account']) > 0) {
 				$tmpxml .= "      <variable name=\"nibble_account\" value=\"" . $row['nibble_account'] . "\"/>\n";
 			}
+			switch ($row['sip_bypass_media']) {
+				case "bypass-media":
+						$tmpxml .= "      <variable name=\"bypass_media\" value=\"true\"/>\n";
+						break;
+				case "bypass-media-after-bridge":
+						$tmpxml .= "      <variable name=\"bypass_media_after_bridge\" value=\"true\"/>\n";
+						break;
+				case "proxy-media":
+						$tmpxml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
+						break;
+			}
+
 			$tmpxml .= "    </variables>\n";
 			$tmpxml .= "  </user>\n";
 

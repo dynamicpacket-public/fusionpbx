@@ -123,5 +123,8 @@
 		$apps[$x]['db'][0]['fields'][27]['name'] = 'mwi_account';
 		$apps[$x]['db'][0]['fields'][27]['type'] = 'text';
 		$apps[$x]['db'][0]['fields'][27]['description'] = '';
+		$apps[$x]['db'][0]['fields'][28]['name'] = 'sip_bypass_media';
+		$apps[$x]['db'][0]['fields'][28]['type'] = 'text';
+		$apps[$x]['db'][0]['fields'][28]['description'] = '';
 
 ?>
