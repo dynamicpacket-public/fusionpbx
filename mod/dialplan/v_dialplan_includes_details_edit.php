@@ -244,6 +244,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	</script>
 	<?php
+
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    Tag:\n";
@@ -251,7 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "                <select name='tag' class='formfld' id='form_tag' onchange='public_include_details_tag_onchange();'>\n";
 	echo "                <option></option>\n";
-	switch (htmlspecialchars($tag)) {
+	switch ($tag) {
 	case "condition":
 		echo "                <option selected='yes'>condition</option>\n";
 		echo "                <option>action</option>\n";
@@ -307,7 +308,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='fieldorder' class='formfld'>\n";
-	if (strlen(htmlspecialchars($fieldorder))> 0) {
+	if (strlen($fieldorder)> 0) {
 		echo "              <option selected='selected' value='".htmlspecialchars($fieldorder)."'>".htmlspecialchars($fieldorder)."</option>\n";
 	}
 	$i=0;
@@ -345,7 +346,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Data:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='fielddata' value=\"".htmlspecialchars($fielddata).\">\n";
+	echo "    <input class='formfld' type='text' name='fielddata' value=\"".htmlspecialchars($fielddata)."\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -358,7 +359,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='field_group' class='formfld'>\n";
 	echo "              <option></option>\n";
-	if (strlen(htmlspecialchars($field_group))> 0) {
+	if (strlen($field_group)> 0) {
 		echo "              <option selected='selected' value='".htmlspecialchars($field_group)."'>".htmlspecialchars($field_group)."</option>\n";
 	}
 	$i=0;
@@ -371,7 +372,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	if ($action == "update") {
 		if ($tag == "condition") {
 			echo "<tr>\n";
@@ -411,7 +412,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-		
+
 		if ($tag == "action") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -464,6 +465,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br />\n";
 		echo "<br />\n";
 	}
+
 	?>
 
 	Conditions are pattern matching tags that help decide if the current call should be processed in this extension or not. When matching conditions against the current call you have several <b>fields</b> that you can compare against.
