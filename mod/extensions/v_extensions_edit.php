@@ -253,7 +253,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					if (strlen($mwi_account) > 0) {
 						if (strpos($mwi_account, '@') === false) {
-							$mwi_account .= "@\${domain_name}";
+							if (count($_SESSION["domains"]) > 1) {
+								$mwi_account .= "@".$v_domain;
+							}
+							else {
+								$mwi_account .= "@\$\${domain}";
+							}
 						}
 						$sql .= "'$mwi_account', ";
 					}
@@ -369,7 +374,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			if (strlen($mwi_account) > 0) {
 				if (strpos($mwi_account, '@') === false) {
-					$mwi_account .= "@\${domain_name}";
+					if (count($_SESSION["domains"]) > 1) {
+						$mwi_account .= "@".$v_domain;
+					}
+					else {
+						$mwi_account .= "@\$\${domain}";
+					}
 				}
 			}
 			$sql .= "mwi_account = '$mwi_account', ";
