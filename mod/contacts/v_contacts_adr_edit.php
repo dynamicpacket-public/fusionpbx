@@ -151,7 +151,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$contacts_adr_id = $_GET["id"];
 		$sql = "";
 		$sql .= "select * from v_contacts_adr ";
-		$sql .= "where contacts_adr_id = '$contacts_adr_id' ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and contacts_adr_id = '$contacts_adr_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();

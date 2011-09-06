@@ -126,7 +126,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 
-
 //show the header
 	require_once "includes/header.php";
 
@@ -143,10 +142,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Add Notes</b></td>\n";
+		echo "<td align='left' width='15%' nowrap='nowrap'><b>Add Notes</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Edit Notes</b></td>\n";
+		echo "<td align='left' width='15%' nowrap='nowrap'><b>Edit Notes</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_contacts_edit.php?id=$contact_id'\" value='Back'></td>\n";
 	echo "</tr>\n";
@@ -156,7 +155,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Notes:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"7\" style=\"width: 100%\" name='notes'>$notes</textarea>\n";
+	echo "  <textarea class='formfld' type='text' rows=\"20\" style=\"width: 100%\" name='notes'>$notes</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";

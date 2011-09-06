@@ -75,15 +75,25 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
-	if ($result_count > 0) {
+	if ($result_count == 0) {
+		echo "<tr>\n";
+		echo "<th>\n";
+		echo "	&nbsp; \n";
+		echo "</th>\n";
+		echo "<td align='right' width='42'>\n";
+		echo "	<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+		echo "</td>\n";
+		echo "<tr>\n";
+	}
+	else {
 		foreach($result as $row) {
 			$notes = $row['notes'];
 			$notes = str_replace("\n","<br />",$notes);
 
 			echo "<tr>\n";
 			echo "<th>\n";
-			echo "	User: ".$row['last_mod_user']." &nbsp; &nbsp; \n";
-			echo "	Date: ".$row['last_mod_date']."&nbsp; &nbsp; \n";
+			echo "	".$row['last_mod_date']."&nbsp; &nbsp; \n";
+			echo "	".$row['last_mod_user']." &nbsp; &nbsp; \n";
 			echo "</th>\n";
 			//echo "<th>Modified Date ".$row['last_mod_date']."</th>\n";
 			//echo "<th>Modified By ".$row['last_mod_user']."</th>\n";
