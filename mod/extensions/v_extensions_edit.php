@@ -229,7 +229,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "'$user_list', ";
 					}
 					$sql .= "'$provisioning_list', ";
-					$sql .= "'#".generate_password(4, 1)."', ";
+					$sql .= "'user-choose', ";
 					$sql .= "'$accountcode', ";
 					$sql .= "'$effective_caller_id_name', ";
 					$sql .= "'$effective_caller_id_number', ";
@@ -340,7 +340,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "password = '$password', ";
 			$sql .= "user_list = '$user_list', ";
 			$sql .= "provisioning_list = '$provisioning_list', ";
-			$sql .= "vm_password = '#$vm_password', ";
+			if (strlen($vm_password) > 0) {
+				$sql .= "vm_password = '$vm_password', ";
+			}
+			else {
+				$sql .= "vm_password = 'user-choose', ";
+			}
 			$sql .= "accountcode = '$accountcode', ";
 			$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
 			$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
