@@ -34,6 +34,11 @@ else {
 	exit;
 }
 
+//pdo database connection
+	if (strlen($_REQUEST['id']) > 0) {
+		require_once "v_sql_query_pdo.php";
+	}
+
 //set the headers
 	header('Content-type: application/octet-binary');
 	header('Content-Disposition: attachment; filename=database_backup.sql');

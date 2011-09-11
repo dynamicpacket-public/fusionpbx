@@ -34,6 +34,11 @@ else {
 	exit;
 }
 
+//pdo database connection
+	if (strlen($_REQUEST['id']) > 0) {
+		require_once "v_sql_query_pdo.php";
+	}
+
 if (count($_POST)>0) {
 	$sql_type = trim($_POST["sql_type"]);
 	$sql_cmd = trim($_POST["sql_cmd"]);

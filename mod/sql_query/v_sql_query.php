@@ -34,11 +34,11 @@ else {
 	exit;
 }
 
-//pdo voicemail database connection
-	//include "includes/lib_pdo_vm.php";
-
 //show the header
 	require_once "includes/header.php";
+
+//pdo voicemail database connection
+	require_once "v_sql_query_pdo.php";
 
 //show the content
 	//edit area
@@ -73,7 +73,13 @@ else {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>SQL Query</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_backup.php'\" value='Backup'>\n";
+	if (strlen($_REQUEST['id']) > 0) {
+		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_backup.php?id=".$_REQUEST['id']."'\" value='Backup'>\n";
+	}
+	else {
+		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_backup.php'\" value='Backup'>\n";
+	}
+	echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_query_db.php'\" value='Database'>\n";
 	echo "	<input type='button' class='btn' name='' alt='back' onClick=\"history.back()\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -87,6 +93,30 @@ else {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	
+	/*
+	echo "			DB: <select name='sql_db'>\n";
+	echo "				<option value=''></option>\n";
+	$sql = "";
+	$sql .= "select * from v_database_connections ";
+	$sql .= "where v_id = '$v_id' ";	
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	foreach ($result as &$row) {
+		//$db_type = $row["db_type"];
+		//$db_host = $row["db_host"];
+		//$db_port = $row["db_port"];
+		//$db_name = $row["db_name"];
+		//$db_username = $row["db_username"];
+		//$db_password = $row["db_password"];
+		//$db_path = $row["db_path"];
+		//$db_description = $row["db_description"];
+		echo "			<option value='".$row["database_connection_id"]."'>".$row["db_host"]." - ".$row["db_name"]."</option>\n";
+	}
+	unset ($prep_statement);
+	echo "			</select>\n";
+	*/
 
 	echo "			Type: <select name='sql_type'>\n";
 	echo "			<option value='default'>default</option>\n";
@@ -120,7 +150,7 @@ else {
 		echo "			<option value='".$row[0]."'>".$row[0]."</option>\n";
 	}
 	echo "			</select>\n";
-
+	echo "			<input type='hidden' name='id' value='".$_REQUEST['id']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='Execute'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -136,5 +166,6 @@ else {
 	echo "<iframe id='frame' width='100%' height='400' FRAMEBORDER='0' name='frame' style='background-color : #FFFFFF;'></iframe>\n";
 
 //show the footer
+	include "includes/config.php";
 	require_once "includes/footer.php";
 ?>
