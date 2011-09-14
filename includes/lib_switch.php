@@ -1405,19 +1405,19 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			$description = $row["description"];
 			if ("voicemail default \${domain} ".$extension == $select_value || "voicemail:default \${domain} ".$extension == $select_value) {
 				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:voicemail ".$_SESSION["context"]." \${domain} $extension' selected='selected'>".$extension." ".$description."</option>\n";
+					echo "		<option value='menu-exec-app:voicemail default \${domain} $extension' selected='selected'>".$extension." ".$description."</option>\n";
 				}
 				if ($select_type == "dialplan") {
-					echo "		<option value='voicemail:".$_SESSION["context"]." \${domain} $extension' selected='selected'>".$extension." ".$description."</option>\n";
+					echo "		<option value='voicemail:default \${domain} $extension' selected='selected'>".$extension." ".$description."</option>\n";
 				}
 				$selection_found = true;
 			}
 			else {
 				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:voicemail ".$_SESSION["context"]." \${domain} $extension'>".$extension." ".$description."</option>\n";
+					echo "		<option value='menu-exec-app:voicemail default \${domain} $extension'>".$extension." ".$description."</option>\n";
 				}
 				if ($select_type == "dialplan") {
-					echo "		<option value='voicemail:".$_SESSION["context"]." \${domain} $extension'>".$extension." ".$description."</option>\n";
+					echo "		<option value='voicemail:default \${domain} $extension'>".$extension." ".$description."</option>\n";
 				}
 			}
 		}
