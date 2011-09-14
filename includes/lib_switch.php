@@ -4463,11 +4463,11 @@ function v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fie
 	$sql .= "values ";
 	$sql .= "(";
 	$sql .= "'$v_id', ";
-	$sql .= "'$dialplan_include_id', ";
-	$sql .= "'$tag', ";
-	$sql .= "'$fieldorder', ";
-	$sql .= "'$fieldtype', ";
-	$sql .= "'$fielddata' ";
+	$sql .= "'".check_str($dialplan_include_id)."', ";
+	$sql .= "'".check_str($tag)."', ";
+	$sql .= "'".check_str($fieldorder)."', ";
+	$sql .= "'".check_str($fieldtype)."', ";
+	$sql .= "'".check_str($fielddata)."' ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);

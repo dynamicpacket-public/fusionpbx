@@ -31,35 +31,38 @@
 	}
 
 	if (!function_exists('check_str')) {
-		function check_str($str) {
+		function check_str($string) {
 			global $db_type;
 			//when code in db is urlencoded the ' does not need to be modified
 			if ($db_type == "sqlite") {
-				$str = sqlite_escape_string($str);
+				if (function_exists('sqlite_escape_string')) {
+					$string = sqlite_escape_string($string);
+				}
+				else {
+					$string = str_replace("''","'",$string);
+				}
 			}
 			if ($db_type == "pgsql") {
-				$str = pg_escape_string($str);
+				$string = pg_escape_string($string);
 			}
 			if ($db_type == "mysql") {
-				$tmp_str = mysql_real_escape_string($str);
+				$tmp_str = mysql_real_escape_string($string);
 				if (strlen($tmp_str)) {
-					$str = $tmp_str;
+					$string = $tmp_str;
 				}
 				else {
 					$search = array("\x00", "\n", "\r", "\\", "'", "\"", "\x1a");
 					$replace = array("\\x00", "\\n", "\\r", "\\\\" ,"\'", "\\\"", "\\\x1a");
-					$str = str_replace($search, $replace, $str);
+					$string = str_replace($search, $replace, $string);
 				}
 			}
-			$str = trim ($str); //remove white space
-			return $str;
+			return trim($string); //remove white space
 		}
 	}
 
 	if (!function_exists('check_sql')) {
-		function check_sql($str) {
-			$str = trim ($str); //remove white space
-			return $str;
+		function check_sql($string) {
+			return trim($string); //remove white space
 		}
 	}
 
