@@ -140,7 +140,7 @@ $tmp_texthtml = $tmp_textplain;
 
 	$tmp_to = $fax_email;
 	$tmp_to = str_replace(";", ",", $tmp_to);
-	$tmp_to_array = split(",", $tmp_to);
+	$tmp_to_array = explode(",", $tmp_to);
 	foreach($tmp_to_array as $tmp_to_row) {
 		if (strlen($tmp_to_row) > 0) {
 			echo "tmp_to_row: $tmp_to_row\n";
