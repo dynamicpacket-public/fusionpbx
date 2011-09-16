@@ -47,18 +47,39 @@ else {
 		$extension = check_str($_POST["extension"]);
 		$password = check_str($_POST["password"]);
 
-		$user_list = check_str($_POST["user_list"]."|");
-		$user_list = str_replace("\n", "|", "|".$user_list);
-		$user_list = str_replace("\r", "", $user_list);
-		$user_list = str_replace("||", "|", $user_list);
-		$user_list = trim($user_list);
+		//prepare the user list for the database
+		$user_list = $_POST["user_list"];
+		if (strlen($user_list) > 0) {
+			$user_list_array = explode("\n", $user_list);
+			if (count($user_list_array) == 0) {
+				$user_list = '';
+			}
+			else {
+				$user_list = '|';
+				foreach($user_list_array as $user){
+					if(strlen(trim($user)) > 0) {
+						$user_list .= check_str(trim($user))."|";
+					}
+				}
+			}
+		}
 
-		$provisioning_list = check_str($_POST["provisioning_list"]."|");
-		$provisioning_list = str_replace("\n", "|", "|".$provisioning_list);
-		$provisioning_list = str_replace("\r", "", $provisioning_list);
-		$provisioning_list = str_replace(" ", "", $provisioning_list);
-		$provisioning_list = str_replace("||", "|", $provisioning_list);
-		$provisioning_list = strtolower($provisioning_list);
+		//prepare the provisioning list for the database
+		$provisioning_list = $_POST["provisioning_list"];
+		if (strlen($provisioning_list) > 0) {
+			$provisioning_list_array = explode("\n", $provisioning_list);
+			if (count($provisioning_list_array) == 0) {
+				$provisioning_list = '';
+			}
+			else {
+				$provisioning_list = '|';
+				foreach($provisioning_list_array as $value){
+					if(strlen(trim($value)) > 0) {
+						$provisioning_list .= check_str(trim($value))."|";
+					}
+				}
+			}
+		}
 
 		$vm_password = check_str($_POST["vm_password"]);
 		$accountcode = check_str($_POST["accountcode"]);
@@ -226,7 +247,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$extension', ";
 					$sql .= "'$password', ";
 					if ($autogen_users == "true") { 
-						$sql .= "'|$extension|', ";
+						$sql .= "'|".$extension."|', ";
 					} else {
 						$sql .= "'$user_list', ";
 					}
@@ -335,7 +356,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$user_list_array = explode("|", $user_list);
 			foreach($user_list_array as $tmp_user){
 				$user_password = generate_password();
-				user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
+				if (strlen($tmp_user) > 0) {
+					user_add($tmp_user, $user_password, $userfirstname, $userlastname, $useremail);
+				}
 			}
 			unset($tmp_user);
 
@@ -599,7 +622,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "Use the select list to add users to the userlist. This will assign users to this extension.\n";
 	echo "<br />\n";
 	echo "<br />\n";
-	$user_list = str_replace("|", "\n", $user_list);
+	//replace the vertical bar with a line feed to display in the textarea
+	$user_list = trim($user_list, "|");
+	$user_list_array = explode("|", $user_list);
+	$user_list = '';
+	foreach($user_list_array as $user){
+		$user_list .= trim($user)."\n";
+	}
 	echo "		<textarea name=\"user_list\" id=\"user_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$user_list</textarea>\n";
 	echo "		<br>\n";
 	echo "If a user is not in the select list it can be added manually to the user list and it will be created automatically.\n";
@@ -695,12 +724,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<option value=''></option>\n";
 
 	foreach($result as $row) {
-		//print_r( $row );
-		if ($row[phone_mac_address] == $select_mac_address) {
-			echo "<option value='".$row[phone_mac_address]."' selected>".$row[phone_mac_address]." ".$row[phone_model]." ".$row[phone_description]."</option>\n";
+		if ($row['phone_mac_address'] == $select_mac_address) {
+			echo "<option value='".$row['phone_mac_address']."' selected>".$row['phone_mac_address']." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
 		}
 		else {
-			echo "<option value='".$row[phone_mac_address]."'>".$row[phone_mac_address]." ".$row[phone_model]." ".$row[phone_description]."</option>\n";
+			echo "<option value='".$row['phone_mac_address']."'>".$row['phone_mac_address']." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
 		}
 		//$row[phone_mac_address]
 		//$row[phone_vendor]
@@ -755,7 +783,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo "Select a line number.<br>\n";
 	echo "<br />\n";
-	$provisioning_list = str_replace("|", "\n", $provisioning_list);
+	//replace the vertical bar with a line feed to display in the textarea
+	$provisioning_list = trim($provisioning_list, "|");
+	$provisioning_list_array = explode("|", $provisioning_list);
+	$provisioning_list = '';
+	foreach($provisioning_list_array as $value){
+		$provisioning_list .= trim($value)."\n";
+	}
 	echo "    <textarea name=\"provisioning_list\" id=\"provisioning_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$provisioning_list</textarea>\n";
 	echo "    <br>\n";
 	echo "If a MAC address is not in the select list it can be added manually.<br />MAC Address:Line Number\n";

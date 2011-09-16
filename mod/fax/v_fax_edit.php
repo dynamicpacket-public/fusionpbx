@@ -121,11 +121,24 @@ else {
 		$fax_pin_number = check_str($_POST["fax_pin_number"]);
 		$fax_caller_id_name = check_str($_POST["fax_caller_id_name"]);
 		$fax_caller_id_number = check_str($_POST["fax_caller_id_number"]);
-		$fax_user_list = check_str($_POST["fax_user_list"])."|";
-		$fax_user_list = str_replace("\n", "|", "|".$fax_user_list);
-		$fax_user_list = str_replace("\r", "", $fax_user_list);
-		$fax_user_list = str_replace("||", "|", $fax_user_list);
-		$fax_user_list = trim($fax_user_list);
+
+		//prepare the user list for the database
+		$fax_user_list = $_POST["fax_user_list"];
+		if (strlen($fax_user_list) > 0) {
+			$fax_user_list_array = explode("\n", $fax_user_list);
+			if (count($fax_user_list_array) == 0) {
+				$fax_user_list = '';
+			}
+			else {
+				$fax_user_list = '|';
+				foreach($fax_user_list_array as $user){
+					if(strlen(trim($user)) > 0) {
+						$fax_user_list .= check_str(trim($user))."|";
+					}
+				}
+			}
+		}
+
 		$faxdescription = check_str($_POST["faxdescription"]);
 	}
 
@@ -310,7 +323,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "fax_pin_number = '$fax_pin_number', ";
 				$sql .= "fax_caller_id_name = '$fax_caller_id_name', ";
 				$sql .= "fax_caller_id_number = '$fax_caller_id_number', ";
-				//$sql .= "fax_user_list = '$fax_user_list', ";
+				if (ifgroup("admin") || ifgroup("superadmin")) {
+					$sql .= "fax_user_list = '$fax_user_list', ";
+				}
 				$sql .= "faxdescription = '$faxdescription' ";
 				$sql .= "where v_id = '$v_id' ";
 				$sql .= "and fax_id = '$fax_id' ";
@@ -555,7 +570,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "Use the select list to add users to the user list. This will assign users to this extension.\n";
 		echo "<br />\n";
 		echo "<br />\n";
-		$fax_user_list = str_replace("|", "\n", $fax_user_list);
+		//replace the vertical bar with a line feed to display in the textarea
+		$fax_user_list = trim($fax_user_list, "|");
+		$fax_user_list_array = explode("|", $fax_user_list);
+		$fax_user_list = '';
+		foreach($fax_user_list_array as $user){
+			$fax_user_list .= trim($user)."\n";
+		}
 		echo "		<textarea name=\"fax_user_list\" id=\"fax_user_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$fax_user_list</textarea>\n";
 		echo "		<br>\n";
 		echo "Assign the users that are can manage this fax extension.\n";

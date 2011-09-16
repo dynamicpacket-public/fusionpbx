@@ -98,11 +98,22 @@ $order = $_GET["order"];
 		$dialplan_order = check_str($_POST["dialplan_order"]);
 		$pin_number = check_str($_POST["pin_number"]);
 
-		$user_list = check_str($_POST["user_list"]."|");
-		$user_list = str_replace("\n", "|", "|".$user_list);
-		$user_list = str_replace("\r", "", $user_list);
-		$user_list = str_replace("||", "|", $user_list);
-		$user_list = trim($user_list);
+		//prepare the user list for the database
+		$user_list = $_POST["user_list"];
+		if (strlen($user_list) > 0) {
+			$user_list_array = explode("\n", $user_list);
+			if (count($user_list_array) == 0) {
+				$user_list = '';
+			}
+			else {
+				$user_list = '|';
+				foreach($user_list_array as $user){
+					if(strlen(trim($user)) > 0) {
+						$user_list .= check_str(trim($user))."|";
+					}
+				}
+			}
+		}
 
 		$profile = check_str($_POST["profile"]);
 		$flags = check_str($_POST["flags"]);
@@ -500,7 +511,13 @@ $order = $_GET["order"];
 		echo "Use the select list to add users to the userlist. This will assign users to this extension.\n";
 		echo "<br />\n";
 		echo "<br />\n";
-		$user_list = str_replace("|", "\n", $user_list);
+		//replace the vertical bar with a line feed to display in the textarea
+		$user_list = trim($user_list, "|");
+		$user_list_array = explode("|", $user_list);
+		$user_list = '';
+		foreach($user_list_array as $user){
+			$user_list .= trim($user)."\n";
+		}
 		echo "		<textarea name=\"user_list\" id=\"user_list\" class=\"formfld\" cols=\"30\" rows=\"3\" style='width: 60%;' wrap=\"off\">$user_list</textarea>\n";
 		echo "		<br>\n";
 		echo "If a user is not in the select list it can be added manually to the user list and it will be created automatically.\n";
