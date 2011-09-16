@@ -531,7 +531,6 @@
 	if (!function_exists('user_exists')) {
 		function user_exists($username) {
 			global $db, $v_id;
-			$user_exists = false;
 			$sql = "select * from v_users ";
 			$sql .= "where v_id = '$v_id' ";
 			$sql .= "and username = '".$username."' ";
@@ -550,10 +549,10 @@
 
 	if (!function_exists('user_add')) {
 		function user_add($username, $password, $userfirstname='', $userlastname='', $useremail='') {
+			global $db, $v_id;
 			if (strlen($username) == 0) { return false; }
 			if (strlen($password) == 0) { return false; }
 			if (!user_exists($username)) {
-				global $db, $v_id;
 				//add the user account
 					$usertype = 'Individual';
 					$usercategory = 'user';
