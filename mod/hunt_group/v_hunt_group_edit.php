@@ -59,11 +59,24 @@ require_once "includes/paging.php";
 		$huntgroupcidnameprefix = check_str($_POST["huntgroupcidnameprefix"]);
 		$huntgrouppin = check_str($_POST["huntgrouppin"]);
 		$huntgroupcallerannounce = check_str($_POST["huntgroupcallerannounce"]);
-		$hunt_group_user_list = check_str($_POST["hunt_group_user_list"])."|";
-		$hunt_group_user_list = str_replace("\n", "|", "|".$hunt_group_user_list);
-		$hunt_group_user_list = str_replace("\r", "", $hunt_group_user_list);
-		$hunt_group_user_list = str_replace("||", "|", $hunt_group_user_list);
-		$hunt_group_user_list = trim($hunt_group_user_list);
+
+		//prepare the user list for the database
+		$hunt_group_user_list = $_POST["hunt_group_user_list"];
+		if (strlen($hunt_group_user_list) > 0) {
+			$hunt_group_user_list_array = explode("\n", $hunt_group_user_list);
+			if (count($hunt_group_user_list_array) == 0) {
+				$hunt_group_user_list = '';
+			}
+			else {
+				$hunt_group_user_list = '|';
+				foreach($hunt_group_user_list_array as $user){
+					if(strlen(trim($user)) > 0) {
+						$hunt_group_user_list .= check_str(trim($user))."|";
+					}
+				}
+			}
+		}
+
 		$hunt_group_enabled = check_str($_POST["hunt_group_enabled"]);
 		$huntgroupdescr = check_str($_POST["huntgroupdescr"]);
 
@@ -181,7 +194,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "huntgroupcidnameprefix = '$huntgroupcidnameprefix', ";
 				$sql .= "huntgrouppin = '$huntgrouppin', ";
 				$sql .= "huntgroupcallerannounce = '$huntgroupcallerannounce', ";
-				$sql .= "hunt_group_user_list = '$hunt_group_user_list', ";
+				if (ifgroup("admin") || ifgroup("superadmin")) {
+					$sql .= "hunt_group_user_list = '$hunt_group_user_list', ";
+				}
 				$sql .= "hunt_group_enabled = '$hunt_group_enabled', ";
 				$sql .= "huntgroupdescr = '$huntgroupdescr' ";
 				$sql .= "where v_id = '$v_id' ";
@@ -516,7 +531,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "Use the select list to add users to the user list. This will assign users to this extension.\n";
 		echo "<br />\n";
 		echo "<br />\n";
-		$hunt_group_user_list = str_replace("|", "\n", $hunt_group_user_list);
+		//replace the vertical bar with a line feed to display in the textarea
+		$hunt_group_user_list = trim($hunt_group_user_list, "|");
+		$hunt_group_user_list_array = explode("|", $hunt_group_user_list);
+		$hunt_group_user_list = '';
+		foreach($hunt_group_user_list_array as $user){
+			$hunt_group_user_list .= trim($user)."\n";
+		}
 		echo "		<textarea name=\"hunt_group_user_list\" id=\"hunt_group_user_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$hunt_group_user_list</textarea>\n";
 		echo "		<br>\n";
 		echo "Assign the users that are can manage this hunt group extension.\n";
