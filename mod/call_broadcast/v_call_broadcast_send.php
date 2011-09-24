@@ -163,7 +163,7 @@ function cmd_async($cmd) {
 						}
 
 					//set the command
-						$cmd = "sched_api +".$sched_seconds." none originate ".$origination_url." ".$broadcast_destination_data." XML $context";
+						$cmd = "bgapi sched_api +".$sched_seconds." none originate ".$origination_url." ".$broadcast_destination_data." XML $context";
 
 					//if the event socket connection is lost then re-connect
 						if (!$fp) {
