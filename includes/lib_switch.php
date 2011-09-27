@@ -3294,7 +3294,7 @@ function sync_package_v_fax() {
 						$fielddata .= "domain=".$v_domain;
 					}
 					$fieldorder = '005';
-					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, check_str($fielddata));
+					v_dialplan_includes_details_add($v_id, $dialplan_include_id, $tag, $fieldorder, $fieldtype, $fielddata);
 
 					//<action application="answer" />
 					$tag = 'action'; //condition, action, antiaction
