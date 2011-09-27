@@ -102,8 +102,8 @@ INSERT INTO v_vars VALUES(1,1,'sound_prefix','$${base_dir}/sounds/en/us/callie',
 INSERT INTO v_vars VALUES(1,2,'domain','$${local_ip_v4}','Domain','true',1,'U2V0cyB0aGUgZGVmYXVsdCBkb21haW4u');
 INSERT INTO v_vars VALUES(1,3,'domain_name','$${domain}','Domain','true',2,'');
 INSERT INTO v_vars VALUES(1,4,'hold_music','local_stream://moh','Music on Hold','true',4,'');
-INSERT INTO v_vars VALUES(1,5,'global_codec_prefs','G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM','Codecs','true',5,'default: G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM');
-INSERT INTO v_vars VALUES(1,6,'outbound_codec_prefs','PCMU,PCMA,GSM','Codecs','true',6,'default: PCMU,PCMA,GSM');
+INSERT INTO v_vars VALUES(1,5,'global_codec_prefs','G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM','Codecs','true',5,'RzcyMjFAMzIwMDBoLEc3MjIxQDE2MDAwaCxHNzIyLFBDTVUsUENNQSxpTEJDLEdTTSxIMjYzLEgyNjQ=');
+INSERT INTO v_vars VALUES(1,6,'outbound_codec_prefs','PCMU,PCMA,GSM','Codecs','true',6,'ZGVmYXVsdDogUENNVSxQQ01BLEdTTQ==');
 INSERT INTO v_vars VALUES(1,7,'xmpp_client_profile','xmppc','Dingaling','true',7,'eG1wcF9jbGllbnRfcHJvZmlsZSBhbmQgeG1wcF9zZXJ2ZXJfcHJvZmlsZSB4bXBwX2NsaWVudF9wcm9maWxlIGNhbiBiZSBhbnkgc3RyaW5nLiB4bXBwX3NlcnZlcl9wcm9maWxlIGlzIGFwcGVuZGVkIHRvICJkaW5nYWxpbmdfIiB0byBmb3JtIHRoZSBkYXRhYmFzZSBuYW1lIGNvbnRhaW5pbmcgdGhlICJzdWJzY3JpcHRpb25zIiB0YWJsZS4gdXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1sIGVudW0uY29uZi54bWw=');
 INSERT INTO v_vars VALUES(1,8,'xmpp_server_profile','xmpps','Dingaling','true',8,'');
 INSERT INTO v_vars VALUES(1,9,'bind_server_ip','auto','Dingaling','true',9,'Q2FuIGJlIGFuIGlwIGFkZHJlc3MsIGEgZG5zIG5hbWUsIG9yICJhdXRvIi4gVGhpcyBkZXRlcm1pbmVzIGFuIGlwIGFkZHJlc3MgYXZhaWxhYmxlIG9uIHRoaXMgaG9zdCB0byBiaW5kLiBJZiB5b3UgYXJlIHNlcGFyYXRpbmcgUlRQIGFuZCBTSVAgdHJhZmZpYywgeW91IHdpbGwgd2FudCB0byBoYXZlIHVzZSBkaWZmZXJlbnQgYWRkcmVzc2VzIHdoZXJlIHRoaXMgdmFyaWFibGUgYXBwZWFycy4gVXNlZCBieTogZGluZ2FsaW5nLmNvbmYueG1s');
