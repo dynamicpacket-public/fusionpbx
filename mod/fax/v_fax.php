@@ -79,7 +79,7 @@ require_once "includes/paging.php";
 	$numrows = count($result);
 	unset ($prepstatement, $result, $sql);
 
-	$rowsperpage = 10;
+	$rowsperpage = 150;
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
