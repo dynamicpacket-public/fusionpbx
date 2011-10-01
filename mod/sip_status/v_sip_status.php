@@ -86,10 +86,6 @@ if (strlen($msg) > 0) {
 	echo "</div>\n";
 }
 
-echo "<div align='center'>\n";
-echo "<table width='100%'><tr><td align='left'>\n";
-echo "<br /><br />\n\n";
-
 //sofia status
 	if ($fp && permission_exists('system_status_sofia_status')) {
 		$cmd = "api sofia xmlstatus";
@@ -112,14 +108,13 @@ echo "<br /><br />\n\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 
-		echo "<table width='100%' cellspacing='0'>\n";
+		echo "<table width='100%' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<th>Name</th>\n";
 		echo "<th>Type</th>\n";
 		echo "<th>Data</th>\n";
 		echo "<th>State</th>\n";
 		echo "</tr>\n";
-
 		foreach ($xml->profile as $row) {
 			//print_r($row);
 			echo "<tr>\n";
