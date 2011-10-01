@@ -124,26 +124,25 @@ else {
 				echo "<tr><td colspan='4' align='left'>\n";
 				echo "	<br />\n";
 				echo "	<br />\n";
-				echo "	<b>".$row[var_cat]."</b>&nbsp;</td></tr>\n";
+				echo "	<b>".$row['var_cat']."</b>&nbsp;</td></tr>\n";
 				echo $tmp_var_header;
 			}
 
 			echo "<tr >\n";
-			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row[var_name]."</td>\n";
-			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$var_value."</td>\n";
-			//echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row[var_cat]."</td>\n";
-			//echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row[var_order]."</td>\n";
-			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row[var_enabled]."</td>\n";
-
-			$var_desc = str_replace("\n", "<br />", trim(base64_decode($row[var_desc])));
+			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".substr($row['var_name'],0,32)."</td>\n";
+			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".substr($var_value,0,30)."</td>\n";
+			//echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row['var_cat']."</td>\n";
+			//echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row['var_order']."</td>\n";
+			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$row['var_enabled']."</td>\n";
+			$var_desc = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_desc']),0,40)));
 			$var_desc = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_desc);
 			echo "	<td valign='top' align='left' class='".$rowstyle[$c]."'>".$var_desc."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('variables_edit')) {
-				echo "		<a href='v_vars_edit.php?id=".$row[var_id]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='v_vars_edit.php?id=".$row['var_id']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('variables_delete')) {
-				echo "		<a href='v_vars_delete.php?id=".$row[var_id]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='v_vars_delete.php?id=".$row['var_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
