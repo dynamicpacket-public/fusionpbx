@@ -78,19 +78,22 @@ require_once "includes/header.php";
 <?php
 
 echo "<br />\n";
+echo "<div align='center'>\n";
 
 echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "<tr>\n";
 echo "<td width='50%'>\n";
 echo "	<b>Logs</b><br />\n";
-
 echo "</td>\n";
 echo "<td width='50%' align='right'>\n";
 if (permission_exists('log_download')) {
 	echo "  <input type='button' class='btn' value='download logs' onclick=\"document.location.href='v_log_viewer.php?a=download&t=logs';\" />\n";
 }
+echo "</td>\n";
 echo "</tr>\n";
-echo "</table>\n";
+echo "<tr>\n";
+echo "<td colspan='2'>";
+
 echo "<br />\n\n";
 if (stristr(PHP_OS, 'WIN')) { 
 	//windows detected
