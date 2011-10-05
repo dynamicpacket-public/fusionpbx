@@ -1862,12 +1862,15 @@ function sync_package_v_extensions() {
 				$fout = fopen($v_extensions_dir."/v_".$extension.".xml","w");
 				$tmpxml .= "<include>\n";
 			}
-			if (strlen($row['cidr']) == 0) {
-				$tmpxml .= "  <user id=\"" . $row['extension'] . "\">\n";
+			$cidr = '';
+			if (strlen($row['cidr']) > 0) {
+				$cidr = " cidr=\"" . $row['cidr'] . "\"";
 			}
-			else {
-				$tmpxml .= "  <user id=\"" . $row['extension'] . "\" cidr=\"" . $row['cidr'] . "\">\n";
+			$number_alias = '';
+			if (strlen($row['number_alias']) > 0) {
+				$number_alias = " number-alias=\"".$row['number_alias']."\"";
 			}
+			$tmpxml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
 			$tmpxml .= "    <params>\n";
 			$tmpxml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
 			$tmpxml .= "      <param name=\"vm-password\" value=\"" . $vm_password . "\"/>\n";
@@ -1933,6 +1936,12 @@ function sync_package_v_extensions() {
 			}
 			if (strlen($row['outbound_caller_id_number']) > 0) {
 				$tmpxml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $row['outbound_caller_id_number'] . "\"/>\n";
+			}
+			if (strlen($row['limit_max']) > 0) {
+				$tmpxml .= "      <variable name=\"limit_max\" value=\"" . $row['limit_max'] . "\"/>\n";
+			}
+			if (strlen($row['limit_destination']) > 0) {
+				$tmpxml .= "      <variable name=\"limit_destination\" value=\"" . $row['limit_destination'] . "\"/>\n";
 			}
 			if (strlen($row['sip_force_contact']) > 0) {
 				$tmpxml .= "      <variable name=\"sip-force-contact\" value=\"" . $row['sip_force_contact'] . "\"/>\n";
