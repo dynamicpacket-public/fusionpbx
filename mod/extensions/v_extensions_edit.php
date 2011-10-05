@@ -45,6 +45,7 @@ else {
 //get the http values and set them as php variables
 	if (count($_POST)>0) {
 		$extension = check_str($_POST["extension"]);
+		$number_alias = check_str($_POST["number_alias"]);
 		$password = check_str($_POST["password"]);
 
 		//prepare the user list for the database
@@ -87,6 +88,8 @@ else {
 		$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
 		$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
 		$outbound_caller_id_number = check_str($_POST["outbound_caller_id_number"]);
+		$limit_max = check_str($_POST["limit_max"]);
+		$limit_destination = check_str($_POST["limit_destination"]);
 		$vm_enabled = check_str($_POST["vm_enabled"]);
 		$vm_mailto = check_str($_POST["vm_mailto"]);
 		$vm_attach_file = check_str($_POST["vm_attach_file"]);
@@ -117,6 +120,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		//if (strlen($v_id) == 0) { $msg .= "Please provide: v_id<br>\n"; }
 		if (strlen($extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
+		//if (strlen($number_alias) == 0) { $msg .= "Please provide: Number Alias<br>\n"; }
 		//if (strlen($user_list) == 0) { $msg .= "Please provide: User List<br>\n"; }
 		//if (strlen($vm_password) == 0) { $msg .= "Please provide: Voicemail Password<br>\n"; }
 		//if (strlen($accountcode) == 0) { $msg .= "Please provide: Account Code<br>\n"; }
@@ -124,6 +128,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($effective_caller_id_number) == 0) { $msg .= "Please provide: Effective Caller ID Number<br>\n"; }
 		//if (strlen($outbound_caller_id_name) == 0) { $msg .= "Please provide: Outbound Caller ID Name<br>\n"; }
 		//if (strlen($outbound_caller_id_number) == 0) { $msg .= "Please provide: Outbound Caller ID Number<br>\n"; }
+		//if (strlen($limit_max) == 0) { $msg .= "Please provide: Max Callsr<br>\n"; }
+		//if (strlen($limit_destination) == 0) { $msg .= "Please provide: Transfer Destination Number<br>\n"; }
 		//if (strlen($vm_mailto) == 0) { $msg .= "Please provide: Voicemail Mail To<br>\n"; }
 		//if (strlen($vm_attach_file) == 0) { $msg .= "Please provide: Voicemail Attach File<br>\n"; }
 		//if (strlen($vm_keep_local_after_email) == 0) { $msg .= "Please provide: VM Keep Local After Email<br>\n"; }
@@ -209,6 +215,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "v_id, ";
 					$sql .= "extension, ";
+					$sql .= "number_alias, ";
 					$sql .= "password, ";
 					$sql .= "user_list, ";
 					$sql .= "provisioning_list, ";
@@ -218,6 +225,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "effective_caller_id_number, ";
 					$sql .= "outbound_caller_id_name, ";
 					$sql .= "outbound_caller_id_number, ";
+					$sql .= "limit_max, ";
+					$sql .= "limit_destination, ";
 					$sql .= "vm_enabled, ";
 					$sql .= "vm_mailto, ";
 					$sql .= "vm_attach_file, ";
@@ -245,6 +254,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "'$v_id', ";
 					$sql .= "'$extension', ";
+					$sql .= "'$number_alias', ";
 					$sql .= "'$password', ";
 					if ($autogen_users == "true") { 
 						$sql .= "'|".$extension."|', ";
@@ -258,6 +268,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$effective_caller_id_number', ";
 					$sql .= "'$outbound_caller_id_name', ";
 					$sql .= "'$outbound_caller_id_number', ";
+					$sql .= "'$limit_max', ";
+					$sql .= "'$limit_destination', ";
 					$sql .= "'$vm_enabled', ";
 					$sql .= "'$vm_mailto', ";
 					$sql .= "'$vm_attach_file', ";
@@ -368,6 +380,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			$sql = "update v_extensions set ";
 			$sql .= "extension = '$extension', ";
+			$sql .= "number_alias = '$number_alias', ";
 			$sql .= "password = '$password', ";
 			$sql .= "user_list = '$user_list', ";
 			$sql .= "provisioning_list = '$provisioning_list', ";
@@ -382,6 +395,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
 			$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
 			$sql .= "outbound_caller_id_number = '$outbound_caller_id_number', ";
+			$sql .= "limit_max = '$limit_max', ";
+			$sql .= "limit_destination = '$limit_destination', ";
 			$sql .= "vm_enabled = '$vm_enabled', ";
 			$sql .= "vm_mailto = '$vm_mailto', ";
 			$sql .= "vm_attach_file = '$vm_attach_file', ";
@@ -461,8 +476,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prepstatement->fetchAll();
 		foreach ($result as &$row) {
 			$extension = $row["extension"];
+			$number_alias = $row["number_alias"];
 			$password = $row["password"];
-			$user_list = $row["user_list"];
+			$user_list = trim($row["user_list"]);
 			$provisioning_list = $row["provisioning_list"];
 			$provisioning_list = strtolower($provisioning_list);
 			$vm_password = $row["vm_password"];
@@ -472,6 +488,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$effective_caller_id_number = $row["effective_caller_id_number"];
 			$outbound_caller_id_name = $row["outbound_caller_id_name"];
 			$outbound_caller_id_number = $row["outbound_caller_id_number"];
+			$limit_max = $row["limit_max"];
+			$limit_destination = $row["limit_destination"];
 			$vm_enabled = $row["vm_enabled"];
 			$vm_mailto = $row["vm_mailto"];
 			$vm_attach_file = $row["vm_attach_file"];
@@ -550,7 +568,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='extension' autocomplete='off' maxlength='255' value=\"$extension\">\n";
 	echo "<br />\n";
-	echo "Enter the extension here. The default configuration allows 2 - 7 digit extensions.\n";
+	echo "Enter the alphanumeric extension. The default configuration allows 2 - 7 digit extensions.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Number Alias:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='number_alias' autocomplete='off' maxlength='255' value=\"$number_alias\">\n";
+	echo "<br />\n";
+	echo "If the extension is numeric then number alias is optional.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -667,7 +696,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"$effective_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "Enter the effective caller id name here.\n";
+	echo "Enter the internal caller id name here.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -678,7 +707,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='effective_caller_id_number' maxlength='255' value=\"$effective_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "Enter the effective caller id number here.\n";
+	echo "Enter the internal caller id number here.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -689,7 +718,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"$outbound_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "Enter the outbound caller id name here.\n";
+	echo "Enter the external caller id name here.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -700,7 +729,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' value=\"$outbound_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "Enter the outbound caller id number here.\n";
+	echo "Enter the external caller id number here.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Limit Max:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='limit_max' maxlength='255' value=\"$limit_max\">\n";
+	echo "<br />\n";
+	echo "Enter the max number of outgoing calls for this user.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    Limit Destination:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='limit_destination' maxlength='255' value=\"$limit_destination\">\n";
+	echo "<br />\n";
+	echo "Enter the destination to send the calls when the max number of outgoing calls has been reached. \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
