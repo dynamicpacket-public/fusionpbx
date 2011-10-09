@@ -378,14 +378,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			//set database fields as variables
 				$v_id = $row["v_id"];
-				$fax_extension = $row["fax_extension"];
-				$fax_name = $row["fax_name"];
-				$fax_email = $row["fax_email"];
+				$fax_extension = $row["faxextension"];
+				$fax_name = $row["faxname"];
+				$fax_email = $row["faxemail"];
 				$fax_pin_number = $row["fax_pin_number"];
 				$fax_caller_id_name = $row["fax_caller_id_name"];
 				$fax_caller_id_number = $row["fax_caller_id_number"];
 				$fax_user_list = $row["fax_user_list"];
-				$fax_description = $row["fax_description"];
+				$fax_description = $row["faxdescription"];
 			//limit to one row
 				break;
 		}
