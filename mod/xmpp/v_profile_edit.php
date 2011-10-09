@@ -130,7 +130,8 @@ if ($action == "add" && permission_exists('xmpp_add')) {
  	$sql .= "vad, ";
  	$sql .= "avatar, ";
  	$sql .= "candidate_acl, ";
- 	$sql .= "local_network_acl";
+ 	$sql .= "local_network_acl, ";
+	$sql .= "description ";
 	$sql .= ") values (";
  	$sql .= "$v_id, ";
  	$sql .= "'" . $request['profile_name'] . "', ";
@@ -149,7 +150,8 @@ if ($action == "add" && permission_exists('xmpp_add')) {
  	$sql .= "'" . $request['vad'] . "', ";
  	$sql .= "'" . $request['avatar'] . "', ";
  	$sql .= "'" . $request['candidate_acl'] . "', ";
- 	$sql .= "'" . $request['local_network_acl'] . "'";
+ 	$sql .= "'" . $request['local_network_acl'] . "', ";
+	$sql .= "'" . $request['description'] . "' ";
 	$sql .= ") ";
 	if ($db_type == "pgsql") {
 	 	$sql .= "RETURNING xmpp_profile_id;";
@@ -184,7 +186,8 @@ if ($action == "add" && permission_exists('xmpp_add')) {
 	$sql .= "vad = '" . $request['vad'] . "', ";
 	$sql .= "avatar = '" . $request['avatar'] . "', ";
 	$sql .= "candidate_acl = '" . $request['candidate_acl'] . "', ";
-	$sql .= "local_network_acl = '" . $request['local_network_acl'] . "' ";
+	$sql .= "local_network_acl = '" . $request['local_network_acl'] . "', ";
+	$sql .= "description = '" . $request['description'] . "' ";
 	$sql .= "where xmpp_profile_id = " . $request['id'];
 	$db->exec(check_sql($sql));
 		

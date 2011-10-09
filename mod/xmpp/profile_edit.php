@@ -265,7 +265,7 @@ function hide_advanced_config() {
 			Profile Description:
 		</td> 
 		<td class='vtable' align='left'> 
-			<input class='formfld' type='text' name='description' value=''> 
+			<input class='formfld' type='text' name='description' value='<?php echo $profile['description'];?>'> 
 			<br /> 
 			Enter the description of the Profile here.
 		</td> 

@@ -100,5 +100,8 @@
 		$apps[$x]['db'][0]['fields'][19]['name'] = 'enabled';
 		$apps[$x]['db'][0]['fields'][19]['type'] = 'text'; 
 		$apps[$x]['db'][0]['fields'][19]['description'] = '';
+		$apps[$x]['db'][0]['fields'][20]['name'] = 'description';
+		$apps[$x]['db'][0]['fields'][20]['type'] = 'text'; 
+		$apps[$x]['db'][0]['fields'][20]['description'] = '';
 
 ?>
