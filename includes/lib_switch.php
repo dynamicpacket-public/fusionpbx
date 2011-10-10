@@ -1941,7 +1941,7 @@ function sync_package_v_extensions() {
 				$tmpxml .= "      <variable name=\"limit_max\" value=\"" . $row['limit_max'] . "\"/>\n";
 			}
 			else {
-				$tmpxml .= "      <variable name=\"limit_max\" value=\"2\"/>\n";
+				$tmpxml .= "      <variable name=\"limit_max\" value=\"5\"/>\n";
 			}
 			if (strlen($row['limit_destination']) > 0) {
 				$tmpxml .= "      <variable name=\"limit_destination\" value=\"" . $row['limit_destination'] . "\"/>\n";
