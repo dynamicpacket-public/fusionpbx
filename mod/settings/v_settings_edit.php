@@ -276,7 +276,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='numbering_plan' maxlength='255' value=\"$numbering_plan\">\n";
 	echo "<br />\n";
-	echo "Enter the numbering plan here. example: US\n";
+	echo "Enter the numbering plan. example: US\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -287,7 +287,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "<td class='vtable' align='left'>\n";
 	//echo "    <input class='formfld' type='text' name='default_gateway' maxlength='255' value=\"$default_gateway\">\n";
 	//echo "<br />\n";
-	//echo " Enter the default gateway name here.\n";
+	//echo " Enter the default gateway name.\n";
 	//echo "</td>\n";
 	//echo "</tr>\n";
 
@@ -298,7 +298,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_ip_address' maxlength='255' value=\"$event_socket_ip_address\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket port here. default: 127.0.0.1\n";
+	echo "Enter the event socket IP address. default: 127.0.0.1\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -309,7 +309,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_port' maxlength='255' value=\"$event_socket_port\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket port here. default: 8021\n";
+	echo "Enter the event socket port. default: 8021\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -320,7 +320,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onfocus=\"document.getElementById('show_event_socket_password').innerHTML = 'Password: '+document.getElementById('event_socket_password').value;\" onblur=\"//document.getElementById('show_event_socket_password').innerHTML = ''\" maxlength='50' value=\"$event_socket_password\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket password here. <span id='show_event_socket_password'></span>\n";
+	echo "Enter the event socket password. <span id='show_event_socket_password'></span>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -331,7 +331,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_http_port' maxlength='255' value=\"$xml_rpc_http_port\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC HTTP Port here. default: 8787\n";
+	echo "Enter the XML RPC HTTP Port. default: 8787\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -342,7 +342,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_realm' maxlength='255' value=\"$xml_rpc_auth_realm\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth Realm here. default: freeswitch\n";
+	echo "Enter the XML RPC Auth Realm. default: freeswitch\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -353,7 +353,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' value=\"$xml_rpc_auth_user\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth User here. default: xmlrpc\n";
+	echo "Enter the XML RPC Auth User. default: xmlrpc\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -364,7 +364,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onfocus=\"document.getElementById('show_xml_rpc_auth_pass').innerHTML = 'Password: '+document.getElementById('xml_rpc_auth_pass').value;\" onblur=\"//document.getElementById('show_xml_rpc_auth_pass').innerHTML = ''\" maxlength='50' value=\"$xml_rpc_auth_pass\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth Password here. <span id='show_xml_rpc_auth_pass'></span>\n";
+	echo "Enter the XML RPC Auth Password. <span id='show_xml_rpc_auth_pass'></span>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
