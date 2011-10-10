@@ -44,70 +44,72 @@ else {
 
 //get the http values and set them as php variables
 	if (count($_POST)>0) {
-		$extension = check_str($_POST["extension"]);
-		$number_alias = check_str($_POST["number_alias"]);
-		$password = check_str($_POST["password"]);
+		//get the values from the HTTP POST and save them as PHP variables
+			$extension = check_str($_POST["extension"]);
+			$number_alias = check_str($_POST["number_alias"]);
+			$password = check_str($_POST["password"]);
 
 		//prepare the user list for the database
-		$user_list = $_POST["user_list"];
-		if (strlen($user_list) > 0) {
-			$user_list_array = explode("\n", $user_list);
-			if (count($user_list_array) == 0) {
-				$user_list = '';
-			}
-			else {
-				$user_list = '|';
-				foreach($user_list_array as $user){
-					if(strlen(trim($user)) > 0) {
-						$user_list .= check_str(trim($user))."|";
+			$user_list = $_POST["user_list"];
+			if (strlen($user_list) > 0) {
+				$user_list_array = explode("\n", $user_list);
+				if (count($user_list_array) == 0) {
+					$user_list = '';
+				}
+				else {
+					$user_list = '|';
+					foreach($user_list_array as $user){
+						if(strlen(trim($user)) > 0) {
+							$user_list .= check_str(trim($user))."|";
+						}
 					}
 				}
 			}
-		}
 
 		//prepare the provisioning list for the database
-		$provisioning_list = $_POST["provisioning_list"];
-		if (strlen($provisioning_list) > 0) {
-			$provisioning_list_array = explode("\n", $provisioning_list);
-			if (count($provisioning_list_array) == 0) {
-				$provisioning_list = '';
-			}
-			else {
-				$provisioning_list = '|';
-				foreach($provisioning_list_array as $value){
-					if(strlen(trim($value)) > 0) {
-						$provisioning_list .= check_str(trim($value))."|";
+			$provisioning_list = $_POST["provisioning_list"];
+			if (strlen($provisioning_list) > 0) {
+				$provisioning_list_array = explode("\n", $provisioning_list);
+				if (count($provisioning_list_array) == 0) {
+					$provisioning_list = '';
+				}
+				else {
+					$provisioning_list = '|';
+					foreach($provisioning_list_array as $value){
+						if(strlen(trim($value)) > 0) {
+							$provisioning_list .= check_str(trim($value))."|";
+						}
 					}
 				}
 			}
-		}
 
-		$vm_password = check_str($_POST["vm_password"]);
-		$accountcode = check_str($_POST["accountcode"]);
-		$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
-		$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
-		$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
-		$outbound_caller_id_number = check_str($_POST["outbound_caller_id_number"]);
-		$limit_max = check_str($_POST["limit_max"]);
-		$limit_destination = check_str($_POST["limit_destination"]);
-		$vm_enabled = check_str($_POST["vm_enabled"]);
-		$vm_mailto = check_str($_POST["vm_mailto"]);
-		$vm_attach_file = check_str($_POST["vm_attach_file"]);
-		$vm_keep_local_after_email = check_str($_POST["vm_keep_local_after_email"]);
-		$user_context = check_str($_POST["user_context"]);
-		$range = check_str($_POST["range"]);
-		$autogen_users = check_str($_POST["autogen_users"]);
-		$toll_allow = check_str($_POST["toll_allow"]);
-		$callgroup = check_str($_POST["callgroup"]);
-		$auth_acl = check_str($_POST["auth_acl"]);
-		$cidr = check_str($_POST["cidr"]);
-		$sip_force_contact = check_str($_POST["sip_force_contact"]);
-		$sip_force_expires = check_str($_POST["sip_force_expires"]);
-		$nibble_account = check_str($_POST["nibble_account"]);
-		$mwi_account = check_str($_POST["mwi_account"]);
-		$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
-		$enabled = check_str($_POST["enabled"]);
-		$description = check_str($_POST["description"]);
+		//get the values from the HTTP POST and save them as PHP variables
+			$vm_password = check_str($_POST["vm_password"]);
+			$accountcode = check_str($_POST["accountcode"]);
+			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
+			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
+			$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
+			$outbound_caller_id_number = check_str($_POST["outbound_caller_id_number"]);
+			$limit_max = check_str($_POST["limit_max"]);
+			$limit_destination = check_str($_POST["limit_destination"]);
+			$vm_enabled = check_str($_POST["vm_enabled"]);
+			$vm_mailto = check_str($_POST["vm_mailto"]);
+			$vm_attach_file = check_str($_POST["vm_attach_file"]);
+			$vm_keep_local_after_email = check_str($_POST["vm_keep_local_after_email"]);
+			$user_context = check_str($_POST["user_context"]);
+			$range = check_str($_POST["range"]);
+			$autogen_users = check_str($_POST["autogen_users"]);
+			$toll_allow = check_str($_POST["toll_allow"]);
+			$callgroup = check_str($_POST["callgroup"]);
+			$auth_acl = check_str($_POST["auth_acl"]);
+			$cidr = check_str($_POST["cidr"]);
+			$sip_force_contact = check_str($_POST["sip_force_contact"]);
+			$sip_force_expires = check_str($_POST["sip_force_expires"]);
+			$nibble_account = check_str($_POST["nibble_account"]);
+			$mwi_account = check_str($_POST["mwi_account"]);
+			$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
+			$enabled = check_str($_POST["enabled"]);
+			$description = check_str($_POST["description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -511,6 +513,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prepstatement);
 	}
 
+//set the defaults
+	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 
 //begin the page content
 	require_once "includes/header.php";
