@@ -2015,7 +2015,7 @@ function sync_package_v_extensions() {
 			$tmpxml .= "	<domain name=\"".$extension_dir_name."\">\n";
 		}
 		$tmpxml .= "		<params>\n";
-		$tmpxml .= "			<param name=\"dial-string\" value=\"{presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
+		$tmpxml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
 		$tmpxml .= "		</params>\n";
 		$tmpxml .= "\n";
 		$tmpxml .= "		<variables>\n";
