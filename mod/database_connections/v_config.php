@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = 'database_connection';
+		$apps[$x]['name'] = 'DB Connections';
 		$apps[$x]['guid'] = '8D229B6D-1383-FCEC-74C6-4CE1682479E2';
 		$apps[$x]['category'] = '';
 		$apps[$x]['subcategory'] = '';
