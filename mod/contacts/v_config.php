@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = 'contacts';
+		$apps[$x]['name'] = 'Contacts';
 		$apps[$x]['guid'] = '04481E0E-A478-C559-ADAD-52BD4174574C';
 		$apps[$x]['category'] = '';
 		$apps[$x]['subcategory'] = '';
@@ -173,7 +173,7 @@
 		$z++;
 
 		$y = 3; //table array index
-		$apps[$x]['db'][$y]['table'] = 'v_contacts_notes';
+		$apps[$x]['db'][$y]['table'] = 'v_contact_notes';
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'contacts_note_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'serial';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'integer PRIMARY KEY';

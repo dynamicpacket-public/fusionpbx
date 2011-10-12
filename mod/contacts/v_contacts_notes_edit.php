@@ -26,12 +26,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$contacts_note_id = check_str($_POST["contacts_note_id"]);
 	}
@@ -57,7 +51,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add") {
-			$sql = "insert into v_contacts_notes ";
+			$sql = "insert into v_contact_notes ";
 			$sql .= "(";
 			$sql .= "contact_id, ";
 			$sql .= "notes, ";
@@ -86,7 +80,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		} //if ($action == "add")
 
 		if ($action == "update") {
-			$sql = "update v_contacts_notes set ";
+			$sql = "update v_contact_notes set ";
 			$sql .= "contact_id = '$contact_id', ";
 			$sql .= "notes = '$notes', ";
 			$sql .= "v_id = '$v_id', ";
@@ -112,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contacts_note_id = $_GET["id"];
 		$sql = "";
-		$sql .= "select * from v_contacts_notes ";
+		$sql .= "select * from v_contact_notes ";
 		$sql .= "where contacts_note_id = '$contacts_note_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();

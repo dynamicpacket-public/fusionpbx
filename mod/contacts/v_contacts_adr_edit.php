@@ -39,13 +39,6 @@ if (strlen($_GET["contact_id"]) > 0) {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$contacts_adr_id = check_str($_POST["contacts_adr_id"]);
 	}
@@ -130,7 +123,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "adr_country = '$adr_country', ";
 			$sql .= "adr_latitude = '$adr_latitude', ";
 			$sql .= "adr_longitude = '$adr_longitude' ";
-			$sql .= "where contacts_adr_id = '$contacts_adr_id'";
+			$sql .= "where v_id = '$v_id'";
+			$sql .= "and contacts_adr_id = '$contacts_adr_id'";
 			$db->exec(check_sql($sql));
 			unset($sql);
 

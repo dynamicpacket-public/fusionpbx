@@ -35,13 +35,6 @@ if (strlen($_GET["contact_id"]) > 0) {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$contacts_tel_id = check_str($_POST["contacts_tel_id"]);
 	}
@@ -119,7 +112,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$contacts_tel_id = $_GET["id"];
 		$sql = "";
 		$sql .= "select * from v_contacts_tel ";
-		$sql .= "where contacts_tel_id = '$contacts_tel_id' ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and contacts_tel_id = '$contacts_tel_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();

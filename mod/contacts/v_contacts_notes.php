@@ -31,7 +31,7 @@ require_once "includes/paging.php";
 
 	//prepare to page the results
 		$sql = "";
-		$sql .= " select count(*) as num_rows from v_contacts_notes ";
+		$sql .= " select count(*) as num_rows from v_contact_notes ";
 		$sql .= " where v_id = '$v_id' ";
 		$sql .= " and contact_id = '$contact_id' ";
 		if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
@@ -57,7 +57,7 @@ require_once "includes/paging.php";
 
 	//get the contact list
 		$sql = "";
-		$sql .= " select * from v_contacts_notes ";
+		$sql .= " select * from v_contact_notes ";
 		$sql .= " where v_id = '$v_id' ";
 		$sql .= " and contact_id = '$contact_id' ";
 		if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
@@ -81,14 +81,14 @@ require_once "includes/paging.php";
 		echo "	&nbsp; \n";
 		echo "</th>\n";
 		echo "<td align='right' width='42'>\n";
-		echo "	<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='v_contact_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 		echo "</td>\n";
 		echo "<tr>\n";
 	}
 	else {
 		foreach($result as $row) {
 			$notes = $row['notes'];
-			$notes = str_replace("\n","<br />",$notes);
+			//$notes = str_replace("\n","<br />",$notes);
 
 			echo "<tr>\n";
 			echo "<th>\n";
@@ -98,7 +98,7 @@ require_once "includes/paging.php";
 			//echo "<th>Modified Date ".$row['last_mod_date']."</th>\n";
 			//echo "<th>Modified By ".$row['last_mod_user']."</th>\n";
 			echo "<td align='right' width='42'>\n";
-			echo "	<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='v_contact_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 			echo "</td>\n";
 			echo "<tr>\n";
 
@@ -107,8 +107,8 @@ require_once "includes/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_date']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_user']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_contacts_notes_edit.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_contacts_notes_delete.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='v_contact_notes_edit.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='v_contact_notes_delete.php?contact_id=".$row['contact_id']."&id=".$row['contacts_note_id']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -129,7 +129,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_contacts_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='v_contact_notes_edit.php?contact_id=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

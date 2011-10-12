@@ -9,7 +9,7 @@ if (count($_GET)>0) {
 
 if (strlen($id)>0) {
 	$sql = "";
-	$sql .= "delete from v_contacts_notes ";
+	$sql .= "delete from v_contact_notes ";
 	$sql .= "where contacts_note_id = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

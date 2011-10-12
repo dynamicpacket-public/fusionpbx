@@ -37,13 +37,6 @@ else {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-
-	////recommend moving this to the config.php file
-	$uploadtempdir = $_ENV["TEMP"]."\\";
-	ini_set('upload_tmp_dir', $uploadtempdir);
-	////$imagedir = $_ENV["TEMP"]."\\";
-	////$filedir = $_ENV["TEMP"]."\\";
-
 	if ($action == "update") {
 		$contact_id = check_str($_POST["contact_id"]);
 	}
@@ -156,7 +149,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$contact_id = $_GET["id"];
 		$sql = "";
 		$sql .= "select * from v_contacts ";
-		$sql .= "where contact_id = '$contact_id' ";
+		$sql .= "where v_id = '$v_id' ";
+		$sql .= "and contact_id = '$contact_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
@@ -183,10 +177,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";
@@ -199,6 +192,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Edit</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='qr code' onclick=\"window.location='v_contacts_vcard.php?id=$contact_id&type=image'\" value='QR Code'>\n";
+	echo "	<input type='button' class='btn' name='' alt='vcard' onclick=\"window.location='v_contacts_vcard.php?id=$contact_id&type=download'\" value='vCard'>\n";
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/mod/invoices')) {
 		echo "	<input type='button' class='btn' name='' alt='invoice' onclick=\"window.location='/mod/invoices/v_invoices.php?id=$contact_id'\" value='Invoices'>\n";
 	}
@@ -210,219 +205,239 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "The contact is a list of individuals and organizations.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 
+	echo "<table border='0' width='100%'>\n";
 	echo "<tr>\n";
-	echo "	<td><strong>User Information</strong></td>\n";
-	echo "	<td>&nbsp;</td>\n";
+	echo "<td width='55%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+
+		echo "<table border='0' width='100%'>\n";
+		echo "<tr>\n";
+		echo "	<td><strong>User Information</strong></td>\n";
+		echo "	<td>&nbsp;</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Type:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' style='width:85%;' name='type'>\n";
+		echo "	<option value=''></option>\n";
+		if ($type == "customer") { 
+			echo "	<option value='customer' selected='selected' >Customer</option>\n";
+		}
+		else {
+			echo "	<option value='customer'>Customer</option>\n";
+		}
+		if ($type == "contractor") { 
+			echo "	<option value='contractor' selected='selected' >Contractor</option>\n";
+		}
+		else {
+			echo "	<option value='contractor'>Contractor</option>\n";
+		}
+		if ($type == "friend") { 
+			echo "	<option value='friend' selected='selected' >Friend</option>\n";
+		}
+		else {
+			echo "	<option value='friend'>Friend</option>\n";
+		}
+		if ($type == "lead") { 
+			echo "	<option value='lead' selected='selected' >Lead</option>\n";
+		}
+		else {
+			echo "	<option value='lead'>Lead</option>\n";
+		}
+		if ($type == "member") { 
+			echo "	<option value='member' selected='selected' >Member</option>\n";
+		}
+		else {
+			echo "	<option value='member'>Member</option>\n";
+		}
+		if ($type == "family") { 
+			echo "	<option value='family' selected='selected' >Family</option>\n";
+		}
+		else {
+			echo "	<option value='family'>Family</option>\n";
+		}
+		if ($type == "subscriber") { 
+			echo "	<option value='subscriber' selected='selected' >Subscriber</option>\n";
+		}
+		else {
+			echo "	<option value='subscriber'>Subscriber</option>\n";
+		}
+		if ($type == "supplier") { 
+			echo "	<option value='supplier' selected='selected' >Supplier</option>\n";
+		}
+		else {
+			echo "	<option value='supplier'>Supplier</option>\n";
+		}
+		if ($type == "provider") { 
+			echo "	<option value='provider' selected='selected' >Provider</option>\n";
+		}
+		else {
+			echo "	<option value='provider'>Provider</option>\n";
+		}
+		if ($type == "volunteer") { 
+			echo "	<option value='volunteer' selected='selected' >Volunteer</option>\n";
+		}
+		else {
+			echo "	<option value='volunteer'>Volunteer</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "Select the contact type.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Organization:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='org' maxlength='255' value=\"$org\">\n";
+		echo "<br />\n";
+		echo "Enter the organization.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	First Name:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='n_given' maxlength='255' value=\"$n_given\">\n";
+		echo "<br />\n";
+		echo "Enter the given name.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Last Name:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='n_family' maxlength='255' value=\"$n_family\">\n";
+		echo "<br />\n";
+		echo "Enter the family name.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Nickname:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='nickname' maxlength='255' value=\"$nickname\">\n";
+		echo "<br />\n";
+		echo "Enter the nickname.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Title:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='title' maxlength='255' value=\"$title\">\n";
+		echo "<br />\n";
+		echo "Enter the title.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Role:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='role' maxlength='255' value=\"$role\">\n";
+		echo "<br />\n";
+		echo "Enter the role.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		//echo "<tr>\n";
+		//echo "<td><strong>Contact Information</strong></td>\n";
+		//echo "<td>&nbsp;</td>\n";
+		//echo "<tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Email:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='email' maxlength='255' value=\"$email\">\n";
+		echo "<br />\n";
+		echo "Enter the email address.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	URL:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' style='width:85%;' type='text' name='url' maxlength='255' value='$url'>\n";
+		echo "<br />\n";
+		echo "Enter the website address.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		//echo "<tr>\n";
+		//echo "<td><strong>Additional Information</strong></td>\n";
+		//echo "<td>&nbsp;</td>\n";
+		//echo "<tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Time Zone:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:85%;' type='text' name='tz' maxlength='255' value=\"$tz\">\n";
+		echo "<br />\n";
+		echo "Enter the time zone.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Notes:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' style='width:85%;' type='text' name='note' maxlength='255' value='$note'>\n";
+		echo "<br />\n";
+		echo "Enter the notes.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "	<tr>\n";
+		echo "		<td colspan='2' align='right'>\n";
+		if ($action == "update") {
+			echo "				<input type='hidden' name='contact_id' value='$contact_id'>\n";
+		}
+		echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+		echo "		</td>\n";
+		echo "	</tr>";
+		echo "</table>";
+		echo "</form>";
+
+	echo "</td>\n";
+	echo "<td width='45%' class='' valign='top' align='center' nowrap='nowrap'>\n";
+		//echo "	<img src='v_contacts_vcard.php?id=$contact_id&type=image' width='90%'><br /><br />\n";
+
+		if ($action == "update") {
+			require "v_contacts_tel.php";
+			require "v_contacts_adr.php";
+			require "v_contacts_notes.php";
+			//echo "<br/><br/>\n";
+		}
+
+	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='type'>\n";
-	echo "	<option value=''></option>\n";
-	if ($type == "customer") { 
-		echo "	<option value='customer' selected='selected' >Customer</option>\n";
-	}
-	else {
-		echo "	<option value='customer'>Customer</option>\n";
-	}
-	if ($type == "contractor") { 
-		echo "	<option value='contractor' selected='selected' >Contractor</option>\n";
-	}
-	else {
-		echo "	<option value='contractor'>Contractor</option>\n";
-	}
-	if ($type == "friend") { 
-		echo "	<option value='friend' selected='selected' >Friend</option>\n";
-	}
-	else {
-		echo "	<option value='friend'>Friend</option>\n";
-	}
-	if ($type == "lead") { 
-		echo "	<option value='lead' selected='selected' >Lead</option>\n";
-	}
-	else {
-		echo "	<option value='lead'>Lead</option>\n";
-	}
-	if ($type == "member") { 
-		echo "	<option value='member' selected='selected' >Member</option>\n";
-	}
-	else {
-		echo "	<option value='member'>Member</option>\n";
-	}
-	if ($type == "family") { 
-		echo "	<option value='family' selected='selected' >Family</option>\n";
-	}
-	else {
-		echo "	<option value='family'>Family</option>\n";
-	}
-	if ($type == "subscriber") { 
-		echo "	<option value='subscriber' selected='selected' >Subscriber</option>\n";
-	}
-	else {
-		echo "	<option value='subscriber'>Subscriber</option>\n";
-	}
-	if ($type == "supplier") { 
-		echo "	<option value='supplier' selected='selected' >Supplier</option>\n";
-	}
-	else {
-		echo "	<option value='supplier'>Supplier</option>\n";
-	}
-	if ($type == "provider") { 
-		echo "	<option value='provider' selected='selected' >Provider</option>\n";
-	}
-	else {
-		echo "	<option value='provider'>Provider</option>\n";
-	}
-	if ($type == "volunteer") { 
-		echo "	<option value='volunteer' selected='selected' >Volunteer</option>\n";
-	}
-	else {
-		echo "	<option value='volunteer'>Volunteer</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "Select the contact type.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Organization:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='org' maxlength='255' value=\"$org\">\n";
-	echo "<br />\n";
-	echo "Enter the organization.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	First Name:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='n_given' maxlength='255' value=\"$n_given\">\n";
-	echo "<br />\n";
-	echo "Enter the given name.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Last Name:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='n_family' maxlength='255' value=\"$n_family\">\n";
-	echo "<br />\n";
-	echo "Enter the family name.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Nickname:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='nickname' maxlength='255' value=\"$nickname\">\n";
-	echo "<br />\n";
-	echo "Enter the nickname.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Title:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='title' maxlength='255' value=\"$title\">\n";
-	echo "<br />\n";
-	echo "Enter the title.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Role:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='role' maxlength='255' value=\"$role\">\n";
-	echo "<br />\n";
-	echo "Enter the role.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	//echo "<tr>\n";
-	//echo "<td><strong>Contact Information</strong></td>\n";
-	//echo "<td>&nbsp;</td>\n";
-	//echo "<tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Email:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='email' maxlength='255' value=\"$email\">\n";
-	echo "<br />\n";
-	echo "Enter the email address.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	URL:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='url' maxlength='255' value='$url'>\n";
-	echo "<br />\n";
-	echo "Enter the website address.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	//echo "<tr>\n";
-	//echo "<td><strong>Additional Information</strong></td>\n";
-	//echo "<td>&nbsp;</td>\n";
-	//echo "<tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Time Zone:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='tz' maxlength='255' value=\"$tz\">\n";
-	echo "<br />\n";
-	echo "Enter the time zone.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Notes:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='note' maxlength='255' value='$note'>\n";
-	echo "<br />\n";
-	echo "Enter the notes.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='contact_id' value='$contact_id'>\n";
-	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</form>";
-
-	if ($action == "update") {
-		require "v_contacts_tel.php";
-		require "v_contacts_adr.php";
-		require "v_contacts_notes.php";
+		echo "<br/>\n";
+		
 	}
 
 	echo "	</td>";
