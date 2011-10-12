@@ -152,7 +152,9 @@ if (!function_exists('switch_module_info')) {
 			case "mod_db":
 				$mod['module_label'] = 'DB';
 				$mod['module_cat'] = 'Applications';
-				$mod['module_desc'] = 'Dattabase key / value storage functionality, dialing and limit backend.';
+				$mod['module_desc'] = 'Database key / value storage functionality, dialing and limit backend.';
+				$mod['module_enabled'] = 'true';
+				$mod['module_default_enabled'] = 'true';
 				break;
 			case "mod_avmd":
 				$mod['module_label'] = 'AVMD';
