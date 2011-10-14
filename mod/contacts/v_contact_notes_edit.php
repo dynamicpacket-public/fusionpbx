@@ -117,7 +117,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "last_mod_date = now(), ";
 			$sql .= "last_mod_user = '".$_SESSION['username']."' ";
 			$sql .= "where v_id = '$v_id' ";
-			$sql .= "where contacts_note_id = '$contacts_note_id'";
+			$sql .= "and contacts_note_id = '$contacts_note_id'";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
