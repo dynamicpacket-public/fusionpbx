@@ -20,21 +20,21 @@
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][$y]['name'] = 'contact_view';
+		$apps[$x]['permissions'][$y]['name'] = 'contacts_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
-		$apps[$x]['permissions'][1]['name'] = 'contact_add';
+		$apps[$x]['permissions'][1]['name'] = 'contacts_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][1]['groups'][] = 'admin';
 
-		$apps[$x]['permissions'][2]['name'] = 'contact_edit';
+		$apps[$x]['permissions'][2]['name'] = 'contacts_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		//$apps[$x]['permissions'][2]['groups'][] = 'user';
 
-		$apps[$x]['permissions'][3]['name'] = 'contact_delete';
+		$apps[$x]['permissions'][3]['name'] = 'contacts_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][3]['groups'][] = 'admin';
 

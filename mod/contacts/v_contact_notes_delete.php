@@ -41,9 +41,9 @@ if (count($_GET)>0) {
 
 if (strlen($id)>0) {
 	$sql = "";
-	$sql .= "delete from v_contacts_tel ";
+	$sql .= "delete from v_contact_notes ";
 	$sql .= "where v_id = '$v_id' ";
-	$sql .= "and contacts_tel_id = '$id' ";
+	$sql .= "and contacts_note_id = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	unset($sql);
@@ -54,9 +54,7 @@ echo "<meta http-equiv=\"refresh\" content=\"2;url=v_contacts_edit.php?id=$conta
 echo "<div align='center'>\n";
 echo "Delete Complete\n";
 echo "</div>\n";
-
 require_once "includes/footer.php";
 return;
 
 ?>
-

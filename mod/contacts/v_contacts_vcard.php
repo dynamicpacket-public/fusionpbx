@@ -103,22 +103,22 @@ if (count($_GET)>0) {
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
 			$adr_type = $row["adr_type"];
-//			$adr_street = $row["adr_street"];
-//			$adr_extended = $row["adr_extended"];
-//			$adr_locality = $row["adr_locality"];
+			$adr_street = $row["adr_street"];
+			$adr_extended = $row["adr_extended"];
+			$adr_locality = $row["adr_locality"];
 			$adr_region = $row["adr_region"];
-//			$adr_postal_code = $row["adr_postal_code"];
+			$adr_postal_code = $row["adr_postal_code"];
 			$adr_country = $row["adr_country"];
 			$adr_latitude = $row["adr_latitude"];
 			$adr_longitude = $row["adr_longitude"];
 			$adr_type = strtolower(trim($adr_type));
 
-			$vcard->data[$adr_type.'_address'] = $adr_street;
-			$vcard->data[$adr_type.'_extended_address'] = $adr_extended;
-			$vcard->data[$adr_type.'_city'] = $adr_locality;
-			$vcard->data[$adr_type.'_state'] = $adr_region;
-			$vcard->data[$adr_type.'_postal_code'] = $adr_postal_code;
-			$vcard->data[$adr_type.'_country'] = $adr_country;
+			//$vcard->data[$adr_type.'_address'] = $adr_street;
+			//$vcard->data[$adr_type.'_extended_address'] = $adr_extended;
+			//$vcard->data[$adr_type.'_city'] = $adr_locality;
+			//$vcard->data[$adr_type.'_state'] = $adr_region;
+			//$vcard->data[$adr_type.'_postal_code'] = $adr_postal_code;
+			//$vcard->data[$adr_type.'_country'] = $adr_country;
 		}
 		unset ($prep_statement);
 
