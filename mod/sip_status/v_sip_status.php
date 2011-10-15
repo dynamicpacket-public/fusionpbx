@@ -103,7 +103,8 @@ if (strlen($msg) > 0) {
 		echo "  <b>sofia status</b> \n";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
-		echo "  <input type='button' class='btn' value='reloadxml' onclick=\"document.location.href='v_cmd.php?cmd=api+reloadxml';\" />\n";
+		echo "  <input type='button' class='btn' value='Reload ACL' onclick=\"document.location.href='v_cmd.php?cmd=api+reloadacl';\" />\n";
+		echo "  <input type='button' class='btn' value='Reload XML' onclick=\"document.location.href='v_cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";

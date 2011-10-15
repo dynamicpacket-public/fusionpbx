@@ -45,11 +45,6 @@ $rdr = $_GET['rdr'];
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
-				//reload the access control list
-					$tmp_cmd = 'api reloadacl';
-					$response = event_socket_request($fp, $tmp_cmd);
-					unset($tmp_cmd);
-
 				//rescan the external profile to look for new or stopped gateways
 					$tmp_cmd = 'api sofia profile external rescan';
 					$response = event_socket_request($fp, $tmp_cmd);
