@@ -93,10 +93,12 @@ require_once "includes/paging.php";
 		if (strlen($orderby)> 0) { $sql .= "order by $orderby $order "; }
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll();
+			$result_count = count($result);
+			unset ($prep_statement, $sql);
+		}
 
 	$c = 0;
 	$row_style["0"] = "rowstyle0";
