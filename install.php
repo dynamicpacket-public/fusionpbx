@@ -173,29 +173,54 @@ $v_id = '1';
 		switch (PHP_OS) {
 		case "FreeBSD":
 			//if the freebsd port is installed use the following paths by default.
-				if (file_exists('/usr/local/etc/freeswitch/conf')) {
-					//set the default db_filepath
-						if (strlen($db_filepath) == 0) { //secure dir
-							$db_filepath = '/var/db/fusionpbx';
-							if (!is_dir($db_filepath)) { mkdir($db_filepath,0777,true); }
-						}
-					//set the other default directories
-						$v_bin_dir = '/usr/local/bin'; //freeswitch bin directory
-						$v_conf_dir = '/usr/local/etc/freeswitch/conf';
-						$v_db_dir = '/var/db/freeswitch';
-						$v_htdocs_dir = '/usr/local/www/freeswitch/htdocs';
-						$v_log_dir = '/var/log/freeswitch';
-						$v_mod_dir = '/usr/local/lib/freeswitch/mod';
-						$v_extensions_dir = $v_conf_dir.'/directory/default';
-						$v_gateways_dir = $v_conf_dir.'/sip_profiles/external';
-						$v_dialplan_public_dir = $v_conf_dir.'/dialplan/public';
-						$v_dialplan_default_dir = $v_conf_dir.'/dialplan/default';
-						$v_scripts_dir = '/usr/local/etc/freeswitch/scripts';
-						$v_grammar_dir = '/usr/local/etc/freeswitch/grammar';
-						$v_storage_dir = '/var/freeswitch';
-						$v_voicemail_dir = '/var/spool/freeswitch/voicemail';
-						$v_recordings_dir = '/var/freeswitch/recordings';
-						$v_sounds_dir = '/usr/local/share/freeswitch/sounds';
+				if (file_exists('/var/db/freeswitch')) {
+					//freebsd port
+						//set the default db_filepath
+							if (strlen($db_filepath) == 0) { //secure dir
+								$db_filepath = '/var/db/fusionpbx';
+								if (!is_dir($db_filepath)) { mkdir($db_filepath,0777,true); }
+							}
+						//set the other default directories
+							$v_bin_dir = '/usr/local/bin'; //freeswitch bin directory
+							$v_conf_dir = '/usr/local/etc/freeswitch/conf';
+							$v_db_dir = '/var/db/freeswitch';
+							$v_htdocs_dir = '/usr/local/www/freeswitch/htdocs';
+							$v_log_dir = '/var/log/freeswitch';
+							$v_mod_dir = '/usr/local/lib/freeswitch/mod';
+							$v_extensions_dir = $v_conf_dir.'/directory/default';
+							$v_gateways_dir = $v_conf_dir.'/sip_profiles/external';
+							$v_dialplan_public_dir = $v_conf_dir.'/dialplan/public';
+							$v_dialplan_default_dir = $v_conf_dir.'/dialplan/default';
+							$v_scripts_dir = '/usr/local/etc/freeswitch/scripts';
+							$v_grammar_dir = '/usr/local/etc/freeswitch/grammar';
+							$v_storage_dir = '/var/freeswitch';
+							$v_voicemail_dir = '/var/spool/freeswitch/voicemail';
+							$v_recordings_dir = '/var/freeswitch/recordings';
+							$v_sounds_dir = '/usr/local/share/freeswitch/sounds';
+				elseif (file_exists('/data/freeswitch')) {
+					//freebsd embedded 
+						//set the default db_filepath
+							if (strlen($db_filepath) == 0) { //secure dir
+								$db_filepath = '/data/db/fusionpbx';
+								if (!is_dir($db_filepath)) { mkdir($db_filepath,0777,true); }
+							}
+						//set the other default directories
+							$v_bin_dir = '/usr/local/bin'; //freeswitch bin directory
+							$v_conf_dir = '/usr/local/etc/freeswitch/conf';
+							$v_db_dir = '/data/freeswitch/db';
+							$v_htdocs_dir = '/usr/local/www/freeswitch/htdocs';
+							$v_log_dir = '/data/freeswitch/log';
+							$v_mod_dir = '/usr/local/lib/freeswitch/mod';
+							$v_extensions_dir = $v_conf_dir.'/directory/default';
+							$v_gateways_dir = $v_conf_dir.'/sip_profiles/external';
+							$v_dialplan_public_dir = $v_conf_dir.'/dialplan/public';
+							$v_dialplan_default_dir = $v_conf_dir.'/dialplan/default';
+							$v_scripts_dir = '/usr/local/etc/freeswitch/scripts';
+							$v_grammar_dir = '/usr/local/etc/freeswitch/grammar';
+							$v_storage_dir = '/data/freeswitch';
+							$v_voicemail_dir = '/data/freeswitch/voicemail';
+							$v_recordings_dir = '/data/freeswitch/recordings';
+							$v_sounds_dir = '/data/freeswitch/sounds';
 				}
 				else {
 					//set the default db_filepath
@@ -249,7 +274,7 @@ $v_id = '1';
 		*/
 
 	//set the dir defaults for windows
-		if (stristr(PHP_OS, 'WIN')) { 
+		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN")) {
 			//echo "windows: ".PHP_OS;
 			if (is_dir('C:/program files/FreeSWITCH')) {
 				$install_v_dir = 'C:/program files/FreeSWITCH';
@@ -323,7 +348,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (strlen($install_v_template_name) == 0) { $msg .= "Please provide the Theme.<br>\n"; }
 
 		if (!is_writable($install_v_dir."/conf/vars.xml")) {
-			if (stristr(PHP_OS, 'WIN')) { 
+			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN")) {
 				//some windows operating systems report read only but are writable
 			}
 			else {
