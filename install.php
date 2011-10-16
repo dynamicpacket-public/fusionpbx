@@ -197,6 +197,7 @@ $v_id = '1';
 							$v_voicemail_dir = '/var/spool/freeswitch/voicemail';
 							$v_recordings_dir = '/var/freeswitch/recordings';
 							$v_sounds_dir = '/usr/local/share/freeswitch/sounds';
+				}
 				elseif (file_exists('/data/freeswitch')) {
 					//freebsd embedded 
 						//set the default db_filepath
