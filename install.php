@@ -275,7 +275,7 @@ $v_id = '1';
 		*/
 
 	//set the dir defaults for windows
-		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN")) {
+		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 			//echo "windows: ".PHP_OS;
 			if (is_dir('C:/program files/FreeSWITCH')) {
 				$install_v_dir = 'C:/program files/FreeSWITCH';
@@ -349,7 +349,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		if (strlen($install_v_template_name) == 0) { $msg .= "Please provide the Theme.<br>\n"; }
 
 		if (!is_writable($install_v_dir."/conf/vars.xml")) {
-			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN")) {
+			if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 				//some windows operating systems report read only but are writable
 			}
 			else {
