@@ -276,59 +276,58 @@ $v_id = '1';
 
 	//set the dir defaults for windows
 		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
-			//echo "windows: ".PHP_OS;
-			if (is_dir('C:/program files/FreeSWITCH')) {
+			if (substr($_SERVER["DOCUMENT_ROOT"], -3) == "www") {
+				//integrated installer
+				$install_v_dir = realpath($_SERVER["DOCUMENT_ROOT"]."/..");
+				$v_parent_dir = realpath($_SERVER["DOCUMENT_ROOT"]."/..");
+				$install_php_dir = realpath($_SERVER["PHPRC"]."/..");
+				$v_startup_script_dir = '';
+			} elseif (is_dir('C:/program files/FreeSWITCH')) {
 				$install_v_dir = 'C:/program files/FreeSWITCH';
 				$v_parent_dir = 'C:/program files';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('D:/program files/FreeSWITCH')) {
+			} elseif (is_dir('D:/program files/FreeSWITCH')) {
 				$install_v_dir = 'D:/program files/FreeSWITCH';
 				$v_parent_dir = 'D:/program files';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('E:/program files/FreeSWITCH')) {
+			} elseif (is_dir('E:/program files/FreeSWITCH')) {
 				$install_v_dir = 'E:/program files/FreeSWITCH';
 				$v_parent_dir = 'E:/program files';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('F:/program files/FreeSWITCH')) {
+			} elseif (is_dir('F:/program files/FreeSWITCH')) {
 				$install_v_dir = 'F:/program files/FreeSWITCH';
 				$v_parent_dir = 'F:/program files';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('C:/FreeSWITCH')) {
+			} elseif (is_dir('C:/FreeSWITCH')) {
 				$install_v_dir = 'C:/FreeSWITCH';
 				$v_parent_dir = 'C:';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('D:/FreeSWITCH')) {
+			} elseif (is_dir('D:/FreeSWITCH')) {
 				$install_v_dir = 'D:/FreeSWITCH';
 				$v_parent_dir = 'D:';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('E:/FreeSWITCH')) {
+			} elseif (is_dir('E:/FreeSWITCH')) {
 				$install_v_dir = 'E:/FreeSWITCH';
 				$v_parent_dir = 'E:';
 				$v_startup_script_dir = '';
-			}
-			if (is_dir('F:/FreeSWITCH')) {
+			} elseif (is_dir('F:/FreeSWITCH')) {
 				$install_v_dir = 'F:/FreeSWITCH';
 				$v_parent_dir = 'F:';
 				$v_startup_script_dir = '';
+			} else {
+				if (is_dir('C:/PHP')) { $install_php_dir = 'C:/PHP'; }
+				if (is_dir('D:/PHP')) { $install_php_dir = 'D:/PHP'; }
+				if (is_dir('E:/PHP')) { $install_php_dir = 'E:/PHP'; }
+				if (is_dir('F:/PHP')) { $install_php_dir = 'F:/PHP'; }
+				if (is_dir('C:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'C:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
+				if (is_dir('D:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'D:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
+				if (is_dir('E:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'E:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
+				if (is_dir('F:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'F:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
+				if (is_dir('C:/fusionpbx/Program/php')) { $install_php_dir = 'C:/fusionpbx/Program/php'; }
+				if (is_dir('D:/fusionpbx/Program/php')) { $install_php_dir = 'D:/fusionpbx/Program/php'; }
+				if (is_dir('E:/fusionpbx/Program/php')) { $install_php_dir = 'E:/fusionpbx/Program/php'; }
+				if (is_dir('F:/fusionpbx/Program/php')) { $install_php_dir = 'F:/fusionpbx/Program/php'; }
 			}
-			if (is_dir('C:/PHP')) { $install_php_dir = 'C:/PHP'; }
-			if (is_dir('D:/PHP')) { $install_php_dir = 'D:/PHP'; }
-			if (is_dir('E:/PHP')) { $install_php_dir = 'E:/PHP'; }
-			if (is_dir('F:/PHP')) { $install_php_dir = 'F:/PHP'; }
-			if (is_dir('C:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'C:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
-			if (is_dir('D:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'D:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
-			if (is_dir('E:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'E:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
-			if (is_dir('F:/FreeSWITCH/wamp/bin/php/php5.3.0')) { $install_php_dir = 'F:/FreeSWITCH/wamp/bin/php/php5.3.0'; }
-			if (is_dir('C:/fusionpbx/Program/php')) { $install_php_dir = 'C:/fusionpbx/Program/php'; }
-			if (is_dir('D:/fusionpbx/Program/php')) { $install_php_dir = 'D:/fusionpbx/Program/php'; }
-			if (is_dir('E:/fusionpbx/Program/php')) { $install_php_dir = 'E:/fusionpbx/Program/php'; }
-			if (is_dir('F:/fusionpbx/Program/php')) { $install_php_dir = 'F:/fusionpbx/Program/php'; }
 		}
 
 
