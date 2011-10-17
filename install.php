@@ -330,7 +330,6 @@ $v_id = '1';
 			}
 		}
 
-
 if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
@@ -669,9 +668,17 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$v_build_revision = '';
 		$v_label = '';
 		$v_name = 'freeswitch';
-		$v_web_dir = $_SERVER["DOCUMENT_ROOT"];
-		$v_web_root = $_SERVER["DOCUMENT_ROOT"];
+		$v_web_dir = str_replace("\\", "/", $_SERVER["DOCUMENT_ROOT"]);
+		$v_web_root = str_replace("\\", "/", $_SERVER["DOCUMENT_ROOT"]);
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].'/fusionpbx')){ $v_relative_url = $_SERVER["DOCUMENT_ROOT"].'/fusionpbx'; } else { $v_relative_url = '/'; }
+
+		//replace back slashes with forward slashes
+		$install_v_dir = str_replace("\\", "/", $install_v_dir);
+		$v_parent_dir = str_replace("\\", "/", $v_parent_dir);
+		$install_php_dir = str_replace("\\", "/", $install_php_dir);
+		$v_startup_script_dir = str_replace("\\", "/", $v_startup_script_dir);
+		$install_tmp_dir = str_replace("\\", "/", $install_tmp_dir);
+		$install_v_backup_dir = str_replace("\\", "/", $install_v_backup_dir);
 
 		$sql = "update v_system_settings set ";
 		$sql .= "v_domain = '".$domain."', ";
