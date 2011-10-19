@@ -93,15 +93,14 @@ else {
 					$x = 1;
 					foreach ($column_array as $column) {
 						if ($x < $column_array_count) {
-							echo "'".$column."',";
+							echo ''.$column.',';
 						}
 						else {
-							echo "'".$column."'";
+							echo ''.$column.'';
 						}
 						$x++;
 					}
 					echo ") ";
-
 					echo "VALUES( ";
 					$x = 1;
 					foreach ($column_array as $column) {
