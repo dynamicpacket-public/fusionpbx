@@ -89,30 +89,39 @@ else {
 				$column_array_count = count($column_array);
 
 				foreach ($result2 as &$row) {
-					echo "INSERT INTO $table_name (";
+					$sql = "INSERT INTO $table_name (";
 					$x = 1;
 					foreach ($column_array as $column) {
 						if ($x < $column_array_count) {
-							echo ''.$column.',';
+							if (strlen($row[$column])> 0) {
+								$sql .= ''.$column.',';
+							}
 						}
 						else {
-							echo ''.$column.'';
+							if (strlen($row[$column])> 0) {
+								$sql .= ''.$column.'';
+							}
 						}
 						$x++;
 					}
-					echo ") ";
-					echo "VALUES( ";
+					$sql .= ") ";
+					$sql .= "VALUES( ";
 					$x = 1;
 					foreach ($column_array as $column) {
 						if ($x < $column_array_count) {
-							echo "'".check_str($row[$column])."',";
+							if (strlen($row[$column])> 0) {
+								$sql .= "'".check_str($row[$column])."',";
+							}
 						}
 						else {
-							echo "'".check_str($row[$column])."'";
+							if (strlen($row[$column])> 0) {
+								$sql .= "'".check_str($row[$column])."'";
+							}
 						}
 						$x++;
 					}
-					echo ");\n";
+					$sql .= ");\n";
+					echo str_replace(",)", ")", $sql);
 				}
 			}
 
