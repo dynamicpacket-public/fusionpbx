@@ -222,7 +222,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/mod/invoices')) {
 		echo "	<input type='button' class='btn' name='' alt='invoice' onclick=\"window.location='/mod/invoices/v_invoices.php?id=$contact_id'\" value='Invoices'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_contacts.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.history.back();\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
