@@ -263,7 +263,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td width='30%' nowrap valign='top'><b>Voicemail Settings</b></td>\n";
+	echo "	<td width='30%' nowrap valign='top' align='left'><b>Voicemail Settings for $extension</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_msgs.php'\" value='Back'><br /><br /></td>\n";
 	echo "</tr>\n";
 
@@ -308,13 +308,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='vm_enabled'>\n";
 	echo "    <option value=''></option>\n";
 	if ($vm_enabled == "true") { 
-		echo "    <option value='true' SELECTED >true</option>\n";
+		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
 	if ($vm_enabled == "false") { 
-		echo "    <option value='false' SELECTED >false</option>\n";
+		echo "    <option value='false' selected='selected'>false</option>\n";
 	}
 	else {
 		echo "    <option value='false'>false</option>\n";
@@ -344,13 +344,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='vm_attach_file'>\n";
 	echo "    <option value=''></option>\n";
 	if ($vm_attach_file == "true") { 
-		echo "    <option value='true' SELECTED >true</option>\n";
+		echo "    <option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
 	if ($vm_attach_file == "false") { 
-		echo "    <option value='false' SELECTED >false</option>\n";
+		echo "    <option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "    <option value='false'>false</option>\n";
@@ -369,13 +369,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
 	echo "    <option value=''></option>\n";
 	if ($vm_keep_local_after_email == "true") { 
-		echo "    <option value='true' SELECTED >true</option>\n";
+		echo "    <option value='true' selected='selected' >true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
 	if ($vm_keep_local_after_email == "false") { 
-		echo "    <option value='false' SELECTED >false</option>\n";
+		echo "    <option value='false' selected='selected' >false</option>\n";
 	}
 	else {
 		echo "    <option value='false'>false</option>\n";
