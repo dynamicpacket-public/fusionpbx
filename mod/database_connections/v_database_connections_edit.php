@@ -134,7 +134,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true") 
-
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -174,18 +173,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%'  border='0' cellpadding='3' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Database Connection Add</b></td>\n";
+		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>Database Connection Add</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Database Connection Edit</b></td>\n";
+		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>Database Connection Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_database_connections.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align=\"right\"><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_database_connections.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
+	echo "<td align=\"left\" colspan='2'>\n";
 	echo "Database connection information.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
