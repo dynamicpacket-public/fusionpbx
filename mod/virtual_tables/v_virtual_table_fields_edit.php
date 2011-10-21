@@ -203,33 +203,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //begin the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>Virtual Table Field Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Virtual Table Field Add</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>Virtual Table Field Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Virtual Table Field Edit</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables_edit.php?id=$virtual_table_id'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
+	echo "<td align=\"left\" colspan=\"2\">\n";
 	echo "Lists the fields in the virtual database.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Label:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -240,7 +237,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -251,56 +248,56 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='virtual_field_type'>\n";
 	echo "	<option value=''></option>\n";
 	if ($virtual_field_type == "text") { 
-		echo "	<option value='text' selected='selected' >Text</option>\n";
+		echo "	<option value='text' selected='selected'>Text</option>\n";
 	}
 	else {
 		echo "	<option value='text'>Text</option>\n";
 	}
 	if ($virtual_field_type == "number") { 
-		echo "	<option value='number' selected='selected' >Number</option>\n";
+		echo "	<option value='number' selected='selected'>Number</option>\n";
 	}
 	else {
 		echo "	<option value='number'>Number</option>\n";
 	}
 	if ($virtual_field_type == "date") { 
-		echo "	<option value='date' selected='selected' >Date</option>\n";
+		echo "	<option value='date' selected='selected'>Date</option>\n";
 	}
 	else {
 		echo "	<option value='date'>Date</option>\n";
 	}
 	if ($virtual_field_type == "email") { 
-		echo "	<option value='email' selected='selected' >Email</option>\n";
+		echo "	<option value='email' selected='selected'>Email</option>\n";
 	}
 	else {
 		echo "	<option value='email'>Email</option>\n";
 	}
 	if ($virtual_field_type == "label") { 
-		echo "	<option value='label' selected='selected' >Label</option>\n";
+		echo "	<option value='label' selected='selected'>Label</option>\n";
 	}
 	else {
 		echo "	<option value='label'>Label</option>\n";
 	}
 	if ($virtual_field_type == "phone") { 
-		echo "	<option value='phone' selected='selected' >Phone</option>\n";
+		echo "	<option value='phone' selected='selected'>Phone</option>\n";
 	}
 	else {
 		echo "	<option value='phone'>Phone</option>\n";
 	}
 	//if ($virtual_field_type == "truefalse") { 
-	//	echo "	<option value='truefalse' selected='selected' >True or False</option>\n";
+	//	echo "	<option value='truefalse' selected='selected'>True or False</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='truefalse'>True or False</option>\n";
 	//}
 	if ($virtual_field_type == "checkbox") { 
-		echo "	<option value='checkbox' selected='selected' >Check Box</option>\n";
+		echo "	<option value='checkbox' selected='selected'>Check Box</option>\n";
 	}
 	else {
 		echo "	<option value='checkbox'>Check Box</option>\n";
@@ -312,13 +309,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//	echo "	<option value='radiobutton'>Radio Button</option>\n";
 	//}
 	if ($virtual_field_type == "textarea") { 
-		echo "	<option value='textarea' selected='selected' >Textarea</option>\n";
+		echo "	<option value='textarea' selected='selected'>Textarea</option>\n";
 	}
 	else {
 		echo "	<option value='textarea'>Textarea</option>\n";
 	}
 	if ($virtual_field_type == "select") { 
-		echo "	<option value='select' selected='selected' >Select</option>\n";
+		echo "	<option value='select' selected='selected'>Select</option>\n";
 	}
 	else {
 		echo "	<option value='select'>Select</option>\n";
@@ -330,79 +327,79 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<option value='hidden'>Hidden</option>\n";
 	}
 	//if ($virtual_field_type == "ipv4") { 
-	//	echo "	<option value='ipv4' selected='selected' >IP version 4</option>\n";
+	//	echo "	<option value='ipv4' selected='selected'>IP version 4</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='ipv4'>IP version 4</option>\n";
 	//}
 	//if ($virtual_field_type == "ipv6") { 
-	//	echo "	<option value='ipv6' selected='selected' >IP version 6</option>\n";
+	//	echo "	<option value='ipv6' selected='selected'>IP version 6</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='ipv6'>IP version 6</option>\n";
 	//}
 	//if ($virtual_field_type == "money") { 
-	//	echo "	<option value='money' selected='selected' >Money</option>\n";
+	//	echo "	<option value='money' selected='selected'>Money</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='money'>Money</option>\n";
 	//}
 	if ($virtual_field_type == "password") { 
-		echo "	<option value='password' selected='selected' >Password</option>\n";
+		echo "	<option value='password' selected='selected'>Password</option>\n";
 	}
 	else {
 		echo "	<option value='password'>Password</option>\n";
 	}
 	if ($virtual_field_type == "pin_number") { 
-		echo "	<option value='pin_number' selected='selected' >PIN Number</option>\n";
+		echo "	<option value='pin_number' selected='selected'>PIN Number</option>\n";
 	}
 	else {
 		echo "	<option value='pin_number'>PIN Number</option>\n";
 	}
 	//if ($virtual_field_type == "upload_image") { 
-	//	echo "	<option value='upload_image' selected='selected' >Upload Image</option>\n";
+	//	echo "	<option value='upload_image' selected='selected'>Upload Image</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='upload_image'>Upload Image</option>\n";
 	//}
 	//if ($virtual_field_type == "upload_file") { 
-	//	echo "	<option value='upload_file' selected='selected' >Upload File</option>\n";
+	//	echo "	<option value='upload_file' selected='selected'>Upload File</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='upload_file'>Upload File</option>\n";
 	//}
 	//if ($virtual_field_type == "yesno") { 
-	//	echo "	<option value='yesno' selected='selected' >Yes or No</option>\n";
+	//	echo "	<option value='yesno' selected='selected'>Yes or No</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='yesno'>Yes or No</option>\n";
 	//}
 	if ($virtual_field_type == "url") { 
-		echo "	<option value='url' selected='selected' >URL</option>\n";
+		echo "	<option value='url' selected='selected'>URL</option>\n";
 	}
 	else {
 		echo "	<option value='url'>URL</option>\n";
 	}
 	//if ($virtual_field_type == "add_date") { 
-	//	echo "	<option value='add_date' selected='selected' >Add Date</option>\n";
+	//	echo "	<option value='add_date' selected='selected'>Add Date</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='add_date'>Add Date</option>\n";
 	//}
 	//if ($virtual_field_type == "add_user") { 
-	//	echo "	<option value='add_user' selected='selected' >Add User</option>\n";
+	//	echo "	<option value='add_user' selected='selected'>Add User</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='add_user'>Add User</option>\n";
 	//}
 	if ($virtual_field_type == "mod_date") { 
-		echo "	<option value='mod_date' selected='selected' >Modified Date</option>\n";
+		echo "	<option value='mod_date' selected='selected'>Modified Date</option>\n";
 	}
 	else {
 		echo "	<option value='mod_date'>Modified Date</option>\n";
 	}
 	if ($virtual_field_type == "mod_user") { 
-		echo "	<option value='mod_user' selected='selected' >Modified User</option>\n";
+		echo "	<option value='mod_user' selected='selected'>Modified User</option>\n";
 	}
 	else {
 		echo "	<option value='mod_user'>Modified User</option>\n";
@@ -414,7 +411,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Value:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -425,7 +422,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	List Visibility:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -450,7 +447,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Column:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -461,7 +458,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Required:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -486,7 +483,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Field Order:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -497,7 +494,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Tab Order:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -508,7 +505,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
 	echo "	Description:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

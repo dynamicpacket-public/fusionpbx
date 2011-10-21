@@ -49,11 +49,11 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' nowrap><b>Virtual Tables</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>Virtual Tables</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
+	echo "<td align='left' colspan='2'>\n";
 	echo "Provides the ability to quickly define information to store and dynamically makes tools available to view, add, edit, delete, and search.\n";
 	echo "<br /><br />\n";
 	echo "</td>\n";

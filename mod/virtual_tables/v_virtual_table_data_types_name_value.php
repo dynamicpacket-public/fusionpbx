@@ -49,11 +49,11 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' nowrap><b>Virtual Table Data Types Name Value List</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Virtual Table Data Types Name Value List</b></td>\n";
+	echo "<td width='50%' align=\"right\">&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
+	echo "<td align=\"left\" nowrap=\"nowrap\" colspan='2'>\n";
 	echo "Stores the name and value pairs.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -94,7 +94,6 @@ require_once "includes/paging.php";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo thorderby('virtual_data_types_name', 'Name', $orderby, $order);
 	echo thorderby('virtual_data_types_value', 'Value', $orderby, $order);
@@ -103,11 +102,8 @@ require_once "includes/paging.php";
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($resultcount == 0) { //no results
-	}
-	else { //received results
+	if ($resultcount > 0) {
 		foreach($result as $row) {
-			//print_r( $row );
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_data_types_name]."</td>\n";
 			echo "	<td valign='top' class='".$rowstyle[$c]."'>".$row[virtual_data_types_value]."</td>\n";
