@@ -98,10 +98,10 @@ else {
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left' nowrap><b>Execute Command</b></td>\n";
+	echo "<td colspan='2' align='left' nowrap=\"nowrap\"><b>Execute Command</b></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "	<td colspan='2'>\n";
+	echo "	<td align=\"left\" colspan='2'>\n";
 	echo "		Provides a conventient way to execute system, PHP, and switch commands.\n";
 	echo "	<br />\n";
 	echo "	<br />\n";
@@ -111,7 +111,7 @@ else {
 //show the result
 	if (count($_POST)>0) {
 		echo "	<tr>\n";
-		echo "		<td colspan='2' align='left'>\n";
+		echo "		<td colspan='2' align=\"left\">\n";
 
 		//shell_cmd
 		if (strlen($shell_cmd) > 0 && permission_exists('exec_command_line')) {
