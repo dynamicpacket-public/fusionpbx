@@ -82,7 +82,7 @@ echo "<div align='center'>\n";
 
 echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "<tr>\n";
-echo "<td width='50%'>\n";
+echo "<td align=\"left\" width='50%'>\n";
 echo "	<b>Logs</b><br />\n";
 echo "</td>\n";
 echo "<td width='50%' align='right'>\n";
@@ -115,7 +115,7 @@ echo "</tr>";
 
 if (permission_exists('log_path_view')) {
 	echo "<tr>\n";
-	echo "<td>\n";
+	echo "<td align=\"left\">\n";
 	echo $v_log_dir.'/'.$v_name.".log<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
