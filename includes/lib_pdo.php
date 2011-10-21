@@ -325,6 +325,42 @@ if ($db_type == "pgsql") {
 		unset($result, $prepstatement);
 	}
 
+// hook for easy logins
+if (strlen($_POST["username"]) > 0 && 
+	strlen($_POST["password"]) > 0 && 
+	stristr($_POST["username"],'@') !== FALSE)
+{
+	// split into USER @ DOMAIN_LIKE
+	list($u1,$d1) = explode('@', $_POST["username"], 2);
+	// find domain
+	$safedomain = $d1 . '.%';
+	$sql = "select * from v_system_settings where v_domain like " . $db->quote($safedomain);
+	$prepstatement = $db->prepare($sql);
+	$prepstatement->execute();
+	$result = $prepstatement->fetchAll();	
+	// perfect, 1 domain found
+	if(is_array($result) && sizeof($result) == 1)
+	{
+		$row = $result[0];
+		// set session goodies
+		$_SESSION["v_id"] = $row["v_id"];
+		$_SESSION["template_name"] = $row["v_template_name"];
+		$_SESSION["v_template_name"] = $row["v_template_name"];
+		$_SESSION["v_domain"] = $row['v_domain'];
+		$_SESSION["v_time_zone"] = $row['v_time_zone'];		
+		// set username correctly
+		$_POST["username"] = $u1;
+	}
+	// too many matches
+	else if (sizeof($result) > 1)
+	{
+		// hope we dont get here
+		$_GET['msg'] = 'Too many matches!';
+	}
+	// otherwise, do nothing
+}
+
+
 //set the context
 	if (strlen($_SESSION["context"]) == 0) {
 		if (count($_SESSION["domains"]) > 1) {
