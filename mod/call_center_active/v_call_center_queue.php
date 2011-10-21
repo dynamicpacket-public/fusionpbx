@@ -48,12 +48,12 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' nowrap><b>Call Center Queue List</b></td>\n";
-	echo "<td width='50%' align='right'>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Call Center Queue List</b></td>\n";
+	echo "<td width='50%' align=\"right\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
+	echo "<td align=\"left\" colspan='2'>\n";
 	echo "List of queues for the call center.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
